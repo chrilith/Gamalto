@@ -97,9 +97,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 				// Create the scanlines effect
 				r.fillRect(new G.Rect(0, 0, 1, 1),
-						   new G.Color(0, 0, 0, 255 * (dark || 0)));
+						   new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
 				r.fillRect(new G.Rect(0, 1, 1, 1),
-						   new G.Color(255, 255, 255, 255 * (light || 0)));
+						   new G.Color(255, 255, 255, 255 * (light || 0) / 100));
 
 				// Append the scanlines to the document
 				s.backgroundImage = "url(" + c.toDataURL() + ")";
