@@ -1,5 +1,5 @@
 /*
- * Gamalto.Animation
+ * Gamalto.Font
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
