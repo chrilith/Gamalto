@@ -102,7 +102,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	//						&& e.keyCode != 92	? cst.KMOD_META	: 0);	// CHECKME
 	
 		var cur, lst = q.length - 1;
-		for (var n = lst; n >= 0, cur = q[n]; n--) {
+		for (var n = lst; n >= 0; n--) {
+			cur = q[n];
+
 			// Same event?
 			if (cur.equals(evt)) {
 				// Should we repeat?
