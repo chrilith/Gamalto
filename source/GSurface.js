@@ -107,7 +107,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.redraw = function(s, x, y, list) {
 		if (list) {
 			var len = list.length | 0,
-				o = this, n, i,
+				o = this, n, i, r,
 				c = o._clipping || new G.Rect(0, 0, o.width, o.height);
 	
 			for (n = 0; n < len; n++) {
