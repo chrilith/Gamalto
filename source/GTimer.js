@@ -149,7 +149,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				if (list.length > 10) {
 					list.shift();
 				}
-				for (i = 0; i < (length = list.length); sum += list[i++]);
+				for (i = 0; i < (length = list.length); sum += list[i++]) {}
 				callback(sum / length | 0, (1000 / that._frameTime + .5 | 0));
 				that._frameCount = 0;
 				// If the page is in wait state, "d" whill be far higher than 1000
