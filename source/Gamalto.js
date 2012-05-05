@@ -49,12 +49,11 @@ var ENV = window;
 			init: function(run/*, debug*/) { // TODO: debug level
 
 				// Check for dependencies
-				for (use in _using) {
+				for (var use in _using) {
 					if (use.substr(0, 3) == "G__") {
 						var module = use.substr(3);
 						if (!G[module]) {
 							throw 'Gamalto cannot find module ["' + module + '"].';
-							return;
 						}
 					}
 				}
@@ -106,7 +105,7 @@ var ENV = window;
 				}
 
 				return { x: x + "px", y: y + "px", w: w + "px", h: h + "px" };			
-			},
+			}
 		}
 	})();
 
