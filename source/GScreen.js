@@ -104,6 +104,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				// Append the scanlines to the document
 				s.backgroundImage = "url(" + c.toDataURL() + ")";
 				container.appendChild(div);
+				this._scanlines = div;
 
 			} else if (div) {
 				div.parentNode.removeChild(div);
