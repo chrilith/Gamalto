@@ -86,6 +86,10 @@ var ENV = window;
 				var u; // undefined
 				return v1 !== u ? v1 : v2;
 			},
+			
+			N: function(name) {
+				return "G__" + name;
+			},
 
 /* Internal */
 			_isObj: function(v) {
