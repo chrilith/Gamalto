@@ -71,6 +71,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GKeyBoardEvent.js"></script> \
 		<script src="' + dir + 'GEventManager_Keyboard.js"></script> \
 		<script src="' + dir + 'GCommandLine.js"></script> \
+\
+		<script src="' + dir + 'EFader.js"></script> \
 	');
 
 })();
