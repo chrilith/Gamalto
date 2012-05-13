@@ -47,13 +47,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Font = function(bitmap, r, count, tw, th, firstLetter) {
 		var o = this;
-		G.Object.base(o, r, count, tw, th);
+		G.Object.base(o, bitmap, r, count, tw, th);
 		o._bitmap = bitmap;
 		o._firstLetter = firstLetter.charCodeAt(0);
 	}
 	
 	/* Inheritance and shortcut */
-	var proto = G.Font.inherits(G.SectionList);
+	var proto = G.Font.inherits(G.SpriteSheet);
 	
 	proto._paintLine = function(renderer, text, x, y) {
 		var o  = this,
