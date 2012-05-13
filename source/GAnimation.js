@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Animation = function(bitmap, r, count, tw, th) {
-		G.Object.base(this, r, count, tw, th);
+		G.Object.base(this, bitmap, r, count, tw, th);
 		this._curr = 0;
 	//	this._speed
 	}
@@ -67,8 +67,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.draw = function(renderer, x, y, i) {
-		i = G.getDef(i, this._curr) || 0;	// Here we change the reference and so arguments[3] is changed
-		G.Animation.base.draw.apply(this, arguments);
+		i = G.getDef(i, this._curr) || 0;
+		G.Animation.base.draw.call(this, renderer, x, y, i);
 	}
 
 })();
