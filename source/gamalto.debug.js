@@ -54,6 +54,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GVector.js"></script> \
 		<script src="' + dir + 'GRect.js"></script> \
 		<script src="' + dir + 'GSize.js"></script> \
+		<script src="' + dir + 'GScroller.js"></script> \
+		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
 		<script src="' + dir + 'GRenderer.js"></script> \
 		<script src="' + dir + 'GScreen.js"></script> \
