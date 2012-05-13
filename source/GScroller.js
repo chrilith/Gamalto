@@ -109,25 +109,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 		// Copy a main surface area to the region buffer. Double buffering is far more effecient
 		dst.clearRect(0, 0, w, h);	// The buffer is never transformed
-		dst.drawImage(src._canvas, cx, cy, ww, hh, dx, dy, ww, hh);
+		dst.drawImage(src.canvas, cx, cy, ww, hh, dx, dy, ww, hh);
 	
 		// Handle auto loop
 		if (region._loop) {
 			if (sx < 0) {
-				dst.drawImage(src._canvas,
+				dst.drawImage(src.canvas,
 							  x, y, -sx, h,
 							  w + sx, 0, -sx, h);
 			} else if (sx > 0) {
-				dst.drawImage(src._canvas,
+				dst.drawImage(src.canvas,
 							  x + w - sx, y, sx, h,
 							  0, 0, sx, h);
 			}
 			if (sy < 0) {
-				dst.drawImage(src._canvas,
+				dst.drawImage(src.canvas,
 							  x, y, w, -sy,
 							  0, h + sy, w, -sy);
 			} else if (sy > 0) {
-				dst.drawImage(src._canvas,
+				dst.drawImage(src.canvas,
 							  x, y + h - sy, w, sy,
 							  0, 0, w, sy);
 			}
@@ -135,7 +135,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		s.renderer._reset(); // FIXME: access to an unexpected method!!
 		src.clearRect(x, y, w, h);
-		src.drawImage(dst._canvas, x, y);
+		src.drawImage(dst.canvas, x, y);
 	}
 
 })();
