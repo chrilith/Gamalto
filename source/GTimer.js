@@ -83,14 +83,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return wait;
 	}
 	
-	proto.start = function() {
+	proto.start = function(strict) {
 		this._stopped = false;
 		this.update();
 	
 		var that = this,
 			last = Date.now(),						// Last execution is now
 			// TODO: use AnimationFrame but check for expected frame time
-			func = this.strictMode ? null : env.requestAnimationFrame,	
+			func = strict ? null : env.requestAnimationFrame,	
 			next,									// Next iteration duration
 			skip, before;
 	
