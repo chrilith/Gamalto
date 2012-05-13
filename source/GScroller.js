@@ -34,12 +34,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	/* Dependencies */
-	using("Rect");
-	using("Renderer");			// FIXME
-	using("ScrollingRegion");
-	using("Surface");
-	using("Timer");	
-	
+	G.using("Rect");
+	G.using("Renderer");			// FIXME
+	G.using("ScrollingRegion");
+	G.using("Surface");
+	G.using("Timer");	
+
 	/**
 	 * @constructor
 	 */

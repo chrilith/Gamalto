@@ -34,10 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	using("Rect");
-	using("Surface");
-	using("Timer");
-	using("Vector");
+	G.using("Rect");
+	G.using("Surface");
+	G.using("Timer");
+	G.using("Vector");
 
 	/**
 	 * @constructor
