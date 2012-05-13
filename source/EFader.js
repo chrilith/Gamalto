@@ -105,7 +105,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 				c = o._cache;
 				if (!c || c.tag != i) {
-					c = new G.Pattern(s.bitmap, s.getSection(i));
+					c = new G.Pattern(s._bitmap, s.getSection(i));
 					c.tag = i;
 					o._cache = c;
 				}
