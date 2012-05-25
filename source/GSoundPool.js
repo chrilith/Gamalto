@@ -55,15 +55,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			that._done();
 			that._cb(that, name, false);
 		}
-		a.addEventListener("canplaythrough", function() {
-			a.removeEventListener("canplaythrough", arguments.callee, false);
 
+		// FIXME: not always fired in Chrome!!		
+		a.addEventListener("loadedmetadata", function() {
+			a.removeEventListener("loadedmetadata", arguments.callee, false);
 			that._list[name] = new G.Sound(a);
 			that._done();
 			that._cb(that, name, true);
 		}, false);
 
 		a.src = src;
+		a.load();
 	}
 
 })();
