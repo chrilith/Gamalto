@@ -139,4 +139,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._audio.addEventListener(what, this._onError, false);
 	}
 
+	/* Constants */
+	var constant = G.Sound;
+	
+	constant.MP3		= "audio/mpeg";
+	constant.OGG_VORBIS	= "audio/ogg";
+	constant.WAVE		= "audio/wav";
+
+	/* Static */
+	var test = new Audio(),
+		stat = G.Sound;
+
+	stat.isSupported = function(mime) {
+		return test.canPlayType(mime);
+	}
+	
 })();
