@@ -58,14 +58,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		audio.addEventListener("canplaythrought", this._handlePlayThrought.bind(this), false);
 
 		// Loop handling
-		audio.addEventListener("ended", this._handleEnded.bind(this), false);
+		audio.addEventListener("timeupdate", this._handleUpdate.bind(this), false);
 	}
 
 	var proto = G.Sound.inherits(G.Object);
 	
 	proto.play = function(loop) {
 		var a = this._audio;
-		a.loop = ((this._loop = loop | 1) > 1);
+		a.loop = ((this._loop = loop || 1) > 1);
 
 		// Save start time if the sound cannot be played immediately
 		this._startTime = Date.now();
@@ -110,9 +110,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto._handleEnded = function() {
-		if (--this._loop <= 0) {
-			this.stop();
+	proto._handleUpdate = function() {
+		if (this._playing) {
+			var loop = ((Date.now() - this._startTime) / this.duration) | 0;
+			if (this._loop == loop) {
+				this._audio.loop = false;
+			}
 		}
 	}
 
