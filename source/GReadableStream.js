@@ -40,12 +40,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._alloc(size);
 		this._position = 0;
 	}
-	
+
 	/* Inheritance and shortcut */
 	var proto = G.ReadableStream.inherits(G.Object);
 
 	proto._alloc = function(size) {
-		this._data = Array(size + 1).join(String.fromCharCode(0)).split("");
+		if (size > 0) {
+			this._data = Array(size + 1).join(String.fromCharCode(0)).split("");
+		}
 	}
 
 	proto.readByte = function() {
@@ -109,8 +111,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return s;
 	}
 
+	proto.seek = function(offset, origin) {
+		var C = G.Stream;
+
+		switch (origin) {
+			case C.SEEK_SET:
+				this._position = offset;
+				break;
+
+			case C.SEEK_CUR:
+				this._position += offset;
+				break;
+
+			case C.SEEK_END:
+				this._position = this.length - offset;
+				break;
+		}
+	}
+
 	proto.rewind = function() {
-		this._position = 0;
+		this.seek(0, G.Stream.SEEK_SET);
 	}
 
 })();
