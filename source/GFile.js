@@ -34,7 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.using("Convert");
+	G.require	("ReadableStream");
+	G.using		("Convert");
 
 	/**
 	 * @constructor
@@ -44,8 +45,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.File.inherits(G.Object);
-		
+	var proto = G.File.inherits(G.ReadableStream);
+
 	proto.open = function(url) {
 		this._position = 0;
 		this._url = url;
@@ -55,64 +56,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.readByte = function() {
 		this._shouldRead();
-		return this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
+		return this._getByteAt(-(this._initPos - this._position++));
 	}
 
-	/* Big Endian */
-
-	proto.readUInt16BE = function() {
-		var b = this.readByte(),
-			a = this.readByte();
-		return (b << 8) | a;
-	}
-	
-	proto.readSInt16BE = function() {
-		return G.Convert.toSInt16(this.readUInt16LE());
-	}
-
-	proto.readUInt32BE = function() {
-		var d = this.readByte(),
-			c = this.readByte(),
-			b = this.readByte(),
-			a = this.readByte();
-		return (d << 24) | (c << 16) | (b << 8) | a;
-	}
-
-	proto.readSInt32BE = function() {
-		return G.Convert.toSInt32(this.readUInt32BE());
-	}
-
-	/* Little Endian (JavaScript is little endian) */
-
-	proto.readUInt16LE = function() {
-		var a = this.readByte(),
-			b = this.readByte();
-		return (b << 8) | a;
-	}
-	
-	proto.readSInt16LE = function() {
-		return G.Convert.toSInt16(this.readUInt16LE());
-	}
-
-	proto.readUInt32LE = function() {
-		var a = this.readByte(),
-			b = this.readByte(),
-			c = this.readByte(),
-			d = this.readByte();
-		return (d << 24) | (c << 16) | (b << 8) | a;
-	}
-
-	proto.readSInt32LE = function() {
-		return G.Convert.toSInt32(this.readUInt32LE());
-	}
-
-	proto.readString = function(length, stopChar) {
-		var c, s = "";
-		for (var i = 0; i < length; i++) {
-			if ((c = this.readByte()) == (stopChar | 0)) { break; }
-			s += String.fromCharCode(c);
-		}
-		return s;
+	proto._getByteAt = function(position) {
+		return this._data.charCodeAt(position) & 0xff;
 	}
 
 	proto.seek = function(offset, origin) {
@@ -216,7 +164,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._part();
 		}		
 	}
-	
+
 	/* Constants */
 	var constant = G.File;
 
