@@ -56,11 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.readByte = function() {
 		this._shouldRead();
-		return this._getByteAt(-(this._initPos - this._position++));
-	}
-
-	proto._getByteAt = function(position) {
-		return this._data.charCodeAt(position) & 0xff;
+		return  this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
 	}
 
 	proto.seek = function(offset, origin) {
