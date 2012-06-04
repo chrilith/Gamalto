@@ -59,7 +59,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Instance methods */
 	proto._setRect = function(x, y, width, height) {
-		var u = undefined,
+		var u, // = undefined
 			r = this;
 	
 		if (width === u && height === u) {
