@@ -60,6 +60,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return  this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
 	}
 
+	proto.read = function(buffer, size) {
+		while(size--) {
+			buffer.writeByte(this.readByte());
+		}		
+	}
+
 	proto.seek = function(offset, origin) {
 		G.File.base.seek.apply(this, arguments);
 		
