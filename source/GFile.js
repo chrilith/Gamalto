@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.File = function() {
+		G.Object.base(this, 0);
 		this.cacheSize = 4096;	// Initial cache size
 	}
 
@@ -60,21 +61,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.seek = function(offset, origin) {
-		var C = G.File;
-
-		switch (origin) {
-			case C.SEEK_SET:
-				this._position = offset;
-				break;
-
-			case C.SEEK_CUR:
-				this._position += offset;
-				break;
-
-			case G.File.SEEK_END:
-				this._position = this.length - offset;
-				break;
-		}
+		G.File.base.seek.apply(this, arguments);
+		
 		// Invalidate current cached data if needed
 		if (!(this._position >= this._initPos &&
 			  this._position < (this._initPos + this._bufSize))) {
@@ -85,10 +73,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.tell = function() {
 		return (this._initPos + this._position);
-	}
-	
-	proto.rewind = function() {
-		this.seek(0, C.SEEK_SET);
 	}
 	
 	proto.eof = function() {
@@ -160,12 +144,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._part();
 		}		
 	}
-
-	/* Constants */
-	var constant = G.File;
-
-	constant.SEEK_SET = 0;
-	constant.SEEK_CUR = 1;
-	constant.SEEK_END = 2;
 
 })();
