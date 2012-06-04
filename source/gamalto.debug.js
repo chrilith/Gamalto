@@ -75,6 +75,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GCommandLine.js"></script> \
 		<script src="' + dir + 'GSoundPool.js"></script> \
 		<script src="' + dir + 'GSound.js"></script> \
+		<script src="' + dir + 'GReadableStream.js"></script> \
+		<script src="' + dir + 'GMemoryStream.js"></script> \
 		<script src="' + dir + 'GFile.js"></script> \
 		<script src="' + dir + 'GConvert.js"></script> \
 \
