@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readByte = function() {
-		return this._getByteAt(this._position++);
+		return this._data[this._position++].charCodeAt(0) & 0xff
 	}
 
 	/* Big Endian */
@@ -111,10 +111,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.rewind = function() {
 		this._position = 0;
-	}
-
-	proto._getByteAt = function(position) {
-		return this._data[position].charCodeAt(0) & 0xff;
 	}
 
 })();
