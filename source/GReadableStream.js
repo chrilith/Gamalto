@@ -53,6 +53,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readByte = function() {
 		return this._data[this._position++].charCodeAt(0) & 0xff
 	}
+	
+	proto.readUInt8 = function() {
+		return this.readByte();
+	}
+
+	proto.readSInt8 = function() {
+		return G.Convert.toSInt8(this.readUInt8());
+	}
 
 	/* Big Endian */
 
