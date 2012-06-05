@@ -103,15 +103,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						(status > 206) ? u :
 						(status == 0) ? -1 /* local */ :
 							(r.getResponseHeader("Content-Length") | 0))) {
-			
 			this._part();
 			this.length = this._bufSize;
+			/* CHECKME: here the whole data is already into memory.
+						What to do for internal async read? What is the result
+						in applicationCache mode?
+			*/
 		}
 	}
 
-	proto._open = function(mode) {
+	proto._open = function(mode/*, async */) {
 		var r = new XMLHttpRequest();
-		r.open(mode || "GET", this._url, false);
+		r.open(mode || "GET", this._url, arguments[1]);	// [1] = async, internal use only
 		//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 		// Should set responseType one day and read "reponse" to get an ArrayBuffer
 		r.overrideMimeType('text/plain; charset=x-user-defined');
@@ -149,6 +152,53 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			this._part();
 		}		
+	}
+
+	/* Special case for internal use to read data asynchronously.
+	   If range is not supported, the whole file will be read all the time */
+	proto._beginRead = function(buffer, offset, size, callback) {
+		var r = this._open(null, true);
+
+		// Optimize loading needed bytes only!
+		if (this._rangeSupported) {
+			r.setRequestHeader("Range", "bytes=" + offset + "-" + (offset + size - 1));
+		}
+		r.onreadystatechange = this._asyncRead.bind(this, buffer, offset, size, callback);
+		r.send(null);
+
+		return r;
+	}
+
+	proto._asyncRead = function(buffer, offset, size, callback, e) {
+		var xhr = e.target;
+		if (this._asyncResult(xhr)) {
+			var data = xhr.responseText;
+			
+			// If !_rangeSupported, size may be higher
+			size = (data.length > size) ? size : data.length;
+			offset = this._rangeSupported ? 0 : offset;
+
+			// Save data
+			while (size--) {
+				buffer.writeByte(data.charCodeAt(offset++) & 0xff);
+			}
+			// Execute callback if any
+			if (callback) {
+				callback(xhr);
+			}
+		}
+	}
+
+	proto._asyncResult = function(xhr) {
+		return xhr.readyState == 4 && 200 == ((xhr.status || 200) & 200);
+	}
+
+	proto._endRead = function(result) {
+		if (!this._asyncResult(result)) {
+			result.abort();
+		}
+		// free the callback
+		result.onreadystatechange = null;
 	}
 
 })();
