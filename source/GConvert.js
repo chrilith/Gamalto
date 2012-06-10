@@ -75,4 +75,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return value;
 	}
 	
+	/* Base64 encoder for binary data */
+	
+	var enc64 = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+				 "abcdefghijklmnopqrstuvwxyz" +
+				 "0123456789+/=").split("");
+
+	stat.toBase64 = function(binary) {
+		var output = "", i = 0,
+			chr1, chr2, chr3,
+			enc1, enc2, enc3, enc4;
+
+		do {
+			chr1 = binary.charCodeAt(i++) & 0xff;
+			chr2 = binary.charCodeAt(i++) & 0xff;
+			chr3 = binary.charCodeAt(i++) & 0xff;
+
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 &  3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+			
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+
+			output += enc64[enc1] + enc64[enc2] + enc64[enc3] + enc64[enc4];
+
+		} while (i < binary.length);
+
+		return output;
+	}
+	
 })();
