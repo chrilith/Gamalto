@@ -103,12 +103,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						(status > 206) ? u :
 						(status == 0) ? -1 /* local */ :
 							(r.getResponseHeader("Content-Length") | 0))) {
-			this._part();
-			this.length = this._bufSize;
-			/* CHECKME: here the whole data is already into memory.
-						What to do for internal async read? What is the result
-						in applicationCache mode?
+			/*
+				Here, the whole data is loaded into memory since HTTP is not
+				supported. TODO: Optimization may apply.
 			*/
+			this.length = (r.responseText || "").length;
 		}
 	}
 
