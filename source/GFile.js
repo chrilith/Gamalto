@@ -99,7 +99,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Length should be -1 only using "file" URL scheme...
 		if (-1 == (this.length =
-						(status > 206) ? u :
+						(status & 200 != 200) ? u :
 						(status == 0) ? -1 /* local */ :
 							(r.getResponseHeader("Content-Length") | 0))) {
 			/*
