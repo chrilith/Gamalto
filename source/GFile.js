@@ -91,12 +91,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._info = function() {
 		var u,	// = undefined
-			status, ranges,
-			r = this._open("HEAD");
+			status, r = this._open("HEAD");
 
 		r.send(null);
 		status = r.status;
-		ranges = this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
 
 		// Length should be -1 only using "file" URL scheme...
 		if (-1 == (this.length =
