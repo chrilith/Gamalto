@@ -170,7 +170,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._asyncRead = function(buffer, offset, size, callback, e) {
 		var xhr = e.target;
 		if (this._asyncResult(xhr)) {
-			var data = xhr.responseText;
+			var data = (xhr.responseText || "");
 			
 			// If !_rangeSupported, size may be higher
 			size = (data.length > size) ? size : data.length;
@@ -182,7 +182,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 			// Execute callback if any
 			if (callback) {
-				callback(xhr);
+				callback(buffer, xhr);
 			}
 		}
 	}
