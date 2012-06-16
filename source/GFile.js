@@ -54,6 +54,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// TODO: detect file not found
 		this._info();
 	}
+	
+	proto.close = function() {
+		this._data = null;
+		this._bufSize = 0;
+		this._url = null;
+	}
 
 	proto.readByte = function() {
 		this._shouldRead();
@@ -95,6 +101,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		r.send(null);
 		status = r.status;
+		this.mimeType = r.getResponseHeader("Content-Type") ||
+							"application/octet-stream";
 		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
 
 		// Length should be -1 only using "file" URL scheme...
