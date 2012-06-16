@@ -34,41 +34,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.using("Rect");
-	G.using("Renderer");
+	G.require	("Canvas");
+	G.using		("Rect");
+	G.using		("Renderer");
 
 	/**
 	 * @constructor
 	 */
 	G.Surface = function(width, height) {
-		this._initCanvas();
-		this.setSize(width, height);
+		G.Object.base(this, width, height);
 		this.disableClipping();
 	};
 	
 	/* Inheritance and shortcut */
-	var proto = G.Surface.inherits(G.Object);
+	var proto = G.Surface.inherits(G.Canvas);
 	
 	proto._initCanvas = function() {
-		this._canvas = document.createElement("canvas");	
+		G.Surface.base._initCanvas.call(this);
 		this.renderer = new G.Renderer(this);
 	//	this._canvas.style.zIndex = 0;
 	}
-	
-	proto._applySize = function() {
-		var o = this,
-			c = o._canvas;
-		c.width = o.width;
-		c.height = o.height;
-		o._context = c.getContext("2d");
-	}
-	
+		
 	/* Instance methods */
 	proto.setSize = function(width, height) {
-		var that	= this;
-		that.width	= width  || 320;
-		that.height	= height || 240;
-		that._applySize();
+		G.Surface.base.setSize.call(this, width, height);
 		that._area = new G.Rect(0, 0, that.width, that.height);	// Used by G.Renderer
 	}
 	
