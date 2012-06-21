@@ -51,7 +51,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readByte = function() {
-		return this._data[this._position++].charCodeAt(0) & 0xff
+		return this._data[this._position++].charCodeAt(0) & 0xff;
 	}
 	
 	proto.readUInt8 = function() {
