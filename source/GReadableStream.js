@@ -119,8 +119,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return s;
 	}
 
+	proto.tell = function() {
+		return this._position;
+	}
+
+	proto.eos = function() {
+		return this.tell() >= this.length;
+	}
+
 	proto.seek = function(offset, origin) {
-		var C = G.Stream;
+		var C = G.Stream,
+			undef;
+		
+		if (origin === undef) {
+			origin = C.SEEK_SET;
+		}
 
 		switch (origin) {
 			case C.SEEK_SET:
@@ -135,10 +148,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._position = this.length - offset;
 				break;
 		}
-	}
-
-	proto.rewind = function() {
-		this.seek(0, G.Stream.SEEK_SET);
 	}
 
 })();
