@@ -87,10 +87,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return (this._initPos + this._position);
 	}
 	
-	proto.eof = function() {
-		return false;	// TODO
-	}
-	
 	proto.error = function() {
 		return false;	// TODO
 	}
