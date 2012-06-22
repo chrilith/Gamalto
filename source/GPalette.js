@@ -1,5 +1,5 @@
 /*
- * Gamalto.Bitmap
+ * Gamalto.Palette
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
@@ -32,21 +32,82 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
-	
+
+	/* Dependencies */
+	G.using("Color");
+	G.using("Timer");
+
 	/**
 	 * @constructor
 	 */
-	G.Bitmap = function(source) {
-		this.width = source.width;
-		this.height = source.height;
+	G.Palette = function(colors) {
+		this._list = colors || [];
+		this._animators = [];
+		this.length = 0;
+	}
 
-		this._source = source;	// This is the source object
-		this._canvas = source;	// This is the data to be rendered
-		// TODO: more generic name for _canvas
+	/* Inheritance */
+	var proto = G.Palette.inherits(G.Object);
+	
+	/* Instance methods */
+	proto.addColor = function(color) {
+		this._list.push(color);
+		this.length++;
+	}
+
+	proto.setColor = function(index, color) {
+		if (index < this.length) {
+			this._list[index] = color;
+		}
+	}
+
+	proto.getColor = function(index) {
+		return this._list[index];
+	}
+
+	proto.addAnimator = function(from, to, delay) {
+		this._animators.push({
+			speed	 : 1 / delay,
+			step	 : from < to ? +1 : -1,
+			from	 : from,
+			to		 : to,
+			curr	 : 0
+		});
+	}
+
+	proto.update = function(timer) {
+		var n, r, anim = this._animators;
+
+		for (var n = 0; n < anim.length; n++) {
+
+			// Compute number of required iterations based on elapsed time
+			if ((r = (anim[n].curr += timer.elapsedTime * anim[n].speed) | 0)) {
+
+				anim[n].curr -= r; // Save fractional part
+				while (r--) {
+					this.swap(n);
+				}
+
+			}
+		}
+	}
+
+	proto.swap = function(index) {
+			var anim = this._animators[index],
+				list = this._list,
+				step = anim.step,
+				from = anim.from,
+				to	 = anim.to,
+				col	 = list[from];
+				i	 = 0,
+
+		len = (anim.to - anim.from) * step;
+		while (i < len) {
+			var n = from + i * step;
+			list[n] = list[n + step];
+			i++;
+		}
+		list[to] = col;		
 	}
 	
-	/* Inheritance */
-	G.Bitmap.inherits(G.Object);
-
 })();
-
