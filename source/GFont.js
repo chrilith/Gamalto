@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.require	("SectionList");
+	G.require	("SpriteSheet");
 	G.using		("Bitmap");
 	G.using		("Color");
 	G.using		("Rect");
