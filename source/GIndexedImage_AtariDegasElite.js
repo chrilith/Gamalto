@@ -49,6 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		reader	: decoder
 	});
 
+	// Will be called in the context on the calling IndexedImage instance
 	function decoder(buffer) {
 		var palette, data, width, height, x, y, word = [];
 	
