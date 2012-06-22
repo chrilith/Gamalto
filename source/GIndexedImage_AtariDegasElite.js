@@ -45,19 +45,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	base._addDecoder({
 		mime	: "application/octet-stream",
-		ext		: [".pi1"],
+		ext		: [".pi1", ".pi2", ".pi3"],
 		reader	: decoder
 	});
 
 	function decoder(buffer) {
-		var palette, data, width, height, x, y;
+		var palette, data, width, height, x, y, word = [];
 	
 		// Not low resolution?
-		if (buffer.readUInt16BE() != 0) {
-			return null;
-		} else {
-			width = 320;
-			height = 200;
+		var rez = buffer.readUInt16BE();
+		if (rez == 0) {
+			width	= 320;
+			height	= 200;
+			bits	= 4;
+		} else if (rez == 1) {
+			width	= 640;
+			height	= 200;
+			bits	= 2;
+		} else if (rez == 2) {
+			width	= 640;
+			height	= 400;
+			bits	= 1;
 		}
 
 		// Get palette
@@ -70,24 +78,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			palette.addColor(new G.Color(r, g, b));
 		}
-
+		
 		// Image data
+		var iter = Math.pow(2, bits);
 		data = new G.MemoryStream(width * height);
+
 		for (y = 0; y < height; y++) {
 			for (x = 0; x < width / 16; x++) {
-				var p1 = buffer.readUInt16BE(),
-					p2 = buffer.readUInt16BE(),
-					p3 = buffer.readUInt16BE(),
-					p4 = buffer.readUInt16BE();
+
+				for (i = 0; i < bits; i++) {
+					word[i] = buffer.readUInt16BE();
+				}
 
 				for (b = 0; b < 16; b++) {
-					var d = 15 - b,
-						b1 = (p1 & (1 << d)) >> d,
-						b2 = (p2 & (1 << d)) >> d,
-						b3 = (p3 & (1 << d)) >> d,
-						b4 = (p4 & (1 << d)) >> d,
+					var pix = 0, sft = (15 - b);
 
-						pix = (b1 << 0) | (b2 << 1) | (b3 << 2) | (b4 << 3);
+					for (i = 0; i < bits; i++) {
+						pix |= ((word[i] & (1 << sft)) >> sft) << i;
+					}
 
 					data.writeByte(pix);
 				}
@@ -110,7 +118,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					info[x] = buffer.readUInt16BE();
 					buffer.seek(8 - 2, G.Stream.SEEK_CUR);
 				} while (++x < 4);
-	
+
 				if (info[2] != 1) {
 					palette.addAnimator(
 						info[2] == 0 ? info[0] : info[1],
