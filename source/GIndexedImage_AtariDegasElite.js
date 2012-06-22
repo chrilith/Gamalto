@@ -31,8 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-// TOOD: Only PI1 files for now
-
 (function() {
 	/* Dependencies */
 	G.require	("IndexedImage");
