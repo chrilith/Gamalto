@@ -68,6 +68,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GSequence.js"></script> \
 		<script src="' + dir + 'GState.js"></script> \
 		<script src="' + dir + 'GColor.js"></script> \
+		<script src="' + dir + 'GPalette.js"></script> \
 		<script src="' + dir + 'GPattern.js"></script> \
 		<script src="' + dir + 'GEvent.js"></script> \
 		<script src="' + dir + 'GEventManager.js"></script> \
@@ -81,6 +82,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GMemoryStream.js"></script> \
 		<script src="' + dir + 'GFile.js"></script> \
 		<script src="' + dir + 'GConvert.js"></script> \
+		<script src="' + dir + 'GIndexedImage.js"></script> \
+		<script src="' + dir + 'GIndexedImage_AtariDegasElite.js"></script> \
+		<script src="' + dir + 'GIndexedBitmap.js"></script> \
 \
 		<script src="' + dir + 'EFader.js"></script> \
 	');
