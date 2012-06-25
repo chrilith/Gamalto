@@ -82,6 +82,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GMemoryStream.js"></script> \
 		<script src="' + dir + 'GFile.js"></script> \
 		<script src="' + dir + 'GConvert.js"></script> \
+		<script src="' + dir + 'GDecoder.js"></script> \
+		<script src="' + dir + 'GDecoder_RLE.js"></script> \
+		<script src="' + dir + 'GDecoder_RLE-IFF.js"></script> \
+		<script src="' + dir + 'GDecoder_Interleaved.js"></script> \
 		<script src="' + dir + 'GIndexedImage.js"></script> \
 		<script src="' + dir + 'GIndexedImage_AtariDegasElite.js"></script> \
 		<script src="' + dir + 'GIndexedBitmap.js"></script> \
