@@ -168,7 +168,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._toCanvas = function(refresh) {
-		if (refresh || !this._renedered) {
+		if (refresh || !this._rendered) {
 			var all = this.width * this.height,
 				pix = 0;
 	
@@ -176,7 +176,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			do { this._setPixel(pix++, this._data.readByte()); } while (pix < all);
 	
 			this._canvas._copyRawBuffer(this._image);
-			this._renedered = true;
+			this._rendered = true;
 		}
 		return this._canvas._canvas;
 	}
