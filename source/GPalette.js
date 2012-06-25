@@ -88,6 +88,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			}
 		}
+		// Whether the palette has been updated
+		return !!r;
 	}
 
 	proto.swap = function(index) {
