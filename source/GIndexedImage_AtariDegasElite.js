@@ -41,18 +41,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Local */
 	var base = G.IndexedImage;
 
-	base._addDecoder({
+	base.addModule({
 		mime	: "application/octet-stream",
-		ext		: [".pi1", ".pi2", ".pi3"],
-		reader	: decoder
+		ext		: [".pi1", ".pi2", ".pi3", ".pc1", ".pc2", ".pc3"],
+		reader	: module
 	});
 
 	// Will be called in the context on the calling IndexedImage instance
-	function decoder(buffer) {
-		var palette, data, width, height, x, y, word = [];
+	function module(buffer) {
+		var palette, data, width, height, x, y, bits;
 	
 		// Not low resolution?
-		var rez = buffer.readUInt16BE();
+		var packed = !!buffer.readByte(),
+			rez	= buffer.readByte();
+
 		if (rez == 0) {
 			width	= 320;
 			height	= 200;
@@ -66,7 +68,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			height	= 400;
 			bits	= 1;
 		}
-
+		
 		// Get palette
 		palette = new G.Palette();
 		for (x = 0; x < 16; x++) {
@@ -78,28 +80,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			palette.addColor(new G.Color(r, g, b));
 		}
 		
-		// Image data
-		var iter = Math.pow(2, bits);
-		data = new G.MemoryStream(width * height);
+		var temp, dec = G.Decoder;
 
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width / 16; x++) {
-
-				for (i = 0; i < bits; i++) {
-					word[i] = buffer.readUInt16BE();
-				}
-
-				for (b = 0; b < 16; b++) {
-					var pix = 0, sft = (15 - b);
-
-					for (i = 0; i < bits; i++) {
-						pix |= ((word[i] & (1 << sft)) >> sft) << i;
-					}
-
-					data.writeByte(pix);
-				}
-			}
+		if (packed) {
+			data = new G.MemoryStream(32000);
+			dec.get("RLE-IFF")
+				(buffer, data, bits, width, height);
+			data.seek(0);
+		} else {
+			data = buffer;
 		}
+
+		// Image data
+		temp = new G.MemoryStream(width * height);
+		data = dec.get("Interleaved")(data, temp, width, height, bits);
 
 		// Palette animations if any
 		if (!buffer.eos()) {
@@ -122,12 +116,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					palette.addAnimator(
 						info[2] == 0 ? info[0] : info[1],
 						info[2] == 0 ? info[1] : info[0],
-						(128 - info[3]) / 60 * 1500);	// 1500 to adjust perceived speed
+						(128 - info[3]) / 60 * 1000);
 				}
 			} while (++y < 4);
 		}
 
 		return [palette, data, width, height];
-	}	
-	
+	}
+
 })();
