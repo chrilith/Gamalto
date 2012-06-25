@@ -45,6 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.defineProperty(this, "_canvas", {
 			get: function() {
 				return source._toCanvas(this._updated);
+				this._updated = false;
 			},
 			enumerable: false
 		});
