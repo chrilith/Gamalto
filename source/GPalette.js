@@ -76,20 +76,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.update = function(timer) {
-		var n, r, anim = this._animators;
+		var n, r, anim = this._animators, changed;
 
 		for (var n = 0; n < anim.length; n++) {
 
 			// Compute number of required iterations based on elapsed time
 			if ((r = (anim[n].curr += timer.elapsedTime * anim[n].speed) | 0)) {
-
+				changed = r;
 				anim[n].curr -= r; // Save fractional part
 				while (r--) { this.swap(n); }
 
 			}
 		}
 		// Whether the palette has been updated
-		return !!r;
+		return !!changed;
 	}
 
 	proto.swap = function(index) {
