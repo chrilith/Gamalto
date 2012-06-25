@@ -143,7 +143,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._data		= data[1];
 			this.width		= data[2];
 			this.height		= data[3];
-	
+
 			// TODO: use setSize()?
 			this._image =
 				(this._canvas = new G.Canvas(data[2], data[3]))
@@ -167,14 +167,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		data[p + 3] = c.a;
 	}
 
-	proto._toCanvas = function() {
-		var all = this.width * this.height,
-			pix = 0;
-
-		this._data.seek(0);
-		do { this._setPixel(pix++, this._data.readByte()); } while (pix < all);
-
-		this._canvas._copyRawBuffer(this._image);
+	proto._toCanvas = function(refresh) {
+		if (refresh || !this._renedered) {
+			var all = this.width * this.height,
+				pix = 0;
+	
+			this._data.seek(0);
+			do { this._setPixel(pix++, this._data.readByte()); } while (pix < all);
+	
+			this._canvas._copyRawBuffer(this._image);
+			this._renedered = true;
+		}
 		return this._canvas._canvas;
 	}
 

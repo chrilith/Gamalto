@@ -44,18 +44,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		Object.defineProperty(this, "_canvas", {
 			get: function() {
-				return source._toCanvas();
+				return source._toCanvas(this._updated);
 			},
 			enumerable: false
 		});
 	}
-	
+
 	/* Inheritance */
 	var proto = G.IndexedBitmap.inherits(G.Bitmap);
 
 	/* Instance methods */
 	proto.animate = function(timer) {
-		this._source._palette.update(timer);
+		this._updated = this._source._palette.update(timer);
 	}
 
 })();
