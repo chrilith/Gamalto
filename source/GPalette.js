@@ -84,9 +84,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if ((r = (anim[n].curr += timer.elapsedTime * anim[n].speed) | 0)) {
 
 				anim[n].curr -= r; // Save fractional part
-				while (r--) {
-					this.swap(n);
-				}
+				while (r--) { this.swap(n); }
 
 			}
 		}
