@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.mimeType = r.getResponseHeader("Content-Type") ||
 							"application/octet-stream";
 		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
-
+		
 		// Length should be -1 only using "file" URL scheme...
 		if (-1 == (this.length =
 						(status & 200 != 200) ? u :
@@ -112,6 +112,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			*/
 			this.length = (r.responseText || "").length;
 		}
+
+		// TODO: handle error with "status"
 	}
 
 	proto._open = function(mode/*, async */) {
