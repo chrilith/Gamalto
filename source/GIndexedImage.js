@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.using("Palette");
 
 	/* Local */
-	var decoders = [];
+	var modules = [];
 
 	/**
 	 * @constructor
@@ -64,14 +64,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	var stat = G.IndexedImage;
 
-	stat._addDecoder = function(decoder) {
-		decoders.push(decoder);
+	stat.addModule = function(module) {
+		modules.push(module);
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.IndexedImage.inherits(G.Object);
 
-	proto._findDecoder = function() {
+	proto._findModule = function() {
 		var i, u = this._url,
 			p1 = u.indexOf('?'),
 			p2 = u.indexOf('#');
@@ -86,12 +86,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		p2 = u.lastIndexOf(".");
 		u = u.substr(p2 > p1 ? p2 : u.length).toLowerCase();
 
-		// Decoder lookup
-		for (i = 0; i < decoders.length; i++) {
-			if (decoders[i].ext.indexOf(u) != -1 &&
-				decoders[i].mime == this._file.mimeType) {
+		// Module lookup
+		for (i = 0; i < modules.length; i++) {
+			if (modules[i].ext.indexOf(u) != -1 &&
+				modules[i].mime == this._file.mimeType) {
 				
-				return decoders[i].reader;
+				return modules[i].reader;
 			}
 		}
 		return null;
@@ -102,13 +102,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Open the file and get info
 		file.open(this._url);
-		
-		// Find the proper decoder
-		if ((this._decoder = this._findDecoder())) {
+
+		// Find the proper module
+		if ((this._module = this._findModule())) {
 
 			// Allocate temporary buffer
 			var buf = new G.MemoryStream(file.length);
-	
+
 			// Read data
 			file._beginRead(buf, 0,
 							file.length,
@@ -128,7 +128,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._ended = function(buffer, result) {
 		buffer.seek(0);
 
-		var dec  = this._decoder;
+		var dec  = this._module;
 			data = dec ? dec.call(this, buffer) : null;
 
 		this._file._endRead(result);
