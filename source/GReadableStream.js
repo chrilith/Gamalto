@@ -46,6 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._alloc = function(size) {
 		if (size > 0) {
+			this.length = size;
 			this._data = Array(size + 1).join(String.fromCharCode(0)).split("");
 		}
 	}
