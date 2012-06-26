@@ -58,7 +58,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Instance methods */
 	proto.setSize = function(width, height) {
 		G.Surface.base.setSize.call(this, width, height);
-		that._area = new G.Rect(0, 0, that.width, that.height);	// Used by G.Renderer
+		this._area = new G.Rect(0, 0, width, height);	// Used by G.Renderer
 	}
 	
 	proto.enableClipping = function(x, y, width, height) {
