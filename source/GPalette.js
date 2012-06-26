@@ -43,6 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Palette = function(colors) {
 		this._list = colors || [];
 		this._animators = [];
+		this._animated = [];
 		this.length = 0;
 	}
 
@@ -66,13 +67,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.addAnimator = function(from, to, delay) {
+		var step = from < to ? +1 : -1,
+			iter = (to - from) * step;
+
 		this._animators.push({
 			speed	 : 1 / delay,
-			step	 : from < to ? +1 : -1,
+			step	 : step,
 			from	 : from,
 			to		 : to,
 			curr	 : 0
 		});
+
+		// Cache cycling color indices
+		do {
+			this._animated[from] = true;
+			from += step;
+		} while(iter--);
+	}
+	
+	proto.isAnimated = function(index) {
+		return this._animated[index];
 	}
 
 	proto.update = function(timer) {
