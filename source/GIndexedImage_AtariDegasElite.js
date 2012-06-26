@@ -121,6 +121,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			} while (++y < 4);
 		}
 
+		data.seek(0);
 		return [palette, data, width, height];
 	}
 

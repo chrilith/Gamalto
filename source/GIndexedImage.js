@@ -128,26 +128,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._ended = function(buffer, result) {
 		buffer.seek(0);
 
-		var dec  = this._module;
+		var dec  = this._module,
 			data = dec ? dec.call(this, buffer) : null;
 
 		this._file._endRead(result);
 		this._file.close();
 
 		if (!data) {
-			this._data = null;
 			this._error();
 
 		} else {
 			this._palette	= data[0];
-			this._data		= data[1];
 			this.width		= data[2];
-			this.height		= data[3];
+			this.height		= data[3];			
 
 			// TODO: use setSize()?
 			this._image =
 				(this._canvas = new G.Canvas(data[2], data[3]))
 					._createRawBuffer();
+
+			// Render the first pass and save cached data
+			this._prepare(data[1]);
 	
 			// TODO
 			if (this.onload) {
@@ -168,17 +169,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._toCanvas = function(refresh) {
-		if (refresh || !this._rendered) {
-			var all = this.width * this.height,
-				pix = 0;
-	
-			this._data.seek(0);
-			do { this._setPixel(pix++, this._data.readByte()); } while (pix < all);
-	
+		if (refresh) {
+			var all = this._cache.length, curr;
+
+			while (all--) {
+				curr = this._cache[all];
+				this._setPixel(curr.pixel, curr.index);
+			}
+
+			// Here we loose lots of time!
+			// TODO: add image.data management in Surface ???
 			this._canvas._copyRawBuffer(this._image);
-			this._rendered = true;
 		}
 		return this._canvas._canvas;
+	}
+
+	proto._prepare = function(data) {
+		var idx, pix = 0;
+		this._cache = [];
+
+		while (!data.eos()) {
+			idx = data.readByte();
+			this._setPixel(pix, idx);
+
+			if (this._palette.isAnimated(idx)) {
+				this._cache.push({ pixel : pix, index : idx });
+			}
+			pix++;
+		}
+
+		this._canvas._copyRawBuffer(this._image);
 	}
 
 })(ENV);
