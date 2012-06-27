@@ -123,5 +123,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		list[to] = col;		
 	}
+
+	/* The use of methods and objects to access colors is extremily slower
+	   than using direct access and array. This method allows a really great
+	   optimization while rendering in IndexedImage.
+	*/
+	proto._colorsAsArray = function() {
+		var colors, n, colors = [];
+		for (n = 0; n < this.length; n++) {
+			color = this._list[n];
+			colors[n] = [color.r, color.g, color.b];
+		}
+		return colors;
+	}
 	
 })();
