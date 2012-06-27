@@ -56,7 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Instance methods */
 	proto.animate = function(timer) {
-		return (this._updated = this._source._palette.update(timer));
+		this._updated = this._source._palette.update(timer);
 	}
 
 })();
