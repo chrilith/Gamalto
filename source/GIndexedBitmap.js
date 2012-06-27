@@ -44,8 +44,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		Object.defineProperty(this, "_canvas", {
 			get: function() {
-				return source._toCanvas(this._updated);
+				var refresh = this._updated;
 				this._updated = false;
+				return source._toCanvas(refresh);
 			},
 			enumerable: false
 		});
@@ -53,7 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Inheritance */
 	var proto = G.IndexedBitmap.inherits(G.Bitmap);
-
+	
 	/* Instance methods */
 	proto.animate = function(timer) {
 		return (this._updated = this._source._palette.update(timer));
