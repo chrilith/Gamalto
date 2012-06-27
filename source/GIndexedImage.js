@@ -179,9 +179,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			// Here we loose lots of time!
 			// TODO: add image.data management in Surface ???
-			this._canvas._copyRawBuffer(this._image);
+			//this._canvas._copyRawBuffer(this._image);
 		}
-		return this._canvas._canvas;
+		return this._image;
+		//return this._canvas._canvas;
 	}
 
 	proto._prepare = function(data) {
@@ -198,7 +199,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			pix++;
 		}
 
-		this._canvas._copyRawBuffer(this._image);
+		//this._canvas._copyRawBuffer(this._image);
 	}
 
 })(ENV);
