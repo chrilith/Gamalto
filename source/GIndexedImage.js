@@ -157,23 +157,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto._setPixel = function(data, p, color) {
-		color = this._palette.getColor(color);
-		data[p + 0] = color.r;
-		data[p + 1] = color.g;
-		data[p + 2] = color.b;
-		data[p + 3] = color.a;
-	}
-
 	proto._toCanvas = function(refresh) {
 		if (refresh) {
-			var curr,
-				all = this._cache.length,
-				dest = this._image.data;
+			var n, curr, color, index, pixel,
+				dest	= this._image.data,
+				colors	= this._palette._colorsAsArray();
 
-			while (all--) {
-				curr = this._cache[all];
-				this._setPixel(dest, curr[0], curr[1]);
+			for (var n = 0; n < this._cache.length; n++) {
+				curr	= this._cache[n];
+				pixel	= curr[0];
+				index	= curr[1];
+				color	= colors[index];
+
+				dest[pixel + 0] = color[0];
+				dest[pixel + 1] = color[1];
+				dest[pixel + 2] = color[2];
+				dest[pixel + 3] = 255;
 			}
 			this._canvas._copyRawBuffer(this._image);
 		}
@@ -181,18 +180,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._prepare = function(data) {
-		var idx, pix = 0,
-			dest = this._image.data;
+		var color, index, pixel = 0,
+			dest	= this._image.data,
+			colors	= this._palette._colorsAsArray();
+
 		this._cache = [];
-
 		while (!data.eos()) {
-			idx = data.readByte();
-			this._setPixel(dest, pix, idx);
+			index = data.readByte();
+			color = colors[index];
 
-			if (this._palette.isAnimated(idx)) {
-				this._cache.push([pix, idx]);
+			dest[pixel + 0] = color[0];
+			dest[pixel + 1] = color[1];
+			dest[pixel + 2] = color[2];
+			dest[pixel + 3] = 255;
+
+			if (this._palette.isAnimated(index)) {
+				this._cache.push([pixel, index]);
 			}
-			pix += 4;
+			pixel += 4;
 		}
 		this._canvas._copyRawBuffer(this._image);
 	}
