@@ -56,35 +56,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 		
 	/* Instance methods */
+	proto.setSize = function(width, height) {
+		G.Surface.base.setSize.call(this, width, height);
+		this._area = new G.Rect(0, 0, width, height);	// Used by G.Renderer
+	}
+	
 	proto.enableClipping = function(x, y, width, height) {
-		var ctx = this._context;
-
-		if (this._isClipping) {
-			this.disableClipping();
-		}
-
-		ctx.save();
-		ctx.beginPath();
-		ctx.rect(x, y, width, height);
-		ctx.clip();
+		this._clipping = new G.Rect(x, y, width, height);
 	}
 	
 	proto.disableClipping = function() {
-		this._context.restore();
+		this._clipping = null;
 	}
 	
 	proto.blit = function(s, x, y) {
-		// Everything is handled by the JavaScript engine
-		this.renderer._reset();
-		this._context.drawImage(s._canvas, x, y);
-	}
+		var cp = this._clipping,
+			cx = this._context;
 
+		this.renderer._reset();
+		if (!cp) {
+			// Everything is handled by the JavaScript engine
+			cx.drawImage(s._canvas, x, y);
+		} else {
+			var r = new G.Rect(x, y, s.width, s.height).intersecting(cp);
+	
+			if (r !== null) {
+				var dx = r.tL.x,
+					dy = r.tL.y,
+					sx = dx - x,
+					sy = dy - y,
+					ww = r.bR.x - dx + 1,
+					hh = r.bR.y - dy + 1;
+		
+				cx.drawImage(s._canvas, sx, sy, ww, hh, dx, dy, ww, hh);
+			}
+		}
+	}
+	
 	proto.redraw = function(s, x, y, list) {
 		if (list) {
 			var len = list.length | 0,
 				o = this, n, i, r,
 				c = o._clipping || new G.Rect(0, 0, o.width, o.height);
-
+	
 			for (n = 0; n < len; n++) {
 				r = list[n].offset(x, y).intersecting(c);
 	
