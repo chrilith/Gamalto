@@ -157,47 +157,43 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto._setPixel = function(p, color) {
-		var data = this._image.data,
-			c = this._palette.getColor(color);
-
-		p <<= 2;
-		data[p + 0] = c.r;
-		data[p + 1] = c.g;
-		data[p + 2] = c.b;
-		data[p + 3] = c.a;
+	proto._setPixel = function(data, p, color) {
+		color = this._palette.getColor(color);
+		data[p + 0] = color.r;
+		data[p + 1] = color.g;
+		data[p + 2] = color.b;
+		data[p + 3] = color.a;
 	}
 
 	proto._toCanvas = function(refresh) {
 		if (refresh) {
-			var all = this._cache.length, curr;
+			var curr,
+				all = this._cache.length,
+				dest = this._image.data;
 
 			while (all--) {
 				curr = this._cache[all];
-				this._setPixel(curr.pixel, curr.index);
+				this._setPixel(dest, curr[0], curr[1]);
 			}
-
-			// Here we loose lots of time!
-			// TODO: add image.data management in Surface ???
 			this._canvas._copyRawBuffer(this._image);
 		}
 		return this._canvas._canvas;
 	}
 
 	proto._prepare = function(data) {
-		var idx, pix = 0;
+		var idx, pix = 0,
+			dest = this._image.data;
 		this._cache = [];
 
 		while (!data.eos()) {
 			idx = data.readByte();
-			this._setPixel(pix, idx);
+			this._setPixel(dest, pix, idx);
 
 			if (this._palette.isAnimated(idx)) {
-				this._cache.push({ pixel : pix, index : idx });
+				this._cache.push([pix, idx]);
 			}
-			pix++;
+			pix += 4;
 		}
-
 		this._canvas._copyRawBuffer(this._image);
 	}
 
