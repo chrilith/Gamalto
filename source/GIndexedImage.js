@@ -163,7 +163,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				dest	= this._image.data,
 				colors	= this._palette._colorsAsArray();
 
-			for (var n = 0; n < this._cache.length; n++) {
+			for (n = 0; n < this._cache.length; n++) {
 				curr	= this._cache[n];
 				pixel	= curr[0];
 				index	= curr[1];
