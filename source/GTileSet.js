@@ -52,7 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			w = t.width,
 			h = t.height;
 
-		if ((tw && tw != w) || (h && th != h)) {
+		if ((tw && tw != w) || (th && th != h)) {
 			throw "Gamalto: Additional tiles must have the same size.";
 		}
 
