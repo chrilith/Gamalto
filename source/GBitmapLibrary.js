@@ -36,6 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	G.require	("BaseLibrary");
 	G.using		("Bitmap");
+	G.using		("IndexedBitmap");	// TODO: allow optional indexed usage
+	G.using		("IndexedImage");
 
 	/**
 	 * @constructor
@@ -47,18 +49,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Inheritance and shortcut */
 	var proto = G.BitmapLibrary.inherits(G.BaseLibrary);
 	
-	proto.loadItem = function(name, src) {
+	proto.loadItem = function(name, src, indexed) {
 		G.BitmapLibrary.base.loadItem.call(this);
 		
-		var i = new Image();
-		var that = this;
-	
+		var i = (indexed) ?
+			new G.IndexedImage() : new Image(),
+			that = this;
+
 		i.onabort = i.onerror = function() {
 			that._done();
 			that._cb(that, name, false);
 		}
 		i.onload = function() {
-			that._list[name] = new G.Bitmap(i);
+			that._list[name] = (indexed) ?
+				new G.IndexedBitmap() : new G.Bitmap(i);
 			that._done();
 			that._cb(that, name, true);
 		}
