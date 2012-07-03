@@ -49,6 +49,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GSpriteSheet.js"></script> \
 		<script src="' + dir + 'GAnimation.js"></script> \
 		<script src="' + dir + 'GTileSet.js"></script> \
+		<script src="' + dir + 'GTileGroup.js"></script> \
+		<script src="' + dir + 'GTileMap.js"></script> \
+		<script src="' + dir + 'GTiledBlock.js"></script> \
+		<script src="' + dir + 'GTiledAnimation.js"></script> \
 		<script src="' + dir + 'GFont.js"></script> \
 		<script src="' + dir + 'GTiming.js"></script> \
 		<script src="' + dir + 'GTimer.js"></script> \
