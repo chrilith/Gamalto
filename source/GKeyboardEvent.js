@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.KeyboardEvent = function(type) {
-		G.Object.base(this, type);
+		Object.base(this, type);
 	//	this._repeat	// is repeating
 	}
 
