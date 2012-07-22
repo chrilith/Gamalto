@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.TiledBlock = function(ts, data, width, height) {
-		G.Object.base(this, data, width, height);
+		Object.base(this, data, width, height);
 		this._tileSet = ts;
 	}
 	

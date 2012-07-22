@@ -47,7 +47,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.TileMap = function(ts, data, width, height, viewWidth, viewHeight) {
-		G.Object.base(this, data, width, height);
+		Object.base(this, data, width, height);
 		this.setViewport(viewWidth, viewHeight);
 		this.setOrigin(0, 0);
 		this.setOverflow(0, 0, 0, 0);
