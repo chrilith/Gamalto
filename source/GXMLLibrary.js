@@ -39,7 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.XMLLibrary = function(complete) {
-		G.Object.base(this, complete);
+		Object.base(this, complete);
 	}
 	
 	var proto = G.XMLLibrary.inherits(G.BaseLibrary);
