@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'Gamalto.js"></script> \
 		<script src="' + dir + 'Compat.js"></script> \
 		<script src="' + dir + 'GObject.js"></script> \
+		<script src="' + dir + 'OOP.js"></script> \
 		<script src="' + dir + 'Extensions.js"></script> \
 		<script src="' + dir + 'Missing.js"></script> \
 	\
