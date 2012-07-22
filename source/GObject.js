@@ -43,7 +43,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var object = G.Object;
 	
 	object.base = function (that) {
-		var caller = (G.Object.base || arguments.callee).caller,
+		// FIXME: this is weird, G.Object.base supposed to be always defined...
+		var caller = (/*G.Object.base || */arguments.callee).caller,
 			base = caller.__base__;
 
 		if (base) {
