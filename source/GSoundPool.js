@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.SoundPool = function(complete) {
-		G.Object.base(this, complete);
+		Object.base(this, complete);
 	}
 
 	var proto = G.SoundPool.inherits(G.BaseLibrary);
