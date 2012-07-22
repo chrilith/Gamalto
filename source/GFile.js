@@ -41,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.File = function() {
-		G.Object.base(this, 0);
+		Object.base(this, 0);
 		this.cacheSize = 4096;	// Initial cache size
 	}
 
