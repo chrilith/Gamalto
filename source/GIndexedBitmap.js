@@ -39,7 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	
 	G.IndexedBitmap = function(source) {
-		G.Object.base(this, source);
+		Object.base(this, source);
 		delete this._canvas;
 
 		Object.defineProperty(this, "_canvas", {
