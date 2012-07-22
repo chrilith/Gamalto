@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.SpriteSheet = function(bitmap, r, count, tw, th) {
 		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
-		G.Object.base(this, r, count, tw, th);
+		Object.base(this, r, count, tw, th);
 		this._bitmap = bitmap;
 	}
 	
