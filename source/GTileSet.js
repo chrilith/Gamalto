@@ -63,10 +63,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._createSection = function(x, y, w, h) {
 		return new this._T(x, y, w, h);
 	}
-
-	proto.getSection = function(i) {
-		return this._list[i | 0].rect;
+	
+	proto.draw = function(renderer, x, y, i) {
+		renderer.drawBitmapSection(this._bitmap, x, y, this.getSection(i).rect);
 	}
+
 
 	G.TileSet = TileSet.genericize();
 })();
