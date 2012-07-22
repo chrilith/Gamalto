@@ -55,12 +55,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.length += count;
 		for (var y = r.tL.y; y < r.bR.y; y += th) {
 			for (var x = r.tL.x; x < r.bR.x; x += tw) {
-				this._list.push(new G.Rect(x, y, tw, th));
+				this._list.push(this._createSection(x, y, tw, th));
 				if (!--count) {
 					return;
 				}
 			}
 		}
+	}
+	
+	proto._createSection = function(x, y, w, h) {
+		return new G.Rect(x, y, w, h);
 	}
 	
 	proto.getSection = function(i) {
