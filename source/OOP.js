@@ -47,9 +47,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				throw "Attempt to call a base method/constructor on a first level object.";
 			}
 		}
-		
-		// TODO: for compatibility. Need to change all constructors...
-		G.Object.base = Object.base;
 	}
 
 	/* Tests if an object is an instance of an object */
