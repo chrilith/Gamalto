@@ -44,10 +44,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'Extensions.js"></script> \
 		<script src="' + dir + 'Missing.js"></script> \
 	\
+		<script src="' + dir + 'GVector.js"></script> \
+		<script src="' + dir + 'GRect.js"></script> \
+		<script src="' + dir + 'GSize.js"></script> \
 		<script src="' + dir + 'GCanvas.js"></script> \
 		<script src="' + dir + 'GSectionList.js"></script> \
 		<script src="' + dir + 'GSpriteSheet.js"></script> \
 		<script src="' + dir + 'GAnimation.js"></script> \
+		<script src="' + dir + 'GTile.js"></script> \
 		<script src="' + dir + 'GTileSet.js"></script> \
 		<script src="' + dir + 'GTileGroup.js"></script> \
 		<script src="' + dir + 'GTileMap.js"></script> \
@@ -56,9 +60,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GFont.js"></script> \
 		<script src="' + dir + 'GTiming.js"></script> \
 		<script src="' + dir + 'GTimer.js"></script> \
-		<script src="' + dir + 'GVector.js"></script> \
-		<script src="' + dir + 'GRect.js"></script> \
-		<script src="' + dir + 'GSize.js"></script> \
 		<script src="' + dir + 'GScroller.js"></script> \
 		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
