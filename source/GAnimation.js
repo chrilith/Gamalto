@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Animation = function(bitmap, r, count, tw, th) {
-		G.Object.base(this, bitmap, r, count, tw, th);
+		Object.base(this, bitmap, r, count, tw, th);
 		this._curr = 0;
 	//	this._speed
 	}
