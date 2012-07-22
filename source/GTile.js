@@ -1,5 +1,5 @@
 /*
- * Gamalto.TileSet
+ * Gamalto.Tile
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
@@ -32,41 +32,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
-
-	/* Dependencies */
-	G.require	("SpriteSheet");
-	G.using		("Size");
+	
+		/* Dependencies */
+	G.using("Rect");
 
 	/**
 	 * @constructor
 	 */
-	var TileSet = function(bitmap, r, count, tw, th) {
-			this._tile = new G.Size(tw, th);
-			G.Object.base(this, bitmap, r, count, tw, th);
-		},
-		proto = TileSet.inherits(G.SpriteSheet);
-
-	proto.setSections = function(r, count, tw, th) {
-		var t = this._tile,
-			w = t.width,
-			h = t.height;
-
-		if ((tw && tw != w) || (th && th != h)) {
-			throw "Gamalto: Additional tiles must have the same size.";
-		}
-
-		tw = tw || w,
-		th = th || h;
-		TileSet.base.setSections.call(this, r, count, tw, th);
+	G.Tile = function(x, y, w, h) {
+		this.rect = new G.Rect(x, y, w, h);
 	}
 
-	proto._createSection = function(x, y, w, h) {
-		return new this._T(x, y, w, h);
-	}
+	var proto = G.Tile.inherits(G.Object);
 
-	proto.getSection = function(i) {
-		return this._list[i | 0].rect;
-	}
-
-	G.TileSet = TileSet.genericize();
 })();
