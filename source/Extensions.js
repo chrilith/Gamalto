@@ -31,65 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-/* To work with objects */
-
-Object.defineMethod(Object.prototype, "is", function(o) {
-	return this instanceof o;
-});
-
-Object.defineMethod(Object.prototype, "implements", function(o) {
-	return this == o || this.prototype instanceof o;
-});
-
-Object.defineMethod(Function.prototype, "inherits", function(baseClass) {
-	baseClass = (baseClass._generic || baseClass);
-
-	this.__base__  = baseClass;
-	this.__super__ = baseClass.prototype;
-
-	function ctor() {};
-	this.base = ctor.prototype = this.__super__;
-
-	(this.prototype = new ctor()).constructor = this;
-
-	return this.prototype;
-});
-
-(function() {
-	var types = [];
-		
-	function create(type, base) {
-		if (!type) {
-			throw TypeError();
-		}
-
-		for (var i = 0; i < types.length; i++) {
-			if (types[i].base == base && types[i].T == type) {
-				return types[i].ctor;
-			}
-		}
-	
-		var generic = function() {
-			this._T = type;
-			base.apply(this, Array.prototype.slice.call(arguments, 0));
-		};
-		generic.inherits(base);
-		types.push({ base: base, T: type, ctor: generic });
-
-		return generic;
-	}
-
-	Object.defineMethod(Function.prototype, "genericize", function(base) {
-		var that = this,
-			master = function(T) {
-				return create(T, that);
-			};
-		master._generic = that;
-		return master;
-	});
-
-})();
-
 /* Extra Math methods */
 
 Object.defineMethod(Math, "sign", function(n) {
