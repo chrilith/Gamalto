@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.BitmapLibrary = function(complete) {
-		G.Object.base(this, complete);
+		Object.base(this, complete);
 	}
 	
 	/* Inheritance and shortcut */

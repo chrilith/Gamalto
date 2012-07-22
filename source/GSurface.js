@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Surface = function(width, height) {
-		G.Object.base(this, width, height);
+		Object.base(this, width, height);
 		this.disableClipping();
 	};
 	

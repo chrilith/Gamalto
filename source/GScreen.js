@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Screen = function(width, height) {
-		G.Object.base(this, width, height);
+		Object.base(this, width, height);
 	};
 	
 	/* Inheritance and shortcut */
