@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Timer = function(callback, rate, skip) {
-		G.Object.base(this);
+		Object.base(this);
 		
 		this._cb = callback;
 	
