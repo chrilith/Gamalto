@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.MemoryStream = function(size) {
-		G.Object.base(this, size);
+		Object.base(this, size);
 	}
 
 	/* Inheritance and shortcut */
