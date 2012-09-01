@@ -45,9 +45,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'Extensions.js"></script> \
 		<script src="' + dir + 'Missing.js"></script> \
 	\
-		<script src="' + dir + 'GVector.js"></script> \
-		<script src="' + dir + 'GRect.js"></script> \
-		<script src="' + dir + 'GSize.js"></script> \
 		<script src="' + dir + 'GCanvas.js"></script> \
 		<script src="' + dir + 'GSectionList.js"></script> \
 		<script src="' + dir + 'GSpriteSheet.js"></script> \
@@ -61,6 +58,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GFont.js"></script> \
 		<script src="' + dir + 'GTiming.js"></script> \
 		<script src="' + dir + 'GTimer.js"></script> \
+		<script src="' + dir + 'GVector.js"></script> \
+		<script src="' + dir + 'GRect.js"></script> \
+		<script src="' + dir + 'GSize.js"></script> \
 		<script src="' + dir + 'GScroller.js"></script> \
 		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
@@ -79,7 +79,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GEvent.js"></script> \
 		<script src="' + dir + 'GEventManager.js"></script> \
 		<script src="' + dir + 'GKeyBoardEvent.js"></script> \
+		<script src="' + dir + 'GKeyBoardEvent_iCade.js"></script> \
 		<script src="' + dir + 'GEventManager_Keyboard.js"></script> \
+		<script src="' + dir + 'GEventManager_Keyboard_iCade.js"></script> \
 		<script src="' + dir + 'GCommandLine.js"></script> \
 		<script src="' + dir + 'GSoundPool.js"></script> \
 		<script src="' + dir + 'GSound.js"></script> \
