@@ -89,7 +89,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (q.length == 128) {
 			return false;
 		}
-		var cst = Event,
+		var cst = G.Event,
 			evt = new G.KeyboardEvent(e.type);
 		evt.keyCode = (e.keyCode || e.which);
 		evt._time = e.timeStamp; // || Date.now();
