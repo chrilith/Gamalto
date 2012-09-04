@@ -94,13 +94,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		evt.keyCode = (e.keyCode || e.which);
 		evt._time = e.timeStamp; // || Date.now();
 		evt.modifiers =
-			(e.shiftKey		&& e.keyCode != 16	? cst.KMOD_SHIFT: 0) |
-			(e.ctrlKey		&& e.keyCode != 17	? cst.KMOD_CTRL	: 0) |
-			(e.altKey		&& e.keyCode != 18 	? cst.KMOD_ALT	: 0);// |
-	//		(e.altGraphKey	&& e.keyCode != 16	? cst.KMOD_ALTGR: 0) | => CTRL+ALT raised
-	//		(e.metaKey		&& e.keyCode != 91
-	//						&& e.keyCode != 92	? cst.KMOD_META	: 0);	// CHECKME
-	
+			(e.shiftKey		&& evt.keyCode != 16	? cst.KMOD_SHIFT: 0) |
+			(e.ctrlKey		&& evt.keyCode != 17	? cst.KMOD_CTRL	: 0) |
+			(e.altKey		&& evt.keyCode != 18 	? cst.KMOD_ALT	: 0);// |
+	//		(e.altGraphKey	&& evt.keyCode != 16	? cst.KMOD_ALTGR: 0) | => CTRL+ALT raised
+	//		(e.metaKey		&& evt.keyCode != 91
+	//						&& evt.keyCode != 93	? cst.KMOD_META	: 0);	// CHECKME
+
 		var cur, lst = q.length - 1;
 		for (var n = lst; n >= 0; n--) {
 			cur = q[n];
