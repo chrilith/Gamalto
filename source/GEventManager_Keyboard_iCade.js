@@ -64,12 +64,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		},
 		listen: function() {
 			if (this._listen & base.BIT_KBICADE) {
-				env.addEventListener("keydown", this._handlerKeyCade, false);
+				input.addEventListener("keydown", this._handlerKeyCade, false);
 			}
 		},
 		release: function() {
 			if (this._listen & base.BIT_KBICADE) {
-				env.removeEventListener("keydown", this._handlerKeyCade, false);
+				input.removeEventListener("keydown", this._handlerKeyCade, false);
 				document.body.removeEventListener("touchstart", this._handlerTouchCade, false);
 				input.parentNode.removeChild(input);
 			}
@@ -83,6 +83,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			q = this._q,
 			cst = G.Event;
 
+		key = (e.keyCode || e.which);
+		// Prevent slowdown, we are polling on the input only
+		// and so everything can be ignored but the special keys
+		if ([16,17,18,91,93].indexOf(key) == -1 &&
+				!e.ctrlKey && !e.metaKey) {	// For system shortcuts
+			e.preventDefault();
+		}
 		if (q.length == 128) {
 			return false;
 		}		
@@ -104,7 +111,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			76, 86, cst.K_ICADE_FIREX2
 		];
 		
-		key = (e.keyCode || e.which);
 		for (i = 0; i < test.length; i += 3) {
 			if (key == test[i+0] || key == test[i+1]) {
 				type = (key == test[i+1]) ? cst.KEYUP : e.type;
@@ -119,10 +125,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var evt = new G.KeyboardEvent(type);
 		evt.keyCode = key;
 		evt.modifiers = 0;
-
-		// Prevent slowdown
-		e.preventDefault();
-		e.stopPropagation();
 
 		// We are adding a new event
 		return !!(q.push(evt));
