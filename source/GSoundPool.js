@@ -48,22 +48,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.loadItem = function(name, src) {
 		G.SoundPool.base.loadItem.call(this);
 		
-		var a = new Audio();
+		var a = document.createElement("audio");
 		var that = this;
 	
-		a.onabort = a.onerror = function() {
+		a.onabort = a.onerror = function(e) {
 			that._done();
 			that._cb(that, name, false);
 		}
-
-		// FIXME: not always fired in Chrome!!		
-		a.addEventListener("loadedmetadata", function() {
+		
+		a.addEventListener("loadedmetadata", function(e) {
 			a.removeEventListener("loadedmetadata", arguments.callee, false);
 			that._list[name] = new G.Sound(a);
 			that._done();
 			that._cb(that, name, true);
 		}, false);
 
+		// FIXME: this seems to help loading of sound files in Chrome...
+		a.preload = "metadata";
 		a.src = src;
 		a.load();
 	}
