@@ -50,11 +50,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Instance methods */
 	proto.setActive = function(parent) {
-		this.setScanlines(); // Disable scanlines
+		 // Disable scanlines
+		this.setScanlines();
 
-		// For scaling, bug with IE not setting height proportionally?
-		this._canvas.style.width = "100%";
+		// Add the new screen to the document
 		(parent || G.getMainContainer()).appendChild(this._canvas);
+
+		// Adjust the screen stretching
+		this.setStretch();
+		
+		if (!this._resizeHandler) {
+			window.addEventListener("resize", (this._resizeHandler = this._handleResize.bind(this)), false);
+		}
 	}
 
 	proto.enableFiltering = function(isOn) {
@@ -111,6 +118,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._scanlines = null;
 			}
 		}
+		
+		proto._handleResize = function() {
+			this.setStretch();
+		}
+		
+		proto.setStretch = function(mode) {			
+			var c = this._canvas,
+				s = c.style,
+				p = c.parentNode;
+
+			s.marginTop  = s.marginLeft = "";
+			s.width = s.height = "";
+
+			if (!p) { return; }
+			mode = (this._stretch = (mode || this._stretch) | 0);
+			if (mode === stat.STRETCH_NONE) { return; }
+
+			var rw, rh,
+				w1 = p.offsetWidth;
+				h1 = p.offsetHeight,
+				w2 = c.width,
+				h2 = c.height;
+
+			if (mode & stat.STRETCH_UNIFORM) {
+				if (w1 / h1 < w2 / h2) {
+					rw = w1;
+					rh = rw * (h2 / w2);
+				} else {
+					rh = h1;
+					rw = rh * (w2 / h2);
+				}
+			} else if (mode) {
+				rw = w1;
+				rh = h1;
+			}
+
+			if (mode & stat.STRETCH_FILL) {
+				if (rw < w1) {
+					rh *= w1 / rw;
+					rw  = w1;
+					s.marginTop = ((h1 - rh) / 2) + "px";
+				} else {
+					rw *= h1 / rh;
+					rh  = h1;
+					s.marginLeft = ((w1 - rw) / 2) + "px";
+				}
+			}
+			s.width  = rw + "px";
+			s.height = rh + "px";
+		}
+
+		var stat = G.Screen;
+		
+		stat.STRETCH_NONE		= 0;
+		stat.STRETCH_UNIFORM	= 1 << 1;
+		stat.STRETCH_FILL		= 1 << 2;
 	}
 
 })();
