@@ -52,7 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				// Element to enable external keyboard and activate iCade
 				if (!input) {
 					input = document.createElement("input");
-					input.style.position = "relative";
+					input.style.position = "absolute";
 					input.style.top = "-9999px";
 				}
 				document.addEventListener("DOMContentLoaded", function() {
