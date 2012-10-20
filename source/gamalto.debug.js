@@ -59,6 +59,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GTiming.js"></script> \
 		<script src="' + dir + 'GTimer.js"></script> \
 		<script src="' + dir + 'GVector.js"></script> \
+		<script src="' + dir + 'GShape.js"></script> \
+		<script src="' + dir + 'GCircle.js"></script> \
 		<script src="' + dir + 'GRect.js"></script> \
 		<script src="' + dir + 'GSize.js"></script> \
 		<script src="' + dir + 'GScroller.js"></script> \
@@ -98,6 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GIndexedImage_AtariDegasElite.js"></script> \
 		<script src="' + dir + 'GIndexedImage_InterchangeFileFormat.js"></script> \
 		<script src="' + dir + 'GIndexedBitmap.js"></script> \
+		<script src="' + dir + 'GTouchGamepad.js"></script> \
 \
 		<script src="' + dir + 'EFader.js"></script> \
 	');
