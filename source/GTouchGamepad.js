@@ -66,7 +66,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.setActive = function(isOn) {
 		if (this.connected != isOn) {
 			var action = isOn ? "addEventListener" : "removeEventListener",
-				events = 'ontouchstart' in window ?
+				events = this.isSupported() ?
 					["touchstart", "touchend", "touchmove"] :
 					["mousedown",  "mouseup",  "mousemove"];
 
@@ -76,6 +76,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._parent[action](events[i], this, false);
 			}
 		}
+	}
+	
+	proto.isSupported = function() {
+		return ('ontouchstart' in window);
 	}
 
 	proto.handleEvent = function(e) {
