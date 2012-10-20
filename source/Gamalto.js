@@ -90,25 +90,30 @@ var ENV = window;
 			N: function(name) {
 				return "G__" + name;
 			},
+			
+			H: function(name) {
+				return "_" + name + "Handler";
+			},
 
 /* Internal */
 			_isObj: function(v) {
 				return (typeof v == "object");
 			},
 
-			_xywh: function(e, p) {
+			_xywh: function(elem, parent, unit) {
 				var x = 0,
 					y = 0,
-					w = e.offsetWidth,
-					h = e.offsetHeight;
+					w = elem.offsetWidth,
+					h = elem.offsetHeight;
 	
-				while (e && e != p) {
-					x += e.offsetLeft;
-					y += e.offsetTop;
-					e  = e.offsetParent;
+				while (elem && elem != parent) {
+					x += elem.offsetLeft;
+					y += elem.offsetTop;
+					elem = elem.offsetParent;
 				}
 
-				return { x: x + "px", y: y + "px", w: w + "px", h: h + "px" };			
+				unit |= 0;
+				return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
 			}
 		}
 	})();
