@@ -34,8 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.using("Size");
-	G.using("Vector");
+	G.require	("Shape");
+	G.using		("Size");
+	G.using		("Vector");
 
 	/**
 	 * @constructor
@@ -55,7 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	/* Inheritance and shortcut */
-	var proto = G.Rect.inherits(G.Object);
+	var proto = G.Rect.inherits(G.Shape);
 	
 	/* Instance methods */
 	proto._setRect = function(x, y, width, height) {
@@ -100,12 +101,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			);
 	}
 	
-	proto.containts = function(p) {
-		var r = this;
-		return (p.x >= r.tL.x &&
-				p.x <= r.bR.x &&
-				p.y >= r.tL.y &&
-				p.y <= r.bR.y);
+	proto.containts = function(r2) {
+		return (this.vectorInShape(r2.tL) &&
+				this.vectorInShape(r2.bR));
 	}
 	
 	proto.equals = function(r2) {
@@ -125,6 +123,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.clone = function() {
 		return new G.Rect(this.tL, this.bR);
+	}
+
+	proto.pointInShape = function(x, y) {
+		var r = this;
+		return (x >= r.tL.x &&
+				x <= r.bR.x &&
+				y >= r.tL.y &&
+				y <= r.bR.y);
+	}
+	
+	proto.getBoundingBox = function() {
+		return this.clone();
 	}
 
 })();
