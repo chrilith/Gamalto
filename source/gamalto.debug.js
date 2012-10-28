@@ -45,6 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'Extensions.js"></script> \
 		<script src="' + dir + 'Missing.js"></script> \
 	\
+		<script src="' + dir + 'GPromise.js"></script> \
 		<script src="' + dir + 'GCanvas.js"></script> \
 		<script src="' + dir + 'GSectionList.js"></script> \
 		<script src="' + dir + 'GSpriteSheet.js"></script> \
