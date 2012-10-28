@@ -50,24 +50,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.BitmapLibrary.inherits(G.BaseLibrary);
 	
 	proto.loadItem = function(name, src, indexed) {
-		G.BitmapLibrary.base.loadItem.call(this);
-		
-		var i = (indexed) ?
-			new G.IndexedImage() : new Image(),
+		var err,
+			promise = G.BitmapLibrary.base.loadItem.call(this),
+
+			i = (indexed) ? new G.IndexedImage() : new Image(),
 			that = this;
 
-		i.onabort = i.onerror = function() {
+		i.onabort = i.onerror = function(e) {
+			err = new Error("Failed to load item '" + name + "' from '" + src + "'.");
+			err.source	= that;
+			err.item = name;
+			promise.reject(err);
+// TODO: remove old fashion stuff
 			that._done();
-			that._cb(that, name, false);
+			if (that._cb) { that._cb(that, name, false); }
 		}
 		i.onload = function() {
-			that._list[name] = (indexed) ?
+			that._list[G.N(name)] = (indexed) ?
 				new G.IndexedBitmap() : new G.Bitmap(i);
+			promise.resolve({
+				source: that,
+				item: name
+			});
+// TODO: remove old fashion stuff
 			that._done();
-			that._cb(that, name, true);
+			if (that._cb) { that._cb(that, name, true); }
 		}
 
 		i.src = src;
+		return promise;
 	}
 
 })();
