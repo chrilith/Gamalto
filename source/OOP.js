@@ -56,13 +56,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 	
-	/* Tests if an object is a direct instance of an object */
-	if (!("instanceOf" in object)) {
-		object.instanceOf = function(o) {
-			return this.constructor == o;
-		}
-	}
-	
 	/* Object inheritance */
 	if (!("inherits" in func)) {
 		func.inherits = function(baseObject) {
