@@ -61,16 +61,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.reflow();
 	}
 
+	var stat = G.TouchGamepad;
+	
+	stat.isSupported = function() {
+		return ('ontouchstart' in window);
+	}
+
 	var proto = G.TouchGamepad.inherits(G.Object);
 
 	proto.setActive = function(isOn) {
 		if (this.connected != isOn) {
 			var action = isOn ? "addEventListener" : "removeEventListener",
-				events = this.isSupported() ?
+				events = stat.isSupported() ?
 					["touchstart", "touchend", "touchmove"] :
 					["mousedown",  "mouseup",  "mousemove"];
 
-			this.connected = isOn;
+			if ((this.connected = isOn)) {
+				this.reflow();				
+			}
 			window[action]("resize", this, false);
 			for (var i = 0; i < 3; i++) {
 				this._parent[action](events[i], this, false);
@@ -78,10 +86,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 	
-	proto.isSupported = function() {
-		return ('ontouchstart' in window);
-	}
-
 	proto.handleEvent = function(e) {
 		if (e.type == "resize") {
 			this.reflow();
@@ -127,6 +131,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.reflow = function() {
+		// Parent must be displayed in order to compute its size
 		this._rect = G._xywh(this._parent);
 
 		var j, p = this._shapes.nfo[AXES];
@@ -183,7 +188,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		if (p.shape.pointInShape(x, y)) {
 			this.buttons[i] = active | 0;
-
 			return true;
 		}
 		return false;
@@ -201,7 +205,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				xx = x - r.x;
 				yy = y - r.y;
 				tc = p[i];
-				
+
 				if (tc.align & S.ALIGN_BOTTOM) {
 					yy -= r.h >> (tc.align & S.ALIGN_TOP ? 1 : 0);
 				}
