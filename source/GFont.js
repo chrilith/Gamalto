@@ -208,6 +208,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	var constant = G.Font;
 
+	// TODO: use G.Shape consts
 	constant.AH_LEFT   = 0;
 	constant.AH_CENTER = 1;
 	constant.AH_RIGHT  = 2;
