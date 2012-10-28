@@ -49,17 +49,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	/* Tests if an object is an instance of an object */
+	/* Tests if an object implements an given object definition */
 	if (!("is" in object)) {
 		object.is = function(o) {
 			return this instanceof o;
 		}
 	}
 	
-	/* Tests if an object implements an given object definition */
-	if (!("implements" in object)) {
-		object.implements = function(o) {
-			return this == o || this.prototype instanceof o;
+	/* Tests if an object is a direct instance of an object */
+	if (!("instanceOf" in object)) {
+		object.instanceOf = function(o) {
+			return this.constructor == o;
 		}
 	}
 	
