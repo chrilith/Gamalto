@@ -67,7 +67,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		i.onload = function() {
 			that._list[G.N(name)] = (indexed) ?
-				new G.IndexedBitmap() : new G.Bitmap(i);
+				new G.IndexedBitmap(i) : new G.Bitmap(i);
 			promise.resolve({
 				source: that,
 				item: name
