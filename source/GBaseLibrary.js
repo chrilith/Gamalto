@@ -33,15 +33,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
+	G.require("Promise");
+
 	/**
 	 * @constructor
 	 */
 	G.BaseLibrary = function(complete) {
+		this._list = {};
+		this._pending = [];
+
+// TODO: remove old fashion stuff
 		this._cb = complete;
 		this._pendingCounter = 0;
-		this._list = {};
-	
-		// FIXME: may return true between two loadItem() calls...
 		Object.defineProperty(this, "done", {
 			get: function() { return (this._pendingCounter == 0); },
 			enumerable: true
@@ -52,22 +56,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.BaseLibrary.inherits(G.Object);
 	
 	proto.getItem = function(name) {
-		return this._list[name];
+		return this._list[G.N(name)];
 	}
 	
 	proto.unloadItem = function(name) {
-		delete this._list[name];
+		delete this._list[G.N(name)];
+	}
+
+	proto.loadItem = function(name, src) {
+		this._pendingCounter++;	// TODO: remove old fashion stuff
+		return new G.Promise();
+	}
+
+	proto.pushItem = function(name, src) {
+		this._exception();
+		// Here we can have more than just 'src', save all parameters
+		this._pending.push(Array.prototype.slice.call(arguments, 0));
 	}
 	
-	proto.loadItem = function(name, src) {
-		this._pendingCounter++;
+	proto.load = function() {
+		this._exception();
+		this._loading = true;
+
+		var that = this,
+			args = [];
+
+		this._pending.forEach(function(val, i) {
+			args.push(that.loadItem.apply(that, val));
+		});
+
+		return G.Promise.all.apply(null, args)
+			.then(
+				function(value) {
+					that._loading = false;
+					that._pending = [];
+					return value;
+				},
+				function(error) {
+					that._loading = false;
+					return error;
+				}
+			);
+	}
+	
+	proto._exception = function() {
+		if (this._loading) {
+			throw "The libary is already loading items.";		
+		}
 	}
 	
 	proto.hasItem = function(name) {
 		var u;	// undefined
-		return this._list[name] !== u;
+		return this._list[G.N(name)] !== u;
 	}
 	
+// TODO: remove old fashion stuff
 	proto._done = function() {
 		this._pendingCounter--;
 	}
