@@ -172,7 +172,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				dest[pixel + 0] = color[0];
 				dest[pixel + 1] = color[1];
 				dest[pixel + 2] = color[2];
-				dest[pixel + 3] = 255;
+				dest[pixel + 3] = color[3];
 			}
 			this._canvas._copyRawBuffer(this._image);
 		}
@@ -192,7 +192,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			dest[pixel + 0] = color[0];
 			dest[pixel + 1] = color[1];
 			dest[pixel + 2] = color[2];
-			dest[pixel + 3] = 255;
+			dest[pixel + 3] = color[3];
 
 			if (this._palette.isAnimated(index)) {
 				this._cache.push([pixel, index]);
