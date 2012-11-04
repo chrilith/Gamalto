@@ -59,5 +59,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.animate = function(timer) {
 		return (this._updated = this._source._palette.update(timer));
 	}
+	
+	proto.setTransparency = function(index) {
+		this._updated = true;
+		this._source._palette.setTransparency(index);
+	}
+
+	proto.setColor = function(index, color) {
+		this._updated = true;
+		this._source._palette.setColor(index, color);
+	}
 
 })();

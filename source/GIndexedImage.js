@@ -139,6 +139,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		} else {
 			this._palette	= data[0];
+			this._data		= data[1];	// For full redraw
 			this.width		= data[2];
 			this.height		= data[3];			
 
@@ -148,8 +149,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					._createRawBuffer();
 
 			// Render the first pass and save cached data
-			this._prepare(data[1]);
-	
+			this._fullRedraw();
+
 			// TODO
 			if (this.onload) {
 				this.onload();
@@ -158,33 +159,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._toCanvas = function(refresh) {
-		if (refresh) {
-			var n, curr, color, index, pixel,
-				dest	= this._image.data,
-				colors	= this._palette._colorsAsArray();
+		var pal = this._palette;
 
-			for (n = 0; n < this._cache.length; n++) {
-				curr	= this._cache[n];
-				pixel	= curr[0];
-				index	= curr[1];
-				color	= colors[index];
-
-				dest[pixel + 0] = color[0];
-				dest[pixel + 1] = color[1];
-				dest[pixel + 2] = color[2];
-				dest[pixel + 3] = color[3];
-			}
-			this._canvas._copyRawBuffer(this._image);
+		if (pal._changed || refresh) {
+			pal._changed = false;
+			this._fullRedraw();
 		}
+
 		return this._canvas._canvas;
 	}
 
-	proto._prepare = function(data) {
+	proto._fullRedraw = function() {
+		// TODO: optimize animated palette rendering using cache? (see history)
+
 		var color, index, pixel = 0,
+			data	= this._data,
 			dest	= this._image.data,
 			colors	= this._palette._colorsAsArray();
 
-		this._cache = [];
+		data.seek(0);
 		while (!data.eos()) {
 			index = data.readByte();
 			color = colors[index];
@@ -194,9 +187,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			dest[pixel + 2] = color[2];
 			dest[pixel + 3] = color[3];
 
-			if (this._palette.isAnimated(index)) {
-				this._cache.push([pixel, index]);
-			}
 			pixel += 4;
 		}
 		this._canvas._copyRawBuffer(this._image);

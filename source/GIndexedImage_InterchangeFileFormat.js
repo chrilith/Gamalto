@@ -90,7 +90,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						// FIXME: masking is supposed to be set to 2 (mskHasTransparentColor)
 						// but GRAFX2 doesn't seem to set it properly
 						if (masking == 2 || transparency != 0) {
-							palette.setTransparent(transparency);
+							palette.setTransparency(transparency);
 						}
 
 					} else if (chunk == "TMAP") {
