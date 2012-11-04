@@ -50,7 +50,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	// Will be called in the context on the calling IndexedImage instance
 	function module(buffer) {
-		var base, chunk, palette, data, width, height, x, y, bits, size;
+		var base, chunk, palette, data, width, height, x, y, bits, size,
+			transparency, masking;
 
 		// Entry point
 		chunk = buffer.readString(4);
@@ -69,10 +70,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						buffer.readUInt16BE(); // x offset
 						buffer.readUInt16BE(); // y offset
 						bits = buffer.readByte();
-						buffer.readByte(); // masking
+						masking = buffer.readByte();
 						packed = buffer.readByte(); // compress
 						buffer.readByte(); // padding
-						buffer.readUInt16BE(); // transparency
+						transparency = buffer.readUInt16BE();
 						buffer.readByte(); // horiz pixel ratio
 						buffer.readByte(); // vert pixel ratio
 						buffer.readUInt16BE(); // display page width
@@ -86,6 +87,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 								b = buffer.readByte();
 							palette.addColor(new G.Color(r, g, b));
 						}
+						// FIXME: masking is supposed to be set to 2 (mskHasTransparentColor)
+						// but GRAFX2 doesn't seem to set it properly
+						if (masking == 2 || transparency != 0) {
+							palette.setTransparent(transparency);
+						}
+
+					} else if (chunk == "TMAP") {
 
 					} else if (chunk == "CRNG") {		// TODO: CCRT
 						buffer.readUInt16BE(); // padding
