@@ -44,6 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._list = colors || [];
 		this._animators = [];
 		this._animated = [];
+		this._trans = -1;
 		this.length = 0;
 	}
 
@@ -64,6 +65,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.getColor = function(index) {
 		return this._list[index];
+	}
+
+	proto.setTransparent = function(index) {
+		if (index < this.length) {
+			if (this._trans != -1) {
+				this._list[this._trans].a = 255;
+			}
+			this._list[index].a = 0;
+			this._trans = index;
+		}
+	}
+
+	proto.getTransparent = function(index) {
+		return this._trans;
 	}
 
 	proto.addAnimator = function(from, to, delay) {
@@ -134,7 +149,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var colors, n, colors = [];
 		for (n = 0; n < this.length; n++) {
 			color = this._list[n];
-			colors[n] = [color.r, color.g, color.b];
+			colors[n] = [color.r, color.g, color.b, color.a];
 		}
 		return colors;
 	}
