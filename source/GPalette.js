@@ -44,6 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._list = colors || [];
 		this._animators = [];
 		this._animated = [];
+		this._changed = false;	// Whether the palette has been changed
 		this._trans = -1;
 		this.length = 0;
 	}
@@ -60,6 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.setColor = function(index, color) {
 		if (index < this.length) {
 			this._list[index] = color;
+			this._changed = true;
 		}
 	}
 
@@ -67,17 +69,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._list[index];
 	}
 
-	proto.setTransparent = function(index) {
+	proto.setTransparency = function(index) {
 		if (index < this.length) {
-			if (this._trans != -1) {
-				this._list[this._trans].a = 255;
-			}
+			if (this._trans != -1) { this._list[this._trans].a = 255; }
 			this._list[index].a = 0;
 			this._trans = index;
+			this._changed = true;
 		}
 	}
 
-	proto.getTransparent = function(index) {
+	proto.getTransparency = function(index) {
 		return this._trans;
 	}
 
