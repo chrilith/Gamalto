@@ -84,38 +84,74 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.then = function(resolve, reject, progress) {
 		var undef, promise = new G.Promise();
 
+		// Set the "resolve" callback
 		this._resolve = function(value) {
 			value = !resolve ? undef : resolve(value);
-			try {
-				promise.resolve(value);
-			 } catch(e) {
-				promise.reject(e);
-			 }
+			
+			// Prepare internal callback
+			var complete = function(value) {
+				try {
+					value = promise.resolve(value);
+				 } catch(e) {
+					promise.reject(e);
+				 }
+				return value;
+			}
+			
+			// If the value is not a promise, call the callback immediately
+			if (!(value && value.is(G.Promise))) {
+				complete(value);
+			
+			// Else, wait for the new promise completion
+			} else {
+				value.then(
+					function(value) {
+						return complete(value);
+					},
+					function(e) {
+						promise.reject(e);
+					}
+				)
+			}
 		}
+
+		// Set the "reject" callback, this one cuts the pipeline
 		this._reject = function(value) {
 			value = !reject ? undef : reject(value);
 			promise.reject(value);
 		}
+
+		// Progression callback if any
 		this._progress = progress;
 
+		// Return the new promise for pipelining
 		return promise;
 	}
 	
 	G.Promise.all = function(/* args */) {
+		// Get all promises to be completed
 		var all = Array.prototype.slice.call(arguments, 0),
 			count = 0,
 			results = [];
 			promise = new G.Promise();
 
+		// For each promise
 		all.forEach(function(value, i) {
+			// Add completions callbacks for the current promise...
 			all[i].then(
+				// ...for success
 				function(value) {
+					// save the result
 					results[i] = value;
+					// set progression
 					promise.progress(count++ / all.length);
+					
+					// Completion
 					if (count == all.length) {
 						promise.resolve(results);
 					}
 				},
+				// ...for errors
 				function(error) {
 					promise.reject(error);
 				}
