@@ -99,6 +99,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			);
 	}
 	
+	proto._failed = function(name, src, e) {
+		var err = new Error("Failed to load item '" + name + "' from '" + src + "'.");
+		err.source	= this;
+		err.item = name;
+		err.innerException = e;
+		return err;
+	}
+	
 	proto._exception = function() {
 		if (this._loading) {
 			throw "The libary is already loading items.";		
