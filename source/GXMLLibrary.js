@@ -74,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // TODO: remove old fashion stuff
 				that._done();
-				if (that._cb) that._cb(that, name, success);
+				if (that._cb) { that._cb(that, name, success); }
 			}
 		}
 	
