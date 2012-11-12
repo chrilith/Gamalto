@@ -50,21 +50,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.BitmapLibrary.inherits(G.BaseLibrary);
 	
 	proto.loadItem = function(name, src, indexed) {
-		var err,
-			promise = G.BitmapLibrary.base.loadItem.call(this),
+		var promise = G.BitmapLibrary.base.loadItem.call(this),
 
 			i = (indexed) ? new G.IndexedImage() : new Image(),
 			that = this;
 
 		i.onabort = i.onerror = function(e) {
-			err = new Error("Failed to load item '" + name + "' from '" + src + "'.");
-			err.source	= that;
-			err.item = name;
-			promise.reject(err);
+			promise.reject(that._failed(name, src));
+
 // TODO: remove old fashion stuff
 			that._done();
 			if (that._cb) { that._cb(that, name, false); }
 		}
+
 		i.onload = function() {
 			that._list[G.N(name)] = (indexed) ?
 				new G.IndexedBitmap(i) : new G.Bitmap(i);
@@ -72,6 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				source: that,
 				item: name
 			});
+
 // TODO: remove old fashion stuff
 			that._done();
 			if (that._cb) { that._cb(that, name, true); }
