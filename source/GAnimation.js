@@ -63,7 +63,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			frame -= l;
 		}
 	
-		return (o._curr = frame);	// Do not round to keep the fractionnal part 
+		// Do not round to keep the fractionnal part to stay in sync
+		return (o._curr = frame);
 	}
 	
 	proto.draw = function(renderer, x, y, i) {
