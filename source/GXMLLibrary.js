@@ -45,26 +45,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.XMLLibrary.inherits(G.BaseLibrary);
 	
 	proto.loadItem = function(name, src, data) {
-		G.XMLLibrary.base.loadItem.call(this);
+		var promise = G.XMLLibrary.base.loadItem.call(this),
 		
-		var x = new XMLHttpRequest();
-		var that = this;
-	
+			x = new XMLHttpRequest(),
+			that = this;
+
 		x.onreadystatechange = function() {
-			var e, s, d, x = this;
+			var e, exception, success, data, x = this;
 			if (x.readyState == x.DONE) {
-				if ((s = (x.status || 200)) == 200) {
-					try { d = that._toData(x); } catch(e) {}
-					s = s && !!d;
-					if (s) { that._list[name] = d; }
+				if ((success = (x.status || 200)) == 200) {
+					try {
+						data = that._toData(x);
+					} catch(e) {
+						exception = e;
+					}
+					success = success && !!data;
 				}
+
+				if (!success) {
+					promise.reject(that._failed(name, src, exception));
+				} else {
+					that._list[G.N(name)] = data;
+					promise.resolve({
+						source: that,
+						item: name
+					});
+				}
+
+// TODO: remove old fashion stuff
 				that._done();
-				that._cb(that, name, s);
+				if (that._cb) that._cb(that, name, success);
 			}
 		}
 	
 		x.open(data ? "POST" : "GET", src);
 		x.send(data || null);
+		return promise;
 	}
 	
 	proto._toData = function(x) {
