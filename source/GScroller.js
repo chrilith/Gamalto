@@ -34,11 +34,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	/* Dependencies */
-	G.using("Rect");
-	G.using("Renderer");			// FIXME
-	G.using("ScrollingRegion");
-	G.using("Surface");
-	G.using("Timer");	
+	gamalto.using("Rect");
+	gamalto.using("Renderer");			// FIXME
+	gamalto.using("ScrollingRegion");
+	gamalto.using("Surface");
+	gamalto.using("Timer");	
 
 	/**
 	 * @constructor

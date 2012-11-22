@@ -34,10 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.using("Rect");
-	G.using("Surface");
-	G.using("Timer");
-	G.using("Vector");
+	gamalto.using("Rect");
+	gamalto.using("Surface");
+	gamalto.using("Timer");
+	gamalto.using("Vector");
 
 	/**
 	 * @constructor
