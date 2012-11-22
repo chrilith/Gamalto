@@ -54,10 +54,7 @@ var ENV = window;
 				// Run the application
 				document.addEventListener('DOMContentLoaded', run, false);
 			},
-	
-			using: function(name) { gamalto.using(name); },
-			require: function(name) { gamalto.require(name); },
-	
+		
 			setMainContainer: function(container) {
 				container = (typeof container == "string") ?
 					document.getElementById(container) : container;
