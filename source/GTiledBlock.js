@@ -50,12 +50,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var ts = this._tileSet
 			tw = ts._tile.width,
 			th = ts._tile.height;
-	
+
 		// TODO: while and inc++ on "t"	
-		for (var tx = 0; tx < mp.width; tx++) {
+		for (var tx = 0; tx < this.width; tx++) {
 			for (var ty = 0; ty < this.height; ty++) {
-				var t = tx + ty * this.width;
-				ts.draw(renderer, this.data[t], x + tx * tw, y + ty * th);
+				var t = tx + ty * this.width,
+					d = this.data[t];
+				if (d != 0xFFFF) {
+					ts.draw(renderer, x + tx * tw, y + ty * th, d);
+				}
 			}
 		}
 	}
