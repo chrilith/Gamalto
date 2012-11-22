@@ -38,6 +38,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		dir	 = path.substr(0, path.indexOf("gamalto.debug.js"));
 	
 	document.write(' \
+		<script src="' + dir + 'Debug.js"></script> \
+	\
 		<script src="' + dir + 'Gamalto.js"></script> \
 		<script src="' + dir + 'Compat.js"></script> \
 		<script src="' + dir + 'GObject.js"></script> \
