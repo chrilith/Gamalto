@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function(env) {
 
 	/* Dependencies */
-	G.require	("Timing");
+	gamalto.require("Timing");
 
 	/**
 	 * @constructor
