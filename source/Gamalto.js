@@ -40,8 +40,7 @@ var ENV = window;
 	var Gamalto = (function() {
 	
 /* Private */
-		var _using = {},
-			_container;   
+		var _container;   
 		
 /* Public */  
 		return {
