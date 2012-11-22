@@ -36,10 +36,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function(env) {
 
 	/* Dependencies */
-	G.using("Canvas");
-	G.using("File");
-	G.using("MemoryStream");
-	G.using("Palette");
+	gamalto.using("Canvas");
+	gamalto.using("File");
+	gamalto.using("MemoryStream");
+	gamalto.using("Palette");
 
 	/* Local */
 	var modules = [];

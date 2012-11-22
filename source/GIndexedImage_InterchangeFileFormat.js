@@ -33,11 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	/* Dependencies */
-	G.require	("IndexedImage");
-	G.using		("Color");
-	G.using		("Decoder");
-	G.using		("MemoryStream");
-	G.using		("Palette");
+	gamalto.require("IndexedImage");
+	gamalto.using("Color");
+	gamalto.using("Decoder");
+	gamalto.using("MemoryStream");
+	gamalto.using("Palette");
 
 	/* Local */
 	var base = G.IndexedImage;

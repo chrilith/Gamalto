@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.require	("Bitmap");
-	G.using		("IndexedImage");
+	gamalto.require("Bitmap");
+	gamalto.using("IndexedImage");
 
 	
 	G.IndexedBitmap = function(source) {
