@@ -49,25 +49,14 @@ var ENV = window;
 			init: function(run/*, debug*/) { // TODO: debug level
 
 				// Check for dependencies
-				for (var use in _using) {
-					if (use.substr(0, 3) == "G__") {
-						var module = use.substr(3);
-						if (!G[module]) {
-							throw 'Gamalto cannot find module ["' + module + '"].';
-						}
-					}
-				}
+				gamalto.checkDependencies();
 
 				// Run the application
 				document.addEventListener('DOMContentLoaded', run, false);
 			},
 	
-			using: function(name) { _using["G__" + name] = 1; },
-			require: function(name) {
-				if (!G[name]) {
-					throw 'Gamalto dependency error ["' + name + '"].';
-				}
-			},
+			using: function(name) { gamalto.using(name); },
+			require: function(name) { gamalto.require(name); },
 	
 			setMainContainer: function(container) {
 				container = (typeof container == "string") ?
