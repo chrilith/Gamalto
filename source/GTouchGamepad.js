@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	/* Dependencies */
-	G.require("Shape");
+	gamalto.require("Shape");
 
 	/* Local */
 	var AXES	= 0,

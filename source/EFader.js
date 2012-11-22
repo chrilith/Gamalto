@@ -34,12 +34,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	/* Dependencies */
-	G.using("Color");
-	G.using("Pattern");
-	G.using("Renderer");
-	G.using("SpriteSheet");
-	G.using("Surface");
-	G.using("Timer");
+	gamalto.using("Color");
+	gamalto.using("Pattern");
+	gamalto.using("Renderer");
+	gamalto.using("SpriteSheet");
+	gamalto.using("Surface");
+	gamalto.using("Timer");
 
 	/**
 	 * @constructor
