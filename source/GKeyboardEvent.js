@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	G.require("Event");
+	gamalto.require("Event");
 	
 	/**
 	 * @constructor
