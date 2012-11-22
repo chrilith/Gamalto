@@ -32,8 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /** @define {boolean} */
-var DEBUG = true;
-if (DEBUG) (function() {
+var GAMALTO_DEBUG = true;
+if (GAMALTO_DEBUG) (function() {
 
 /* Private */
 	var _using = {},
