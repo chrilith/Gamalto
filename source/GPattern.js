@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	G.using("Renderer");
-	G.using("Surface");
+	gamalto.using("Renderer");
+	gamalto.using("Surface");
 
 	/**
 	 * @constructor
