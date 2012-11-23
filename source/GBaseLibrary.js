@@ -34,22 +34,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("Promise");
+	gamalto.using("Promise");
 
 	/**
 	 * @constructor
 	 */
-	G.BaseLibrary = function(complete) {
+	G.BaseLibrary = function() {
 		this._list = {};
 		this._pending = [];
-
-// TODO: remove old fashion stuff
-		this._cb = complete;
-		this._pendingCounter = 0;
-		Object.defineProperty(this, "done", {
-			get: function() { return (this._pendingCounter == 0); },
-			enumerable: true
-		});
 	}
 	
 	/* Inheritance and shortcut */
@@ -64,7 +56,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.loadItem = function(name, src) {
-		this._pendingCounter++;	// TODO: remove old fashion stuff
 		return new G.Promise();
 	}
 
@@ -116,11 +107,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.hasItem = function(name) {
 		var u;	// undefined
 		return this._list[G.N(name)] !== u;
-	}
-	
-// TODO: remove old fashion stuff
-	proto._done = function() {
-		this._pendingCounter--;
 	}
 
 })();

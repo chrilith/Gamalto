@@ -39,8 +39,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.DataLibrary = function(complete) {
-		Object.base(this, complete);
+	G.DataLibrary = function() {
+		Object.base(this);
 	}
 
 	var proto = G.DataLibrary.inherits(G.XMLLibrary);

@@ -38,12 +38,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.XMLLibrary = function(complete) {
-		Object.base(this, complete);
+	G.XMLLibrary = function() {
+		Object.base(this);
 	}
 	
 	var proto = G.XMLLibrary.inherits(G.BaseLibrary);
-	
+
 	proto.loadItem = function(name, src, data) {
 		var promise = G.XMLLibrary.base.loadItem.call(this),
 		
@@ -71,10 +71,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						item: name
 					});
 				}
-
-// TODO: remove old fashion stuff
-				that._done();
-				if (that._cb) { that._cb(that, name, success); }
 			}
 		}
 	
