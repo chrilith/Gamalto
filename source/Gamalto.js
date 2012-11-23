@@ -62,7 +62,7 @@ var ENV = window;
 				return promise;
 			},
 		
-			setMainContainer: function(container) {
+			setContainer: function(container) {
 				container = (typeof container == "string") ?
 					document.getElementById(container) : container;
 				_container = container;
@@ -71,7 +71,7 @@ var ENV = window;
 				container.style.position = "relative";
 			},
 			
-			getMainContainer: function() {
+			getContainer: function() {
 				return (_container || document.body);
 			},
 
