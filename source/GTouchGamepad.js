@@ -52,7 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.connected = false;
 		// this._capture = false; // For mouse handling
 
-		this._parent = container || G.getMainContainer();
+		this._parent = container || G.getContainer();
 		this._shapes = {
 			func: ["_checkAxes", "_checkButton"],
 			nfo : [[], []] 	// 0 = axes, 1 = buttons
