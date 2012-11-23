@@ -42,8 +42,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.BitmapLibrary = function(complete) {
-		Object.base(this, complete);
+	G.BitmapLibrary = function() {
+		Object.base(this);
 	}
 	
 	/* Inheritance and shortcut */
@@ -57,10 +57,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		i.onabort = i.onerror = function(e) {
 			promise.reject(that._failed(name, src));
-
-// TODO: remove old fashion stuff
-			that._done();
-			if (that._cb) { that._cb(that, name, false); }
 		}
 
 		i.onload = function() {
@@ -70,10 +66,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				source: that,
 				item: name
 			});
-
-// TODO: remove old fashion stuff
-			that._done();
-			if (that._cb) { that._cb(that, name, true); }
 		}
 
 		i.src = src;
