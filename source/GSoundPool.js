@@ -46,27 +46,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.SoundPool.inherits(G.BaseLibrary);
 
 	proto.loadItem = function(name, src) {
-		G.SoundPool.base.loadItem.call(this);
-		
-		var a = document.createElement("audio");
-		var that = this;
+		var promise = G.SoundPool.base.loadItem.call(this),
+			a = document.createElement("audio"),
+			that = this;
 	
 		a.onabort = a.onerror = function(e) {
-			that._done();
-			that._cb(that, name, false);
+			promise.reject(that._failed(name, src));
 		}
 		
 		a.addEventListener("loadedmetadata", function(e) {
 			a.removeEventListener("loadedmetadata", arguments.callee, false);
 			that._list[name] = new G.Sound(a);
-			that._done();
-			that._cb(that, name, true);
+			promise.resolve({
+				source: that,
+				item: name
+			});
 		}, false);
 
 		// FIXME: this seems to help loading of sound files in Chrome...
 		a.preload = "metadata";
 		a.src = src;
 		a.load();
+
+		return promise;
 	}
 
 })();
