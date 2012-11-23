@@ -139,7 +139,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._handleTouchCade = function(e) {
-		if (e.target == G.getMainContainer()) {
+		if (e.target == G.getContainer()) {
 			input.focus();
 		}
 	}
