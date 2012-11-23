@@ -56,7 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		
 		a.addEventListener("loadedmetadata", function(e) {
 			a.removeEventListener("loadedmetadata", arguments.callee, false);
-			that._list[name] = new G.Sound(a);
+			that._list[G.N(name)] = new G.Sound(a);
 			promise.resolve({
 				source: that,
 				item: name
