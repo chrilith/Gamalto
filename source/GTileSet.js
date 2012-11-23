@@ -40,11 +40,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	var TileSet = function(bitmap, r, count, tw, th) {
-			this._tile = new G.Size(tw, th);
-			Object.base(this, bitmap, r, count, tw, th);
-		},
-		proto = TileSet.inherits(G.SpriteSheet);
+	G.TileSet = function(bitmap, r, count, tw, th) {
+		this._tile = new G.Size(tw, th);
+		Object.base(this, bitmap, r, count, tw, th);
+	};
+
+	var proto = G.TileSet.inherits(G.SpriteSheet);
 
 	proto.setSections = function(r, count, tw, th) {
 		var t = this._tile,
@@ -57,17 +58,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		tw = tw || w,
 		th = th || h;
-		TileSet.base.setSections.call(this, r, count, tw, th);
+		G.TileSet.base.setSections.call(this, r, count, tw, th);
 	}
 
-	proto._createSection = function(x, y, w, h) {
-		return new this._T(x, y, w, h);
+	proto.createSection = function(x, y, w, h) {
+		return new G.Tile(x, y, w, h);
 	}
 	
 	proto.draw = function(renderer, x, y, i) {
 		renderer.drawBitmapSection(this._bitmap, x, y, this.getSection(i).rect);
 	}
 
-
-	G.TileSet = TileSet.genericize();
 })();
