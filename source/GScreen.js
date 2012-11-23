@@ -54,7 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.setScanlines();
 
 		// Add the new screen to the document
-		(parent || G.getMainContainer()).appendChild(this._canvas);
+		(parent || G.getContainer()).appendChild(this._canvas);
 
 		// Adjust the screen stretching
 		this.setStretch();
