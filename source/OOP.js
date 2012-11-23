@@ -34,8 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	var object	= Object.prototype,
-		func	= Function.prototype
-		types	= [];
+		func	= Function.prototype;
 
 	/* Allows call of the base object constructor */
 	if (!("base" in Object)) {
@@ -68,39 +67,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			return this.prototype;
 		}
-	}
-
-	/* Creates a generic object */
-	if (!("genericize" in func)) {
-		func.genericize = function(base) {
-			var that = this,
-				master = function(T) {
-					return create(T, that);
-				};
-			master._generic = that;
-			return master;
-		}
-	}
-	
-	function create(type, base) {
-		if (!type) {
-			throw TypeError();
-		}
-
-		for (var i = 0; i < types.length; i++) {
-			if (types[i].base == base && types[i].T == type) {
-				return types[i].ctor;
-			}
-		}
-	
-		var generic = function() {
-			this._T = type;
-			base.apply(this, Array.prototype.slice.call(arguments, 0));
-		};
-		generic.inherits(base);
-		types.push({ base: base, T: type, ctor: generic });
-
-		return generic;
 	}
 
 })();
