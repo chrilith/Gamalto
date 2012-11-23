@@ -36,7 +36,9 @@ var ENV = window;
 
 /* Gamalto base object and initializer */
 (function(env) {
-	
+	/* Dependencies */
+	gamalto.using("Promise");
+
 	var Gamalto = (function() {
 	
 /* Private */
@@ -46,12 +48,18 @@ var ENV = window;
 		return {
 			
 			init: function(run/*, debug*/) { // TODO: debug level
+				var promise = new G.Promise();
 
 				// Check for dependencies
 				gamalto.checkDependencies();
 
 				// Run the application
-				document.addEventListener('DOMContentLoaded', run, false);
+				document.addEventListener('DOMContentLoaded', function() {
+					promise.resolve();
+					if (run) { run(); }
+				}, false);
+				
+				return promise;
 			},
 		
 			setMainContainer: function(container) {
