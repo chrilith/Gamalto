@@ -47,7 +47,7 @@ var ENV = window;
 /* Public */  
 		return {
 			
-			init: function(run/*, debug*/) { // TODO: debug level
+			init: function(/*debug*/) { // TODO: debug level
 				var promise = new G.Promise();
 
 				// Check for dependencies
@@ -56,7 +56,6 @@ var ENV = window;
 				// Run the application
 				document.addEventListener('DOMContentLoaded', function() {
 					promise.resolve();
-					if (run) { run(); }
 				}, false);
 				
 				return promise;
