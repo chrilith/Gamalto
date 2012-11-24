@@ -36,18 +36,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Sound = function(audio) {
 		var that = this;
 		this._audio = audio;
-
-		this._onError = this._handleError.bind(this);
-		this._listenError("abort");
-		this._listenError("error");
-		this._listenError("emptied");
-		this._listenError("stalled");
 		
 		// Read metadata
 		if (audio.readyState >= audio.HAVE_METADATA) {
 			this.duration = audio.duration * 1000;	// To msecs
 		}
-		this._canPlay = (audio.readyState >= audio.HAVE_CURRENT_DATA);
 
 		// Always check for metadata update
 		audio.addEventListener("loadedmetadata", function() {
@@ -69,16 +62,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Save start time if the sound cannot be played immediately
 		this._startTime = Date.now();
-		
-		// Sound not ready anymore?
-		if (!this._canPlay) {
-			a.load();
 
-		// Try to play it
-		} else {
-			a.currentTime = 0;
-			a.play();
-		}
+		// Try to play the sound
+		a.currentTime = 0;
+		a.play();
 		
 		// Should be playing...
 		this._playing = true;
@@ -98,17 +85,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	
 	/* Events handling */
-	
-	proto._handleError = function(e) {
-		switch (e.type) {
-			case "abort":
-			case "emptied":
-			case "error":
-			case "stalled":
-				this._canPlay = false;
-				break;
-		}
-	}
 
 	proto._handleUpdate = function() {
 		if (this._playing) {
@@ -120,7 +96,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._handlePlayThrought = function() {
-		if (this._playing && !this._canPlay) {
+		if (this._playing) {
 			var elasped	= Date.now() - this._startTime;
 				loop	= elasped / this.duration | 0;
 				played	= elapsed % this.duration;
@@ -132,11 +108,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					this.stop();
 				}
 		}
-		this._canPlay = true;
-	}
-
-	proto._listenError = function(what) {
-		this._audio.addEventListener(what, this._onError, false);
 	}
 
 	/* Constants */
@@ -151,7 +122,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		stat = G.Sound;
 
 	stat.isSupported = function(mime) {
-		return test.canPlayType(mime);
+		return test.canPlayType(mime) != "";
 	}
 	
 })();
