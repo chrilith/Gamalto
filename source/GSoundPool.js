@@ -39,8 +39,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.SoundPool = function(complete) {
-		Object.base(this, complete);
+	G.SoundPool = function() {
+		Object.base(this);
 	}
 
 	var proto = G.SoundPool.inherits(G.BaseLibrary);
@@ -63,7 +63,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			});
 		}, false);
 
-		// FIXME: this seems to help loading of sound files in Chrome...
 		a.preload = "metadata";
 		a.src = src;
 		a.load();
