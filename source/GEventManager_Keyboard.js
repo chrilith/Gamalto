@@ -44,23 +44,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var base = G.EventManager;
 
 	base._addManager("BIT_KEYBOARD", {
-		init: function() {
-			if (this._listen & base.BIT_KEYBOARD) {
-				this._handlerKeyboard = this._handleKey.bind(this);
-			}
-		},
+		init: function() { },
 		listen: function() {
 			if (this._listen & base.BIT_KEYBOARD) {
-				var h = this._handlerKeyboard;
-				env.addEventListener("keydown", h, false);
-				env.addEventListener("keyup", h, false);
+				env.addEventListener("keydown", this, false);
+				env.addEventListener("keyup", this, false);
 			}
 		},
 		release: function() {
 			if (this._listen & base.BIT_KEYBOARD) {
-				var h = this._handlerKeyboard;
-				env.removeEventListener("keydown", h, false);
-				env.removeEventListener("keyup", h, false);
+				env.removeEventListener("keydown", this, false);
+				env.removeEventListener("keyup", this, false);
 			}
 		}
 	});
@@ -131,7 +125,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return !!(q.push(evt));
 	}
 
-	proto._handleKey = function(e) {
+	proto.handleEvent = function(e) {
 		switch (e.type) {
 			case "keydown":
 			case "keyup":

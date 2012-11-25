@@ -31,13 +31,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function() {
 
 	/**
 	 * Dependencies
 	 */
 	gamalto.require("EventManager");
-	gamalto.using("KeyboardEvent");
+	gamalto.using("KeyboardEvent");	// FIXME: iCade consts are required
 	
 	/* Local */
 	var input, base = G.EventManager;
@@ -45,76 +45,72 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	base._addManager("BIT_KBICADE", {
 		init: function() {
 			if (this._listen & base.BIT_KBICADE) {
-				var body,
-					h = this._handlerTouchCade = this._handleTouchCade.bind(this);
-				this._handlerKeyCade = this._handleKeyCade.bind(this);
-				
 				// Element to enable external keyboard and activate iCade
 				if (!input) {
 					input = document.createElement("input");
 					input.style.position = "absolute";
 					input.style.top = "-9999px";
 				}
+				// CHECKME: we cannot call init() before Gamalto.init()
 				document.addEventListener("DOMContentLoaded", function() {
-					body = document.body;
+					var body = document.body;
 					body.appendChild(input);
-					body.addEventListener("touchstart", h, false);
+					body.addEventListener("touchstart", this, false);
 				}, false);
 			}
 		},
 		listen: function() {
 			if (this._listen & base.BIT_KBICADE) {
-				input.addEventListener("keydown", this._handlerKeyCade, false);
+				input.addEventListener("keydown", this, false);
 			}
 		},
 		release: function() {
 			if (this._listen & base.BIT_KBICADE) {
-				input.removeEventListener("keydown", this._handlerKeyCade, false);
-				document.body.removeEventListener("touchstart", this._handlerTouchCade, false);
+				input.removeEventListener("keydown", this, false);
+				document.body.removeEventListener("touchstart", this, false);
 				input.parentNode.removeChild(input);
 			}
 		}
 	});
 
-	var proto = base.prototype;
+	var proto = base.prototype,
+		 _cst = G.Event,
+		_slow = [16, 17, 18, 91, 93],
+		_test = [
+			87, 69, _cst.K_ICADE_UP,
+			88, 90, _cst.K_ICADE_DOWN,
+			65, 81, _cst.K_ICADE_LEFT,
+			68, 67, _cst.K_ICADE_RIGHT,
+
+			89, 84, _cst.K_ICADE_FIRE1,
+			85, 70, _cst.K_ICADE_FIRE2,
+			73, 77, _cst.K_ICADE_FIRE3,
+			72, 82, _cst.K_ICADE_FIRE4,
+			74, 78, _cst.K_ICADE_FIRE5,
+			75, 80, _cst.K_ICADE_FIRE6,
+
+			79, 71, _cst.K_ICADE_FIREX1,
+			76, 86, _cst.K_ICADE_FIREX2
+		];
 	
 	proto._pushKeyCade = function(e) {
-		var i, key, type,
+		var i, type,
 			q = this._q,
-			cst = G.Event;
+			key = (e.keyCode || e.which);
 
-		key = (e.keyCode || e.which);
-		// Prevent slowdown, we are polling on the input only
+		// Prevent slowdown: we are polling on the input only
 		// and so everything can be ignored but the special keys
-		if ([16,17,18,91,93].indexOf(key) == -1 &&
+		if (_slow.indexOf(key) == -1 &&
 				!e.ctrlKey && !e.metaKey) {	// For system shortcuts
 			e.preventDefault();
 		}
 		if (q.length == 128) {
 			return false;
 		}		
-
-		var test = [
-			87, 69, cst.K_ICADE_UP,
-			88, 90, cst.K_ICADE_DOWN,
-			65, 81, cst.K_ICADE_LEFT,
-			68, 67, cst.K_ICADE_RIGHT,
-
-			89, 84, cst.K_ICADE_FIRE1,
-			85, 70, cst.K_ICADE_FIRE2,
-			73, 77, cst.K_ICADE_FIRE3,
-			72, 82, cst.K_ICADE_FIRE4,
-			74, 78, cst.K_ICADE_FIRE5,
-			75, 80, cst.K_ICADE_FIRE6,
-
-			79, 71, cst.K_ICADE_FIREX1,
-			76, 86, cst.K_ICADE_FIREX2
-		];
-		
-		for (i = 0; i < test.length; i += 3) {
-			if (key == test[i+0] || key == test[i+1]) {
-				type = (key == test[i+1]) ? cst.KEYUP : e.type;
-				key  = test[i+2];
+		for (i = 0; i < _test.length; i += 3) {
+			if (key == _test[i+0] || key == _test[i+1]) {
+				type = (key == _test[i+1]) ? _cst.KEYUP : e.type;
+				key  = _test[i+2];
 				break;
 			}
 		}
@@ -130,18 +126,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return !!(q.push(evt));
 	}
 
-	proto._handleKeyCade = function(e) {
+	proto.handleEvent = function(e) {
 		switch (e.type) {
 			case "keydown":
 				this._pushKeyCade(e);
 				break;
-		}
-	}
-	
-	proto._handleTouchCade = function(e) {
-		if (e.target == G.getContainer()) {
-			input.focus();
+			case "touchstart":
+				if (e.target == G.getContainer()) {
+					input.focus();
+				}
+				break;
 		}
 	}
 
-})(ENV);
+})();
