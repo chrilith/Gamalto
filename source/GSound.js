@@ -64,7 +64,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._startTime = Date.now();
 
 		// Try to play the sound
-		a.currentTime = 0;
+		if (a.readyState >= a.HAVE_METADATA) {
+			a.currentTime = 0;
+		}
 		a.play();
 		
 		// Should be playing...
