@@ -46,7 +46,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// TODO: keepOriginal?
 		
 		for (var i = 0; i < managers.length; i++) {
-			managers[i].init.call(this);
+			if (listen & (1 << i)) {
+				managers[i].init.call(this);
+			}
 		}
 	}
 
@@ -68,7 +70,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (!o._isPolling) {
 			o._isPolling = true;
 			for (var i = 0; i < managers.length; i++) {
-				managers[i].listen.call(this);
+				if (this._listen & (1 << i)) {
+					managers[i].listen.call(this);
+				}
 			}
 		}
 
@@ -85,7 +89,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto._release = function() {
 		for (var i = 0; i < managers.length; i++) {
-			managers[i].release.call(this);
+			if (this._listen & (1 << i)) {
+				managers[i].release.call(this);
+			}
 		}
 
 		this._q = []; // clear Q
