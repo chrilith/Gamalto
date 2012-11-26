@@ -41,25 +41,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	
 	/* Local */
-	var base = G.EventManager;
-
-	base._addManager("BIT_KEYBOARD", {
-		init: function() { },
-		listen: function() {
-			if (this._listen & base.BIT_KEYBOARD) {
-				env.addEventListener("keydown", this, false);
-				env.addEventListener("keyup", this, false);
-			}
-		},
-		release: function() {
-			if (this._listen & base.BIT_KEYBOARD) {
-				env.removeEventListener("keydown", this, false);
-				env.removeEventListener("keyup", this, false);
-			}
+	var base = G.EventManager,
+		manager = function(parent) {
+			this._parent = parent;
 		}
-	});
 
-	var proto = base.prototype;
+	base._addManager("BIT_KEYBOARD", manager);	
+	
+	var proto = manager.prototype;
+	
+	proto.init = function() {		
+		// Manager extensions
+		var that = this;
+		base.prototype.enableKeyRepeat = function(delay, interval) {
+			that.enableKeyRepeat(delay, interval);
+		}
+	}
+
+	proto.listen = function() {
+		env.addEventListener("keydown", this, false);
+		env.addEventListener("keyup", this, false);
+	}
+
+	proto.release = function() {
+		env.removeEventListener("keydown", this, false);
+		env.removeEventListener("keyup", this, false);
+	}
 	
 	/* TODO: Involve a constant polling (or readable in poll only??).
 	   If needed, _release() will flush Q only
@@ -79,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._pushKey = function(e) {
-		var t, q = this._q;
+		var t, q = this._parent._q;
 		if (q.length == 128) {
 			return false;
 		}
@@ -132,7 +139,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._pushKey(e);
 				break;
 		}
-		//console.log(e);
 	}
 
 })(ENV);

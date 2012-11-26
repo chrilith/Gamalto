@@ -40,14 +40,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.EventManager = function(listen) {
-	//	this._isPolling = false;
-		this._q = [];
-		this._listen = listen;
-		// TODO: keepOriginal?
+//->	this._isPolling = false;
+		this._q = [];			// Event queue
+		this._man = [];			// Active managers
 		
 		for (var i = 0; i < managers.length; i++) {
 			if (listen & (1 << i)) {
-				managers[i].init.call(this);
+				var man = new managers[i](this);
+					man.init();
+				this._man.push(man);
 			}
 		}
 	}
@@ -64,15 +65,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.EventManager.inherits(G.Object);
 	
 	proto.poll = function() {
-		var o = this,
-			h = o._handler;
+		var i, o = this,
+			man = this._man;
 	
 		if (!o._isPolling) {
 			o._isPolling = true;
-			for (var i = 0; i < managers.length; i++) {
-				if (this._listen & (1 << i)) {
-					managers[i].listen.call(this);
-				}
+			for (i = 0; i < man.length; i++) {
+				man[i].listen();
 			}
 		}
 
@@ -89,10 +88,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._release = function() {
-		for (var i = 0; i < managers.length; i++) {
-			if (this._listen & (1 << i)) {
-				managers[i].release.call(this);
-			}
+		var i, man = this._man;
+		for (i = 0; i < man.length; i++) {
+			man[i].release();
 		}
 
 		this._q = []; // clear Q

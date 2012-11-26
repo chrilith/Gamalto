@@ -40,62 +40,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.using("KeyboardEvent");	// FIXME: iCade consts are required
 	
 	/* Local */
-	var input, base = G.EventManager;
-
-	base._addManager("BIT_KBICADE", {
-		init: function() {
-			if (this._listen & base.BIT_KBICADE) {
-				// Element to enable external keyboard and activate iCade
-				if (!input) {
-					input = document.createElement("input");
-					input.style.position = "absolute";
-					input.style.top = "-9999px";
-				}
-				// CHECKME: we cannot call init() before Gamalto.init()
-				document.addEventListener("DOMContentLoaded", function() {
-					var body = document.body;
-					body.appendChild(input);
-					body.addEventListener("touchstart", this, false);
-				}, false);
-			}
-		},
-		listen: function() {
-			if (this._listen & base.BIT_KBICADE) {
-				input.addEventListener("keydown", this, false);
-			}
-		},
-		release: function() {
-			if (this._listen & base.BIT_KBICADE) {
-				input.removeEventListener("keydown", this, false);
-				document.body.removeEventListener("touchstart", this, false);
-				input.parentNode.removeChild(input);
-			}
-		}
-	});
-
-	var proto = base.prototype,
-		 _cst = G.Event,
+	var input,
+		base = G.EventManager,
+		E = G.Event,
 		_slow = [16, 17, 18, 91, 93],
 		_test = [
-			87, 69, _cst.K_ICADE_UP,
-			88, 90, _cst.K_ICADE_DOWN,
-			65, 81, _cst.K_ICADE_LEFT,
-			68, 67, _cst.K_ICADE_RIGHT,
+			87, 69, E.K_ICADE_UP,
+			88, 90, E.K_ICADE_DOWN,
+			65, 81, E.K_ICADE_LEFT,
+			68, 67, E.K_ICADE_RIGHT,
 
-			89, 84, _cst.K_ICADE_FIRE1,
-			85, 70, _cst.K_ICADE_FIRE2,
-			73, 77, _cst.K_ICADE_FIRE3,
-			72, 82, _cst.K_ICADE_FIRE4,
-			74, 78, _cst.K_ICADE_FIRE5,
-			75, 80, _cst.K_ICADE_FIRE6,
+			89, 84, E.K_ICADE_FIRE1,
+			85, 70, E.K_ICADE_FIRE2,
+			73, 77, E.K_ICADE_FIRE3,
+			72, 82, E.K_ICADE_FIRE4,
+			74, 78, E.K_ICADE_FIRE5,
+			75, 80, E.K_ICADE_FIRE6,
 
-			79, 71, _cst.K_ICADE_FIREX1,
-			76, 86, _cst.K_ICADE_FIREX2
-		];
+			79, 71, E.K_ICADE_FIREX1,
+			76, 86, E.K_ICADE_FIREX2
+		],
+		manager = function(parent) {
+			this._parent = parent;
+		};
+
+	base._addManager("BIT_KBICADE", manager);
+
+	var proto = manager.prototype;
+	
+	proto.init = function() {
+		// Element to enable external keyboard and activate iCade
+		if (!input) {
+			input = document.createElement("input");
+			input.style.position = "absolute";
+			input.style.top = "-9999px";
+		}
+		// CHECKME: we cannot call init() before Gamalto.init()
+		document.addEventListener("DOMContentLoaded", function() {
+			var body = document.body;
+			body.appendChild(input);
+			body.addEventListener("touchstart", this, false);
+		}, false);
+	}
+
+	proto.listen = function() {
+		input.addEventListener("keydown", this, false);
+	}
+
+	proto.release = function() {
+		input.removeEventListener("keydown", this, false);
+		document.body.removeEventListener("touchstart", this, false);
+		input.parentNode.removeChild(input);
+	}
 	
 	proto._pushKeyCade = function(e) {
 		var i, type,
-			q = this._q,
+			q = this._parent._q,
 			key = (e.keyCode || e.which);
 
 		// Prevent slowdown: we are polling on the input only
@@ -109,7 +109,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}		
 		for (i = 0; i < _test.length; i += 3) {
 			if (key == _test[i+0] || key == _test[i+1]) {
-				type = (key == _test[i+1]) ? _cst.KEYUP : e.type;
+				type = (key == _test[i+1]) ? E.KEYUP : e.type;
 				key  = _test[i+2];
 				break;
 			}
