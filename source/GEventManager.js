@@ -78,7 +78,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Prevent useless events registration
 		env.clearTimeout(o._timerID);
-		// FIXME: doesn't this break event polling?
+		// Polling is reset here, but set again if _isPolling == false
 		o._timerID = env.setTimeout(this._release.bind(this), 10000);
 	
 		var q = this._q;
