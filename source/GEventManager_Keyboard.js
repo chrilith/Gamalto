@@ -50,13 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	var proto = manager.prototype;
 	
-	proto.init = function() {		
-		// Manager extensions
-		var that = this;
-		base.prototype.enableKeyRepeat = function(delay, interval) {
-			that.enableKeyRepeat(delay, interval);
-		}
-	}
+	proto.init = function(){}
 
 	proto.listen = function() {
 		env.addEventListener("keydown", this, false);
@@ -68,25 +62,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		env.removeEventListener("keyup", this, false);
 	}
 	
+	
+	// EventManager extensions
+	base.prototype.enableKeyRepeat = function(delay, interval) {
+		this._rDelay = delay;		// 500
+		this._rInterval = interval;	// 30
+	}
+
 	/* TODO: Involve a constant polling (or readable in poll only??).
 	   If needed, _release() will flush Q only
-	proto.getModifiersState = function() {
+	base.prototype.getModifiersState = function() {
 		return ;
 	}
 	
-	proto.disableSystemKey = function() {
+	base.prototype.disableSystemKey = function() {
 		// do a preventDefaut with useCapture = true ??
 		// Enable F11 for example, or Windows key?
 	}
 	*/
 	
-	proto.enableKeyRepeat = function(delay, interval) {
-		this._rDelay = delay;		// 500
-		this._rInterval = interval;	// 30
-	}
-	
 	proto._pushKey = function(e) {
-		var t, q = this._parent._q;
+		var t,
+			p = this._parent,
+			q = p._q;
 		if (q.length == 128) {
 			return false;
 		}
@@ -109,7 +107,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// Same event?
 			if (cur.equals(evt)) {
 				// Should we repeat?
-				if (n == lst && (t = (cur._repeat ? this._rInterval : this._rDelay) | 0)) {
+				if (n == lst && (t = (cur._repeat ? p._rInterval : p._rDelay) | 0)) {
 					// Not in time, ignore...
 					if ((Date.now() - cur._time) < t) {	// TODO: add delta to event timeStamp
 						return false;
