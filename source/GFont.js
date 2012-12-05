@@ -45,9 +45,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Font = function(bitmap, r, count, tw, th, firstLetter) {
+	G.Font = function(bitmap, firstLetter, tw, th, count, r) {
 		var o = this;
-		Object.base(o, bitmap, r, count, tw, th);
+		Object.base(o, bitmap, tw, th, count, r);
 		o._bitmap = bitmap;
 		o._firstLetter = firstLetter.charCodeAt(0);
 	}
