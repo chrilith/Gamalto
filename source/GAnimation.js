@@ -41,8 +41,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Animation = function(bitmap, r, count, tw, th) {
-		Object.base(this, bitmap, r, count, tw, th);
+	G.Animation = function(bitmap, tw, th, count, r) {
+		Object.base(this, bitmap, tw, th, count, r);
 		this._curr = 0;
 	//	this._speed
 	}
