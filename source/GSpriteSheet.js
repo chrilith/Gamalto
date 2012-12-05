@@ -41,9 +41,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.SpriteSheet = function(bitmap, r, count, tw, th) {
+	G.SpriteSheet = function(bitmap, tw, th, count, r) {
 		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
-		Object.base(this, r, count, tw, th);
+
+		Object.base(this, tw, th, count, r);
 		this._bitmap = bitmap;
 	}
 	

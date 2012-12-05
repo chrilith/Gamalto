@@ -39,19 +39,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.SectionList = function(r, count, tw, th) {
+	G.SectionList = function(tw, th, count, r) {
 		var o = this;
 	
 		o.length = 0;
 		o._list = [];
-		o.setSections(r, count, tw, th);
+		o.setSections(tw, th, count, r);
 	}
 	
 	/* Inheritance and shortcut */
 	var proto = G.SectionList.inherits(G.Object);
 	
 	/* Instance methods */
-	proto.setSections = function(r, count, tw, th) {
+	proto.setSections = function(tw, th, count, r) {
 		this.length += count;
 		for (var y = r.tL.y; y < r.bR.y; y += th) {
 			for (var x = r.tL.x; x < r.bR.x; x += tw) {
