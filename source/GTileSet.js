@@ -40,14 +40,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileSet = function(bitmap, r, count, tw, th) {
+	G.TileSet = function(bitmap, tw, th, count, r) {
 		this._tile = new G.Size(tw, th);
-		Object.base(this, bitmap, r, count, tw, th);
+		Object.base(this, bitmap, tw, th, count, r);
 	};
 
 	var proto = G.TileSet.inherits(G.SpriteSheet);
 
-	proto.setSections = function(r, count, tw, th) {
+	proto.setSections = function(tw, th, count, r) {
 		var t = this._tile,
 			w = t.width,
 			h = t.height;
@@ -58,7 +58,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		tw = tw || w,
 		th = th || h;
-		G.TileSet.base.setSections.call(this, r, count, tw, th);
+		G.TileSet.base.setSections.call(this, tw, th, count, r);
 	}
 
 	proto.createSection = function(x, y, w, h) {
