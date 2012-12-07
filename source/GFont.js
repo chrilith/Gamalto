@@ -63,14 +63,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 		for (c = 0; c < text.length; c++) {
 			i = text.charCodeAt(c) - o._firstLetter;
-			if (!(s = o.getSection(i))) {
-				continue;
+			if ((s = o.getSection(i))) {
+				renderer.drawBitmapSection(o._bitmap, x + w, y, s);
+				w += s.width;
+				h  = Math.fmax(s.height, h);
 			}
-			renderer.drawBitmapSection(o._bitmap, x + w, y, s);
-			w += s.width;
-			h  = Math.fmax(s.height, h);
 		}
-	
 		return new G.Rect(x, y, w, h);
 	}
 	
