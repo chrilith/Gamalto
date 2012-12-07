@@ -171,8 +171,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		text = text.split("\n");
 		for (c = 0; c < text.length; c++) {
 			s  = this._getBBox(text[c]);
-			w  = Math.fmax(w, s.width);
-			h += s.height;
+			w  = Math.fmax(w, s.w);
+			h += s.h;
 		}	
 		return new G.Size(w, h);
 	}
