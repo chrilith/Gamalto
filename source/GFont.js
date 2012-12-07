@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.require("SpriteSheet");
 	gamalto.using("Bitmap");
-	gamalto.using("Color");
+	gamalto.using("Color");		// Useless, will be style
 	gamalto.using("Rect");
 	gamalto.using("Renderer");
 	gamalto.using("Size");
@@ -50,6 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.base(o, bitmap, tw, th, count, r);
 		o._bitmap = bitmap;
 		o._firstLetter = firstLetter.charCodeAt(0);
+		this.setAlign();
 	}
 	
 	/* Inheritance and shortcut */
@@ -103,63 +104,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 	
-	proto.draw = function(renderer, text, x, y, halign, valign) {
+	proto.draw = function(renderer, text, x, y) {
 		var that = this,
 			shadow = that._shadow;
 	
 		if (shadow) {
 			var prev = that.setColor(shadow.color);
-			that._paint.call(that, renderer, text, x + shadow.x, y + shadow.y, halign, valign);
+			that._paint.call(that, renderer, text, x + shadow.x, y + shadow.y);
 			that.setColor(prev);
 		}
 	
 		return that._paint.apply(that, arguments);
 	}
 	
-	proto._paint = function(renderer, text, x, y, halign, valign) {
+	proto._paint = function(renderer, text, x, y) {
 		var o  = this,
 			d  = o._color ? o._paintColor : o._paintLine,
-			ns = G.Font,
+			S = G.Shape,
+			align = this._align,
 			h  = 0, xx, yy, r,
 			last, l, m;
-	
-		if (!halign && !valign) {
+
+		if (!align || align == (S.ALIGN_LEFT|S.ALIGN_TOP)) {
 			return d.call(o, renderer, text, x, y);
 		}
-	
-		if (valign) {
+
+		// Do we have a bit set for vertical alignment
+
+		if (align & S.ALIGN_BOTTOM) {
 			m = o._getBounds(text, true);
 	
-			switch (valign) {
-				case ns.AV_MIDDLE:
-					y -= m.height >> 1;
-					break;
-				case ns.AV_BOTTOM:
-					y -= m.height;
-					break;
+			if (align & S.ALIGN_TOP) {
+				y -= m.height >> 1;
+			} else {
+				y -= m.height;
 			}
 		}
 	
 		text = text.split('\n');
 		last = text.length;
 		yy = y;
-	
+
 		for (l = 0; l < last; l++) {
 			xx = x;
-	
-			if (halign) {
+
+			// Do we have a bit set for horizontal alignment
+			if (align & S.ALIGN_RIGHT) {
 				m = o._getBounds(text[l]);	// Do not compute twice
 	
-				switch (halign) {
-					case ns.AH_CENTER:
-						xx -= m.width >> 1;
-						break;
-					case ns.AH_RIGHT:
-						xx -= m.width;
-						break;
+				if (align & S.ALIGN_LEFT) {
+					xx -= m.width >> 1;
+				} else {
+					xx -= m.width;
 				}
 			}
-	
+
 			r = d.call(o, renderer, text[l], xx, yy);
 			yy += r.height;
 		}
@@ -176,9 +175,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.setShadow = function(offsetX, offsetY, color) {
+		// FIXME: really create a new object?
 		this._shadow = !offsetX && !offsetY ? null : { x: offsetX, y: offsetY, color: color };
 	}
-	
+
+	proto.setAlign = function(align) {
+		this._align = align;
+	}
+
 	// TODO: multi? useless, pass a param anyway but internally
 	// if \n then = multi...
 	proto._getBounds = function(text, multi) {
@@ -205,15 +209,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 		return new G.Size(w, h);
 	}
-	
-	var constant = G.Font;
-
-	// TODO: use G.Shape consts
-	constant.AH_LEFT   = 0;
-	constant.AH_CENTER = 1;
-	constant.AH_RIGHT  = 2;
-	constant.AV_TOP    = 0;
-	constant.AV_MIDDLE = 1;
-	constant.AV_BOTTOM = 2;
 
 })();
