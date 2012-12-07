@@ -149,7 +149,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 	
-	//TODO: _.setStyle
 	proto.setStyle = function(style) {
 		var prev = this._style;
 		this._style = style;
