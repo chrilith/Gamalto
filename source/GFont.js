@@ -92,22 +92,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		renderer.drawBitmap(buff, x, y);
 
+		// The line was painted at (0,0) in the buffer, readjust the box
+		// position according to the requested coordinates
 		rect.tL.x = x;
 		rect.tL.y = y;
 		return rect;
 	}
 	
 	proto.draw = function(renderer, text, x, y) {
-		var that = this,
-			shadow = that._shadow;
+		var shadow = that._shadow;
 	
 		if (shadow) {
-			var prev = that.setStyle(shadow.style);
-			that._paint.call(that, renderer, text, x + shadow.x, y + shadow.y);
-			that.setStyle(prev);
+			var prev = this.setStyle(shadow.style);
+			this._paint(renderer, text, x + shadow.x, y + shadow.y);
+			this.setStyle(prev);
 		}
 	
-		return that._paint.apply(that, arguments);
+		return this._paint.apply(that, arguments);
 	}
 	
 	proto._paint = function(renderer, text, x, y) {
