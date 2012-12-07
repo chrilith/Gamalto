@@ -36,7 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.require("SpriteSheet");
 	gamalto.using("Bitmap");
-	gamalto.using("Color");		// Useless, will be style
 	gamalto.using("Rect");
 	gamalto.using("Renderer");
 	gamalto.using("Size");
@@ -75,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return new G.Rect(x, y, w, h);
 	}
 	
-	proto._paintColor = function(renderer, text, x, y) {
+	proto._paintStyle = function(renderer, text, x, y) {
 		var rect, area,
 			size = this.getBounds(text),
 			buff = this._buffer;
@@ -90,7 +89,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		rect = this._paintLine(area, text, 0, 0);
 
 		area.enableMask(true);
-		area.fillRect(null, this._color);
+		area.fillRect(null, this._style);
 		area.enableMask(false);
 
 		renderer.drawBitmap(buff, x, y);
@@ -105,9 +104,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			shadow = that._shadow;
 	
 		if (shadow) {
-			var prev = that.setColor(shadow.color);
+			var prev = that.setStyle(shadow.style);
 			that._paint.call(that, renderer, text, x + shadow.x, y + shadow.y);
-			that.setColor(prev);
+			that.setStyle(prev);
 		}
 	
 		return that._paint.apply(that, arguments);
@@ -115,7 +114,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto._paint = function(renderer, text, x, y) {
 		var o  = this,
-			d  = o._color ? o._paintColor : o._paintLine,
+			d  = o._style ? o._paintStyle : o._paintLine,
 			S = G.Shape,
 			align = this._align,
 			h  = 0, xx, yy, r,
@@ -131,7 +130,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			m  = o.getBounds(text);	
 			y -= m.height >> (align & S.ALIGN_TOP ? 1 : 0);
 		}
-	
+
 		text = text.split('\n');
 		last = text.length;
 		yy = y;
@@ -141,7 +140,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			// Do we have a bit set for horizontal alignment
 			if (align & S.ALIGN_RIGHT) {
-				m   = o._getBBox(text[l]);	// Do not compute twice
+				m   = o._getBBox(text[l]);	// FIXME: Do not compute twice?
 				xx -= m.w >> (align & S.ALIGN_LEFT ? 1 : 0);
 			}
 
@@ -153,16 +152,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	//TODO: _.setStyle
-	proto.setColor = function(color) {
-		var that = this,
-			prev = that._color;
-		that._color = color;
+	proto.setStyle = function(style) {
+		var prev = this._style;
+		this._style = style;
 		return prev;
 	}
 	
-	proto.setShadow = function(offsetX, offsetY, color) {
+	proto.setShadow = function(offsetX, offsetY, style) {
 		// FIXME: really create a new object?
-		this._shadow = !offsetX && !offsetY ? null : { x: offsetX, y: offsetY, color: color };
+		this._shadow = !offsetX && !offsetY ? null : { x: offsetX, y: offsetY, style: style };
 	}
 
 	proto.setAlign = function(align) {
