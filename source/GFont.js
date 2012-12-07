@@ -143,7 +143,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 
 			r = d.call(o, renderer, text[l], xx, yy);
-			yy += r.h;
+			yy += m.h;
 		}
 	
 		return r;
