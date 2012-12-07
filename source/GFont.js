@@ -76,32 +76,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._paintColor = function(renderer, text, x, y) {
-		var o  = this,
-			m  = o._getBounds(text), r,
-			b  = o._buffer,
-			s  = new G.Surface(m.width, m.height),
-			w1 = m.width,
-			h1 = m.height,
-			w2 = s.width,
-			h2 = s.height;
-			o._buffer = s;
-	
-		if (w1 > w2 || h1 > h2) {
-			s.setSize(Math.fmax(w1, w2), Math.fmax(h1, h2));
+		var rect, area,
+			size = this.getBounds(text),
+			buff = this._buffer;
+
+		if (!buff || buff.width != size.width || buff.height != size.height) {
+			this._buffer = buff = new G.Surface(size.width, size.height);
 		} else {
-			s.clear();
+			buff.clear();
 		}
-		r = o._paintLine(s.renderer, text, 0, 0);
-	
-		s.renderer.enableMask(true);
-		s.renderer.fillRect(null, o._color);
-		s.renderer.enableMask(false);
-	
-		renderer.drawBitmap(s, x, y);
-		
-		r.tL.x = x;
-		r.tL.y = y;
-		return r;
+
+		area = buff.renderer;
+		rect = this._paintLine(area, text, 0, 0);
+
+		area.enableMask(true);
+		area.fillRect(null, this._color);
+		area.enableMask(false);
+
+		renderer.drawBitmap(buff, x, y);
+
+		rect.tL.x = x;
+		rect.tL.y = y;
+		return rect;
 	}
 	
 	proto.draw = function(renderer, text, x, y) {
@@ -132,13 +128,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Do we have a bit set for vertical alignment
 
 		if (align & S.ALIGN_BOTTOM) {
-			m = o._getBounds(text, true);
-	
-			if (align & S.ALIGN_TOP) {
-				y -= m.height >> 1;
-			} else {
-				y -= m.height;
-			}
+			m  = o.getBounds(text);	
+			y -= m.height >> (align & S.ALIGN_TOP ? 1 : 0);
 		}
 	
 		text = text.split('\n');
@@ -150,17 +141,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			// Do we have a bit set for horizontal alignment
 			if (align & S.ALIGN_RIGHT) {
-				m = o._getBounds(text[l]);	// Do not compute twice
-	
-				if (align & S.ALIGN_LEFT) {
-					xx -= m.width >> 1;
-				} else {
-					xx -= m.width;
-				}
+				m   = o._getBBox(text[l]);	// Do not compute twice
+				xx -= m.w >> (align & S.ALIGN_LEFT ? 1 : 0);
 			}
 
 			r = d.call(o, renderer, text[l], xx, yy);
-			yy += r.height;
+			yy += r.h;
 		}
 	
 		return r;
@@ -183,31 +169,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._align = align;
 	}
 
-	// TODO: multi? useless, pass a param anyway but internally
-	// if \n then = multi...
-	proto._getBounds = function(text, multi) {
-		var c, i,
-			o = this,
-			s = o.getSection(0),
+	proto.getBounds = function(text) {
+		var c, i, s,
 			w = 0, h = 0;
 	
-		if (multi) {
-			text = text.split("\n");
-			for (c = 0; c < text.length; c++) {
-				s  = o._getBounds(text[c]);
-				w  = Math.fmax(w, s.width);
-				h += s.height;
-			}
-		} else {
-			for (c = 0; c < text.length; c++) {
-				i = text.charCodeAt(c) - o._firstLetter;
-				s = o.getSection(i);
-				w += s.width;
-				h  = Math.fmax(s.height, h);
-			}
-		}
-	
+		text = text.split("\n");
+		for (c = 0; c < text.length; c++) {
+			s  = this._getBBox(text[c]);
+			w  = Math.fmax(w, s.width);
+			h += s.height;
+		}	
 		return new G.Size(w, h);
+	}
+	
+	proto._getBBox = function(text) {
+		var c, i, s,
+			w = 0, h = 0;
+
+		for (c = 0; c < text.length; c++) {
+			i = text.charCodeAt(c) - this._firstLetter;
+			s = this.getSection(i);
+			w += s.width;
+			h  = Math.fmax(s.height, h);
+		}
+		return { w: w, h:h };
 	}
 
 })();
