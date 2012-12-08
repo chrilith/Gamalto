@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.Color.inherits(G.Object);
 
 	/* Instance methods */
-	proto._toCanvasStyle = function() {
+	proto.__toCanvasStyle = function() {
 		return "rgba("	+  this.r + ", "
 						+  this.g + ", "
 						+  this.b + ", "

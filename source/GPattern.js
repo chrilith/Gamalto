@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.Pattern.inherits(G.Object);
 	
 	/* Instance methods */
-	proto._toCanvasStyle = function() {
+	proto.__toCanvasStyle = function() {
 		return this._pattern;
 	}
 
