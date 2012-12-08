@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
+	var _active;
 
 	/* Dependencies */
 	gamalto.require("Surface");
@@ -49,19 +50,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.Screen.inherits(G.Surface);
 	
 	/* Instance methods */
-	proto.setActive = function(parent) {
+	proto.setActive = function() {
 		 // Disable scanlines
 		this.setScanlines();
 
 		// Add the new screen to the document
-		(parent || G.getContainer()).appendChild(this._canvas);
+		var container = G.getContainer();
+		if (_active) {
+			window.removeEventListener("resize", _active, false);
+			container.removeChild(_active._canvas);
+		}
+		window.addEventListener("resize", (_active = this), false);
+		container.appendChild(this._canvas);
 
 		// Adjust the screen stretching
 		this.setStretch();
-		
-		if (!this._resizeHandler) {
-			window.addEventListener("resize", (this._resizeHandler = this._handleResize.bind(this)), false);
-		}
 	}
 
 	proto.enableFiltering = function(isOn) {
@@ -120,7 +123,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 		
-	proto._handleResize = function() {
+	proto.handleEvent = function(e) {
 		this.setStretch();
 	}
 	
