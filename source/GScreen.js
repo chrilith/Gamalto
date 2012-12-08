@@ -33,9 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
-	var _active;
-
-
 	/* Dependencies */
 	gamalto.require("Surface");
 	gamalto.using("Color");
@@ -62,8 +59,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Adjust the screen stretching
 		this.setStretch();
 		
-		if (_active) { window.removeEventListener("resize", _active, false); }
-		window.addEventListener("resize", (_active = this), false);
+		if (!this._resizeHandler) {
+			window.addEventListener("resize", (this._resizeHandler = this._handleResize.bind(this)), false);
+		}
 	}
 
 	proto.enableFiltering = function(isOn) {
@@ -121,7 +119,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 	}
-			
+		
+	proto._handleResize = function() {
+		this.setStretch();
+	}
+	
 	proto.setStretch = function(mode) {
 		var c = this._canvas,
 			s = c.style,
@@ -166,14 +168,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		s.width  = rw + "px";
 		s.height = rh + "px";
-	}
-
-	proto.handleEvent = function(e) {
-		switch (e.type) {
-			case "resize":
-				this.setStretch();
-				break;
-		}
 	}
 
 	var stat = G.Screen;
