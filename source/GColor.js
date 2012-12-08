@@ -50,9 +50,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Instance methods */
 	proto.__toCanvasStyle = function() {
-		return "rgba("	+  this.r + ", "
-						+  this.g + ", "
-						+  this.b + ", "
+		return "rgba("	+  this.r + ","
+						+  this.g + ","
+						+  this.b + ","
 						+ (this.a / 255) + ")";
 	}
 
