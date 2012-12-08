@@ -104,7 +104,7 @@ var ENV = window;
 					elem = elem.offsetParent;
 				}
 
-				unit |= 0;
+				unit = unit || 0;
 				return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
 			}
 		}
