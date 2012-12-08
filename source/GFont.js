@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.draw = function(renderer, text, x, y) {
-		var shadow = that._shadow;
+		var shadow = this._shadow;
 	
 		if (shadow) {
 			var prev = this.setStyle(shadow.style);
@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.setStyle(prev);
 		}
 	
-		return this._paint.apply(that, arguments);
+		return this._paint.apply(this, arguments);
 	}
 	
 	proto._paint = function(renderer, text, x, y) {
