@@ -114,20 +114,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._paint = function(renderer, text, x, y) {
 		var o  = this,
 			d  = o._style ? o._paintStyle : o._paintLine,
-			S = G.Shape,
 			align = this._align,
 			h  = 0, xx, yy, r,
 			last, l, m;
 
-		if (!align || align == (S.ALIGN_LEFT|S.ALIGN_TOP)) {
+		if (!align || align == (G.ALIGN_LEFT|G.ALIGN_TOP)) {
 			return d.call(o, renderer, text, x, y);
 		}
 
 		// Do we have a bit set for vertical alignment
 
-		if (align & S.ALIGN_BOTTOM) {
+		if (align & G.ALIGN_BOTTOM) {
 			m  = o.getBounds(text);	
-			y -= m.height >> (align & S.ALIGN_TOP ? 1 : 0);
+			y -= m.height >> (align & G.ALIGN_TOP ? 1 : 0);
 		}
 
 		text = text.split('\n');
@@ -138,9 +137,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			xx = x;
 
 			// Do we have a bit set for horizontal alignment
-			if (align & S.ALIGN_RIGHT) {
+			if (align & G.ALIGN_RIGHT) {
 				m   = o._getBBox(text[l]);	// FIXME: Do not compute twice?
-				xx -= m.w >> (align & S.ALIGN_LEFT ? 1 : 0);
+				xx -= m.w >> (align & G.ALIGN_LEFT ? 1 : 0);
 			}
 
 			r = d.call(o, renderer, text[l], xx, yy);

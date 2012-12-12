@@ -196,8 +196,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._check = function(x, y, active) {
 		var j, i, xx, yy, tc,
 			sh = this._shapes,
-			r = this._rect,
-			S = G.Shape;
+			r = this._rect;
 
 		for (j = 0; j < COUNT; j++) {
 			var p = sh.nfo[j];
@@ -206,11 +205,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				yy = y - r.y;
 				tc = p[i];
 
-				if (tc.align & S.ALIGN_BOTTOM) {
-					yy -= r.h >> (tc.align & S.ALIGN_TOP ? 1 : 0);
+				if (tc.align & G.ALIGN_BOTTOM) {
+					yy -= r.h >> (tc.align & G.ALIGN_TOP ? 1 : 0);
 				}
-				if (tc.align & S.ALIGN_RIGHT) {
-					xx -= r.w >> (tc.align & S.ALIGN_LEFT ? 1 : 0);
+				if (tc.align & G.ALIGN_RIGHT) {
+					xx -= r.w >> (tc.align & G.ALIGN_LEFT ? 1 : 0);
 				}
 
 				// TODO: check for change and raise event
