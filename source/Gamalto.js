@@ -113,6 +113,15 @@ var ENV = window;
 	/* Globalization */
 	env.G  = env.Gamalto = Gamalto;
 
+	/* Global contants */
+	Gamalto.ALIGN_LEFT		= 1 << 0;
+	Gamalto.ALIGN_RIGHT		= 1 << 1;
+	Gamalto.ALIGN_TOP		= 1 << 2;
+	Gamalto.ALIGN_BOTTOM	= 1 << 3;
+
+	Gamalto.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
+	Gamalto.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
+
 	/* Namespace for special effects objects */
 	env.GE = G.Effects = {};
 
