@@ -51,29 +51,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			that = this;
 
 		x.onreadystatechange = function() {
-			var e, exception, success, data, x = this;
-			if (x.readyState == x.DONE) {
-				if ((success = (x.status || 200)) == 200) {
-					try {
-						data = that._toData(x);
-					} catch(e) {
-						exception = e;
+			var e, exception, success;
+			switch (x.readyState) {
+				case x.LOADING:
+					data = true;
+					break;
+				case x.DONE:
+					if (data && (success = (x.status || 200)) == 200) {
+						try {
+							data = that._toData(x);
+						} catch(e) {
+							exception = e;
+						}
+						success = success && !!data;
 					}
-					success = success && !!data;
-				}
-
-				if (!success) {
-					promise.reject(that._failed(name, src, exception));
-				} else {
-					that._list[G.N(name)] = data;
-					promise.resolve({
-						source: that,
-						item: name
-					});
-				}
+	
+					if (!success) {
+						promise.reject(that._failed(name, src, exception));
+					} else {
+						that._list[G.N(name)] = data;
+						promise.resolve({
+							source: that,
+							item: name
+						});
+					}
+					break;
 			}
 		}
-	
+
 		x.open(data ? "POST" : "GET", src);
 		x.send(data || null);
 		return promise;
