@@ -43,15 +43,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.vectorInShape = function(v) {
 		return this.pointInShape(v.x, v.y);
 	}
-
-	var constant = G.Shape;
-
-	constant.ALIGN_LEFT		= 1 << 0;
-	constant.ALIGN_RIGHT	= 1 << 1;
-	constant.ALIGN_TOP		= 1 << 2;
-	constant.ALIGN_BOTTOM	= 1 << 3;
-
-	constant.ALIGN_CENTER = (1 << 0 | 1 << 1); 	// LEFT+RIGHT
-	constant.ALIGN_MIDDLE = (1 << 2 | 1 << 3);	// TOP+BOTTOM
-
+	
 })();
