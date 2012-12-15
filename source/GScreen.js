@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
-	var _active;
+	var _active, _scanlines;
 
 	/* Dependencies */
 	gamalto.require("Surface");
@@ -51,7 +51,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Instance methods */
 	proto.setActive = function() {
-		 // Disable scanlines
+		// Disable scanlines
 		this.setScanlines();
 
 		// Add the new screen to the document
@@ -87,13 +87,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		if (container) {	
 			var isOn = (dark || light),
-				div = this._scanlines;
+				div = _scanlines;
 
 			if (isOn) {
 				var s = new G.Surface(1, 2),
 					r = s.renderer,
 					c = s._context.canvas,
-					p = G._xywh(this._canvas, container);
+					p = G._xywh(this._canvas, container, "px");
 
 				// Prepare the object holding the scanline effect
 				div = (div || document.createElement("div"));
@@ -114,11 +114,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				// Append the scanlines to the document
 				s.backgroundImage = "url(" + c.toDataURL() + ")";
 				container.appendChild(div);
-				this._scanlines = div;
+				_scanlines = div;
 
 			} else if (div) {
 				div.parentNode.removeChild(div);
-				this._scanlines = null;
+				_scanlines = null;
 			}
 		}
 	}
