@@ -43,33 +43,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Animation = function(bitmap, tw, th, count, r) {
 		Object.base(this, bitmap, tw, th, count, r);
-		this._curr = 0;
-	//	this._speed
+		this._speed = 0;
+//var/	this._curr
 	}
-	
+
 	/* Inheritance and shortcut */
 	var proto = G.Animation.inherits(G.SpriteSheet);
-	
+
 	proto.setDuration = function(time) {
 		this._speed = 1 / (time / this.length);
 	}
-	
+
 	proto.update = function(timer, frame) {
-		var u, o = this,
-			l = o.length;
-	
-		frame = G.getDef(frame, o._curr) || 0;
-		if ((frame += timer.elapsedTime * o._speed) >= l) {
-			frame -= l;
+		var length = this.length;
+
+		frame = G.defined(frame, this._curr, 0);
+		if ((frame += timer.elapsedTime * this._speed) >= length) {
+			frame -= length;
 		}
-	
+
 		// Do not round to keep the fractionnal part to stay in sync
-		return (o._curr = frame);
+		return (this._curr = frame);
 	}
-	
-	proto.draw = function(renderer, x, y, i) {
-		i = G.getDef(i, this._curr) || 0;
-		G.Animation.base.draw.call(this, renderer, x, y, i);
+
+	proto.draw = function(renderer, x, y, frame) {
+		frame = G.defined(frame, this._curr, 0);
+		G.Animation.base.draw.call(this, renderer, x, y, frame);
 	}
 
 })();
