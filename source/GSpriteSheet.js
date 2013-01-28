@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			h = bitmap.height;
 
 		r = r || new G.Rect(0, 0, w, h);
-		if ((count = count || -1) < 0) {
+		if ((count = count || -1) < 0) {
 			count = (w / tw | 0) * (h / th | 0);
 		}
 
