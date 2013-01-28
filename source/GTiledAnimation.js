@@ -44,8 +44,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._list = [];
 		this.setDuration(0);
 		this.length = 0;
+//var/	this._curr
+//var/	this._duration
+//var/	this._speed
 	}
-	
+
 	var proto = G.TiledAnimation.inherits(G.Object);
 	
 	proto.add = function(block) {
@@ -60,21 +63,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.update = function(timer, frame) {
-		var u, o = this,
-			l = o.length;
+		var length = this.length;
 	
-		frame = G.getDef(frame, o._curr) || 0;
-		if ((frame += timer.elapsedTime * o._speed) >= l) {
-			frame -= l;
+		frame = G.defined(frame, this._curr, 0);
+		if ((frame += timer.elapsedTime * this._speed) >= length) {
+			frame -= length;
 		}
 	
 		// Do not round to keep the fractionnal part to stay in sync
-		return (o._curr = frame); 
+		return (this._curr = frame); 
 	}
 	
-	proto.draw = function(renderer, x, y, i) {
-		i = G.getDef(i, this._curr) || 0;
-		this._list[i].draw(renderer, x, y);
+	proto.draw = function(renderer, x, y, frame) {
+		frame = G.defined(i, this._curr, 0);
+		this._list[frame].draw(renderer, x, y);
 	}
 
 })();
