@@ -57,7 +57,7 @@ var ENV = window;
 				document.addEventListener('DOMContentLoaded', function() {
 					promise.resolve();
 				}, false);
-				
+
 				return promise;
 			},
 		
@@ -74,9 +74,15 @@ var ENV = window;
 				return (_container || document.body);
 			},
 
-			getDef: function(v1, v2) {
-				var u; // undefined
-				return v1 !== u ? v1 : v2;
+			defined: function(/* vargs... */) {
+				var i,
+					a = arguments,
+					u; // undefined
+
+				for (i = 0; i < a.length; i++) {
+					if (a[i] !== u) { return a[i]; }
+				}
+				return u;
 			},
 			
 			N: function(name) {
@@ -114,6 +120,8 @@ var ENV = window;
 	env.G  = env.Gamalto = Gamalto;
 
 	/* Global contants */
+	Gamalto.NONE			= undefined;
+	
 	Gamalto.ALIGN_LEFT		= 1 << 0;
 	Gamalto.ALIGN_RIGHT		= 1 << 1;
 	Gamalto.ALIGN_TOP		= 1 << 2;
