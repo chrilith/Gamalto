@@ -69,12 +69,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._allocBuffer();
 	}
 	
-	proto.setSpeed = function(tx, ty) {
+	proto.setSpeed = function(px, py) {
 		var s = this._speed;
-		s.x = tx;
-		s.y = ty;
+		s.x = px / 1000;
+		s.y = py / 1000;
 	}
-	
+
 	proto.reset = function() {
 		var p = this._prev,
 			c = this._curr;
@@ -90,7 +90,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return new G.Vector(s.x * dx, s.y * dy);	
 	}
 	
-	proto._update = function(timer, dx, dy) {
+	proto.update = function(timer, dx, dy) {
 		var o = this,
 			p = o._prev,
 			c = o._curr,
@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 		p.x -= c.x;
 		p.y -= c.y;
-	
+
 		return c;
 	}
 	

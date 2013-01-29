@@ -61,29 +61,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.setRegion = function(name, region) {
 		name = G.N(name);
-		if (region){
+		if (region) {
 			this._regs[name] = region;
 		} else if (this._regs[name]) {
 			delete this._regs[name];
 		}
 	}
 	
-	proto.update = function(timer, dx, dy, region) {
-		return this.getRegion(region)._update(timer, dx, dy);
+	proto.update = function(timer, dx, dy, name) {
+		return this.getRegion(name).update(timer, dx, dy);
 	}
 	
-	proto.draw = function(region, sx, sy) {
-		var r = this.getRegion(region),
+	proto.draw = function(sx, sy, name) {
+		var r = this.getRegion(name),
 			c = r._curr;
-		sx = isNaN(sx) ? c.x : sx;
-		sy = isNaN(sy) ? c.y : sy;
-	
-		c.x = 0;	// Reset current position
-		c.y = 0;
-		if (!sx && !sy) {
-			return;
+
+		if (!isNaN(sx) && !isNaN(sy)) {
+			// In that case, reset the current position
+			r.reset();
+		} else {
+			sx = c.x;
+			sy = c.y;
 		}
-		this._move(r, sx, sy);
+		if (sx || sy) {
+			this._move(r, sx, sy);
+		}
 	}
 	
 	proto._move = function(region, sx, sy) {
@@ -107,7 +109,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			dx = (sx > 0 ? sx : 0),
 			dy = (sy > 0 ? sy : 0);
 	
-		// Copy a main surface area to the region buffer. Double buffering is far more effecient
+		// Copy a main surface area to the region buffer. Double buffering is far more efficient
 		dst.clearRect(0, 0, w, h);	// The buffer is never transformed
 		dst.drawImage(src.canvas, cx, cy, ww, hh, dx, dy, ww, hh);
 	
