@@ -92,6 +92,10 @@ var ENV = window;
 			H: function(name) {
 				return "_" + name + "Handler";
 			},
+			
+			_isName: function(name) {
+				return name && name.indexOf("G__") == 0;
+			},
 
 /* Internal */
 			_isObj: function(v) {
