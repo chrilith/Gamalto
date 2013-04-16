@@ -51,47 +51,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.readByte = function() {
-		return this._data[this._position++].charCodeAt(0) & 0xff;
+	proto.readByte = function(at) {
+		if (isNaN(at)) { at = this._position++; }
+		return this._data[at].charCodeAt(0) & 0xff;
 	}
 	
-	proto.readUInt8 = function() {
-		return this.readByte();
+	proto.readUInt8 = function(at) {
+		return this.readByte(at);
 	}
 
-	proto.readSInt8 = function() {
-		return G.Convert.toSInt8(this.readUInt8());
+	proto.readSInt8 = function(at) {
+		return G.Convert.toSInt8(this.readUInt8(at));
 	}
 
 	/* Big Endian */
 
-	proto.readUInt16BE = function() {
-		var b = this.readByte(),
-			a = this.readByte();
+	proto.readUInt16BE = function(at) {
+		var b = this.readByte(at + 0),
+			a = this.readByte(at + 1);
 		return (b << 8) | a;
 	}
 
-	proto.readSInt16BE = function() {
-		return G.Convert.toSInt16(this.readUInt16LE());
+	proto.readSInt16BE = function(at) {
+		return G.Convert.toSInt16(this.readUInt16LE(at));
 	}
 	
-	proto.readUInt32BE = function() {
-		var d = this.readByte(),
-			c = this.readByte(),
-			b = this.readByte(),
-			a = this.readByte();
+	proto.readUInt32BE = function(at) {
+		var d = this.readByte(at + 0),
+			c = this.readByte(at + 1),
+			b = this.readByte(at + 2),
+			a = this.readByte(at + 3);
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
-	proto.readSInt32BE = function() {
-		return G.Convert.toSInt32(this.readUInt32BE());
+	proto.readSInt32BE = function(at) {
+		return G.Convert.toSInt32(this.readUInt32BE(at));
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
-	proto.readUInt16LE = function() {
-		var a = this.readByte(),
-			b = this.readByte();
+	proto.readUInt16LE = function(at) {
+		var a = this.readByte(at + 0),
+			b = this.readByte(at + 1);
 		return (b << 8) | a;
 	}
 
@@ -99,16 +100,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return G.Convert.toSInt16(this.readUInt16LE());
 	}
 
-	proto.readUInt32LE = function() {
-		var a = this.readByte(),
-			b = this.readByte(),
-			c = this.readByte(),
-			d = this.readByte();
+	proto.readUInt32LE = function(at) {
+		var a = this.readByte(at + 0),
+			b = this.readByte(at + 1),
+			c = this.readByte(at + 2),
+			d = this.readByte(at + 3);
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
-	proto.readSInt32LE = function() {
-		return G.Convert.toSInt32(this.readUInt32LE());
+	proto.readSInt32LE = function(at) {
+		return G.Convert.toSInt32(this.readUInt32LE(at));
 	}
 
 	proto.readString = function(length, stopChar) {
