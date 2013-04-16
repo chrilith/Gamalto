@@ -92,4 +92,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
+	proto.memset = function(value, length) {
+		while(length-- > 0) {
+			this.writeByte(value);
+		}
+	}
+
 })();
