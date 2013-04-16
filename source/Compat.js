@@ -61,61 +61,70 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 							  browser specific name.
 		@returns {String}	  The browser specific name if any or 'undefined'.
 	*/
-	op.getMemberName = function(name) {
-		var n, i, u,		// = undefined
-			owner = this;
+	Object.defineProperty(op, "getMemberName", {
+		enumerable: false,
+		value: function(name) {
+			var n, i, u,		// = undefined
+				owner = this;
 
-		if (owner[name] !== u) {
-			return name;
-		}
-		// Get the name to be extended
-		name = name[0].toUpperCase() + name.substr(1);
-		for (i = 0; i < prefix.length; i++) {
-			n = prefix[i] + name;
-			if (n in owner) {
-				return n;
+			if (owner[name] !== u) {
+				return name;
 			}
+			// Get the name to be extended
+			name = name[0].toUpperCase() + name.substr(1);
+			for (i = 0; i < prefix.length; i++) {
+				n = prefix[i] + name;
+				if (n in owner) {
+					return n;
+				}
+			}
+			return u;
 		}
-		return u;
-	}
+	});
 
 	/**
 		@param {String} name  The name of the member you want to get the value.
 		@returns {Object}	  The value of the member if any.
 	*/
-	op.getMember = function(name) {
-		var u,				// = undefined
-			owner = this,
-			n = owner.getMemberName(name);
-		return !n ? u : owner[n];
-	}
+	Object.defineProperty(op, "getMember", {
+		enumerable: false,
+		value: function(name) {
+			var u,				// = undefined
+				owner = this,
+				n = owner.getMemberName(name);
+			return !n ? u : owner[n];
+		}
+	});
 
 	/**
 		@param {String} name  The name of the member you want to set the value.
 		@param {Object} value The value to be set.
 		@returns {Boolean}	  Whether the value has been set.
 	*/
-	op.setMember = function(name, value) {
-		var n, i, owner = this;
+	Object.defineProperty(op, "setMember", {
+		enumerable: false,
+		value: function(name, value) {
+			var n, i, owner = this;
 
-		// Get the correct member name if any
-		if (!(name = owner.getMemberName(name))) {
-			return false;	
-		// Empty value or not a string? set it directly
-		} else if (!value || typeof value != "string") {
-			owner[name] = value;
-			return true;
-		}
-		// Try to set the member value (mainly for CSS props...)
-		for (var i = 0; i < prop.length; i++) {
-			n = prop[i] + value;
-			owner[name] = n;
-			if (owner[name] == n) {
+			// Get the correct member name if any
+			if (!(name = owner.getMemberName(name))) {
+				return false;	
+			// Empty value or not a string? set it directly
+			} else if (!value || typeof value != "string") {
+				owner[name] = value;
 				return true;
 			}
+			// Try to set the member value (mainly for CSS props...)
+			for (var i = 0; i < prop.length; i++) {
+				n = prop[i] + value;
+				owner[name] = n;
+				if (owner[name] == n) {
+					return true;
+				}
+			}
+			return false;
 		}
-		return false;
-	}
+	});
 
 	/**
 		This method let you to defined an existing browser specific method

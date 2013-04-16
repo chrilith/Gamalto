@@ -50,9 +50,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Tests if an object implements an given object definition */
 	if (!("is" in object)) {
-		object.is = function(o) {
-			return this instanceof o;
-		}
+		Object.defineProperty(object, "is", {
+			enumerable: false,
+			value: function(o) {
+				return this instanceof o;
+			}
+		});
 	}
 	
 	/* Object inheritance */
