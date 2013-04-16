@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("ReadableStream");
+	gamalto.require("ReadStream");
 
 	/**
 	 * @constructor
@@ -44,10 +44,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.MemoryStream.inherits(G.ReadableStream);
+	var proto = G.MemoryStream.inherits(G.ReadStream);
 	
 	proto.writeByte = function(data) {
-		this._data[this._position++] = String.fromCharCode(data & 0xff);
+		this._data[this._startAt + this._position++] = String.fromCharCode(data & 0xff);
 	}
 
 	/* Big Endian */
