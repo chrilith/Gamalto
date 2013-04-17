@@ -54,7 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.renderer = new G.Renderer(this);
 	//	this._canvas.style.zIndex = 0;
 	}
-		
+
 	/* Instance methods */
 	proto.enableClipping = function(x, y, width, height) {
 		var ctx = this._context;
@@ -68,11 +68,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		ctx.rect(x, y, width, height);
 		ctx.clip();
 	}
-	
+
 	proto.disableClipping = function() {
 		this._context.restore();
 	}
-	
+
 	proto.blit = function(s, x, y) {
 		this.renderer._reset();
 		this._context.drawImage(s._canvas, x, y);
@@ -102,6 +102,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.clear = function() {
 		this.renderer._reset();
 		this._context.clearRect(0, 0, this.width, this.height);
+	}
+
+	// TODO: exception if accessing other methods while locked
+	proto.lock = function() {
+		if (!this._locked) {
+			return (this._locked = this._context.getImageData(0, 0, this.width, this.height));
+		}
+		return null;
+	}
+
+	proto.unlock = function() {
+		if (this._locked) {
+			this._context.putImageData(this._locked, 0, 0);
+			this._locked = null;
+		}
 	}
 
 })();
