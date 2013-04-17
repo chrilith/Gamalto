@@ -39,43 +39,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.MemoryStream = function(size) {
-		Object.base(this, size);
+	G.MemoryStream = function(size, len) {
+		Object.base(this, size * (len || 1));
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 	
-	proto.writeByte = function(data) {
-		this._data[this._startAt + this._position++] = String.fromCharCode(data & 0xff);
+	proto.writeByte = function(data, at) {
+		if (isNaN(at)) { at = this._position++; }
+		this._data[this._startAt + at] = String.fromCharCode(data & 0xff);
 	}
 
 	/* Big Endian */
 
-	proto.writeInt16BE = function(data) {
-		this.writeByte((data >> 8) & 0xff);
-		this.writeByte((data     ) & 0xff);
+	proto.writeInt16BE = function(data, at) {
+		this.writeByte((data >> 8) & 0xff, at + 0);
+		this.writeByte((data     ) & 0xff, at + 1);
 	}
 
-	proto.writeInt32BE = function(data) {
-		this.writeByte((data >> 24) & 0xff);
-		this.writeByte((data >> 16) & 0xff);
-		this.writeByte((data >>  8) & 0xff);
-		this.writeByte((data      ) & 0xff);
+	proto.writeInt32BE = function(data, at) {
+		this.writeByte((data >> 24) & 0xff, at + 0);
+		this.writeByte((data >> 16) & 0xff, at + 1);
+		this.writeByte((data >>  8) & 0xff, at + 2);
+		this.writeByte((data      ) & 0xff, at + 3);
 	}	
 
 	/* Little Endian (JavaScript is little endian) */
 	
-	proto.writeInt16LE = function(data) {
-		this.writeByte((data     ) & 0xff);
-		this.writeByte((data >> 8) & 0xff);
+	proto.writeInt16LE = function(data, at) {
+		this.writeByte((data     ) & 0xff, at + 0);
+		this.writeByte((data >> 8) & 0xff, at + 1);
 	}
 	
-	proto.writeInt32LE = function(data) {
-		this.writeByte((data      ) & 0xff);
-		this.writeByte((data >>  8) & 0xff);
-		this.writeByte((data >> 16) & 0xff);
-		this.writeByte((data >> 24) & 0xff);
+	proto.writeInt32LE = function(data, at) {
+		this.writeByte((data      ) & 0xff, at + 2);
+		this.writeByte((data >>  8) & 0xff, at + 3);
+		this.writeByte((data >> 16) & 0xff, at + 4);
+		this.writeByte((data >> 24) & 0xff, at + 5);
 	}
 
 	proto.writeString = function(str, stopChar) {
@@ -92,7 +93,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.memset = function(value, length) {
+	proto.fill = function(value, length) {
 		while(length-- > 0) {
 			this.writeByte(value);
 		}
