@@ -55,7 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (isNaN(at)) { at = this._position++; }
 		return this._data[at].charCodeAt(0) & 0xff;
 	}
-	
+
 	proto.readUInt8 = function(at) {
 		return this.readByte(at);
 	}
@@ -75,7 +75,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readSInt16BE = function(at) {
 		return G.Convert.toSInt16(this.readUInt16LE(at));
 	}
-	
+
 	proto.readUInt32BE = function(at) {
 		var d = this.readByte(at + 0),
 			c = this.readByte(at + 1),
@@ -132,7 +132,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.seek = function(offset, origin) {
 		var C = G.Stream,
 			undef;
-		
+
 		if (origin === undef) {
 			origin = C.SEEK_SET;
 		}
@@ -150,6 +150,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._position = this.length - offset;
 				break;
 		}
+	}
+
+	proto.rewind = function(by) {
+		this.seek(-by, G.Stream.SEEK_CUR);
+	}
+
+	proto.forward = function(by) {
+		this.seek(+by, G.Stream.SEEK_CUR);
 	}
 
 })();
