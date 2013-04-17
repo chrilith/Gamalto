@@ -58,7 +58,7 @@ if (GAMALTO_DEBUG) (function() {
 
 	debug.assert = function(cond, message) {
 		if (!cond) {
-			throw message;
+			throw message || "Assertion failed";
 		}
 	}
 
