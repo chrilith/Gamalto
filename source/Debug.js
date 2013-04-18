@@ -58,7 +58,13 @@ if (GAMALTO_DEBUG) (function() {
 
 	debug.assert = function(cond, message) {
 		if (!cond) {
-			throw message || "Assertion failed";
+			var err = new Error();
+			message  = "Assertion failed" + (message ? " : " + message : "");
+			if (err.stack) {
+				message += ", " + err.stack.split("\n")[2].replace(/\s*(.+?)\s*/, "$1");
+			}
+			err.message = message;
+			throw err;
 		}
 	}
 
