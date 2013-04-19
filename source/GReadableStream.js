@@ -39,6 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.ReadableStream = function(size) {
 		this._alloc(size);
 		this._position = 0;
+		this._unit = 0;
 	}
 
 	/* Inheritance and shortcut */
@@ -51,17 +52,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.readByte = function(at, relative) {
+	proto._readByte = function(position) {
+		return this._data[position].charCodeAt(0) & 0xff;
+	}
+
+	proto._at = function(at, relative) {
 		if (isNaN(at)) {
 			at  = this._position++;	// Read at the current position and increment
-		} else if (relative) {
-			at += this._position; // Read at the given index from position without incrementing
+		} else {
+			at <<= this._unit;
+			if (relative) {
+				at += this._position; // Read at the given index from position without incrementing
+			}
 		}
-		return this._data[at].charCodeAt(0) & 0xff;
+		return at;
 	}
 
 	proto.readUInt8 = function(at, relative) {
-		return this.readByte(at, relative);
+		return this._readByte(this._at(at, relative));
 	}
 
 	proto.readSInt8 = function(at, relative) {
@@ -71,8 +79,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Big Endian */
 
 	proto.readUInt16BE = function(at, relative) {
-		var b = this.readByte(at + 0, relative),
-			a = this.readByte(at + 1, relative);
+		var p = this._at(at, relative),
+			b = this._readByte(p + 0),
+			a = this._readByte(p + 1);
 		return (b << 8) | a;
 	}
 
@@ -81,10 +90,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUInt32BE = function(at, relative) {
-		var d = this.readByte(at + 0, relative),
-			c = this.readByte(at + 1, relative),
-			b = this.readByte(at + 2, relative),
-			a = this.readByte(at + 3, relative);
+		var p = this._at(at, relative),
+			d = this._readByte(p + 0),
+			c = this._readByte(p + 1),
+			b = this._readByte(p + 2),
+			a = this._readByte(p + 3);
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
@@ -95,8 +105,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function(at, relative) {
-		var a = this.readByte(at + 0, relative),
-			b = this.readByte(at + 1, relative);
+		var p = this._at(at, relative),
+			a = this._readByte(p + 0),
+			b = this._readByte(p + 1);
 		return (b << 8) | a;
 	}
 
@@ -105,10 +116,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUInt32LE = function(at, relative) {
-		var a = this.readByte(at + 0, relative),
-			b = this.readByte(at + 1, relative),
-			c = this.readByte(at + 2, relative),
-			d = this.readByte(at + 3, relative);
+		var p = this._at(at, relative),
+			a = this._readByte(p + 0),
+			b = this._readByte(p + 1),
+			c = this._readByte(p + 2),
+			d = this._readByte(p + 3);
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
@@ -119,7 +131,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readString = function(length, stopChar) {
 		var c, s = "";
 		for (var i = 0; i < length & 0xffff; i++) {
-			if ((c = this.readByte()) == (stopChar | 0)) { break; }
+			if ((c = this.readUInt8()) == (stopChar | 0)) { break; }
 			s += String.fromCharCode(c);
 		}
 		return s;
