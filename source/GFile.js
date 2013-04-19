@@ -61,14 +61,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._url = null;
 	}
 
-	proto.readByte = function() {
+	// Specific data format
+	proto._readByte = function() {
 		this._shouldRead();
-		return  this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
+		return this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
 	}
+	// No position
+	proto._at = function(at, relative) { return 0; }
 
 	proto.read = function(buffer, size) {
 		while(size--) {
-			buffer.writeByte(this.readByte());
+			buffer.writeInt8(this.readSInt8());
 		}		
 	}
 
