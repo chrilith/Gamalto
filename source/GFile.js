@@ -187,7 +187,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			// Save data
 			while (size--) {
-				buffer.writeByte(data.charCodeAt(offset++) & 0xff);
+				buffer.writeInt8(data.charCodeAt(offset++) & 0xff);
 			}
 			// Execute callback if any
 			if (callback) {
