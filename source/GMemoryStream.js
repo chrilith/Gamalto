@@ -40,8 +40,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.MemoryStream = function(size, unit) {
-		len = (len || 1);
-		Object.base(this, size * len);
+		unit = (unit || 1);
+		Object.base(this, size * unit);
 		this._unit = unit >> 1;
 	}
 
