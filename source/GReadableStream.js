@@ -169,11 +169,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.rewind = function(by) {
-		this.seek(-by << this._unit, G.Stream.SEEK_CUR);
+		this.seek(-(by || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 	proto.forward = function(by) {
-		this.seek(+by << this._unit, G.Stream.SEEK_CUR);
+		this.seek(+(by || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 })();
