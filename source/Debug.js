@@ -72,6 +72,34 @@ if (GAMALTO_DEBUG) (function() {
 		console.log.apply(console, arguments);
 	}
 
+	debug.mem = function(stream, addr, len) {
+		if (stream.is(G.ReadableStream)) {
+			var i, val, str = "",
+				ptr = stream.ptr(addr),
+				unit = (stream._unit << 1 || 1),
+				pad = Array(16).join(0);
+
+			for (i = 0; i < 16 >> (unit >> 1); i++) {
+				str += (pad + (i * unit).toString(16)).substr(-unit << 1) + "  ";
+			}
+			str += "\n";
+
+			for (i = 0; i < len; i++) {
+				if (unit == 1) {
+					val = ptr.readUInt8(i);
+				} else if (unit == 2) {
+					val = ptr.readUInt16LE(i);
+				} else if (unit == 4) {
+					val = ptr.readUInt32BE(i);
+				}
+
+				if (i % (16 >> (unit >> 1)) == 0) { str += "\n" + (pad + (addr + i * unit).toString(16)).substr(-8) + "   "; }
+				str += ((pad + val.toString(16)).substr(-unit << 1) + "  ");
+			}
+			debug.log("Offset(h)  " + str.toUpperCase());
+		}
+	}
+
 	window.gamalto = debug;
 
 })();
