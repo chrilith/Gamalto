@@ -40,9 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.MemoryStream = function(size, unit) {
-		unit = (unit || 1);
-		Object.base(this, size * unit);
-		this._unit = unit >> 1;
+		Object.base(this, size, unit);
 	}
 
 	/* Inheritance and shortcut */
@@ -83,10 +81,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.writeInt32LE = function(data, at) {
 		at = this._at(at);
-		this._writeByte((data      ) & 0xff, at + 2);
-		this._writeByte((data >>  8) & 0xff, at + 3);
-		this._writeByte((data >> 16) & 0xff, at + 4);
-		this._writeByte((data >> 24) & 0xff, at + 5);
+		this._writeByte((data      ) & 0xff, at + 0);
+		this._writeByte((data >>  8) & 0xff, at + 1);
+		this._writeByte((data >> 16) & 0xff, at + 2);
+		this._writeByte((data >> 24) & 0xff, at + 3);
 	}
 
 	proto.writeString = function(str, stopChar) {
@@ -97,9 +95,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.copy = function(dest, length) {
+	proto.copy = function(src, length) {
 		while(length-- > 0) {
-			dest.writeInt8(this.readSInt8());
+			this.writeInt8(src.readSInt8());
 		}
 	}
 
