@@ -97,7 +97,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Palette animations if any
 		if (!buffer.eos()) {
-			var pos  = buffer.tell(),
+			var pos  = buffer.pos(),
 				info = []; /* 0 = start color
 						      1 = end color
 						      2 = direction (0 = left, 1 = none, 2 = right)
