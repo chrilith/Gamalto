@@ -67,6 +67,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.setStretch();
 	}
 
+	proto.enableMouse = function(isOn) {
+		this._canvas.style.cursor = isOn ? "" : "none";
+	};
+
 	proto.enableFiltering = function(isOn) {
 		var style = this._canvas.style;
 
