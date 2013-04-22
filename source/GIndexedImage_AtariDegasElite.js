@@ -52,8 +52,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var palette, data, width, height, x, y, bits;
 	
 		// Not low resolution?
-		var packed = !!buffer.readByte(),
-			rez	= buffer.readByte();
+		var packed = !!buffer.readUInt8(),
+			rez	= buffer.readUInt8();
 
 		if (rez == 0) {
 			width	= 320;

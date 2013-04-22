@@ -43,14 +43,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	base.add("RLE", function(source, dest) {
 		do {
 			var data = -1,
-				iter = source.readByte();
-			
+				iter = source.readUInt8();
+
 			if (iter > 128) {
-				data = source.readByte();
+				data = source.readUInt8();
 				iter = 256 - iter;
 			}
 			do {
-				dest.writeByte(data != -1 ? data : source.readByte());
+				dest.writeInt8(data != -1 ? data : source.readUInt8());
 			} while (iter--);
 
 		} while (!(source.eos() || dest.eos()));

@@ -69,22 +69,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						height = buffer.readUInt16BE();
 						buffer.readUInt16BE(); // x offset
 						buffer.readUInt16BE(); // y offset
-						bits = buffer.readByte();
-						masking = buffer.readByte();
-						packed = buffer.readByte(); // compress
-						buffer.readByte(); // padding
+						bits = buffer.readUInt8();
+						masking = buffer.readUInt8();
+						packed = buffer.readUInt8(); // compress
+						buffer.readUInt8(); // padding
 						transparency = buffer.readUInt16BE();
-						buffer.readByte(); // horiz pixel ratio
-						buffer.readByte(); // vert pixel ratio
+						buffer.readUInt8(); // horiz pixel ratio
+						buffer.readUInt8(); // vert pixel ratio
 						buffer.readUInt16BE(); // display page width
 						buffer.readUInt16BE(); // display page height
 
 					} else if (chunk == "CMAP") {
 						palette = new G.Palette();
 						for (x = 0; x < size; x += 3) {
-							var r = buffer.readByte(),
-								g = buffer.readByte(),
-								b = buffer.readByte();
+							var r = buffer.readUInt8(),
+								g = buffer.readUInt8(),
+								b = buffer.readUInt8();
 							palette.addColor(new G.Color(r, g, b));
 						}
 						// FIXME: masking is supposed to be set to 2 (mskHasTransparentColor)
@@ -99,8 +99,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						buffer.readUInt16BE(); // padding
 						var rate	= buffer.readUInt16BE(),
 							active	= buffer.readUInt16BE(),
-							from	= buffer.readByte(),
-							to		= buffer.readByte();
+							from	= buffer.readUInt8(),
+							to		= buffer.readUInt8();
 
 						if (active & 1) {
 							palette.addAnimator(
