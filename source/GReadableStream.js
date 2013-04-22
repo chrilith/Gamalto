@@ -137,12 +137,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return s;
 	}
 
-	proto.tell = function() {
+	proto.pos = function() {
 		return this._position;
 	}
 
 	proto.eos = function() {
-		return this.tell() >= this.length;
+		return this.pos() >= this.length;
 	}
 
 	proto.seek = function(offset, origin) {
@@ -168,11 +168,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.rewind = function(by) {
+	proto.rew = function(by) {
 		this.seek(-(by || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
-	proto.forward = function(by) {
+	proto.fwd = function(by) {
 		this.seek(+(by || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
