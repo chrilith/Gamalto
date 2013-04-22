@@ -56,41 +56,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._data[position].charCodeAt(0) & 0xff;
 	}
 
-	proto._at = function(at, relative) {
+	proto._at = function(at) {
 		if (isNaN(at)) {
 			at  = this._position++;	// Read at the current position and increment
 		} else {
 			at <<= this._unit;
-			if (relative) {
-				at += this._position; // Read at the given index from position without incrementing
-			}
 		}
 		return at;
 	}
 
-	proto.readUInt8 = function(at, relative) {
-		return this._readByte(this._at(at, relative));
+	proto.readUInt8 = function(at) {
+		return this._readByte(this._at(at));
 	}
 
-	proto.readSInt8 = function(at, relative) {
-		return G.Convert.toSInt8(this.readUInt8(at, relative));
+	proto.readSInt8 = function(at) {
+		return G.Convert.toSInt8(this.readUInt8(at));
 	}
 
 	/* Big Endian */
 
-	proto.readUInt16BE = function(at, relative) {
-		var p = this._at(at, relative),
+	proto.readUInt16BE = function(at) {
+		var p = this._at(at),
 			b = this._readByte(p + 0),
 			a = this._readByte(p + 1);
 		return (b << 8) | a;
 	}
 
-	proto.readSInt16BE = function(at, relative) {
-		return G.Convert.toSInt16(this.readUInt16LE(at, relative));
+	proto.readSInt16BE = function(at) {
+		return G.Convert.toSInt16(this.readUInt16LE(at));
 	}
 
-	proto.readUInt32BE = function(at, relative) {
-		var p = this._at(at, relative),
+	proto.readUInt32BE = function(at) {
+		var p = this._at(at),
 			d = this._readByte(p + 0),
 			c = this._readByte(p + 1),
 			b = this._readByte(p + 2),
@@ -98,25 +95,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
-	proto.readSInt32BE = function(at, relative) {
-		return G.Convert.toSInt32(this.readUInt32BE(at, relative));
+	proto.readSInt32BE = function(at) {
+		return G.Convert.toSInt32(this.readUInt32BE(at));
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
-	proto.readUInt16LE = function(at, relative) {
-		var p = this._at(at, relative),
+	proto.readUInt16LE = function(at) {
+		var p = this._at(at),
 			a = this._readByte(p + 0),
 			b = this._readByte(p + 1);
 		return (b << 8) | a;
 	}
 
-	proto.readSInt16LE = function(at, relative) {
-		return G.Convert.toSInt16(this.readUInt16LE(at, relative));
+	proto.readSInt16LE = function(at) {
+		return G.Convert.toSInt16(this.readUInt16LE(at));
 	}
 
-	proto.readUInt32LE = function(at, relative) {
-		var p = this._at(at, relative),
+	proto.readUInt32LE = function(at) {
+		var p = this._at(at),
 			a = this._readByte(p + 0),
 			b = this._readByte(p + 1),
 			c = this._readByte(p + 2),
@@ -124,8 +121,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	}
 
-	proto.readSInt32LE = function(at, relative) {
-		return G.Convert.toSInt32(this.readUInt32LE(at, relative));
+	proto.readSInt32LE = function(at) {
+		return G.Convert.toSInt32(this.readUInt32LE(at));
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -137,8 +134,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return s;
 	}
 
-	proto.pos = function() {
-		return this._position;
+	proto.pos = function(offset) {
+		return this._position + (offset | 0);
 	}
 
 	proto.eos = function() {
