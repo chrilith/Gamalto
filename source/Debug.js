@@ -72,6 +72,10 @@ if (GAMALTO_DEBUG) (function() {
 		console.log.apply(console, arguments);
 	}
 
+	debug.warn = function() {
+		console.warn.apply(console, arguments);
+	}
+
 	debug.mem = function(stream, addr, len) {
 		if (stream.is(G.ReadableStream)) {
 			var i, val, str = "",
