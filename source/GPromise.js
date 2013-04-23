@@ -93,6 +93,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				try {
 					value = promise.resolve(value);
 				 } catch(e) {
+				 	gamalto.warn("Promise rejected : " + e.message + (!e.stack ? "" :  ("\n" + e.stack)));
 					promise.reject(e);
 				 }
 				return value;
