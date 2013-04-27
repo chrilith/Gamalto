@@ -36,13 +36,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var STATE_PENDING	= 0,
 		STATE_PROGRESS	= 1,
 		STATE_RESOLVED	= 2,
-		STATE_REJECTED	= 3/*,
-		STATE_CANCELED	= 4 TODO ?*/;
+		STATE_REJECTED	= 3,
+		STATE_CANCELED	= 4;
 
 	/**
 	 * @constructor
 	 */
-	G.Promise = function() {}
+	G.Promise = function() {
+		this._resolve = [];
+		this._reject = [];
+		this._progress = [];
+	}
 	
 	/* Inheritance and shortcut */
 	var proto = G.Promise.inherits(G.Object);
@@ -56,49 +60,78 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.progress = function(value) {
-		var func = this._progress;
-		if (func) { func.apply(func, value); }
+		var progress = this.progress;
+		for (var i = 0; i < progress.length; i++) {
+			this._immediate(progress[i], value);
+		}
 	}
-	
+
+	proto.cancel = function(value) {
+		this._complete(STATE_CANCELED, value);
+	}
+
 	proto._complete = function(state, value) {
 		var func;
 
 		if (this._state > STATE_PROGRESS) {
 			return;
 		}
-		this._state = state;
-		this.value = value;
 
 		switch (state) {
 			case STATE_RESOLVED:
 				func = this._resolve;
 				break;
+			case STATE_CANCELED:
 			case STATE_REJECTED:
 				func = this._reject;
 				break;
 		}
 
-		if (func) { func(value); }
+		if (func) { this._exec(func, value); }
+		this._state = state;
+		this.value = value;
+	}
+
+	proto._exec = function(func, value) {
+		while (func.length) {
+			this._immediate(func.shift(), value);
+		}
+	}
+
+	proto._immediate = function(func, value) {
+		setTimeout(function() {
+			func.call(func, value);
+		}, 0);
+	}
+
+	proto._prepare = function(resolver) {
+		var that = this;
+		return function(value) {
+			return that._resolver(value, resolver);
+		}
+	}
+
+	proto._resolver = function(value, resolver) {
+		try {
+			value = (resolver || this.resolve)(value);
+		} catch(e) {
+			this.reject(e);
+		}
+		return value;		
 	}
 
 	proto.then = function(resolve, reject, progress) {
 		var undef, promise = new G.Promise();
 
 		// Set the "resolve" callback
-		this._resolve = function(value) {
-			value = !resolve ? undef : resolve(value);
-			
+		this._resolve.push(function(value) {
+			value = promise._resolver(value, resolve);
+
 			// Prepare internal callback
-			var complete = function(value) {
-				try {
-					value = promise.resolve(value);
-				 } catch(e) {
-				 	gamalto.warn("Promise rejected : " + e.message + (!e.stack ? "" :  ("\n" + e.stack)));
-					promise.reject(e);
-				 }
-				return value;
-			}
-			
+			var complete = promise._prepare(function(value) {
+				promise.resolve(value);
+			});
+
 			// If the value is not a promise, call the callback immediately
 			if (!(value && value.is(G.Promise))) {
 				complete(value);
@@ -114,16 +147,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					}
 				)
 			}
-		}
+		});
 
 		// Set the "reject" callback, this one cuts the pipeline
-		this._reject = function(value) {
+		this._reject.push(promise._prepare(function(value) {
 			value = !reject ? undef : reject(value);
-			promise.reject(value);
-		}
+			promise.resolve(value);
+
+		}));
 
 		// Progression callback if any
-		this._progress = progress;
+		if (progress) {
+			this._progress.push(progress);
+		}
 
 		// Return the new promise for pipelining
 		return promise;
