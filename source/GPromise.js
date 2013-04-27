@@ -55,8 +55,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._complete(STATE_RESOLVED, value);
 	}
 		
-	proto.reject = function(value) {
-		this._complete(STATE_REJECTED, value);
+	proto.reject = function(reason) {
+		this._complete(STATE_REJECTED, reason);
 	}
 
 	proto.progress = function(value) {
@@ -66,8 +66,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto.cancel = function(value) {
-		this._complete(STATE_CANCELED, value);
+	proto.cancel = function() {
+		this._complete(STATE_CANCELED, new Error("Canceled"));
 	}
 
 	proto._complete = function(state, value) {
