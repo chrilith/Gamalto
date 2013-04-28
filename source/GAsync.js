@@ -71,16 +71,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}, 0);
 	}
 
-	proto.delay = function(msecs) {
-		var promise = new G.Promise();
-
-		setTimeout(function() {
-			promise.resolve();
-		}, msecs);
-
-		return promise;
-	};
-
 	/* Helper */
 	var stat = G.Async = {};
 
@@ -99,5 +89,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		return promise;
 	}
+
+	stat.delay = function(msecs) {
+		var promise = new G.Promise();
+
+		setTimeout(function() {
+			promise.resolve();
+		}, msecs);
+
+		return promise;
+	};
+
 
 })();
