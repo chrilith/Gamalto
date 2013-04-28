@@ -40,7 +40,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.MemoryStream = function(size, unit) {
+		var method, data, tmp;
+
+		// Do we have a source data?
+		if (size instanceof Array) {
+			data = size;
+			size = data.length;
+		}
+
+		// Base constructor
 		Object.base(this, size, unit);
+
+		// Copy data if any...
+		if (data) {
+			method = "writeInt" + ((unit == 4) ? "32LE" : (unit == 2) ? "16LE" : "8");
+			tmp = this.ptr();
+			for (var i = 0; i < size; i++) {
+				tmp[method](data[i]);
+			}
+		}
 	}
 
 	/* Inheritance and shortcut */
