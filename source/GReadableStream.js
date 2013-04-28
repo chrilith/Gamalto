@@ -166,11 +166,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.rew = function(by) {
-		this.seek(-(by || 1) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(-(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 	proto.fwd = function(by) {
-		this.seek(+(by || 1) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(+(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 })();
