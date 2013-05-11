@@ -74,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		var cst = G.Event,
 			evt = new G.MouseEvent(e.type),
-			pos = G._xywh(e.target || e.srcElement);
+			pos;
 
 		evt._time = e.timeStamp; // || Date.now();
 		evt.modifiers = !G.KeyboardEvent ? 0 :
@@ -85,11 +85,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	//		(e.metaKey		&& evt.keyCode != 91
 	//						&& evt.keyCode != 93	? cst.KMOD_META	: 0);	// CHECKME
 
+		evt.target = (e.target || e.srcElement);
+
 		// Mouse related stuff
 		evt.absX = e.clientX;
 		evt.absY = e.clientY;
 
 		// Relative
+		pos = G._xywh(evt.target);
 		evt.x = evt.absX - pos.x;
 		evt.y = evt.absY - pos.y;
 

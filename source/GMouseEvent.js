@@ -57,6 +57,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				a.modifiers	== b.modifiers);
 	};
 
+	proto.onSurface = function(surface) {
+		return (this.target == surface._canvas);
+	};
+
 	/* Constants */
 	var constant = G.Event;
 
