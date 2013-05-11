@@ -65,7 +65,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 
 	proto._writeByte = function(data, position) {
-		this._data[this._startAt + position] = String.fromCharCode(data & 0xff);
+		data = (this._native) ? String.fromCharCode(data & 0xff) : data;
+		this._data[this._startAt + position] = data;
 	}
 
 	proto.writeInt8 = function(data, at) {
@@ -115,7 +116,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.copy = function(src, length) {
 		while(length-- > 0) {
-			this.writeInt8(src.readSInt8());
+			this.writeInt8(src.readUInt8());
 		}
 	}
 
