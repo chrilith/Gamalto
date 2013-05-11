@@ -40,29 +40,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._alloc(size);
 		this._position = 0;
 		this._unit = 0;
+
+		return null;
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.ReadableStream.inherits(G.Object);
 
 	proto._alloc = function(size) {
-		if (size > 0) {
-			this.length = size;
-			this._data = Array(size + 1).join(String.fromCharCode(0)).split("");
-		}
+		this._data = null;
 	}
 
 	proto._readByte = function(position) {
 		return this._data[position].charCodeAt(0) & 0xff;
-	}
-
-	proto._at = function(at) {
-		if (isNaN(at)) {
-			at  = this._position++;	// Read at the current position and increment
-		} else {
-			at <<= this._unit;
-		}
-		return at;
 	}
 
 	proto.readUInt8 = function(at) {
