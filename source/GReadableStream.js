@@ -49,10 +49,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._data = null;
 	}
 
-	proto._readByte = function(position) {
-		return this._data[position].charCodeAt(0) & 0xff;
-	}
-
 	proto.readUInt8 = function(at) {
 		return this._readByte(this._at(at));
 	}
