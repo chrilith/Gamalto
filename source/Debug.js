@@ -94,7 +94,7 @@ if (GAMALTO_DEBUG) (function() {
 				} else if (unit == 2) {
 					val = ptr.readUInt16LE(i);
 				} else if (unit == 4) {
-					val = ptr.readUInt32BE(i);
+					val = ptr.readUInt32LE(i);
 				}
 
 				if (i % (16 >> (unit >> 1)) == 0) { str += "\n" + (pad + (addr + i * unit).toString(16)).substr(-8) + "   "; }
