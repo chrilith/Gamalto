@@ -40,8 +40,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._alloc(size);
 		this._position = 0;
 		this._unit = 0;
-
-		return null;
 	}
 
 	/* Inheritance and shortcut */
