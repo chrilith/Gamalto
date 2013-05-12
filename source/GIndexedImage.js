@@ -179,7 +179,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		data.seek(0);
 		while (!data.eos()) {
-			index = data.readByte();
+			index = data.readUInt8();
 			color = colors[index];
 
 			dest[pixel + 0] = color[0];
