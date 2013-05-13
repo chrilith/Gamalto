@@ -39,10 +39,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Color = function(r, g, b, a) {
 		var u;	// = undefined
 	
-		this.r = r || 0;
-		this.g = g || 0;
-		this.b = b || 0;
-		this.a = (a === u) ? 255 : (a || 0);
+		this.r = Math.fmin(Math.fmax(r || 0, 0), 255);
+		this.g = Math.fmin(Math.fmax(g || 0, 0), 255);
+		this.b = Math.fmin(Math.fmax(b || 0, 0), 255);
+		this.a = Math.fmin(Math.fmax((a === u) ? 255 : (a || 0), 0), 255);
 	}
 
 	/* Inheritance and shortcut */
