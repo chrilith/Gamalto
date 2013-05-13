@@ -36,18 +36,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.ReadableStream = function(size) {
-		this._alloc(size);
+	G.ReadableStream = function(unit) {
 		this._position = 0;
-		this._unit = 0;
+		this._unit = (unit || 1) >> 1;
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.ReadableStream.inherits(G.Object);
-
-	proto._alloc = function(size) {
-		this._data = null;
-	}
 
 	proto.readUInt8 = function(at) {
 		return this._readByte(this._at(1, at));

@@ -40,32 +40,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.MemoryStream = function(size, unit) {
-		var method, data, tmp;
-
 		// Do we have a source data?
-		if (size instanceof Array) {
-			data = size;
-			size = data.length;
-		}
+		var data = isNaN(size) ? size : this._alloc(size);
 
 		// Base constructor
-		Object.base(this, size, unit);
-
-		// Copy data if any...
-		if (data) {
-			method = "writeInt" + ((unit == 4) ? "32LE" : (unit == 2) ? "16LE" : "8");
-			tmp = this.ptr();
-			for (var i = 0; i < size; i++) {
-				tmp[method](data[i]);
-			}
-		}
+		Object.base(this, data, unit);
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 
+	proto._alloc = function(size) {
+		if (size > 0) {
+			if ('Uint8Array' in self) {
+				// TODO: use DataView for better performance with getXX/setXX?
+				return new Uint8Array(size);
+			} else {
+				return Array(size + 1).join(String.fromCharCode(0)).split("");
+			}
+		}
+	}
+
 	proto._writeByte = function(data, position) {
-		data = (this._native) ? String.fromCharCode(data & 0xff) : data;
+		data = (this._native) ? data : String.fromCharCode(data & 0xff);
 		this._data[this._startAt + position] = data;
 	}
 
