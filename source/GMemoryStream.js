@@ -70,20 +70,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.writeInt8 = function(data, at) {
-		at = this._at(at);
+		at = this._at(1, at);
 		this._writeByte(data, at);
 	}
 
 	/* Big Endian */
 
 	proto.writeInt16BE = function(data, at) {
-		at = this._at(at);
+		at = this._at(2, at);
 		this._writeByte((data >> 8), at + 0);
 		this._writeByte((data     ), at + 1);
 	}
 
 	proto.writeInt32BE = function(data, at) {
-		at = this._at(at);
+		at = this._at(4, at);
 		this._writeByte((data >> 24), at + 0);
 		this._writeByte((data >> 16), at + 1);
 		this._writeByte((data >>  8), at + 2);
@@ -93,13 +93,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Little Endian (JavaScript is little endian) */
 	
 	proto.writeInt16LE = function(data, at) {
-		at = this._at(at);
+		at = this._at(2, at);
 		this._writeByte((data     ), at + 0);
 		this._writeByte((data >> 8), at + 1);
 	}
 	
 	proto.writeInt32LE = function(data, at) {
-		at = this._at(at);
+		at = this._at(4, at);
 		this._writeByte((data      ), at + 0);
 		this._writeByte((data >>  8), at + 1);
 		this._writeByte((data >> 16), at + 2);

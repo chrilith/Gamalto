@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUInt8 = function(at) {
-		return this._readByte(this._at(at));
+		return this._readByte(this._at(1, at));
 	}
 
 	proto.readSInt8 = function(at) {
@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Big Endian */
 
 	proto.readUInt16BE = function(at) {
-		var p = this._at(at),
+		var p = this._at(2, at),
 			b = this._readByte(p + 0),
 			a = this._readByte(p + 1);
 		return (b << 8) | a;
@@ -71,7 +71,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUInt32BE = function(at) {
-		var p = this._at(at),
+		var p = this._at(4, at),
 			d = this._readByte(p + 0),
 			c = this._readByte(p + 1),
 			b = this._readByte(p + 2),
@@ -86,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function(at) {
-		var p = this._at(at),
+		var p = this._at(2, at),
 			a = this._readByte(p + 0),
 			b = this._readByte(p + 1);
 		return (b << 8) | a;
@@ -97,7 +97,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUInt32LE = function(at) {
-		var p = this._at(at),
+		var p = this._at(4, at),
 			a = this._readByte(p + 0),
 			b = this._readByte(p + 1),
 			c = this._readByte(p + 2),
