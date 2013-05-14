@@ -33,6 +33,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	// TODO: use DataView for better performance with getXX/setXX?
+	var recent = ('Uint8Array' in self),
+		object = recent ? Uint8Array : Array;
+
 	/* Dependencies */
 	gamalto.require("ReadStream");
 
@@ -41,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.MemoryStream = function(size, unit) {
 		// Do we have a source data?
-		var data = isNaN(size) ? size : this._alloc(size);
+		var data = typeof size != 'number' ? size : this._alloc(size);
 
 		// Base constructor
 		Object.base(this, data, unit);
@@ -50,19 +54,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Inheritance and shortcut */
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 
+	// TODO: use DataView for better performance with getXX/setXX?
 	proto._alloc = function(size) {
 		if (size > 0) {
-			if ('Uint8Array' in self) {
-				// TODO: use DataView for better performance with getXX/setXX?
-				return new Uint8Array(size);
-			} else {
-				return Array(size);
-			}
+			return new object(size);
 		}
 	}
 
-	proto._writeByte = function(data, position) {
-		this._data[this._startAt + position] = data & 0xff;
+	if (recent) {
+		proto._writeByte = function(data, position) {
+			this._data[this._startAt + position] = data;
+		}
+
+	} else {
+		proto._writeByte = function(data, position) {
+			// Be sure to always have a usigned value written in the array,
+			// this is slower but prevent error using simple arrays
+			this._data[this._startAt + position] = String.fromCharCode(data).charCodeAt(0);
+		}
 	}
 
 	proto.writeInt8 = function(data, at) {
