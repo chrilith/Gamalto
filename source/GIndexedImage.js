@@ -149,7 +149,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					._createRawBuffer();
 
 			// Render the first pass and save cached data
-			this._fullRedraw();
+			this._toCanvas();
 
 			// TODO
 			if (this.onload) {
@@ -171,24 +171,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._fullRedraw = function() {
 		// TODO: optimize animated palette rendering using cache? (see history)
-
-		var color, index, pixel = 0,
+		var color, index,
+			pixel	= 0,
+			pos		= -1,
 			data	= this._data,
 			dest	= this._image.data,
-			colors	= this._palette._colorsAsArray();
+			colors	= this._palette._list;
 
 		data.seek(0);
-		while (!data.eos()) {
-			index = data.readUInt8();
+
+		while (++pos < data.length) {
+			// Directly read stream buffer to speed up things a lot!
+			index = data._data[pos];//data.readUInt8();
 			color = colors[index];
 
-			dest[pixel + 0] = color[0];
-			dest[pixel + 1] = color[1];
-			dest[pixel + 2] = color[2];
-			dest[pixel + 3] = color[3];
-
-			pixel += 4;
+			dest[pixel++] = color.r;
+			dest[pixel++] = color.g;
+			dest[pixel++] = color.b;
+			dest[pixel++] = color.a;
 		}
+
 		this._canvas._copyRawBuffer(this._image);
 	}
 
