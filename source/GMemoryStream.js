@@ -56,14 +56,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				// TODO: use DataView for better performance with getXX/setXX?
 				return new Uint8Array(size);
 			} else {
-				return Array(size + 1).join(String.fromCharCode(0)).split("");
+				return Array(size);
 			}
 		}
 	}
 
 	proto._writeByte = function(data, position) {
-		data = (this._native) ? data : String.fromCharCode(data & 0xff);
-		this._data[this._startAt + position] = data;
+		this._data[this._startAt + position] = data & 0xff;
 	}
 
 	proto.writeInt8 = function(data, at) {
