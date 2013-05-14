@@ -118,7 +118,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.eos = function() {
-		return this.pos() >= this.length;
+		return this._position >= this.length;
 	}
 
 	proto.seek = function(offset, origin) {
