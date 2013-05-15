@@ -54,9 +54,12 @@ var ENV = window;
 				gamalto.checkDependencies();
 
 				// Run the application
-				document.addEventListener('DOMContentLoaded', function() {
-					promise.resolve();
-				}, false);
+				var loader = function() { promise.resolve(); };
+				if (document.readyState == 'complete') {
+					setTimeout(loader, 0);
+				} else {
+					document.addEventListener('DOMContentLoaded', loader, false);
+				}
 
 				return promise;
 			},
