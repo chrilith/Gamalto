@@ -61,11 +61,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
+	// FIXME: still a problem here, _data may be initialized with an normal array
+	// Change ReadStream _data initialization to copy data to the proper typed array
+	// or set a _writeByteN() and _writeByteA() in the constructor?
 	if (recent) {
 		proto._writeByte = function(data, position) {
 			this._data[this._startAt + position] = data;
 		}
-
 	} else {
 		proto._writeByte = function(data, position) {
 			// Be sure to always have a usigned value written in the array,
@@ -120,8 +122,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.copy = function(src, length) {
-		while(length-- > 0) {
-			this.writeInt8(src.readUInt8());
+		if ('set' in this._data && 'subarray' in src._data) {
+			var pos = src.addr(),
+				src = src._data.subarray(pos, pos + length);
+			this._data.set(src, this.addr());
+		} else {
+			while(length-- > 0) {
+				this.writeInt8(src.readUInt8());
+			}
 		}
 	}
 
