@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.progress = function(value) {
-		var progress = this.progress;
+		var progress = this._progress;
 		for (var i = 0; i < progress.length; i++) {
 			this._immediate(progress[i], value);
 		}
