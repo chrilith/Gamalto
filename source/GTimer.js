@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 	
 	/* Inheritance and shortcut */
-	var proto = G.Timer.inherits(G.Timing);
+	var proto = G.Timer.inherits(G.Object);
 	
 	/* Instance methods */
 	proto.setFrameRate = function(rate) {
@@ -66,7 +66,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._nextWait = function(prev) {
 		var that = this,
 			elasped = Date.now() - prev,
-			wait = that._frameTime - elasped + (that._overWait || 0);
+			wait = that._frameTime - elasped + (that._overWait | 0);
 	
 		if (elasped > that._tolerance) {
 			return that._frameTime;
@@ -82,10 +82,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		that._shouldSkip = false;
 		return wait;
 	}
-	
+
+	proto.getElapsed = function() {
+		var e = (Date.now() - this._lastTime);
+		return e >= this._tolerance ? 0 : e;
+	}
+
 	proto.start = function(strict) {
 		this._stopped = false;
-		this.update();
 	
 		var that = this,
 			last = Date.now(),						// Last execution is now
@@ -102,20 +106,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// Static time since the last call.
 			that.elapsedTime = that.getElapsed();
 			before = Date.now();
-	
+
 			// Execute the timer if possible, should access "elapsedTime".
 			if (!(skip = that._shouldSkip && that._frameSkip)) {
 				skip = that._cb(that);
 			}
-	
+
 			// Save the last execution time.
 			// Don't update the time if we have to skip so that the next frame
 			// will take the lost time into account. This time is independent from
 			// the internal timer time.
-			if (!skip) { that.update(); }
-	
+			if (!skip) { that._lastTime = before; }
+
 			// Compute FPS
-			last = that._computeFPS(last, skip);
+			last = that.computeFPS__(last, skip);
 	
 			// Next iteration
 			next = that._nextWait(before);
@@ -133,38 +137,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/*	Frames Per Second (FPS) related methods
 		For debug purpose only */
 	
-	proto._computeFPS = function(last, skip) {
+	proto.computeFPS__ = function(last, skip) {
 		var time, elapsed, i, length, sum = 0,
-			that = this,
-			list = that._fps,
-			callback = that._fpsCb;
+			list = this._ticks,
+			callback = this._fpsCb;
 	
 		if (callback) {
 			elapsed = (time = Date.now()) - last;
 			if (!skip) {
-				that._frameCount++;
+				this._frameCount++;
 			}
 			if (elapsed >= 1000) {
-				list.push(that._frameCount);
-				if (list.length > 10) {
-					list.shift();
+				this._tickSum -= list[this._tickIndex] | 0;
+				this._tickSum += (list[this._tickIndex] = this._frameCount);
+				if (++this._tickIndex == 100) {
+					this._tickIndex = 0;
 				}
-				for (i = 0; i < (length = list.length); sum += list[i++]) {}
-				callback(sum / length | 0, (1000 / that._frameTime + .5 | 0));
-				that._frameCount = 0;
+				callback(this._tickSum / this._ticks.length | 0, (1000 / this._frameTime + .5 | 0));
+				this._frameCount = 0;
 				// If the page is in wait state, "d" whill be far higher than 1000
 				// so we use a modulo to extract the over time.
-				return time - (elapsed % 1000);
+				return time + (elapsed % 1000);
 			}
 		}
 	
 		return last;
 	}
-	
-	proto.setFPSWatcher = function(callback) {
-		this._fps = [];
+
+	var setFPSWatcher__ = function(callback) {
 		this._fpsCb = callback;
 		this._frameCount = 0;
-	}
+		this._ticks = [0];
+		this._tickSum = 0;
+		this._tickIndex = 0;
+	};
+	proto.setFPSWatcher = setFPSWatcher__;	// Removed in release mode
 
 })(ENV);
