@@ -44,7 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Animation = function(bitmap, tw, th, count, r) {
 		Object.base(this, bitmap, tw, th, count, r);
 		this._speed = 0;
-//var/	this._curr
+		this._offs = [];
+		this.frame = 0;
 	}
 
 	/* Inheritance and shortcut */
@@ -54,20 +55,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._speed = 1 / (time / this.length);
 	}
 
+	proto.setOffset = function(frame, x, y) {
+		this._offs[frame] = new G.Vector(x, y);
+	}
+
 	proto.update = function(timer, frame) {
 		var length = this.length;
 
-		frame = G.defined(frame, this._curr, 0);
+		frame = G.defined(frame, this.frame, 0);
 		if ((frame += timer.elapsedTime * this._speed) >= length) {
 			frame -= length;
 		}
 
 		// Do not round to keep the fractionnal part to stay in sync
-		return (this._curr = frame);
+		return (this.frame = frame);
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
-		frame = G.defined(frame, this._curr, 0);
+		frame = G.defined(frame, this.frame, 0);
+		var offs = this._offs[frame | 0],
+			invX = renderer.getFlipX() ? -1 : +1,
+			invY = renderer.getFlipY() ? -1 : +1;
+		if (offs) {
+			x += offs.x * invX | 0;
+			y += offs.y * invY | 0;
+		}
 		G.Animation.base.draw.call(this, renderer, x, y, frame);
 	}
 
