@@ -60,13 +60,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GTiledBlock.js"></script> \
 		<script src="' + dir + 'GTiledAnimation.js"></script> \
 		<script src="' + dir + 'GFont.js"></script> \
-		<script src="' + dir + 'GTiming.js"></script> \
 		<script src="' + dir + 'GTimer.js"></script> \
 		<script src="' + dir + 'GVector.js"></script> \
 		<script src="' + dir + 'GShape.js"></script> \
 		<script src="' + dir + 'GCircle.js"></script> \
 		<script src="' + dir + 'GRect.js"></script> \
 		<script src="' + dir + 'GSize.js"></script> \
+		<script src="' + dir + 'GEntity.js"></script> \
 		<script src="' + dir + 'GScroller.js"></script> \
 		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
