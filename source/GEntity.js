@@ -53,6 +53,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (G.isName(name)) {
 				clone._options[name] = {
 					anim : to.anim,
+					offs : to.offs.clone(),
 					prev : to.prev.clone(),
 					curr : to.prev.clone(),
 					speed: to.speed.clone(),
@@ -64,9 +65,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		clone.position = this.position.clone();
 	}
 	
-	proto.addAnimation = function(name, anim, speed) {
+	proto.addAnimation = function(name, anim) {
 		this._options[G.N(name)] = {
 			anim : anim,
+			offs : new G.Vector(0, 0),
 			prev : new G.Vector(0, 0),
 			curr : new G.Vector(0, 0),
 			speed: new G.Vector(0, 0),
@@ -80,11 +82,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		o.speed.x = px / 1000;
 		o.speed.y = py / 1000;
 	}
+
+	proto.setOffset = function(name, ox, oy) {
+		var o = this._options[G.N(name)];
+		o.offs.x = ox;
+		o.offs.y = oy;
+	}
 	
 	proto.reset = function(name) {
 		var o = this._options[G.N(name)],
-			p = o._prev,
-			c = o._curr;
+			p = o.prev,
+			c = o.curr;
 		p.x = 0;
 		p.y = 0;
 		c.x = 0;
@@ -119,7 +127,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.update = function(timer, dx, dy) {
-		var o = a._options[G.N(this._active)],
+		var o = this._options[G.N(this._active)],
 			p = o.prev,
 			c = o.curr,
 			d = this.getDisplacement(timer, dx, dy),
@@ -129,14 +137,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		c.x = t * d.x,	// Step
 		c.y = t * d.y;
 	
-		p.x += cx;
-		p.y += cy;
+		p.x += c.x;
+		p.y += c.y;
 	
 		c.x = p.x | 0;	// Round
 		c.y = p.y | 0;
 	
-		p.x -= cx;
-		p.y -= cy;
+		p.x -= c.x;
+		p.y -= c.y;
 	
 		position.x += c.x;	// Move
 		position.y += c.y;
@@ -148,15 +156,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.draw = function(renderer, x, y, i) {
-		var o = a._options[G.N(this._active)],
-			p = this.position;
+		var o = this._options[G.N(this._active)],
+			p = this.position,
+			d = o.offs;
 	
 		if (!isNaN(x) && !isNaN(y)) {
 			// In that case, reset the current position
 			this.setPosition(x, y);
 		}
 
-		o.anim.draw(renderer, p.x, p.y, G.defined(i, o.frame) );
+		o.anim.draw(renderer, p.x + d.x, p.y + d.y, G.defined(i, o.frame) );
 	}
 
 })();
