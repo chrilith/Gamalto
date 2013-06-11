@@ -58,12 +58,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (chunk == "FORM") {
 			size  = buffer.readUInt32BE(),
 			base = buffer.readString(4);
-
 			if (base == "ILBM" || base == "PBM ") {
 				do {
 					chunk = buffer.readString(4);
 					size = buffer.readUInt32BE();
-					
+
 					if (chunk == "BMHD") {
 						width = buffer.readUInt16BE();
 						height = buffer.readUInt16BE();
@@ -131,6 +130,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 					// Ignore unhandled chunks
 					} else {
+						// Always read at an even position
+						if (size % 2 == 1) { size++; }
 						buffer.seek(size, G.Stream.SEEK_CUR);
 					}
 				} while(!buffer.eos());
