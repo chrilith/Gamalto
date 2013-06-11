@@ -106,7 +106,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 							palette.addAnimator(
 								active == 3 ? from : to,
 								active == 3 ? to : from,
-								500 / (rate / 16384 * 60));
+								1000 / (rate / 16384 * 60));
 							}
 
 					} else if (chunk == "BODY") {
