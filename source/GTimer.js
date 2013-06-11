@@ -84,7 +84,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.getElapsed = function() {
-		var e = (Date.now() - this._lastTime);
+		var e = (Date.now() - this._lastTime | 0);
 		return e >= this._tolerance ? 0 : e;
 	}
 
