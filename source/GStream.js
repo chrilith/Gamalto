@@ -42,4 +42,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	constant.SEEK_CUR = 1;
 	constant.SEEK_END = 2;
 
+	constant.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
+
 })();
