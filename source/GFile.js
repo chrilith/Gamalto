@@ -124,7 +124,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		r.open(mode || "GET", this._url, arguments[1]);	// [1] = async, internal use only
 		//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 		// Should set responseType one day and read "reponse" to get an ArrayBuffer
-		r.overrideMimeType('text/plain; charset=x-user-defined');
+		r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 
 		return r;
 	}
