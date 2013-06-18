@@ -61,7 +61,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Object inheritance */
 	if (!("inherits" in func)) {
 		func.inherits = function(baseObject) {
-			baseObject = (baseObject._generic || baseObject);
 			this.__base = baseObject;
 
 			function ctor() {};
