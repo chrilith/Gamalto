@@ -38,6 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.using("Canvas");
 	gamalto.using("File");
+	gamalto.using("AsyncFile");
 	gamalto.using("MemoryStream");
 	gamalto.using("Palette");
 
@@ -48,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.IndexedImage = function() {
-		this._file = new G.File();
+		this._file = new G.AsyncFile();
 		
 		Object.defineProperty(this, "src", {
 			set: function(value) {
@@ -65,6 +66,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var stat = G.IndexedImage;
 
 	stat.addModule = function(module) {
+		module.mime.push(G.Stream.BIN_MIMETYPE);
 		modules.push(module);
 	}
 
@@ -89,7 +91,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Module lookup
 		for (i = 0; i < modules.length; i++) {
 			if (modules[i].ext.indexOf(u) != -1 &&
-				modules[i].mime == this._file.mimeType) {
+				~modules[i].mime.indexOf(this._file.mimeType)) {
 				
 				return modules[i].reader;
 			}
@@ -98,24 +100,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._load = function() {
-		var file = this._file;
+		var file = this._file,
+			that = this;
 
 		// Open the file and get info
-		file.open(this._url);
-
-		// Find the proper module
-		if ((this._module = this._findModule())) {
-
-			// Allocate temporary buffer
-			var buf = new G.MemoryStream(file.length);
-
-			// Read data
-			file._beginRead(buf, 0,
-							file.length,
-							this._ended.bind(this));
-		} else {
-			this._error();
-		}
+		return file.open(this._url).then(function() {
+			// Find the proper module
+			if ((that._module = that._findModule())) {
+				// Allocate temporary buffer
+				var buf = new G.MemoryStream(file.length);
+				// Read data
+				file.read(buf, file.length).then(function() {
+					file.close();
+					that._ended(buf);
+				});
+			} else {
+				that._error();
+			}			
+		});
 	}
 	
 	proto._error = function() {
@@ -125,14 +127,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto._ended = function(buffer, result) {
+	proto._ended = function(buffer) {
 		buffer.seek(0);
 
 		var dec  = this._module,
 			data = dec ? dec.call(this, buffer) : null;
-
-		this._file._endRead(result);
-		this._file.close();
 
 		if (!data) {
 			this._error();

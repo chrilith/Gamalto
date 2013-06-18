@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var base = G.IndexedImage;
 
 	base.addModule({
-		mime	: "application/octet-stream",
+		mime	: ["application/octet-stream"],
 		ext		: [".iff", ".ilbm", ".lbm"],
 		reader	: module
 	});
