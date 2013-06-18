@@ -33,16 +33,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
+	gamalto.require("SeekableStream");
+
 	/**
 	 * @constructor
 	 */
 	G.ReadableStream = function(unit) {
-		this._position = 0;
+		Object.base(this);
 		this._unit = (unit || 1) >> 1;
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.ReadableStream.inherits(G.Object);
+	var proto = G.ReadableStream.inherits(G.SeekableStream);
 
 	proto.readUInt8 = function(at) {
 		return this._readByte(this._at(1, at));
@@ -115,33 +118,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.pos = function(offset) {
 		return this._position + (offset | 0);
-	}
-
-	proto.eos = function() {
-		return this._position >= this.length;
-	}
-
-	proto.seek = function(offset, origin) {
-		var C = G.Stream,
-			undef;
-
-		if (origin === undef) {
-			origin = C.SEEK_SET;
-		}
-
-		switch (origin) {
-			case C.SEEK_SET:
-				this._position = offset;
-				break;
-
-			case C.SEEK_CUR:
-				this._position += offset;
-				break;
-
-			case C.SEEK_END:
-				this._position = this.length - offset;
-				break;
-		}
 	}
 
 	proto.rew = function(by) {
