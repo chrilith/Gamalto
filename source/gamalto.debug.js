@@ -46,8 +46,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'OOP.js"></script> \
 		<script src="' + dir + 'Extensions.js"></script> \
 		<script src="' + dir + 'Missing.js"></script> \
-	\
 		<script src="' + dir + 'GPromise.js"></script> \
+	\
 		<script src="' + dir + 'GAsync.js"></script> \
 		<script src="' + dir + 'GCanvas.js"></script> \
 		<script src="' + dir + 'GSectionList.js"></script> \
@@ -94,10 +94,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GSoundPool.js"></script> \
 		<script src="' + dir + 'GSound.js"></script> \
 		<script src="' + dir + 'GStream.js"></script> \
+		<script src="' + dir + 'GSeekableStream.js"></script> \
 		<script src="' + dir + 'GReadableStream.js"></script> \
 		<script src="' + dir + 'GReadStream.js"></script> \
 		<script src="' + dir + 'GMemoryStream.js"></script> \
 		<script src="' + dir + 'GFile.js"></script> \
+		<script src="' + dir + 'GAsyncFile.js"></script> \
 		<script src="' + dir + 'GConvert.js"></script> \
 		<script src="' + dir + 'GDecoder.js"></script> \
 		<script src="' + dir + 'GDecoder_RLE.js"></script> \
