@@ -32,7 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
-	var _active, _scanlines;
+	var _active, _scanlines,
+		COCOON = navigator.isCocoonJS;
 
 	/* Dependencies */
 	gamalto.require("Surface");
@@ -131,7 +132,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.setStretch();
 	}
 	
-	proto.setStretch = function(mode) {
+	proto.setStretch = (COCOON)
+	?function(mode) {
+		var prefix = "idtkscale:";
+		mode = (this._stretch = (mode || this._stretch) | 0);
+
+		this._canvas.style.cssText =
+			(mode === stat.STRETCH_DEFAULT) ? "" :
+			(mode & stat.STRETCH_UNIFORM) ?
+				(mode & stat.STRETCH_FILL) ?
+					prefix + "ScaleAspectFill" :
+				prefix + "ScaleAspectFit" :
+			"";	// Default: ScaleToFill;
+	}
+	:function(mode) {
 		var c = this._canvas,
 			s = c.style,
 			p = c.parentNode;
@@ -141,7 +155,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		if (!p) { return; }
 		mode = (this._stretch = (mode || this._stretch) | 0);
-		if (mode === stat.STRETCH_NONE) { return; }
+		if (mode === stat.STRETCH_DEFAULT) { return; }
 
 		var rw, rh,
 			w1 = p.offsetWidth;
@@ -179,8 +193,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	var stat = G.Screen;
 	
-	stat.STRETCH_NONE		= 0;
-	stat.STRETCH_UNIFORM	= 1 << 1;
+	stat.STRETCH_DEFAULT	= 0;
+	stat.STRETCH_UNIFORM	= 1 << 1;	// TODO: what about aspcect ratio only?
 	stat.STRETCH_FILL		= 1 << 2;
 
 })();
