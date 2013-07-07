@@ -41,23 +41,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Surface = function(width, height) {
+	G.Surface = function(width, height, renderer) {
 		Object.base(this, width, height);
+		this.renderer = (renderer === G.Surface.PIXEL) ?
+			(G.PixelRenderer ? G.PixelRenderer(this) : null) :
+				new G.Renderer(this);
 		this.disableClipping();
 	};
 	
 	/* Inheritance and shortcut */
 	var proto = G.Surface.inherits(G.Canvas);
-	
-	proto._initCanvas = function() {
-		G.Surface.base._initCanvas.call(this);
-		this.renderer = new G.Renderer(this);
-	//	this._canvas.style.zIndex = 0;
-	}
 
 	/* Instance methods */
 	proto.enableClipping = function(x, y, width, height) {
-		var ctx = this._context;
+		var ctx = this.renderer._getContext();
 
 		if (this._isClipping) {
 			this.disableClipping();
@@ -70,12 +67,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.disableClipping = function() {
-		this._context.restore();
+		this.renderer._getContext().restore();
 	}
 
 	proto.blit = function(s, x, y) {
 		this.renderer._reset();
-		this._context.drawImage(s._canvas, x, y);
+		this.renderer._getContext().drawImage(s._getCanvas(), x, y);
 	}
 
 	proto.redraw = function(s, x, y, list) {
@@ -93,30 +90,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					sw = r.width,
 					sh = r.height;
 
-				this._context
-					.drawImage(s._canvas, sx, sy, sw, sh, dx, dy, sw, sh);
+				this.renderer._getContext()
+					.drawImage(s._getCanvas(), sx, sy, sw, sh, dx, dy, sw, sh);
 			}
 		}
 	}
 
 	proto.clear = function() {
-		this.renderer._reset();
-		this._context.clearRect(0, 0, this.width, this.height);
+		var renderer = this.renderer;
+		renderer._reset();
+		renderer._getContext().clearRect(0, 0, this.width, this.height);
 	}
 
 	// TODO: exception if accessing other methods while locked
 	proto.lock = function() {
 		if (!this._locked) {
-			return (this._locked = this._context.getImageData(0, 0, this.width, this.height));
+			return (this._locked = this.renderer._getContext().getImageData(0, 0, this.width, this.height));
 		}
 		return null;
 	}
 
 	proto.unlock = function() {
 		if (this._locked) {
-			this._context.putImageData(this._locked, 0, 0);
+			this._copyRawBuffer(this._locked);
 			this._locked = null;
 		}
 	}
 
+	proto._getCanvas = function() {
+		this.renderer.flush();
+		return G.Surface.base._getCanvas.call(this);
+	}
+
+	/* Constants */
+	var constant = G.Surface;
+
+	constant.DEFAULT	= 0;
+	constant.PIXEL		= 1;
 })();

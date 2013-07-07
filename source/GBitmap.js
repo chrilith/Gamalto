@@ -41,12 +41,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.height = source.height;
 
 		this._source = source;	// This is the source object
-		this._canvas = source;	// This is the data to be rendered
-		// TODO: more generic name for _canvas
 	}
 	
 	/* Inheritance */
-	G.Bitmap.inherits(G.Object);
+	var proto = G.Bitmap.inherits(G.Object);
 
+	proto._getCanvas = function() {
+		return this._source;
+	}
 })();
 

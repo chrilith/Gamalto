@@ -59,21 +59,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var container = G.getContainer();
 		if (_active) {
 			window.removeEventListener("resize", _active, false);
-			container.removeChild(_active._canvas);
+			container.removeChild(_active._getCanvas());
 		}
 		window.addEventListener("resize", (_active = this), false);
-		container.appendChild(this._canvas);
+		container.appendChild(this._getCanvas());
 
 		// Adjust the screen stretching
 		this.setStretch();
 	}
 
 	proto.enableMouse = function(isOn) {
-		this._canvas.style.cursor = isOn ? "" : "none";
+		this._getCanvas().style.cursor = isOn ? "" : "none";
 	};
 
 	proto.enableFiltering = function(isOn) {
-		var style = this._canvas.style;
+		var style = this._getCanvas().style;
 
 		if (!isOn &&
 			(style.setMember("imageRendering", "crisp-edges") ||
@@ -88,7 +88,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.setScanlines = function(dark, light) {
-		var container = this._canvas.parentNode;
+		var container = this._getCanvas().parentNode;
 
 		if (container) {	
 			var isOn = (dark || light),
@@ -98,7 +98,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				var s = new G.Surface(1, 2),
 					r = s.renderer,
 					c = s._context.canvas,
-					p = G._xywh(this._canvas, container, "px");
+					p = G._xywh(this._getCanvas(), container, "px");
 
 				// Prepare the object holding the scanline effect
 				div = (div || document.createElement("div"));
@@ -137,7 +137,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var prefix = "idtkscale:";
 		mode = (this._stretch = (mode || this._stretch) | 0);
 
-		this._canvas.style.cssText =
+		this._getCanvas().style.cssText =
 			(mode === stat.STRETCH_DEFAULT) ? "" :
 			(mode & stat.STRETCH_UNIFORM) ?
 				(mode & stat.STRETCH_FILL) ?
@@ -146,7 +146,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			"";	// Default: ScaleToFill;
 	}
 	:function(mode) {
-		var c = this._canvas,
+		var c = this._getCanvas(),
 			s = c.style,
 			p = c.parentNode;
 
