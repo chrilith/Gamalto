@@ -44,7 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Surface = function(width, height, renderer) {
 		Object.base(this, width, height);
 		this.renderer = (renderer === G.Surface.PIXEL) ?
-			(G.PixelRenderer ? G.PixelRenderer(this) : null) :
+			(G.PixelRenderer ? new G.PixelRenderer(this) : null) :
 				new G.Renderer(this);
 		this.disableClipping();
 	};
