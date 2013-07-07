@@ -147,9 +147,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				(this._canvas = new G.Canvas(data[2], data[3]))
 					._createRawBuffer();
 
-			// Render the first pass and save cached data
-			this._toCanvas();
-
 			// TODO
 			if (this.onload) {
 				this.onload();
@@ -157,7 +154,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	proto._toCanvas = function(refresh) {
+	proto._getCanvas = function(refresh) {
 		var pal = this._palette;
 
 		if (pal._changed || refresh) {
@@ -165,7 +162,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._fullRedraw();
 		}
 
-		return this._canvas._canvas;
+		return this._canvas._getCanvas();
 	}
 
 	proto._fullRedraw = function() {

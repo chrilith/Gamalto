@@ -40,16 +40,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	G.IndexedBitmap = function(source) {
 		Object.base(this, source);
-		delete this._canvas;
-
-		Object.defineProperty(this, "_canvas", {
-			get: function() {
-				var refresh = this._updated;
-				this._updated = false;
-				return source._toCanvas(refresh);
-			},
-			enumerable: false
-		});
 	}
 
 	/* Inheritance */
@@ -68,6 +58,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.setColor = function(index, color) {
 		this._updated = true;
 		this._source._palette.setColor(index, color);
+	}
+
+	proto._getCanvas = function() {
+		var refresh = this._updated;
+		this._updated = false;
+		return this._source._getCanvas(refresh);	
 	}
 
 })();
