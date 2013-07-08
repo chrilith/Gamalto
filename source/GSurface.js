@@ -41,11 +41,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Surface = function(width, height, renderer) {
+	G.Surface = function(width, height/*, renderer*/) {
 		Object.base(this, width, height);
-		this.renderer = (renderer === G.Surface.PIXEL) ?
-			(G.PixelRenderer ? new G.PixelRenderer(this) : null) :
-				new G.Renderer(this);
+		this.renderer = new G.Renderer(this);
 		this.disableClipping();
 	};
 	
@@ -126,5 +124,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var constant = G.Surface;
 
 	constant.DEFAULT	= 0;
-	constant.PIXEL		= 1;
 })();
