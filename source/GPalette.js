@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._animated = [];
 		this._changed = false;	// Whether the palette has been changed
 		this._trans = -1;
-		this.length = 0;
+		this.length = this._list.length;
 	}
 
 	/* Inheritance */
