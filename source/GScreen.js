@@ -56,7 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.setScanlines();
 
 		// Add the new screen to the document
-		var container = G.getContainer();
+		var container = gamalto.getContainer();
 		if (_active) {
 			window.removeEventListener("resize", _active, false);
 			container.removeChild(_active._getCanvas());
