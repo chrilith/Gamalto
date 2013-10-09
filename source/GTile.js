@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	/* Dependencies */
-	gamalto.using("Rect");
+	gamalto.using_("Rect");
 
 	/**
 	 * @constructor

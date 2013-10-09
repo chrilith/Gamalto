@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("SpriteSheet");
-	gamalto.using("Size");
+	gamalto.require_("SpriteSheet");
+	gamalto.using_("Size");
 
 	/**
 	 * @constructor
