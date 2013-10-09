@@ -59,6 +59,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._offs[frame] = new G.Vector(x, y);
 	}
 
+	proto.duplicateFrame = function(index, dest) {
+		var copy = this.getSection(index).clone(),
+			offs = this._offs[index];
+		this.insertSection(dest, copy);
+		this._offs[dest] = offs;
+	}
+
 	proto.update = function(timer, frame) {
 		var length = this.length;
 
