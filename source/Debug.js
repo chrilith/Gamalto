@@ -37,26 +37,26 @@ if (GAMALTO_DEBUG) (function() {
 
 /* Private */
 	var _using = {},
-		 debug = {};
+		 debug = gamalto;
 
-	debug.using = function(name) {
+	debug.using_ = function(name) {
 		_using["D__" + name] = 1;
 	}
 	
-	debug.require = function(name) {
-		debug.assert(Gamalto[name], 'Gamalto dependency error ["' + name + '"].');
+	debug.require_ = function(name) {
+		debug.assert_(G[name], 'Gamalto dependency error ["' + name + '"].');
 	}
 	
-	debug.checkDependencies = function() {
+	debug.checkDependencies__ = function() {
 		for (var use in _using) {
 			if (use.substr(0, 3) == "D__") {
 				var module = use.substr(3);
-				debug.assert(G[module], 'Gamalto cannot find module ["' + module + '"].');
+				debug.assert_(G[module], 'Gamalto cannot find module ["' + module + '"].');
 			}
 		}	
 	}
 
-	debug.assert = function(cond, message) {
+	debug.assert_ = function(cond, message) {
 		if (!cond) {
 			var err = new Error();
 			message  = "Assertion failed" + (message ? " : " + message : "");
@@ -68,15 +68,15 @@ if (GAMALTO_DEBUG) (function() {
 		}
 	}
 
-	debug.log = function() {
+	debug.log_ = function() {
 		console.log.apply(console, arguments);
 	}
 
-	debug.warn = function() {
+	debug.warn_ = function() {
 		console.warn.apply(console, arguments);
 	}
 
-	debug.mem = function(stream, addr, len) {
+	debug.mem_ = function(stream, addr, len) {
 		if (stream.is(G.ReadableStream)) {
 			var i, val, str = "",
 				ptr = stream.ptr(addr),
@@ -100,10 +100,8 @@ if (GAMALTO_DEBUG) (function() {
 				if (i % (16 >> (unit >> 1)) == 0) { str += "\n" + (pad + (addr + i * unit).toString(16)).substr(-8) + "   "; }
 				str += ((pad + val.toString(16)).substr(-unit << 1) + "  ");
 			}
-			debug.log("Offset(h)  " + str.toUpperCase());
+			debug.log_("Offset(h)  " + str.toUpperCase());
 		}
 	}
-
-	window.gamalto = debug;
 
 })();

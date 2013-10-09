@@ -113,7 +113,7 @@ var ENV = self;
 	// Object methods
 	core.init = function(loader/*, debug*/) { // TODO: debug level
 		// Check for dependencies
-		gamalto.checkDependencies();
+		gamalto.checkDependencies__();
 
 		// Run the application
 		if (document.readyState == 'complete') {
@@ -146,7 +146,8 @@ var ENV = self;
 		return u;
 	};
 
-	// TODO: Register the singleton
-//	self.gamalto = core;
+	/* Private methods */
 
+	// TODO: Register the singleton
+	self.gamalto = core;
 })();
