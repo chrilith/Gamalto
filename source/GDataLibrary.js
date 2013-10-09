@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("XMLLibrary");
+	gamalto.require_("XMLLibrary");
 
 	/**
 	 * @constructor
