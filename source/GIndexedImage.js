@@ -36,11 +36,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function(env) {
 
 	/* Dependencies */
-	gamalto.using("Canvas");
-	gamalto.using("File");
-	gamalto.using("AsyncFile");
-	gamalto.using("MemoryStream");
-	gamalto.using("Palette");
+	gamalto.using_("Canvas");
+	gamalto.using_("File");
+	gamalto.using_("AsyncFile");
+	gamalto.using_("MemoryStream");
+	gamalto.using_("Palette");
 
 	/* Local */
 	var modules = [];

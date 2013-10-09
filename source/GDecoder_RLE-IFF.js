@@ -33,8 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	/* Dependencies */
-	gamalto.require("Decoder");
-	gamalto.using("MemoryStream");
+	gamalto.require_("Decoder");
+	gamalto.using_("MemoryStream");
 
 	/* Local */
 	var base = G.Decoder;
