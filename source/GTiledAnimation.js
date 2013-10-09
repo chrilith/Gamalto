@@ -32,6 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
+	/* Shortcut */
+	var core = gamalto;
 
 	/* Dependencies */
 	gamalto.using_("TiledBlock");
@@ -65,7 +67,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.update = function(timer, frame) {
 		var length = this.length;
 	
-		frame = G.defined(frame, this._curr, 0);
+		frame = core.defined(frame, this._curr, 0);
 		if ((frame += timer.elapsedTime * this._speed) >= length) {
 			frame -= length;
 		}
@@ -75,7 +77,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.draw = function(renderer, x, y, frame) {
-		frame = G.defined(i, this._curr, 0);
+		frame = core.defined(i, this._curr, 0);
 		this._list[frame].draw(renderer, x, y);
 	}
 
