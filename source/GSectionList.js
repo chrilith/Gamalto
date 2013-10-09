@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.using("Rect");
+	gamalto.using_("Rect");
 	
 	/**
 	 * @constructor
@@ -64,7 +64,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.insertSection = function(at, section) {
-		gamalto.assert(at < this.length);
+		gamalto.assert_(at < this.length);
 		this._list.splice(at, 0, section);
 		this.length++;
 	}

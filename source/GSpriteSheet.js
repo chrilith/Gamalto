@@ -34,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("SectionList");
-	gamalto.using("Bitmap");
-	gamalto.using("Rect");
+	gamalto.require_("SectionList");
+	gamalto.using_("Bitmap");
+	gamalto.using_("Rect");
 
 	/**
 	 * @constructor
