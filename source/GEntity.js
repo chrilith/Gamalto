@@ -165,7 +165,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.setPosition(x, y);
 		}
 
-		o.anim.draw(renderer, p.x + d.x, p.y + d.y, G.defined(i, o.frame) );
+		o.anim.draw(renderer, p.x + d.x, p.y + d.y, gamalto.defined(i, o.frame) );
 	}
 
 })();
