@@ -35,77 +35,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var ENV = self;
 
 /* Gamalto base object and initializer */
-(function(env) {
-
-	var Gamalto = (function() {
-	
-/* Public */  
-		return {
-			
-			N: function(name) {
-				return "G__" + name;
-			},
-			
-			H: function(name) {
-				return "_" + name + "Handler";
-			},
-			
-			_isName: function(name) {
-				return name && name.indexOf("G__") == 0;
-			},
-
-/* Internal */
-			_isObj: function(v) {
-				return (typeof v == "object");
-			},
-
-			_xywh: function(elem, parent, unit) {
-				var x = 0,
-					y = 0,
-					w = elem.offsetWidth,
-					h = elem.offsetHeight;
-	
-				while (elem && elem != parent) {
-					x += elem.offsetLeft;
-					y += elem.offsetTop;
-					elem = elem.offsetParent;
-				}
-
-				unit = unit || 0;
-				return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
-			}
-		}
-	})();
-
-	/* Globalization */
-	env.G  = env.Gamalto = Gamalto;
-
-	/* Global contants */
-	Gamalto.NONE			= undefined;
-	
-	Gamalto.ALIGN_LEFT		= 1 << 0;
-	Gamalto.ALIGN_RIGHT		= 1 << 1;
-	Gamalto.ALIGN_TOP		= 1 << 2;
-	Gamalto.ALIGN_BOTTOM	= 1 << 3;
-
-	Gamalto.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
-	Gamalto.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
-
-	/* Namespace for special effects objects */
-	env.GE = G.Effects = {};
-
-})(self);
-
-/* WIP: Revamped Gamalto base object */
 (function() {
 
 	// This is a singleton
-	var core = Gamalto, // TODO: {},
+	var core = { env: {} },
 
 	/* Private */
 	_container;
-
-	core.env = {};
 
 	// This is supposed to be always accessible
 	core.env.isHttpRangesSupported = true;	// false as of v1.4.1 of CocoonJS
@@ -148,6 +84,59 @@ var ENV = self;
 
 	/* Private methods */
 
-	// TODO: Register the singleton
-	self.gamalto = core;
+	core._isName = function(name) {
+		return name && name.indexOf("G__") == 0;
+	};
+
+	core._isObject = function(v) {
+		return (typeof v == "object");
+	};
+
+	core._xywh = function(elem, parent, unit) {
+		var x = 0,
+			y = 0,
+			w = elem.offsetWidth,
+			h = elem.offsetHeight;
+
+		while (elem && elem != parent) {
+			x += elem.offsetLeft;
+			y += elem.offsetTop;
+			elem = elem.offsetParent;
+		}
+
+		unit = unit || 0;
+		return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
+	};
+
+	/* #defines */
+	var constant = {
+
+		N: function(name) {
+			return "G__" + name;
+		},
+		
+		H: function(name) {
+			return "_" + name + "Handler";
+		}
+	};
+
+	/* Global contants */
+	constant.NONE			= undefined;
+	
+	constant.ALIGN_LEFT		= 1 << 0;
+	constant.ALIGN_RIGHT		= 1 << 1;
+	constant.ALIGN_TOP		= 1 << 2;
+	constant.ALIGN_BOTTOM	= 1 << 3;
+
+	constant.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
+	constant.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
+
+	/* Register the singleton */
+	ENV.gamalto = core;
+
+	/* Globalization */
+	ENV.G = ENV.Gamalto = constant;
+
+	/* Namespace for special effects objects */
+	ENV.GE = G.Effects = {};
 })();
