@@ -32,6 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
+	/* Shortcut */
+	var core = gamalto;
 
 	/* Dependencies */
 	gamalto.require_("SpriteSheet");
@@ -69,7 +71,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.update = function(timer, frame) {
 		var length = this.length;
 
-		frame = G.defined(frame, this.frame, 0);
+		frame = core.defined(frame, this.frame, 0);
 		if ((frame += timer.elapsedTime * this._speed) >= length) {
 			frame -= length;
 		}
@@ -79,7 +81,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
-		frame = G.defined(frame, this.frame, 0);
+		frame = core.defined(frame, this.frame, 0);
 		var offs = this._offs[frame | 0],
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
