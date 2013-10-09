@@ -34,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("Canvas");
-	gamalto.using("Rect");
-	gamalto.using("Renderer");
+	gamalto.require_("Canvas");
+	gamalto.using_("Rect");
+	gamalto.using_("Renderer");
 
 	/**
 	 * @constructor

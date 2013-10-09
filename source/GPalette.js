@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.using("Color");
-	gamalto.using("Timer");
+	gamalto.using_("Color");
+	gamalto.using_("Timer");
 
 	/**
 	 * @constructor

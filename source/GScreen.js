@@ -36,9 +36,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		COCOON = navigator.isCocoonJS;
 
 	/* Dependencies */
-	gamalto.require("Surface");
-	gamalto.using("Color");
-	gamalto.using("Rect");
+	gamalto.require_("Surface");
+	gamalto.using_("Color");
+	gamalto.using_("Rect");
 
 	/**
 	 * @constructor

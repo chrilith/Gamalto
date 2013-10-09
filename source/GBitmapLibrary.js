@@ -34,10 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("BaseLibrary");
-	gamalto.using("Bitmap");
-	gamalto.using("IndexedBitmap");	// TODO: allow optional indexed usage
-	gamalto.using("IndexedImage");
+	gamalto.require_("BaseLibrary");
+	gamalto.using_("Bitmap");
+	gamalto.using_("IndexedBitmap");	// TODO: allow optional indexed usage
+	gamalto.using_("IndexedImage");
 
 	/**
 	 * @constructor
