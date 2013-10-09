@@ -36,8 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	gamalto.require("EventManager");
-	gamalto.using("KeyboardEvent");
+	gamalto.require_("EventManager");
+	gamalto.using_("KeyboardEvent");
 
 	
 	/* Local */

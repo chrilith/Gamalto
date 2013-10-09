@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	gamalto.require("Event");
+	gamalto.require_("Event");
 
 	/* Constants */
 	var constant = G.Event;

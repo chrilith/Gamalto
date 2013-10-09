@@ -36,8 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	gamalto.require("EventManager");
-	gamalto.using("KeyboardEvent");	// FIXME: iCade consts are required
+	gamalto.require_("EventManager");
+	gamalto.using_("KeyboardEvent");	// FIXME: iCade consts are required
 	
 	/* Local */
 	var input,
@@ -75,7 +75,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			input.style.position = "absolute";
 			input.style.top = "-9999px";
 		}
-		// CHECKME: we cannot call init() before Gamalto.init()
+		// CHECKME: we cannot call init() before gamalto.init()
 		document.addEventListener("DOMContentLoaded", function() {
 			var body = document.body;
 			body.appendChild(input);
