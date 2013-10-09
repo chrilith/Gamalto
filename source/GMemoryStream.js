@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		object = recent ? Uint8Array : Array;
 
 	/* Dependencies */
-	gamalto.require("ReadStream");
+	gamalto.require_("ReadStream");
 
 	/**
 	 * @constructor
