@@ -34,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("SeekableStream");
-	gamalto.using("Convert");
-	gamalto.using("Async");
+	gamalto.require_("SeekableStream");
+	gamalto.using_("Convert");
+	gamalto.using_("Async");
 
 	/**
 	 * @constructor

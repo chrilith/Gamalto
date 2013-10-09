@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("ReadableStream");
-	gamalto.using("Convert");
+	gamalto.require_("ReadableStream");
+	gamalto.using_("Convert");
 
 	/**
 	 * @constructor
