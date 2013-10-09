@@ -119,7 +119,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (!skip) { that._lastTime = before; }
 
 			// Compute FPS
-			last = that.computeFPS__(last, skip);
+			last = that.computeFPS_(last, skip);
 	
 			// Next iteration
 			next = that._nextWait(before);
@@ -137,7 +137,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/*	Frames Per Second (FPS) related methods
 		For debug purpose only */
 	
-	proto.computeFPS__ = function(last, skip) {
+	proto.computeFPS_ = function(last, skip) {
 		var time, elapsed, i, length, sum = 0,
 			list = this._ticks,
 			callback = this._fpsCb;
@@ -164,13 +164,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return last;
 	}
 
-	var setFPSWatcher__ = function(callback) {
+	var setFPSWatcher_ = function(callback) {
 		this._fpsCb = callback;
 		this._frameCount = 0;
 		this._ticks = [0];
 		this._tickSum = 0;
 		this._tickIndex = 0;
 	};
-	proto.setFPSWatcher = setFPSWatcher__;	// Removed in release mode
 
 })(ENV);
