@@ -96,7 +96,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				status = r.status;
 				that.mimeType = r.getResponseHeader("Content-Type") ||
 									"application/octet-stream";
-				that._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+				that._rangeSupported = false; //!!r.getResponseHeader("Accept-Ranges");
 
 				// Length should be -1 only using "file" URL scheme...
 				if (-1 == (that.length =
@@ -107,12 +107,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						Here, the whole data is loaded into memory since HTTP is not
 						supported. TODO: Optimization may apply.
 					*/
-					if (r.respsonse) {
+					if (r.response) {
 						that.length = r.response.byteLength;
 					} else {
 						that.length = (r.responseText || "").length;
 					}
 				}
+console.log("length", that.length);
 				// TODO: handle error with "status"
 				promise.resolve(that);
 			}
@@ -126,7 +127,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var r = new XMLHttpRequest();
 		r.open(mode || "GET", this._url, true);
 
-		if (typeof r.responseType == "strisng") {
+		if (typeof r.responseType == "string") {
 			try { r.responseType = "arraybuffer"; } catch(e) {}
 		}
 		if (!r.responseType) {
@@ -170,6 +171,8 @@ console.log(typeof r.response);
 		return this._send(r).then(function(data) {
 console.log("_send");
 console.log(typeof data);
+console.log("data");
+console.log(typeof Uint8Array);
 			that._data = typeof data == "object" ? new Uint8Array(data) : data;
 			that._bufSize = (r.getResponseHeader("Content-Length") | 0)
 								|| that._data.length; // for local files...
