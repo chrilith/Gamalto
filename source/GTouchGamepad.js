@@ -34,6 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // FIXME: bug on iOS5 where touchend event is not always raised properly
 
 (function() {
+	/* Shortcut */
+	var core = gamalto;
+
 	/* Dependencies */
 	gamalto.require_("Shape");
 
@@ -52,7 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.connected = false;
 		// this._capture = false; // For mouse handling
 
-		this._parent = container || G.getContainer();
+		this._parent = container || gamalto.getContainer();
 		this._shapes = {
 			func: ["_checkAxes", "_checkButton"],
 			nfo : [[], []] 	// 0 = axes, 1 = buttons
@@ -132,7 +135,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.reflow = function() {
 		// Parent must be displayed in order to compute its size
-		this._rect = G._xywh(this._parent);
+		this._rect = core._xywh(this._parent);
 
 		var j, p = this._shapes.nfo[AXES];
 		for (i = 0; i < p.length; i++) {
