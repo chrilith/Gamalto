@@ -34,12 +34,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("SpriteSheet");
-	gamalto.using("Bitmap");
-	gamalto.using("Rect");
-	gamalto.using("Renderer");
-	gamalto.using("Size");
-	gamalto.using("Surface");
+	gamalto.require_("SpriteSheet");
+	gamalto.using_("Bitmap");
+	gamalto.using_("Rect");
+	gamalto.using_("Renderer");
+	gamalto.using_("Size");
+	gamalto.using_("Surface");
 
 	/**
 	 * @constructor
