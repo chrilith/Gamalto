@@ -32,61 +32,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /* Initial execution environement */
-var ENV = window;
+var ENV = self;
 
 /* Gamalto base object and initializer */
 (function(env) {
-	/* Dependencies */
-	gamalto.using("Promise");
 
 	var Gamalto = (function() {
 	
-/* Private */
-		var _container;   
-		
 /* Public */  
 		return {
-			
-			init: function(/*debug*/) { // TODO: debug level
-				var promise = new G.Promise();
-
-				// Check for dependencies
-				gamalto.checkDependencies();
-
-				// Run the application
-				var loader = function() { promise.resolve(); };
-				if (document.readyState == 'complete') {
-					setTimeout(loader, 0);
-				} else {
-					document.addEventListener('DOMContentLoaded', loader, false);
-				}
-
-				return promise;
-			},
-		
-			setContainer: function(container) {
-				container = (typeof container == "string") ?
-					document.getElementById(container) : container;
-				_container = container;
-				
-				/* For scanlines positioning and some other stuff... */
-				container.style.position = "relative";
-			},
-			
-			getContainer: function() {
-				return (_container || document.body);
-			},
-
-			defined: function(/* vargs... */) {
-				var i,
-					a = arguments,
-					u; // undefined
-
-				for (i = 0; i < a.length; i++) {
-					if (a[i] !== u) { return a[i]; }
-				}
-				return u;
-			},
 			
 			N: function(name) {
 				return "G__" + name;
@@ -140,4 +94,59 @@ var ENV = window;
 	/* Namespace for special effects objects */
 	env.GE = G.Effects = {};
 
-})(ENV);
+})(self);
+
+/* WIP: Revamped Gamalto base object */
+(function() {
+
+	// This is a singleton
+	var core = Gamalto, // TODO: {},
+
+	/* Private */
+	_container;
+
+	core.env = {};
+
+	// This is supposed to be always accessible
+	core.env.isHttpRangesSupported = true;	// false as of v1.4.1 of CocoonJS
+
+	// Object methods
+	core.init = function(loader/*, debug*/) { // TODO: debug level
+		// Check for dependencies
+		gamalto.checkDependencies();
+
+		// Run the application
+		if (document.readyState == 'complete') {
+			setTimeout(loader, 0);
+		} else {
+			document.addEventListener('DOMContentLoaded', loader, false);
+		}
+	};
+
+	core.setContainer = function(container) {
+		_container = (typeof container == "string") ?
+			document.getElementById(container) : container;
+		
+		/* For scanlines positioning and some other stuff... */
+		_container.style.position = "relative";	// FIXME, bad way to do this
+	};
+	
+	core.getContainer = function() {
+		return (_container || document.body);
+	};
+
+	core.defined = function(/* vargs... */) {
+		var i,
+			a = arguments,
+			u; // undefined
+
+		for (i = 0; i < a.length; i++) {
+			if (a[i] !== u) { return a[i]; }
+		}
+		return u;
+	};
+
+	// TODO: Register the singleton
+//	self.gamalto = core;
+
+})();
