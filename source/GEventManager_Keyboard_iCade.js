@@ -132,7 +132,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._pushKeyCade(e);
 				break;
 			case "touchstart":
-				if (e.target == G.getContainer()) {
+				if (e.target == gamalto.getContainer()) {
 					input.focus();
 				}
 				break;

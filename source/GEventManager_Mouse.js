@@ -32,6 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function(env) {
+	/* Shortcut */
+	var core = gamalto;
 
 	/**
 	 * Dependencies
@@ -92,7 +94,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		evt.absY = e.clientY;
 
 		// Relative
-		pos = G._xywh(evt.target);
+		pos = core._xywh(evt.target);
 		evt.x = evt.absX - pos.x;
 		evt.y = evt.absY - pos.y;
 
