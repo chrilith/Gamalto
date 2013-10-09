@@ -34,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("SpriteSheet");
-	gamalto.using("Rect");
-	gamalto.using("Timer");
+	gamalto.require_("SpriteSheet");
+	gamalto.using_("Rect");
+	gamalto.using_("Timer");
 
 	/**
 	 * @constructor
