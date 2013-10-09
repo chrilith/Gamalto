@@ -34,8 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require("Shape");
-	gamalto.using("Vector");
+	gamalto.require_("Shape");
+	gamalto.using_("Vector");
 
 	/**
 	 * @constructor
