@@ -62,7 +62,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 	}
-	
+
+	proto.insertSection = function(at, section) {
+		gamalto.assert(at < this.length);
+		this._list.splice(at, 0, section);
+		this.length++;
+	}
+
 	proto.createSection = function(x, y, w, h) {
 		return new G.Rect(x, y, w, h);
 	}
