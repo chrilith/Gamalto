@@ -115,7 +115,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		try {
 			value = (resolver || this.resolve)(value);
 		} catch(e) {
-			gamalto.warn("Promise rejected", e);
+			gamalto.warn_("Promise rejected", e);
 			this.reject(e);
 		}
 		return value;		
