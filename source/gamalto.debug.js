@@ -90,8 +90,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GEventManager_Keyboard_iCade.js"></script> \
 		<script src="' + dir + 'GEventManager_Mouse.js"></script> \
 		<script src="' + dir + 'GCommandLine.js"></script> \
-		<script src="' + dir + 'GSoundPool.js"></script> \
 		<script src="' + dir + 'GSound.js"></script> \
+		<script src="' + dir + 'GSoundPool.js"></script> \
+		<script src="' + dir + 'GAudioChannel.js"></script> \
+		<script src="' + dir + 'GAudioMixer.js"></script> \
+		<script src="' + dir + 'GAudioMixer_HTML5Audio.js"></script> \
 		<script src="' + dir + 'GStream.js"></script> \
 		<script src="' + dir + 'GSeekableStream.js"></script> \
 		<script src="' + dir + 'GReadableStream.js"></script> \
