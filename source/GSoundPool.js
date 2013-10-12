@@ -48,7 +48,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.loadItem = function(name, src) {
 		var promise = G.SoundPool.base.loadItem.call(this),
-			event = gamalto.env.audioLoadedEvent,
+			event = "loadedmetadata",	// Supported in CocoonJS 1.4
 			audio = new Audio(),
 			that = this;
 
