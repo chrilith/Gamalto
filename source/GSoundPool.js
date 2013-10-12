@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2013 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -48,14 +48,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.loadItem = function(name, src) {
 		var promise = G.SoundPool.base.loadItem.call(this),
-			event = gamalto.env.audioLoadedEvent;
+			event = gamalto.env.audioLoadedEvent,
 			audio = new Audio(),
 			that = this;
 
 		audio.onabort = audio.onerror = function(e) {
 			promise.reject(that._failed(name, src, e));
 		}
-		
+
 		audio.addEventListener(event, function(e) {
 			audio.removeEventListener(event, arguments.callee, false);
 			that._add(name, new G.Sound(audio));
