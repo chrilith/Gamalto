@@ -46,4 +46,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return "[Gamalto Object]";
 	}
 
+	proto.clone = function() {
+		return null;
+	}
+
 })();
