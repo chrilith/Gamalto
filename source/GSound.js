@@ -34,42 +34,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	G.Sound = function(audio) {
-		var that = this;
+		var that = this,
+			handler = this.handleEvent.bind(this); // passing "this" is not supported by CocoonJS
 		this._audio = audio;
-		
-		// Read metadata
-		if (audio.readyState >= audio.HAVE_METADATA) {
-			this.duration = audio.duration * 1000;	// To msecs
-		}
-
-		// Always check for metadata update
-		audio.addEventListener("loadedmetadata", function() {
-			that.duration = audio.duration * 1000;	// To msecs
-		}, false);
 
 		// When data is available try to play the sound if needed
-		audio.addEventListener("canplaythrought", this._handlePlayThrought.bind(this), false);
+		audio.addEventListener("canplaythrough", handler, false);
 
 		// Loop handling
-		audio.addEventListener("timeupdate", this._handleUpdate.bind(this), false);
+		audio.addEventListener("ended", handler, false);
 	}
 
 	var proto = G.Sound.inherits(G.Object);
 	
 	proto.play = function(loop) {
-		var a = this._audio;
-		a.loop = ((this._loop = loop || 1) > 1);
+		var audio = this._audio;
+
+		// Loop the sound
+		this._loop = loop || 1;
 
 		// Save start time if the sound cannot be played immediately
 		this._startTime = Date.now();
 
-		// Try to play the sound
-		if (a.readyState >= a.HAVE_METADATA) {
-			a.currentTime = 0;
-		}
-		a.play();
-		
-		// Should be playing...
+		// Try to play the sound from the beginning
+		audio.currentTime = 0;
+		audio.play();
+
+		// Should be playing now
 		this._playing = true;
 	}
 
@@ -82,49 +73,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._loop = 0;
 		this._playing = false;
 		this._audio.loop = false;
-		this._audio.pause();
+		this.pause();
 	}
 	
 	
 	/* Events handling */
 
-	proto._handleUpdate = function() {
-		if (this._playing) {
-			var loop = ((Date.now() - this._startTime) / this.duration) | 0;
-			if (this._loop == loop) {
-				this._audio.loop = false;
+	proto.handleEvent = function(e) {
+		if (e.type == "canplaythrough") {
+			this._canplaythrough();
+		} else if (e.type == "ended") {
+			if (--this._loop) {
+				this.play(this._loop);
 			}
 		}
 	}
 
-	proto._handlePlayThrought = function() {
+	proto._canplaythrough = function() {
 		if (this._playing) {
-			var elasped	= Date.now() - this._startTime;
-				loop	= elasped / this.duration | 0;
-				played	= elapsed % this.duration;
+			var elapsed		= (Date.now() - this._startTime) / 1000,
+				audio		= this._audio,
+				duration	= audio.duration,
+				// Adjust
+				loop		= elapsed / duration | 0,
+				played		= elapsed % duration;
 
 				if ((this._loop -= loop) > 0) {
-					this._audio.currentTime = played / 1000;
+					this._audio.currentTime = played;
 					this._audio.play();
 				} else {
 					this.stop();
 				}
 		}
-	}
-
-	/* Constants */
-	var constant = G.Sound;
-	
-	constant.MP3		= "audio/mpeg";
-	constant.OGG_VORBIS	= "audio/ogg";
-	constant.WAVE		= "audio/wav";
-
-	/* Static */
-	var test = new Audio(),
-		stat = G.Sound;
-
-	stat.isSupported = function(mime) {
-		return test.canPlayType(mime) != "";
 	}
 	
 })();

@@ -35,11 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.require_("BaseLibrary");
+	gamalto.using_("Sound");
 
 	/**
 	 * @constructor
 	 */
-	G.SoundPool = function() {
+	var stat = G.SoundPool = function() {
 		Object.base(this);
 	}
 
@@ -47,27 +48,52 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.loadItem = function(name, src) {
 		var promise = G.SoundPool.base.loadItem.call(this),
-			a = document.createElement("audio"),
+			event = gamalto.env.audioLoadedEvent;
+			audio = new Audio(),
 			that = this;
-	
-		a.onabort = a.onerror = function(e) {
-			promise.reject(that._failed(name, src));
+
+		audio.onabort = audio.onerror = function(e) {
+			promise.reject(that._failed(name, src, e));
 		}
 		
-		a.addEventListener("loadedmetadata", function(e) {
-			a.removeEventListener("loadedmetadata", arguments.callee, false);
-			that._list[G.N(name)] = new G.Sound(a);
+		audio.addEventListener(event, function(e) {
+			audio.removeEventListener(event, arguments.callee, false);
+			that._add(name, new G.Sound(audio));
+
 			promise.resolve({
 				source: that,
 				item: name
 			});
 		}, false);
 
-		a.preload = "metadata";
-		a.src = src;
-		a.load();
+		audio.preload = "auto";
+		audio.src = src;
+		audio.load();
 
 		return promise;
+	}
+
+	/* Constants */
+	var constant = stat;
+
+	constant.MP3	= ["audio/mpeg", "audio/mpg3"];
+	constant.MP4	= ["audio/mpg4"];
+	constant.OGG	= ["audio/ogg"];
+	constant.WAVE	= ["audio/wav", "audio/x-wav"];
+
+	/* Static */
+	var test = new Audio();
+
+	stat.isSupported = function(mime) {
+		if (typeof mime == "string") { mime = [mime]; }
+
+		var supported;
+		mime.forEach(function(item) {
+			if (test.canPlayType(item) != "") {
+				supported = 1;
+			}
+		});
+		return !!supported;
 	}
 
 })();
