@@ -48,8 +48,6 @@ var ENV = self;
 	core.env.isMobile = false;				// TODO
 	core.env.hasAudio = false;				// Will be iniitalized by the audio lib
 
-	core.env.audioLoadedEvent = navigator.isCocoonJS ? "canplaythrough" : "loadedmetadata";
-
 	// Object methods
 	core.init = function(loader/*, debug*/) { // TODO: debug level
 		// Check for dependencies
