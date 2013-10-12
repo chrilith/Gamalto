@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2013 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -33,10 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	
-	G.Sound = function(audio) {
+	G.Sound = function(audio, priority) {
 		var that = this,
 			handler = this.handleEvent.bind(this); // passing "this" is not supported by CocoonJS
 		this._audio = audio;
+		this.priority = priority | 0;				// May be use on signle channel platform
 
 		// When data is available try to play the sound if needed
 		audio.addEventListener("canplaythrough", handler, false);
@@ -57,7 +58,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._startTime = Date.now();
 
 		// Try to play the sound from the beginning
-		audio.currentTime = 0;
+		try { audio.currentTime = 0; } catch(e) {}		// Expection if metadata are not available
 		audio.play();
 
 		// Should be playing now
@@ -71,12 +72,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.stop = function() {
 		this._loop = 0;
-		this._playing = false;
-		this._audio.loop = false;
 		this.pause();
 	}
+
+	proto.equals = function(snd) {
+		return this._audio.src == snd._audio.src &&
+			this.priority == snd.priority;
+	}
 	
-	
+	proto.clone = function() {
+		var audio = new Audio();
+		audio.src = this._audio.src;
+		return new G.Sound(audio, this.priority);
+	}
+
 	/* Events handling */
 
 	proto.handleEvent = function(e) {
@@ -85,6 +94,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} else if (e.type == "ended") {
 			if (--this._loop) {
 				this.play(this._loop);
+			} else {
+				this.stop();
 			}
 		}
 	}
