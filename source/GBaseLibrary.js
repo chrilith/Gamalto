@@ -91,7 +91,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._add = function(name, item) {
-		that._list[G.N(name)] = item;
+		this._list[G.N(name)] = item;
 	}
 	
 	proto._failed = function(name, src, e) {
