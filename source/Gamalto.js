@@ -44,7 +44,11 @@ var ENV = self;
 	_container;
 
 	// This is supposed to be always accessible
-	core.env.isHttpRangesSupported = true;	// false as of v1.4.1 of CocoonJS
+	core.env.isHttpRangesSupported = false;	// false as of v1.4.1 of CocoonJS
+	core.env.isMobile = false;				// TODO
+	core.env.hasAudio = false;				// Will be iniitalized by the audio lib
+
+	core.env.audioLoadedEvent = navigator.isCocoonJS ? "canplaythrough" : "loadedmetadata";
 
 	// Object methods
 	core.init = function(loader/*, debug*/) { // TODO: debug level
