@@ -135,7 +135,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 
-		s.renderer._reset(); // FIXME: access to an unexpected method!!
+		// Force no transformation without altering current surface configuration
+		s.renderer._reset();
 		src.clearRect(x, y, w, h);
 		src.drawImage(dst.canvas, x, y);
 	}
