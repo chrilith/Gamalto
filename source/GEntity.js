@@ -98,6 +98,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		c.x = 0;
 		c.y = 0;
 	}
+
+	proto.getActive = function() {
+		return this._active;
+	}
 	
 	proto.setActive = function(name) {
 		if (name != this._active) {
@@ -164,7 +168,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// In that case, reset the current position
 			this.setPosition(x, y);
 		}
-
 		o.anim.draw(renderer, p.x + d.x, p.y + d.y, gamalto.defined(i, o.frame) );
 	}
 
