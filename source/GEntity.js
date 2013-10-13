@@ -50,14 +50,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			name, options = this._options;
 	
 		for(name in options) {
-			if (G.isName(name)) {
+			if (gamalto.isName(name)) {
 				clone._options[name] = {
 					anim : to.anim,
 					offs : to.offs.clone(),
 					prev : to.prev.clone(),
 					curr : to.prev.clone(),
 					speed: to.speed.clone(),
-					frame: to.frame
+					frame: to.frame.clone()
 				}
 			}
 		}
@@ -72,8 +72,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			prev : new G.Vector(0, 0),
 			curr : new G.Vector(0, 0),
 			speed: new G.Vector(0, 0),
-			frame: 0
+			frame: new G.Animator()
 		};
+	}
+
+	proto.isPlaying = function() {
+		var name = this._active;
+		if (!name) {
+			return false;
+		}
+		return this._options[G.N(name)].frame.playing;
 	}
 	
 	// Displacement speed for the given animation
@@ -105,9 +113,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto.setActive = function(name) {
 		if (name != this._active) {
-			var v = this._options[G.N(name)].prev;
+			var options = this._options[G.N(name)],
+				v = options.prev;
 			v.x = 0;
 			v.y = 0;
+			options.frame.reset();
 			this._active = name;
 		}
 	}
@@ -154,8 +164,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		position.y += c.y;
 		
 		// Always calculate the next frame to stay in sync
-		o.frame = o.anim.update(timer, o.frame);
-	
+		o.anim.update(timer, o.frame);
+
 		return c;
 	}
 	
@@ -168,7 +178,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// In that case, reset the current position
 			this.setPosition(x, y);
 		}
-		o.anim.draw(renderer, p.x + d.x, p.y + d.y, gamalto.defined(i, o.frame) );
+		o.anim.draw(renderer, p.x + d.x, p.y + d.y, gamalto.defined(i, o.frame.progress) );
 	}
 
 })();
