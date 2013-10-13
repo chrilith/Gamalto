@@ -47,6 +47,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.base(this, bitmap, tw, th, count, r);
 		this._speed = 0;
 		this._offs = [];
+		this.animator = new G.Animator();
 		this.setLoop(true);
 		this.reset();
 	}
@@ -66,6 +67,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._loop = !!isOn;
 	}
 
+	proto.getLoop = function() {
+		return this._loop;
+	}
+
 	proto.duplicateFrame = function(index, dest) {
 		var copy = this.getSection(index).clone(),
 			offs = this._offs[index];
@@ -73,38 +78,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._offs[dest] = offs;
 	}
 
-	proto.update = function(timer, frame) {
+	proto.update = function(timer, animator) {
 		var length = this.length;
 
-		// INternal or external frame counter
-		frame = core.defined(frame, this.frame, 0);
+		// Internal or external frame counter
+		animator = core.defined(animator, this.animator, 0);
 
 		// Handle playing state
-		if (!this.playing && frame < length) {
-			this.playing = true;
+		if (!animator.playing && animator.progress < length) {
+			animator.playing = true;
 		}
 
 		// Loop or end
-		if ((frame += timer.elapsedTime * this._speed) >= length) {
+		if ((animator.progress += timer.elapsedTime * this._speed) >= length) {
 			if (this._loop) {
-				frame -= length;
+				animator.progress -= length;
 			} else {
-				frame = length - 1;
-				this.playing = false;
+				animator.progress = length - 1;
+				animator.playing = false;
 			}
 		}
 
 		// Do not round to keep the fractionnal part to stay in sync
-		return (this.frame = frame);
+		return animator.progress;
 	}
 
 	proto.reset = function() {
-		this.playing = false;
-		this.frame = 0;
+		this.animator.reset();
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
-		frame = core.defined(frame, this.frame, 0);
+		frame = core.defined(frame, this.animator.progress, 0);
 		var offs = this._offs[frame | 0],
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
