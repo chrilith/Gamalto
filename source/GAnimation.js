@@ -47,7 +47,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.base(this, bitmap, tw, th, count, r);
 		this._speed = 0;
 		this._offs = [];
-		this.frame = 0;
+		this.setLoop(true);
+		this.reset();
 	}
 
 	/* Inheritance and shortcut */
@@ -61,6 +62,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._offs[frame] = new G.Vector(x, y);
 	}
 
+	proto.setLoop = function(isOn) {
+		this._loop = !!isOn;
+	}
+
 	proto.duplicateFrame = function(index, dest) {
 		var copy = this.getSection(index).clone(),
 			offs = this._offs[index];
@@ -71,13 +76,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.update = function(timer, frame) {
 		var length = this.length;
 
+		// INternal or external frame counter
 		frame = core.defined(frame, this.frame, 0);
+
+		// Handle playing state
+		if (!this.playing && frame < length) {
+			this.playing = true;
+		}
+
+		// Loop or end
 		if ((frame += timer.elapsedTime * this._speed) >= length) {
-			frame -= length;
+			if (this._loop) {
+				frame -= length;
+			} else {
+				frame = length - 1;
+				this.playing = false;
+			}
 		}
 
 		// Do not round to keep the fractionnal part to stay in sync
 		return (this.frame = frame);
+	}
+
+	proto.reset = function() {
+		this.playing = false;
+		this.frame = 0;
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
