@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	G.Pattern = function(bitmap, r) {
 		var s = new G.Surface(r.width, r.height);	
 		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
-		this._pattern = s._context.createPattern(s._canvas, "repeat");
+		this._pattern = s._context.createPattern(s._getCanvas(), "repeat");
 	}
 
 	/* Inheritance and shortcut */
