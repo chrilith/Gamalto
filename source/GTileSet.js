@@ -61,7 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		G.TileSet.base.setSections.call(this, tw, th, count, r);
 	}
 
-	proto.createSection = function(x, y, w, h) {
+	proto._createSection = function(x, y, w, h) {
 		return new G.Tile(x, y, w, h);
 	}
 	
