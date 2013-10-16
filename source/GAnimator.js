@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Animator = function() {
 		this.reset();
+		this._duration = [];
 	}
 
 	/* Inheritance and shortcut */
@@ -50,12 +51,65 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.reset = function() {
 		this.progress = 0;
 		this.playing = false;
+		this._lastTime = 0;
+	}
+
+	proto.setLoop = function(isOn) {
+		this._loop = !!isOn;
+	}
+
+	proto.getLoop = function() {
+		return this._loop;
+	}
+
+	proto.update = function(timer) {
+		var undef,
+			// Where do we start
+			pos = this.progress,
+			index = pos | 0,
+			list = this._duration,
+			length = list.length,
+			// Elpasted time to consider
+			time = (this._lastTime += timer.elapsedTime);
+
+		// Handle playing state
+		if (!this.playing && this.progress < length) {
+			this.playing = true;
+		}
+
+		// Starting at 'index'
+		while (index < length) {
+			var iter = list[index] | 0;
+
+			// Does the elapsed time fits the current duration
+			if (time < iter) {
+				break;
+			}
+			// No, remove the curent duration move to the next 
+			this._lastTime = (time -= iter);
+
+			// Reached the end? should we loop?
+			if (++index == length && this._loop) {
+				index = 0;
+			}
+		};
+		// Save progression and check for end
+		if ((this.progress = index) == length) {
+			if (!this._loop) {
+				this.progress = length - 1;
+				this.playing = false;
+			}
+		}
+		return this.playing;
 	}
 
 	proto.clone = function() {
 		var clone = new G.Animator();
+
 		clone.progress = this.progress;
 		clone.playing = this.playing;
+		clone.setLoop(this.getLoop());
+
 		return clone;
 	}
 

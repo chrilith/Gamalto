@@ -44,71 +44,53 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Animation = function(bitmap, tw, th, count, r) {
-		Object.base(this, bitmap, tw, th, count, r);
-		this._speed = 0;
-		this._offs = [];
 		this.animator = new G.Animator();
-		this.setLoop(true);
-		this.reset();
+		Object.base(this, bitmap, tw, th, count, r);
+		this._offs = [];
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.Animation.inherits(G.SpriteSheet);
 
-	proto.setDuration = function(time) {
-		this._speed = 1 / (time / this.length);
+	proto.setFrameDuration = function(frame, time) {
+		gamalto.assert_(frame < this._list.length);
+		this.animator._duration[frame] = time;
 	}
 
-	proto.setOffset = function(frame, x, y) {
+	proto.setFrameOffset = function(frame, x, y) {
+		gamalto.assert_(frame < this._list.length);
 		this._offs[frame] = new G.Vector(x, y);
-	}
-
-	proto.setLoop = function(isOn) {
-		this._loop = !!isOn;
-	}
-
-	proto.getLoop = function() {
-		return this._loop;
 	}
 
 	proto.duplicateFrame = function(index, dest) {
 		var copy = this.getSection(index).clone(),
-			offs = this._offs[index];
+			offs = this._offs[index],
+			time = this.animator._duration[index];
 		this.insertSection(dest, copy);
 		this._offs[dest] = offs;
+		this.setFrameDuration(dest, time);
 	}
 
-	proto.update = function(timer, animator) {
-		var length = this.length;
-
-		// Internal or external frame counter
-		animator = core.defined(animator, this.animator, 0);
-
-		// Handle playing state
-		if (!animator.playing && animator.progress < length) {
-			animator.playing = true;
-		}
-
-		// Loop or end
-		if ((animator.progress += timer.elapsedTime * this._speed) >= length) {
-			if (this._loop) {
-				animator.progress -= length;
-			} else {
-				animator.progress = length - 1;
-				animator.playing = false;
-			}
-		}
-
-		// Do not round to keep the fractionnal part to stay in sync
-		return animator.progress;
+	proto.setLoop = function(isOn) {
+		this.animator.setLoop(isOn);
 	}
 
-	proto.reset = function() {
-		this.animator.reset();
+	proto.getLoop = function() {
+		return this.animator.getLoop();
+	}
+
+	proto.update = function(timer) {
+		return this.animator.update(timer);
+	}
+
+	proto._createSection = function(x, y, w, h) {
+		this.animator._duration.push(0);
+		return G.Animation.base._createSection.apply(this, arguments);
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
 		frame = core.defined(frame, this.animator.progress, 0);
+
 		var offs = this._offs[frame | 0],
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
@@ -116,7 +98,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			x += offs.x * invX | 0;
 			y += offs.y * invY | 0;
 		}
-		G.Animation.base.draw.call(this, renderer, x, y, frame);
+		G.Animation.base.draw.apply(this, arguments);
 	}
 
 })();
