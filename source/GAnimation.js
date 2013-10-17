@@ -44,9 +44,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Animation = function(bitmap, tw, th, count, r) {
-		this.animator = new G.Animator();
-		Object.base(this, bitmap, tw, th, count, r);
 		this._offs = [];
+		this._time = [];
+		Object.base(this, bitmap, tw, th, count, r);
+		this.animator = new G.Animator();
+		this.setLoop(true);
 	}
 
 	/* Inheritance and shortcut */
@@ -54,7 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.setFrameDuration = function(frame, time) {
 		gamalto.assert_(frame < this._list.length);
-		this.animator._duration[frame] = time;
+		this._time[frame] = time;
 	}
 
 	proto.setFrameOffset = function(frame, x, y) {
@@ -65,26 +67,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.duplicateFrame = function(index, dest) {
 		var copy = this.getSection(index).clone(),
 			offs = this._offs[index],
-			time = this.animator._duration[index];
+			time = this._time[index];
 		this.insertSection(dest, copy);
 		this._offs[dest] = offs;
 		this.setFrameDuration(dest, time);
 	}
 
 	proto.setLoop = function(isOn) {
-		this.animator.setLoop(isOn);
+		this._loop = !!isOn;
 	}
 
 	proto.getLoop = function() {
-		return this.animator.getLoop();
+		return this._loop;
 	}
 
-	proto.update = function(timer) {
-		return this.animator.update(timer);
+	proto.update = function(timer, animator) {
+		return core.defined(animator, this.animator)
+					.update(timer, this._loop, this._time);
 	}
 
 	proto._createSection = function(x, y, w, h) {
-		this.animator._duration.push(0);
+		this._time.push(0);
 		return G.Animation.base._createSection.apply(this, arguments);
 	}
 

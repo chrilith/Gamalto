@@ -41,7 +41,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Animator = function() {
 		this.reset();
-		this._duration = [];
 	}
 
 	/* Inheritance and shortcut */
@@ -54,23 +53,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._lastTime = 0;
 	}
 
-	proto.setLoop = function(isOn) {
-		this._loop = !!isOn;
-	}
-
-	proto.getLoop = function() {
-		return this._loop;
-	}
-
-	proto.update = function(timer) {
-		var undef,
-			// Where do we start
+	proto.update = function(timer, loop, duration) {
+		var // Where do we start
 			pos = this.progress,
 			index = pos | 0,
-			list = this._duration,
-			length = list.length,
+			length = duration.length,
 			// Elpasted time to consider
 			time = (this._lastTime += timer.elapsedTime);
+
+		// Nothing to animate
+		if (length <= 1) {
+			return false;
+		}
 
 		// Handle playing state
 		if (!this.playing && this.progress < length) {
@@ -79,7 +73,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Starting at 'index'
 		while (index < length) {
-			var iter = list[index] | 0;
+			var iter = duration[index] | 0;
 
 			// Does the elapsed time fits the current duration
 			if (time < iter) {
@@ -89,17 +83,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._lastTime = (time -= iter);
 
 			// Reached the end? should we loop?
-			if (++index == length && this._loop) {
+			if (++index == length && loop) {
 				index = 0;
 			}
 		};
 		// Save progression and check for end
-		if ((this.progress = index) == length) {
-			if (!this._loop) {
-				this.progress = length - 1;
-				this.playing = false;
-			}
+		if ((this.progress = index) == length && !loop) {
+			this.progress = --length; // faster (length - 1)???
+			this.playing = false;
 		}
+		// TODO: this.progress + lastTime / duration pour la partie fractionnelle
 		return this.playing;
 	}
 
@@ -108,7 +101,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		clone.progress = this.progress;
 		clone.playing = this.playing;
-		clone.setLoop(this.getLoop());
 
 		return clone;
 	}
