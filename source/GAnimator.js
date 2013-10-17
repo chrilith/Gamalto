@@ -62,6 +62,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			time = (this._lastTime += timer.elapsedTime);
 
 		// Nothing to animate
+		// FIXME: should be played anyway for non looping animator
 		if (length <= 1) {
 			return false;
 		}
