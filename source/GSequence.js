@@ -43,6 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._list = [];
 		this._time = [];
 		Object.base(this);
+		// TODO: remove the callback...
 		this.callback = callback;
 	}
 	
@@ -66,7 +67,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// to for complete sequence execution? Important if an action has some
 		// dependance with a previous one...
 		if (!was || p !== i) {
-			if (was)    { this._call("exiting", p, timer); }
+			if (was) { this._call("exiting", p, timer); }
 			if (now) { this._call("entering", i, timer); }
 		}
 		if (now) { this._call("update", i, timer); }
