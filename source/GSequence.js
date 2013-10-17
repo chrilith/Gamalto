@@ -33,67 +33,52 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
+	gamalto.require_("Animator");
+
 	/**
 	 * @constructor
 	 */
 	G.Sequence = function(callback) {
 		this._list = [];
-		this.reset();
-	
+		this._time = [];
+		Object.base(this);
 		this.callback = callback;
 	}
 	
 	/* Inheritance and shortcut */
-	var proto = G.Sequence.inherits(G.Object);
+	var proto = G.Sequence.inherits(G.Animator);
 	
 	proto.add = function(inst, duration) {
-		this._list.push({ object: inst, duration: duration });
+		this._list.push(inst);
+		this._time.push(duration);
 		return this;
 	}
-	
-	proto.reset = function() {
-		var u;	// = undefined
-		this._curr = u;
-		this._lastTime = 0;
-	}
-	
+
 	proto.update = function(timer) {
-		var u,	// = undefined
-			s = this,
-			p = s._curr,
-			i = p || 0,
-			l = s._list,
-			t = (s._lastTime += timer.elapsedTime),
-			c = s.callback,
-			ended;
-	
+		var p = this.progress | 0,	// remove fractional part for comparison
+			c = this.callback,
+			was = this.playing,
+			now = G.Sequence.base.update.call(this, timer, false, this._time),
+			i = this.progress | 0;
+
 		// TODO: an action may be skipped upon slowdown. Add a strict parameter
 		// to for complete sequence execution? Important if an action has some
 		// dependance with a previous one...
-		while (i < l.length) {
-			if (t < l[i].duration) {
-				break;
-			}
-			s._lastTime = (t -= l[i++].duration);
-		};
-
-		if (p !== i) { s._call("exiting", timer); }
-		if (!(ended = ((s._curr = i) == l.length)) &&
-			p !== i) { s._call("entering", timer); }
-		if (!ended)  { s._call("update", timer); }
+		if (!was || p !== i) {
+			if (was)    { this._call("exiting", p, timer); }
+			if (now) { this._call("entering", i, timer); }
+		}
+		if (now) { this._call("update", i, timer); }
+		// FIXME: if no callback, the last action will loop even if its duration has passed
 		else if (c) { c(timer); }
-	
-		return ended;
+
+		return now;
 	}
-	
-	proto._call = function(method, data) {
-		var o, c = this._curr;
-	
-		if (c !== o /* undefined */
-			&& (o = this._list[c].object)
-			&& o[method]) {
-			
-			o[method](data);
+
+	proto._call = function(method, exec, data) {
+		if ((exec = this._list[exec]) && exec[method]) {
+			exec[method](data);
 		}
 	}
 
