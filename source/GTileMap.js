@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileMap = function(ts, data, width, height, viewWidth, viewHeight) {
+	var stat = G.TileMap = function(ts, data, width, height, viewWidth, viewHeight) {
 		Object.base(this, data, width, height);
 		this.setViewport(viewWidth, viewHeight);
 		this.setOrigin(0, 0);
@@ -80,12 +80,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._drawSection = function(renderer, tx, ty, tw, th, ox, oy) {
-		var ts = this._tileSet;
+		var ts = this._tileSet,
+			empty = G.TileMap.EMPTY;
 	
 	// TODO: do not draw overflow
 		for (var x = 0; x < tw; x++) {
 			for (var y = 0; y < th; y++) {
-				if (this.data[t] != 0xffff) {
+				if (this.data[t] != empty) {
 					var t = (x + tx) + (y + ty) * this.width;
 					ts.draw(renderer, ox + x * ts._tile.width, oy + y * ts._tile.height, this.data[t] - 1);
 				}
@@ -198,5 +199,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			o._drawSection(renderer, cx | 0, cy | 0, vp.width, h, ox, oy);
 		}
 	}
+
+	/* Constant */
+	stat.NOTILE = 0xffff;	// Value for empty tile
 
 })();
