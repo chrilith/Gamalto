@@ -39,7 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileGroup = function(data, width, height) {
+	var stat = G.TileGroup = function(data, width, height) {
 		this.data = data;
 		this.width = width;
 		this.height = height;
@@ -47,5 +47,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Inheritance and shortcut */
 	G.TileGroup.inherits(G.Object);
+
+	/* Constant */
+	stat.NOTILE = 0xffff;	// Value for empty tile
 
 })();

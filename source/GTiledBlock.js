@@ -49,14 +49,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.draw = function(renderer, x, y) {
 		var ts = this._tileSet
 			tw = ts._tile.width,
-			th = ts._tile.height;
+			th = ts._tile.height,
+			empty = G.TileGroup.NOTILE;
 
 		// TODO: while and inc++ on "t"	
 		for (var tx = 0; tx < this.width; tx++) {
 			for (var ty = 0; ty < this.height; ty++) {
 				var t = tx + ty * this.width,
 					d = this.data[t];
-				if (d != 0xFFFF) {
+				if (d != empty) {
 					ts.draw(renderer, x + tx * tw, y + ty * th, d);
 				}
 			}
