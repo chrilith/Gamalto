@@ -56,9 +56,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			throw "Gamalto: Additional tiles must have the same size.";
 		}
 
-		tw = tw || w,
-		th = th || h;
-		G.TileSet.base.setSections.call(this, tw, th, count, r);
+		// Here we are replacing values of ...
+		tw = tw || w,	// arguments[0]
+		th = th || h;	// arguments[1]
+
+		G.TileSet.base.setSections.apply(this, arguments);
 	}
 
 	proto._createSection = function(x, y, w, h) {
