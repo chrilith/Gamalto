@@ -77,7 +77,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.draw = function(renderer, x, y, frame) {
-		frame = core.defined(i, this._curr, 0);
+		frame = core.defined(frame, this._curr, 0);
 		this._list[frame].draw(renderer, x, y);
 	}
 
