@@ -39,15 +39,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TiledBlock = function(ts, data, width, height) {
-		Object.base(this, data, width, height);
+	G.TiledBlock = function(ts, data, rows) {
+		Object.base(this, data, rows, Math.ceil(data.length / rows));
 		this._tileSet = ts;
 	}
 	
 	var proto = G.TiledBlock.inherits(G.TileGroup);
 	
 	proto.draw = function(renderer, x, y) {
-		var ts = this._tileSet
+		var ts = this._tileSet,
 			tw = ts._tile.width,
 			th = ts._tile.height,
 			empty = G.TileGroup.NOTILE;
