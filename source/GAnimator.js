@@ -89,7 +89,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		};
 		// Save progression and check for end
 		if ((this.progress = index) == length && !loop) {
-			this.progress = --length; // faster (length - 1)???
 			this.playing = false;
 		}
 		// TODO: this.progress + lastTime / duration pour la partie fractionnelle
