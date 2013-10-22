@@ -70,24 +70,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._loading = true;
 
 		var that = this,
-			args = [];
+			args = [],
+			promise = new G.Promise();
 
 		this._pending.forEach(function(val, i) {
 			args.push(that.loadItem.apply(that, val));
 		});
 
-		return G.Promise.all.apply(null, args)
+		G.Promise.all.apply(null, args)
 			.then(
 				function(value) {
 					that._loading = false;
 					that._pending = [];
-					return value;
+					promise.resolve(value);
 				},
 				function(error) {
 					that._loading = false;
-					return error;
+					promise.reject(error);
+				},
+				function(value) {
+					promise.progress(value);
 				}
 			);
+
+		return promise;
 	}
 
 	proto._add = function(name, item) {
