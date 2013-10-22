@@ -39,12 +39,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Sequence = function(callback) {
+	G.Sequence = function() {
 		this._list = [];
 		this._time = [];
 		Object.base(this);
-		// TODO: remove the callback...
-		this.callback = callback;
 	}
 	
 	/* Inheritance and shortcut */
@@ -58,7 +56,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.update = function(timer) {
 		var p = this.progress | 0,	// remove fractional part for comparison
-			c = this.callback,
 			was = this.playing,
 			now = G.Sequence.base.update.call(this, timer, false, this._time),
 			i = this.progress | 0;
@@ -71,8 +68,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (now) { this._call("entering", i, timer); }
 		}
 		if (now) { this._call("update", i, timer); }
-		// FIXME: if no callback, the last action will loop even if its duration has passed
-		else if (c) { c(timer); }
 
 		return now;
 	}
