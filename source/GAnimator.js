@@ -67,7 +67,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Handle playing state
-		if (!this.playing && this.progress < length) {
+		if (!this.playing) {
+			// animation seems to have ended
+			if (this.progress == length - 1) {
+				return false;
+			}
 			this.playing = true;
 		}
 
@@ -89,6 +93,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		};
 		// Save progression and check for end
 		if ((this.progress = index) == length && !loop) {
+			this.progress = --length; // faster (length - 1)???
 			this.playing = false;
 		}
 		// TODO: this.progress + lastTime / duration pour la partie fractionnelle
