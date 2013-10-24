@@ -101,7 +101,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			x += offs.x * invX | 0;
 			y += offs.y * invY | 0;
 		}
-		G.Animation.base.draw.apply(this, arguments);
+		G.Animation.base.draw.call(this, renderer, x, y, frame);
 	}
 
 })();
