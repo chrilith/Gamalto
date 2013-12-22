@@ -115,7 +115,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						that.length = (r.responseText || "").length;
 					}
 				}
-console.log("length", that.length);
+				gamalto.log_("Loading async file size:", that.length);
 				// TODO: handle error with "status"
 				promise.resolve(that);
 			}
@@ -137,7 +137,7 @@ console.log("length", that.length);
 				//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 			} else {
-				console.log("not supported");
+				gamalto.error_("Binary load not supported!");
 			}
 		}
 		return r;
@@ -148,8 +148,6 @@ console.log("length", that.length);
 		r.onreadystatechange = function() {
 			if (r.readyState == r.DONE) {
 				var status = (r.status || 200);
-console.log("response");
-console.log(typeof r.response);
 				promise.resolve((status < 200 || status > 206) ? "" : (r.response || r.responseText));
 			}
 		};
@@ -171,10 +169,6 @@ console.log(typeof r.response);
 		}
 		this._initPos = p;
 		return this._send(r).then(function(data) {
-console.log("_send");
-console.log(typeof data);
-console.log("data");
-console.log(typeof Uint8Array);
 			that._data = typeof data == "object" ? new Uint8Array(data) : data;
 			that._bufSize = (r.getResponseHeader("Content-Length") | 0)
 								|| that._data.length; // for local files...
