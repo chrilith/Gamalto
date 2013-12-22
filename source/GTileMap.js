@@ -73,7 +73,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._bR = new G.Vector(x2, y2);
 	}
 	
-	proto.draw = function(renderer, w, h) {
+	proto.render = function(renderer, w, h) {
 		var tx = this._tileX | 0,
 			ty = this._tileY | 0;
 		this._drawSection(renderer, tx, ty, w, h, 0, 0);
@@ -162,7 +162,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return new G.Vector(mx, my);
 	}
 	
-	proto.redraw = function(renderer) {
+	proto.draw = function(renderer) {
 		// Let's redraw missing parts
 		var o = this,
 			ts = o._tileSet,
