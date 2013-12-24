@@ -199,7 +199,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-	// Called by Surface and Scroller to prevent unexpected transformation
 	proto._reset = function() {
 		var ctx = this._getContext();
 		ctx.globalAlpha = 1;

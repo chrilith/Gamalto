@@ -102,7 +102,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return old;
 	}
 
-	// Called by Surface and Scroller to prevent unexpected transformation
 	proto._reset = function() { /* To be implemented, should be replace with setTransform() */ }
 
 	/* Should be called before accessing _canvas */
