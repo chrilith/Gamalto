@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -41,9 +41,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Surface = function(width, height/*, renderer*/) {
-		Object.base(this, width, height);
-		this.renderer = new G.Renderer(this);
+	G.Surface = function(width, height, mode) {
+		Object.base(this, width, height, mode);
+		this.renderer = new G["Renderer" + (this._mode == G.Canvas.OPTIMIZED ? "WebGL" : "" /* TODO: "2D" */)](this);
 		this.disableClipping();
 	};
 	
@@ -51,8 +51,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.Surface.inherits(G.Canvas);
 
 	/* Instance methods */
+
+// TODO: should be done by the renderer
+// http://stackoverflow.com/questions/11544608/how-to-clear-a-rectangle-area-in-webgl
+// http://www.opengl.org/wiki/Scissor_Test
+
 	proto.enableClipping = function(x, y, width, height) {
-		var ctx = this.renderer._getContext();
+/*		var ctx = this.renderer._getContext();
 
 		if (this._isClipping) {
 			this.disableClipping();
@@ -61,11 +66,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		ctx.save();
 		ctx.beginPath();
 		ctx.rect(x, y, width, height);
-		ctx.clip();
+		ctx.clip();*/
 	}
 
 	proto.disableClipping = function() {
-		this.renderer._getContext().restore();
+//		this.renderer._getContext().restore();
 	}
 
 	proto.blit = function(s, x, y) {
@@ -95,9 +100,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.clear = function() {
-		var renderer = this.renderer;
-		renderer._reset();
-		renderer._getContext().clearRect(0, 0, this.width, this.height);
+		this.renderer._reset();
+		this.renderer.clearRect(new G.Rect(0, 0, this.width, this.height));
 	}
 
 	// TODO: exception if accessing other methods while locked
@@ -120,8 +124,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return G.Surface.base._getCanvas.call(this);
 	}
 
-	/* Constants */
-	var constant = G.Surface;
-
-	constant.DEFAULT	= 0;
 })();
