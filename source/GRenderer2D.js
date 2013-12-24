@@ -1,5 +1,5 @@
 /*
- * Gamalto.Renderer
+ * Gamalto.Renderer2D
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
