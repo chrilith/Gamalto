@@ -68,6 +68,10 @@ if (GAMALTO_DEBUG) (function() {
 		}
 	}
 
+	debug.error_ = function() {
+		console.error.apply(console, arguments);
+	}
+
 	debug.log_ = function() {
 		console.log.apply(console, arguments);
 	}
