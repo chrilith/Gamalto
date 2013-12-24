@@ -142,10 +142,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.width		= data[2];
 			this.height		= data[3];			
 
-			// TODO: use setSize()?
-			this._image =
-				(this._canvas = new G.Buffer(data[2], data[3]))
-					._createRawBuffer();
+			// Always try to get an optimized buffer to handle indexed data
+			this._buffer = new G.Buffer(data[2], data[3], G.Buffer.OPTIMIZED);
 
 			// TODO
 			if (this.onload) {
@@ -159,35 +157,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		if (pal._changed || refresh) {
 			pal._changed = false;
-			this._fullRedraw();
+			this._buffer._copyRawDataIndexed(pal._list, {
+				data: this._data._data,
+				width: this.width,
+				height: this.height
+			});
 		}
 
-		return this._canvas._getCanvas();
-	}
-
-	proto._fullRedraw = function() {
-		// TODO: optimize animated palette rendering using cache? (see history)
-		var color, index,
-			pixel	= 0,
-			pos		= -1,
-			data	= this._data,
-			dest	= this._image.data,
-			colors	= this._palette._list;
-
-		data.seek(0);
-
-		while (++pos < data.length) {
-			// Directly read stream buffer to speed up things a lot!
-			index = data._data[pos];//data.readUInt8();
-			color = colors[index];
-
-			dest[pixel++] = color.r;
-			dest[pixel++] = color.g;
-			dest[pixel++] = color.b;
-			dest[pixel++] = color.a;
-		}
-
-		this._canvas._copyRawBuffer(this._image);
+		return this._buffer._getCanvas();
 	}
 
 })(ENV);
