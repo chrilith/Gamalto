@@ -92,8 +92,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.clear = function() {
-		this.renderer._reset();
+		this.renderer.setTransform(false);
 		this.renderer.clearRect(new G.Rect(0, 0, this.width, this.height));
+		this.renderer.setTransform(true);
 	}
 
 	// TODO: exception if accessing other methods while locked
