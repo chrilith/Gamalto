@@ -66,29 +66,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.blit = function(s, x, y) {
-		var renderer = this.renderer;
-		renderer.setTransform(false);
+		var renderer = this.renderer,
+			old = renderer.setTransform(false);
 		renderer.drawBitmap(s, x, y);
-		renderer.setTransform(true);
+		renderer.setTransform(old);
 	}
 
 	proto.redraw = function(s, x, y, list) {
 		if (list) {
 			var renderer = this.renderer,
-				len = list.length | 0;
-
-			renderer.setTransform(false);
+				len = list.length | 0,
+				old = renderer.setTransform(false);
 			list.forEach(function(r) {
 				renderer.drawBitmapSection(s, r.tL.x + x, r.tL.y + y, r);
 			});
-			renderer.setTransform(true);
+			renderer.setTransform(old);
 		}
 	}
 
 	proto.clear = function() {
-		this.renderer.setTransform(false);
-		this.renderer.clearRect(new G.Rect(0, 0, this.width, this.height));
-		this.renderer.setTransform(true);
+		var renderer = this.renderer,
+			old = renderer.setTransform(false);
+		renderer.clearRect(new G.Rect(0, 0, this.width, this.height));
+		renderer.setTransform(old);
 	}
 
 	// TODO: exception if accessing other methods while locked
