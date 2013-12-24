@@ -54,6 +54,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Inheritance and shortcut */
 	var proto = G.Animation.inherits(G.SpriteSheet);
 
+	proto.setDuration = function(time) {
+		var that = this,
+			slice = time / that._list.length;
+		this._list.forEach(function(dummy, frame) {
+			that._time[frame] = slice;
+		});
+	}
+
 	proto.setFrameDuration = function(frame, time) {
 		gamalto.assert_(frame < this._list.length);
 		this._time[frame] = time;
