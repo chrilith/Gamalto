@@ -137,10 +137,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Force no transformation without altering current surface configuration
-//		s.renderer._reset();	// FIXME: should not be called here
-//		src.clearRect(x, y, w, h);
-//		src.drawImage(dst.canvas, x, y);
-
 		var r = this._surface.renderer;
 
 		var old = r.setTransform(false);
