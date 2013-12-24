@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function(env) {
 
 	/* Dependencies */
-	gamalto.using_("Canvas");
+	gamalto.using_("Buffer");
 	gamalto.using_("File");
 	gamalto.using_("AsyncFile");
 	gamalto.using_("MemoryStream");
@@ -144,7 +144,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			// TODO: use setSize()?
 			this._image =
-				(this._canvas = new G.Canvas(data[2], data[3]))
+				(this._canvas = new G.Buffer(data[2], data[3]))
 					._createRawBuffer();
 
 			// TODO
