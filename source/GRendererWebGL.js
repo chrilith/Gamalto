@@ -319,9 +319,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		}
 	}
 
-	// Called by Surface and Scroller to prevent unexpected transformation
-	proto._reset = function() {
-	}
+	proto._reset = function() { }
 
 	/* Should be called before accessing _canvas */
 	proto.flush = function() { /* Nothing to do */ }
