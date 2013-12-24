@@ -306,6 +306,19 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	proto._transform = function(x, y, w, h) {
 	}
 
+	proto._clip = function(r) {
+		var gl = this._getContext();
+
+		if (!r) {
+			gl.disable(gl.SCISSOR_TEST);
+		} else {
+			var y = this._surface.height - r.height - r.tL.y;
+
+			gl.enable(gl.SCISSOR_TEST);
+			gl.scissor(r.tL.x, y, r.width, r.height);
+		}
+	}
+
 	// Called by Surface and Scroller to prevent unexpected transformation
 	proto._reset = function() {
 	}
