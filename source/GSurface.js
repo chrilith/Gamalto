@@ -66,28 +66,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.blit = function(s, x, y) {
-		this.renderer._reset();
-		this.renderer._getContext().drawImage(s._getCanvas(), x, y);
+		var renderer = this.renderer;
+		renderer.setTransform(false);
+		renderer.drawBitmap(s, x, y);
+		renderer.setTransform(true);
 	}
 
 	proto.redraw = function(s, x, y, list) {
 		if (list) {
-			var len = list.length | 0, n;
+			var renderer = this.renderer,
+				len = list.length | 0;
 
-			this.renderer._reset();
-			for (n = 0; n < len; n++) {
-				var r = list[n],
-
-					sx = r.tL.x,
-					sy = r.tL.y,
-					dx = sx + x,
-					dy = sy + y,
-					sw = r.width,
-					sh = r.height;
-
-				this.renderer._getContext()
-					.drawImage(s._getCanvas(), sx, sy, sw, sh, dx, dy, sw, sh);
-			}
+			renderer.setTransform(false);
+			list.forEach(function(r) {
+				renderer.drawBitmapSection(s, r.tL.x + x, r.tL.y + y, r);
+			});
+			renderer.setTransform(true);
 		}
 	}
 
@@ -100,7 +94,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// TODO: exception if accessing other methods while locked
 	proto.lock = function() {
 		if (!this._locked) {
-			return (this._locked = this.renderer._getContext().getImageData(0, 0, this.width, this.height));
+			return (this._locked = this._getRawBuffer());
 		}
 		return null;
 	}
