@@ -186,6 +186,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return [x - dx, y + dy];
 	}
 
+	proto._clip = function(r) {
+		var ctx = this._getContext();
+
+		if (!r) {
+			ctx.restore();
+		} else {
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(r.tL.x, r.tL.y, r.width, r.height);
+			ctx.clip();
+		}
+	}
+
 	// Called by Surface and Scroller to prevent unexpected transformation
 	proto._reset = function() {
 		var ctx = this._getContext();

@@ -52,26 +52,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.Surface.inherits(G.Buffer);
 
 	/* Instance methods */
-
-// TODO: should be done by the renderer
-// http://stackoverflow.com/questions/11544608/how-to-clear-a-rectangle-area-in-webgl
-// http://www.opengl.org/wiki/Scissor_Test
-
 	proto.enableClipping = function(x, y, width, height) {
-/*		var ctx = this.renderer._getContext();
-
 		if (this._isClipping) {
 			this.disableClipping();
 		}
-
-		ctx.save();
-		ctx.beginPath();
-		ctx.rect(x, y, width, height);
-		ctx.clip();*/
+		this._isClipping = true;
+		this.renderer._clip(new G.Rect(x, y, width, height));
 	}
 
 	proto.disableClipping = function() {
-//		this.renderer._getContext().restore();
+		this._isClipping = false;
+		this.renderer._clip();
 	}
 
 	proto.blit = function(s, x, y) {
