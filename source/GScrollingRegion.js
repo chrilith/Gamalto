@@ -112,7 +112,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return c;
 	}
 	
-	// TODO: alloc buffer only is setLoop(true), else free the buffer if any
+	// TODO: alloc buffer only if setLoop(true), else free the buffer if any
 	// or if alhpa channel?
 	// Double buffer seems to be always faster...
 	proto._allocBuffer = function() {
@@ -123,7 +123,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (this._buffer) {
 				this._buffer.setDimensions(b.width, b.height);
 			} else {
-				this._buffer = new G.Surface(b.width, b.height);
+				this._buffer = new G.Canvas(b.width, b.height);
 			}
 		}
 	}
