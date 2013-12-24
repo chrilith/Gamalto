@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.using_("Renderer");
+	gamalto.using_("Renderer2D");
 	gamalto.using_("Surface");
 
 	/**

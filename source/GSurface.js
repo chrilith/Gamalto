@@ -36,14 +36,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.require_("Canvas");
 	gamalto.using_("Rect");
-	gamalto.using_("Renderer");
+	gamalto.using_("Renderer2D");
+	gamalto.using_("RendererWebGL");
 
 	/**
 	 * @constructor
 	 */
 	G.Surface = function(width, height, mode) {
 		Object.base(this, width, height, mode);
-		this.renderer = new G["Renderer" + (this._mode == G.Canvas.OPTIMIZED ? "WebGL" : "" /* TODO: "2D" */)](this);
+		this.renderer = new G["Renderer" + (this._mode == G.Canvas.OPTIMIZED ? "WebGL" : "2D")](this);
 		this.disableClipping();
 	};
 	
