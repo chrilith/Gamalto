@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Dependencies */
 	gamalto.using_("Rect");
-	gamalto.using_("Renderer");
+	gamalto.using_("Renderer2D");
 	gamalto.using_("Bitmap");
 	gamalto.using_("ScrollingRegion");
 	gamalto.using_("Surface");
