@@ -47,6 +47,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'Missing.js"></script> \
 		<script src="' + dir + 'GPromise.js"></script> \
 	\
+		<script src="' + dir + 'GShader.js"></script> \
 		<script src="' + dir + 'GAnimator.js"></script> \
 		<script src="' + dir + 'GAsync.js"></script> \
 		<script src="' + dir + 'GCanvas.js"></script> \
@@ -70,7 +71,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GScroller.js"></script> \
 		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
+		<script src="' + dir + 'GBaseRenderer.js"></script> \
 		<script src="' + dir + 'GRenderer.js"></script> \
+		<script src="' + dir + 'GRendererWebGL.js"></script> \
 		<script src="' + dir + 'GScreen.js"></script> \
 		<script src="' + dir + 'GBitmap.js"></script> \
 		<script src="' + dir + 'GBaseLibrary.js"></script> \
