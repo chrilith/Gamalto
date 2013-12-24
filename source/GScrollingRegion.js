@@ -123,7 +123,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (this._buffer) {
 				this._buffer.setDimensions(b.width, b.height);
 			} else {
-				this._buffer = new G.Canvas(b.width, b.height);
+				this._buffer = new G.Buffer(b.width, b.height);
 			}
 		}
 	}
