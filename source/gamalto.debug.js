@@ -72,7 +72,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GScrollingRegion.js"></script> \
 		<script src="' + dir + 'GSurface.js"></script> \
 		<script src="' + dir + 'GBaseRenderer.js"></script> \
-		<script src="' + dir + 'GRenderer.js"></script> \
+		<script src="' + dir + 'GRenderer2D.js"></script> \
 		<script src="' + dir + 'GRendererWebGL.js"></script> \
 		<script src="' + dir + 'GScreen.js"></script> \
 		<script src="' + dir + 'GBitmap.js"></script> \

@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("SpriteSheet");
 	gamalto.using_("Bitmap");
 	gamalto.using_("Rect");
-	gamalto.using_("Renderer");
+	gamalto.using_("Renderer2D");
 	gamalto.using_("Size");
 	gamalto.using_("Surface");
 

@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.using_("Color");
 	gamalto.using_("Pattern");
-	gamalto.using_("Renderer");
+	gamalto.using_("Renderer2D");
 	gamalto.using_("SpriteSheet");
 	gamalto.using_("Surface");
 	gamalto.using_("Timer");
