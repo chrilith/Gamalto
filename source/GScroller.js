@@ -35,7 +35,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Dependencies */
 	gamalto.using_("Rect");
-	gamalto.using_("Renderer");			// FIXME
+	gamalto.using_("Renderer");
+	gamalto.using_("Bitmap");
 	gamalto.using_("ScrollingRegion");
 	gamalto.using_("Surface");
 	gamalto.using_("Timer");	
@@ -136,9 +137,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Force no transformation without altering current surface configuration
-		s.renderer._reset();
-		src.clearRect(x, y, w, h);
-		src.drawImage(dst.canvas, x, y);
+//		s.renderer._reset();	// FIXME: should not be called here
+//		src.clearRect(x, y, w, h);
+//		src.drawImage(dst.canvas, x, y);
+
+		var r = this._surface.renderer;
+
+		var old = r.setTransform(false);
+		r.clearRect(new G.Rect(x, y, w, h));
+		r.drawBitmap(dst.canvas, x, y);
+		r.setTransform(old);
 	}
 
 })();
