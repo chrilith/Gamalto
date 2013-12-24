@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("Canvas");
+	gamalto.require_("Buffer");
 	gamalto.using_("Rect");
 	gamalto.using_("Renderer2D");
 	gamalto.using_("RendererWebGL");
@@ -44,12 +44,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Surface = function(width, height, mode) {
 		Object.base(this, width, height, mode);
-		this.renderer = new G["Renderer" + (this._mode == G.Canvas.OPTIMIZED ? "WebGL" : "2D")](this);
+		this.renderer = new G["Renderer" + (this._mode == G.Buffer.OPTIMIZED ? "WebGL" : "2D")](this);
 		this.disableClipping();
 	};
 	
 	/* Inheritance and shortcut */
-	var proto = G.Surface.inherits(G.Canvas);
+	var proto = G.Surface.inherits(G.Buffer);
 
 	/* Instance methods */
 
