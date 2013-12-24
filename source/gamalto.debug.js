@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GShader.js"></script> \
 		<script src="' + dir + 'GAnimator.js"></script> \
 		<script src="' + dir + 'GAsync.js"></script> \
-		<script src="' + dir + 'GCanvas.js"></script> \
+		<script src="' + dir + 'GBuffer.js"></script> \
 		<script src="' + dir + 'GSectionList.js"></script> \
 		<script src="' + dir + 'GSpriteSheet.js"></script> \
 		<script src="' + dir + 'GAnimation.js"></script> \
