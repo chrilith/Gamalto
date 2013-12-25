@@ -84,18 +84,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		buffer.fwd(12)
 
 		// Palette animations if any
-		var active	= !!(buffer.readUInt8() & 0x80),
+		var valid	= !!(buffer.readUInt8() & 0x80),
 			limits	= buffer.readUInt8(),
-			rev		= !!(buffer.readUInt8() & 0x80),
-			rate	= buffer.readUInt8(),
+			active	= valid && !!(buffer.readUInt8() & 0x80),
+			vblank	= buffer.readSInt8(),
 			from	= (limits & 0xf0) >> 4,
 			to		= (limits & 0x0f);
 
 		if (active) {
 			palette.addAnimator(
-				rev ? to : from,
-				rev ? from : to,
-				rate / 60 * 1000);
+				vblank < 0 ? from : to,
+				vblank < 0 ? to : from,
+				Math.fabs(vblank) / 60 * 1000);
 		}
 
 		// skip more...
