@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						pix |= ((word[i] & (1 << sft)) >> sft) << i;
 					}
 
-					dest.writeByte(pix);
+					dest.writeInt8(pix);
 				}
 			}
 		}
