@@ -113,6 +113,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GDecoder_Interleaved.js"></script> \
 		<script src="' + dir + 'GIndexedImage.js"></script> \
 		<script src="' + dir + 'GIndexedImage_AtariDegasElite.js"></script> \
+		<script src="' + dir + 'GIndexedImage_AtariNeochrome.js"></script> \
 		<script src="' + dir + 'GIndexedImage_InterchangeFileFormat.js"></script> \
 		<script src="' + dir + 'GIndexedBitmap.js"></script> \
 		<script src="' + dir + 'GTouchGamepad.js"></script> \
