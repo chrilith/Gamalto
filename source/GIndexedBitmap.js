@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	G.IndexedBitmap = function(source) {
 		Object.base(this, source);
+		this._updated = true;	// To force initial image rendering
 	}
 
 	/* Inheritance */
