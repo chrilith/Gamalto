@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -72,6 +72,20 @@ var ENV = self;
 	core.getContainer = function() {
 		return (_container || document.body);
 	};
+
+	core.setIcon = function(href) {
+		var head = document.getElementsByTagName("head")[0];
+		if (head) {
+			var link = document.createElement("link");
+			link.rel = "icon";
+			link.href = href;
+			head.appendChild(link);
+		}
+	};
+
+	core.setTitle = function(title) {
+		document.title = title;
+	}
 
 	core.defined = function(/* vargs... */) {
 		var i,
