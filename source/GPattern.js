@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Pattern = function(bitmap, r) {
+		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
 		var s = new G.Surface(r.width, r.height);	
 		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
 		this._pattern = s._context.createPattern(s._getCanvas(), "repeat");
