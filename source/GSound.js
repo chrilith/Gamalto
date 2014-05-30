@@ -38,6 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			handler = this.handleEvent.bind(this); // passing "this" is not supported by CocoonJS
 		this._audio = audio;
 		this.priority = priority | 0;				// May be use on signle channel platform
+		this._canPlay = false;
 
 		// When data is available try to play the sound if needed
 		audio.addEventListener("canplaythrough", handler, false);
@@ -101,7 +102,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._canplaythrough = function() {
-		if (this._playing) {
+		if (this._playing && !this._canPlay) {
 			var elapsed		= (Date.now() - this._startTime) / 1000,
 				audio		= this._audio,
 				duration	= audio.duration,
@@ -116,6 +117,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					this.stop();
 				}
 		}
+		this._canPlay = true;
 	}
 	
 })();
