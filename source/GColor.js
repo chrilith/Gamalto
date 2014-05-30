@@ -56,4 +56,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						+ (this.a / 255) + ")";
 	}
 
+	var constant = G.Color;
+
+	constant.BLACK	= new G.Color(0, 0, 0);
+	constant.GREY	= new G.Color(128, 128, 128);
+	constant.WHITE	= new G.Color(255, 255, 255);
 })();
