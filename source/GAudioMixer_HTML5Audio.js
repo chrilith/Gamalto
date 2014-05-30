@@ -75,7 +75,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		// Then try to find a playing channel with same priority
 		for (i = 0; i < all.length; i++) {
-			if (all[i].getPriority() < priority) {
+			if (all[i].getPriority() <= priority) {
 				return all[i];
 			}
 		}
