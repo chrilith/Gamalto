@@ -84,8 +84,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.playSound = function(sound, loop) {
 		var channel = this._findChannel(sound.priority);
-		gamalto.warn_(channel, "Unable to allocate channel to play sound.");
-		if (channel) {
+		if (!channel) {
+			gamalto.warn_("Unable to allocate channel to play sound.");
+		} else {
 			channel.push(sound);
 			channel.play(loop);
 		}
