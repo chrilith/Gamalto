@@ -46,6 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._resolve = [];
 		this._reject = [];
 		this._progress = [];
+		this._state = STATE_PENDING;
 	}
 	
 	/* Inheritance and shortcut */
@@ -71,13 +72,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._complete = function(state, value) {
+		if (this._state <= STATE_PROGRESS) {
+			this._state = state;
+		}
+		this._completed(value);
+	}
+
+	proto._completed = function(value) {
 		var func;
 
-		if (this._state > STATE_PROGRESS) {
-			return;
-		}
-
-		switch (state) {
+		switch (this._state) {
 			case STATE_RESOLVED:
 				func = this._resolve;
 				break;
@@ -88,7 +92,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		if (func) { this._exec(func, value); }
-		this._state = state;
 		this.value = value;
 	}
 
@@ -157,9 +160,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		}));
 
-		// Progression callback if any
-		if (progress) {
-			this._progress.push(progress);
+		if (this._state > STATE_PROGRESS) {
+			this._completed(this.value);
+		} else {
+			// Progression callback if any
+			if (progress) {
+				this._progress.push(progress);
+			}
 		}
 
 		// Return the new promise for pipelining
@@ -170,7 +177,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Get all promises to be completed
 		var all = Array.prototype.slice.call(arguments, 0),
 			count = 0,
-			results = [];
+			results = [],
 			promise = new G.Promise();
 
 		// For each promise
