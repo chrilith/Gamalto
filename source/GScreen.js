@@ -43,14 +43,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Screen = function(width, height) {
-		Object.base(this, width, height);
+	G.Screen = function(width, height, mode) {
+		// Real screen
+		this._screen = new G.Surface(width, height, mode);
+		Object.base(this, width, height, mode);
 	};
-	
+
 	/* Inheritance and shortcut */
 	var proto = G.Screen.inherits(G.Surface);
 	
 	/* Instance methods */
+	proto.setSize = function(width, height) {
+		this._screen.setSize(width, height);
+		G.Screen.base.setSize.call(this, width, height);
+	}
+
+	proto.__screenCanvas = function() {
+		return this._screen._getCanvas();
+	}
+
 	proto.setActive = function() {
 		// Disable scanlines
 		this.setScanlines();
@@ -59,21 +70,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var container = gamalto.getContainer();
 		if (_active) {
 			window.removeEventListener("resize", _active, false);
-			container.removeChild(_active._getCanvas());
+			container.removeChild(_active.__screenCanvas());
 		}
 		window.addEventListener("resize", (_active = this), false);
-		container.appendChild(this._getCanvas());
+		container.appendChild(this.__screenCanvas());
 
 		// Adjust the screen stretching
 		this.setStretch();
 	}
 
 	proto.enableMouse = function(isOn) {
-		this._getCanvas().style.cursor = isOn ? "" : "none";
+		this.__screenCanvas().style.cursor = isOn ? "" : "none";
 	};
 
 	proto.enableFiltering = function(isOn) {
-		var style = this._getCanvas().style;
+		var style = this.__screenCanvas().style;
 
 		if (!isOn &&
 			(style.setMember("imageRendering", "crisp-edges") ||
@@ -86,48 +97,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 style.setMember("interpolationMode", null);
 		}
 	}
+
+	proto.clear = function() {
+		var renderer = this._screen.renderer,
+			old = renderer.setTransform(false);
+		renderer.fillRect(new G.Rect(0, 0, this.width, this.height), G.Color.BLACK);
+		renderer.setTransform(old);
+	}
 	
 	proto.setScanlines = function(dark, light) {
-		var container = this._getCanvas().parentNode;
+		if (!(dark || light)) {
+			this._scanlines = null;
 
-		if (container) {	
-			var isOn = (dark || light),
-				div = _scanlines;
+		} else {
+			var s = new G.Surface(1, 2),
+				r = s.renderer;
 
-			if (isOn) {
-				var s = new G.Surface(1, 2),
-					r = s.renderer,
-					c = s._context.canvas,
-					p = G._xywh(this._getCanvas(), container, "px");
+			// Create the scanlines effect
+			r.fillRect(new G.Rect(0, 0, 1, 1),
+					   new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
+			r.fillRect(new G.Rect(0, 1, 1, 1),
+					   new G.Color(255, 255, 255, 255 * (light || 0) / 100));			
 
-				// Prepare the object holding the scanline effect
-				div = (div || document.createElement("div"));
-
-				s = div.style;
-				s.position = "absolute";
-				s.left	 = p.x;
-				s.top	 = p.y;
-				s.width	 = p.w;
-				s.height = p.h;
-
-				// Create the scanlines effect
-				r.fillRect(new G.Rect(0, 0, 1, 1),
-						   new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
-				r.fillRect(new G.Rect(0, 1, 1, 1),
-						   new G.Color(255, 255, 255, 255 * (light || 0) / 100));
-
-				// Append the scanlines to the document
-				s.backgroundImage = "url(" + c.toDataURL() + ")";
-				container.appendChild(div);
-				_scanlines = div;
-
-			} else if (div) {
-				div.parentNode.removeChild(div);
-				_scanlines = null;
-			}
+			this._scanlines = new G.Pattern(s);
 		}
 	}
-		
+
+	proto.refresh = function() {
+		this._screen.blit(this, 0, 0);
+		if (this._scanlines) {
+			this._screen.renderer.fillRect(null, this._scanlines);
+		}
+	}
+
 	proto.handleEvent = function(e) {
 		this.setStretch();
 	}
@@ -146,7 +148,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			"";	// Default: ScaleToFill;
 	}
 	:function(mode) {
-		var c = this._getCanvas(),
+		var c = this.__screenCanvas(),
 			s = c.style,
 			p = c.parentNode;
 
