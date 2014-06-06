@@ -87,8 +87,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		<script src="' + dir + 'GPattern.js"></script> \
 		<script src="' + dir + 'GEvent.js"></script> \
 		<script src="' + dir + 'GEventManager.js"></script> \
-		<script src="' + dir + 'GKeyBoardEvent.js"></script> \
-		<script src="' + dir + 'GKeyBoardEvent_iCade.js"></script> \
+		<script src="' + dir + 'GKeyboardEvent.js"></script> \
+		<script src="' + dir + 'GKeyboardEvent_iCade.js"></script> \
 		<script src="' + dir + 'GMouseEvent.js"></script> \
 		<script src="' + dir + 'GEventManager_Keyboard.js"></script> \
 		<script src="' + dir + 'GEventManager_Keyboard_iCade.js"></script> \
