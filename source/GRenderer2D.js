@@ -59,7 +59,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			gc = bitmap._getCanvas;
 
 		this._getContext()
-			.drawImage(gc ? bitmap._getCanvas() : bitmap, xy[0], xy[1]);
+			.drawImage(gc ? gc.call(bitmap) : bitmap, xy[0], xy[1]);
 	}
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
@@ -71,7 +71,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			gc = bitmap._getCanvas;
 
 		this._getContext()
-			.drawImage(gc ? bitmap._getCanvas() : bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);
+			.drawImage(gc ? gc.call(bitmap) : bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);
 	}
 
 	proto.enableFiltering = function(isOn) {
