@@ -39,32 +39,47 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.SectionList = function(tw, th, count, r) {
-		var o = this;
-	
+	G.SectionList = function() {
+		var o = this;	
 		o.length = 0;
 		o._list = [];
-		o.setSections(tw, th, count, r);
+		this.setMargin();
+		this.setSpacing();
 	}
 	
 	/* Inheritance and shortcut */
 	var proto = G.SectionList.inherits(G.Object);
 	
 	/* Instance methods */
-	proto.setSections = function(tw, th, count, r) {
+
+	proto.setMargin = function(x, y) {
+		this._margin = new G.Vector(x | 0, y | 0);
+	}
+
+	proto.setSpacing = function(x, y) {
+		this._spacing = new G.Vector(x | 0, y | 0);
+	}
+
+	proto.addSections = function(count, r, size) {
+		var tw = size.width,
+			th = size.height,
+			mg = this._margin,
+			sp = this._spacing;
 		this.length += count;
-		for (var y = r.tL.y; y < r.bR.y; y += th) {
-			for (var x = r.tL.x; x < r.bR.x; x += tw) {
+
+		for (var y = r.tL.y + mg.y; y < r.bR.y - mg.y; y += th + sp.y) {
+			for (var x = r.tL.x - mg.x; x < r.bR.x - mg.x; x += tw + sp.x) {
 				this._list.push(this._createSection(x, y, tw, th));
 				if (!--count) {
-					return;
+					return this;
 				}
 			}
 		}
+		return this;
 	}
 
 	proto.insertSection = function(at, section) {
-		gamalto.assert_(at < this.length);
+		gamalto.assert_(at <= this.length);
 		this._list.splice(at, 0, section);
 		this.length++;
 	}

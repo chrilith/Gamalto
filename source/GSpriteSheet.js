@@ -41,22 +41,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.SpriteSheet = function(bitmap, tw, th, count, r) {
-		var w = bitmap.width,
-			h = bitmap.height;
-
-		r = r || new G.Rect(0, 0, w, h);
-		if ((count = count || -1) < 0) {
-			count = (w / tw | 0) * (h / th | 0);
-		}
-
-		Object.base(this, tw, th, count, r);
+	G.SpriteSheet = function(bitmap) {
+		Object.base(this);
 		this._bitmap = bitmap;
 	}
 	
 	/* Inheritance and shortcut */
 	var proto = G.SpriteSheet.inherits(G.SectionList);
 	
+	/* Instance methods */
+	proto.addSections = function(count, r, size) {
+		var b = this._bitmap,
+			w = b.width,
+			h = b.height;
+
+		r = r || new G.Rect(0, 0, w, h);
+		if ((count = count || -1) < 0) {
+			count = (w / size.width | 0) * (h / size.height | 0);
+		}
+		return G.SpriteSheet.base.addSections.call(this, count, r, size);
+	}
+
 	proto.draw = function(renderer, x, y, i) {
 		renderer.drawBitmapSection(this._bitmap, x, y, this.getSection(i));
 	}
