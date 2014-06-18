@@ -164,7 +164,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return last;
 	}
 
-	var setFPSWatcher_ = function(callback) {
+	proto.setFPSWatcher_ = function(callback) {
 		this._fpsCb = callback;
 		this._frameCount = 0;
 		this._ticks = [0];
