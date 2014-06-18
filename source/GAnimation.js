@@ -43,73 +43,119 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Animation = function(bitmap, tw, th, count, r) {
+	var _Object = G.Animation = function(sheet) {
+		this.sheet = sheet;
+
+		this._list = [];
 		this._offs = [];
 		this._time = [];
-		Object.base(this, bitmap, tw, th, count, r);
-		this.animator = new G.Animator();
+		this.length = 0;
+
+		Object.base(this);
 		this.setLoop(true);
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.Animation.inherits(G.SpriteSheet);
+	var proto = G.Animation.inherits(G.Animator);
+
+	proto.useSectionsRange = function(start, length) {
+		this.length += length;
+		while (length--) {
+			this._list.push(start++);
+			this._time.push(0);
+		}
+		return this;
+	}
+
+	proto.useSections = function(list) {
+		var arr = this._list,
+			len = list.length;
+
+		this.length += len;
+		arr.push.apply(arr, list);
+		while (len--) {
+			this._time.push(0);
+		}
+		return this;
+	}
+
+	proto.getSection = function(frame) {
+		return this.sheet.getSection(this._list[frame]);
+	}
 
 	proto.setDuration = function(time) {
-		var that = this,
-			slice = time / that._list.length;
-		this._list.forEach(function(dummy, frame) {
-			that._time[frame] = slice;
-		});
+		var len = this.length,
+			slice = time / len;
+		while (len--) {
+			this._time[len] = slice;
+		}
+		return this;
 	}
 
 	proto.setFrameDuration = function(frame, time) {
 		gamalto.assert_(frame < this._list.length);
 		this._time[frame] = time;
+		return this;
 	}
 
 	proto.setFrameOffset = function(frame, x, y) {
 		gamalto.assert_(frame < this._list.length);
 		this._offs[frame] = new G.Vector(x, y);
+		return this;
+	}
+
+	proto.getFrameOffset = function(frame) {
+		return this._offs[frame] || G.Vector.ZERO;
 	}
 
 	proto.duplicateFrame = function(index, dest) {
-		var copy = this.getSection(index).clone(),
+		gamalto.assert_(dest <= this._list.length);
+
+		var copy = this._list[index],
 			offs = this._offs[index],
 			time = this._time[index];
-		this.insertSection(dest, copy);
-		this._offs[dest] = offs;
-		this.setFrameDuration(dest, time);
+
+		this._list.splice(dest, 0, copy);
+		this._offs.splice(dest, 0, offs);
+		this._time.splice(dest, 0, time);
+
+		return this;
 	}
 
 	proto.setLoop = function(isOn) {
 		this._loop = !!isOn;
+		return this;
 	}
 
 	proto.getLoop = function() {
 		return this._loop;
 	}
 
-	proto.update = function(timer, animator) {
-		return core.defined(animator, this.animator)
-					.update(timer, this._loop, this._time);
-	}
-
-	proto._createSection = function(x, y, w, h) {
-		this._time.push(0);
-		return G.Animation.base._createSection.apply(this, arguments);
+	proto.update = function(timer) {
+		return _Object.base
+			.update.call(this, timer, this._loop, this._time);
 	}
 
 	proto.draw = function(renderer, x, y, frame) {
-		frame = core.defined(frame, this.animator.progress, 0);
+		frame = core.defined(frame, this.progress, 0) | 0;
 
-		var offs = this._offs[frame | 0],
+		var offs = this._offs[frame],
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
 		if (offs) {
 			x += offs.x * invX | 0;
 			y += offs.y * invY | 0;
 		}
-		G.Animation.base.draw.call(this, renderer, x, y, frame);
+		this.sheet.draw(renderer, x, y, this._list[frame]);
+		return frame;
+	}
+
+	proto.clone = function() {
+		var clone = new _Object(this.sheet);
+		clone._list = this._list.slice();
+		clone._offs = this._offs.slice();
+		clone._time = this._time.slice();
+		_Object.base.clone.call(this);
 	}
 
 })();
