@@ -39,14 +39,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	var stat = G.TileGroup = function(data, width, height) {
+	var stat = G.TileGroup = function() { };
+	
+	/* Inheritance and shortcut */
+	var proto = G.TileGroup.inherits(G.Object);
+
+	proto.setData = function(data, width, height) {
 		this.data = data;
 		this.width = width;
 		this.height = height;
 	}
-	
-	/* Inheritance and shortcut */
-	G.TileGroup.inherits(G.Object);
 
 	/* Constant */
 	stat.NOTILE = 0xffff;	// Value for empty tile
