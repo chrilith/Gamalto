@@ -56,8 +56,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					offs : to.offs.clone(),
 					prev : to.prev.clone(),
 					curr : to.prev.clone(),
-					speed: to.speed.clone(),
-					frame: to.frame.clone()
+					speed: to.speed.clone()
 				}
 			}
 		}
@@ -71,8 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			offs : new G.Vector(0, 0),
 			prev : new G.Vector(0, 0),
 			curr : new G.Vector(0, 0),
-			speed: new G.Vector(0, 0),
-			frame: new G.Animator()
+			speed: new G.Vector(0, 0)
 		};
 	}
 
@@ -81,7 +79,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (!name) {
 			return false;
 		}
-		return this._options[G.N(name)].frame.playing;
+		return this._options[G.N(name)].anim.playing;
 	}
 	
 	// Displacement speed for the given animation
@@ -117,7 +115,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				v = options.prev;
 			v.x = 0;
 			v.y = 0;
-			options.frame.reset();
+			options.anim.reset();
 			this._active = name;
 		}
 	}
@@ -164,7 +162,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		position.y += c.y;
 		
 		// Always calculate the next frame to stay in sync
-		o.anim.update(timer, o.frame);
+		o.anim.update(timer);
 
 		return c;
 	}
@@ -179,7 +177,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// In that case, reset the current position
 			this.setPosition(x, y);
 		}
-		o.anim.draw(renderer, p.x + d.x, p.y + d.y, gamalto.defined(i, o.frame.progress) );
+		return o.anim.draw(renderer, p.x + d.x, p.y + d.y, i);
 	}
 
 })();
