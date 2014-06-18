@@ -66,7 +66,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		r.tL.y = y;
 		r.bR.x = x + width - 1;
 		r.bR.y = y + height - 1;
-		this._allocBuffer();
+		this._allocBuffer(width, height);
 	}
 	
 	proto.setSpeed = function(px, py) {
@@ -115,15 +115,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// TODO: alloc buffer only if setLoop(true), else free the buffer if any
 	// or if alhpa channel?
 	// Double buffer seems to be always faster...
-	proto._allocBuffer = function() {
-		var b = this._bounds.getSize();
-		if (!(b.width && b.height)) {
+	proto._allocBuffer = function(width, height) {
+		if (!(width && height)) {
 			this._buffer = null;
 		} else {
 			if (this._buffer) {
-				this._buffer.setDimensions(b.width, b.height);
+				this._buffer.setSize(width, height);
 			} else {
-				this._buffer = new G.Buffer(b.width, b.height);
+				this._buffer = new G.Buffer(width, height);
 			}
 		}
 	}
