@@ -40,27 +40,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileSet = function(bitmap, tw, th, count, r) {
-		this._tile = new G.Size(tw, th);
-		Object.base(this, bitmap, tw, th, count, r);
+	G.TileSet = function(bitmap, size) {
+		this._tile = size;
+		Object.base(this, bitmap);
 	};
 
 	var proto = G.TileSet.inherits(G.SpriteSheet);
 
-	proto.setSections = function(tw, th, count, r) {
-		var t = this._tile,
-			w = t.width,
-			h = t.height;
-
-		if ((tw && tw != w) || (th && th != h)) {
-			throw "Gamalto: Additional tiles must have the same size.";
-		}
-
-		// Here we are replacing values of ...
-		tw = tw || w,	// arguments[0]
-		th = th || h;	// arguments[1]
-
-		G.TileSet.base.setSections.apply(this, arguments);
+	proto.addSections = function(count, r, size) {
+		// Must be always the same, simply ignore passed parameter
+		size = this._tile;
+		return G.TileSet.base.addSections.call(this, count, r, size);
 	}
 
 	proto._createSection = function(x, y, w, h) {
