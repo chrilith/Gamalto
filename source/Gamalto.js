@@ -49,7 +49,7 @@ var ENV = self;
 	core.env.hasAudio = false;				// Will be iniitalized by the audio lib
 
 	// Object methods
-	core.init = function(loader/*, debug*/) { // TODO: debug level
+	var init = function(loader/*, debug*/) { // TODO: debug level
 		// Check for dependencies
 		gamalto.checkDependencies__();
 
@@ -146,6 +146,9 @@ var ENV = self;
 
 	constant.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
 	constant.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
+
+	/* Initiamization */
+	constant.init = init;
 
 	/* Register the singleton */
 	ENV.gamalto = core;
