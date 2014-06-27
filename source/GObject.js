@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,22 +32,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/**
-	 * @constructor
+	 * Base object of all Gamalto objects.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Object
 	 */
 	G.Object = function() {
-	//	this.tag = ...
+		/**
+		 * An utility property to exchange data between objects.
+		 * @member {object}
+		 */
+		this.tag = undefined;
 	};
 	
-	var proto = G.Object.prototype;
+	/** @alias Gamalto.Object.prototype */
+	var proto = G.object.prototype;
 
+	/**
+	 * Converts the object into a string.
+	 * @virtual
+	 * @returns {string}
+	 */
 	proto.toString = function() {
 		return "[Gamalto Object]";
-	}
+	};
 
+	/**
+	 * Clones the object.
+	 * @virtual
+	 * @returns {object} Returns a new instance of the object. Defaults to null.
+	 */
 	proto.clone = function() {
 		return null;
-	}
+	};
 
 })();
