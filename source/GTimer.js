@@ -5,7 +5,7 @@
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -37,7 +37,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* ... */
 
 	/**
-	 * @constructor
+	 * Manages a timer which updates the game by triggering actions at specific time.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Timer
+	 * @augments Gamalto.Object
+	 *
+	 * @param {TimingFunc} callback
+	 *     The function to be called on every frame.
+	 * @param {number} [rate]
+	 *     The expected minimum frame rate before trying to skip frames. By default, a rate of 25 frames per second is used.
+	 * @param {number} [skip]
+	 *     A value between 0 and 100 representing the percentage of frames to skip. By default, this parameter is set to 0 meaning that no frame skip will occur.
 	 */
 	G.Timer = function(callback, rate, skip) {
 		Object.base(this);
@@ -49,14 +60,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 	
 	/* Inheritance and shortcut */
+
+	/** @alias Gamalto.Timer.prototype */
 	var proto = G.Timer.inherits(G.Object);
 	
 	/* Instance methods */
+
+	/**
+	 * Sets the expected timer frame rate.
+	 *
+	 * @param {number} rate
+	 *     A positive interger value.
+	 */
 	proto.setFrameRate = function(rate) {
 		this._tolerance = 500 + (this._frameTime = 1000 / rate);
 		this.setSkipRatio(this._frameSkipRatio);
 	}
 	
+	/**
+	 * Sets the amount of frame that should be automatically skipped if the frame rate cannot be honored.
+	 *
+	 * @param {number} ratio
+	 *     A positive interger value between 0, no frame skip, and 100 allowing full frame skip.
+	 */
 	proto.setSkipRatio = function(ratio) {
 		this._skipped = 0;
 		this._frameSkipRatio = ratio;
@@ -83,11 +109,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return wait;
 	}
 
+	/**
+	 * Gets the elapsed time since the last iteration.
+	 */
 	proto.getElapsed = function() {
 		var e = (Date.now() - this._lastTime | 0);
 		return e >= this._tolerance ? 0 : e;
 	}
 
+	/**
+	 * Starts the timer execution.
+	 *
+	 * @param {boolean} [strict]
+	 *      Whether to force maximum frame rate to the set value Useful for non time-based games.
+	 */
 	proto.start = function(strict) {
 		this._stopped = false;
 	
@@ -119,7 +154,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (!skip) { that._lastTime = before; }
 
 			// Compute FPS
-			last = that.computeFPS_(last, skip);
+			last = that._computeFPS_(last, skip);
 	
 			// Next iteration
 			next = that._nextWait(before);
@@ -130,14 +165,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		})();
 	}
 
+	/**
+	 * Stops the timer execution.
+	 */
 	proto.stop = function() {
 		this._stopped = true;
 	}
 	
 	/*	Frames Per Second (FPS) related methods
 		For debug purpose only */
-	
-	proto.computeFPS_ = function(last, skip) {
+
+	proto._computeFPS_ = function(last, skip) {
 		var time, elapsed, i, length, sum = 0,
 			list = this._ticks,
 			callback = this._fpsCb;
@@ -164,6 +202,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return last;
 	}
 
+	/**
+	 * Sets the callback function which will receive the frame rate information.
+	 *
+	 * @param {FPSFunc} callback
+	 *      The function to be called on every frame counter update. Setting to null will disable the FPS counter.
+	 */
 	proto.setFPSWatcher_ = function(callback) {
 		this._fpsCb = callback;
 		this._frameCount = 0;
