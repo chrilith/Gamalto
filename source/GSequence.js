@@ -39,7 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Sequence = function() {
+	var _Object = G.Sequence = function() {
 		this._list = [];
 		this._time = [];
 		Object.base(this);
@@ -57,7 +57,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.update = function(timer) {
 		var p = this.progress | 0,	// remove fractional part for comparison
 			was = this.playing,
-			now = G.Sequence.base.update.call(this, timer, false, this._time),
+			now = _Object.base._update.call(this, timer, false, this._time),
 			i = this.progress | 0;
 
 		// TODO: an action may be skipped upon slowdown. Add a strict parameter
