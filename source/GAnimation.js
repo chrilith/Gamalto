@@ -41,7 +41,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.using_("Timer");
 
 	/**
-	 * @constructor
+	 * Creates a new animation sequence from a sprites sheet.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Animation
+	 * @augments Gamalto.Animator
+	 *
+	 * @param {Gamalto.SpriteSheet} sheet
+	 *     The sprites sheet containing the sections for the animation.
+	 *
+	 * @example
+	 * // Getting an object instance
+	 * var anim = new Gamalto.Animation(sheet);
 	 */
 	var _Object = G.Animation = function(sheet) {
 		this.sheet = sheet;
@@ -56,6 +67,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/* Inheritance and shortcut */
+
+	/** @alias Gamalto.Animation.prototype */
 	var proto = G.Animation.inherits(G.Animator);
 
 	proto.useSectionsRange = function(start, length) {
@@ -122,20 +135,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this;
 	}
 
+	/**
+	 * Sets the loop state of the animation.
+	 *
+	 * @param {boolean} isOn
+	 *     Whether to loop the animation.
+	 * @returns {Gamalto.Animation} The current object for function calls chaining.
+	 */
 	proto.setLoop = function(isOn) {
 		this._loop = !!isOn;
 		return this;
 	}
 
+	/**
+	 * Gets the loop state of the animation.
+	 */
 	proto.getLoop = function() {
 		return this._loop;
 	}
 
+	/**
+	 * Updates the animation state.
+	 *
+	 * @param {Gamalto.Timer} timer
+	 *     The {@linkcode Gamalto.Timer} object from which the elpased time will be read. Internally calls the {@linkcode Gamalto.Animator#_update} method.
+	 * @returns {boolean} The playing state.
+	 */
 	proto.update = function(timer) {
 		return _Object.base
-			.update.call(this, timer, this._loop, this._time);
+			._update.call(this, timer, this._loop, this._time);
 	}
 
+	/**
+	 * Draws the current animation frame.
+	 *
+	 * @param {Gamalto.BaseRenderer} renderer
+	 *     The renderer of the {@linkcode Gamalto.surface} to which the animation frame will be rendered.
+	 * @param {number} x
+	 *     The horizontal drawing position.
+	 * @param {number} y
+	 *     The vertical drawing position.
+	 * @param {number} [frame]
+	 *     The index of the frame to draw. Usually, the frame index is internally calculated.
+	 * @returns {number} The drawn frame index.
+	 */
 	proto.draw = function(renderer, x, y, frame) {
 		frame = core.defined(frame, this.progress, 0) | 0;
 
@@ -150,6 +193,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return frame;
 	}
 
+	/**
+	 * Creates a clone of the current object.
+	 * @returns {Gamalto.Animation} A deep copy of the object.
+	 */
 	proto.clone = function() {
 		var clone = new _Object(this.sheet);
 		clone._list = this._list.slice();
