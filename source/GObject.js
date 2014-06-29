@@ -48,7 +48,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 	
 	/** @alias Gamalto.Object.prototype */
-	var proto = G.object.prototype;
+	var proto = G.Object.prototype;
 
 	/**
 	 * Converts the object into a string.
