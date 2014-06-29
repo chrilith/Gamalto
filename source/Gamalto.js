@@ -78,10 +78,16 @@ var ENV = self;
 	var constant = _Object;
 
 	/* Global contants */
+
+	/**
+	 * Common value for undefined propertes.
+	 * @constant NONE
+	 * @memberof Gamalto
+	 */
 	constant.NONE			= undefined;
 	
 	constant.ALIGN_LEFT		= 1 << 0;
-	constant.ALIGN_RIGHT		= 1 << 1;
+	constant.ALIGN_RIGHT	= 1 << 1;
 	constant.ALIGN_TOP		= 1 << 2;
 	constant.ALIGN_BOTTOM	= 1 << 3;
 

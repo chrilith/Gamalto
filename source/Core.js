@@ -61,10 +61,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			document.getElementById(container) : container;
 	};
 	
+	/**
+	 * Gets the container of the canvas element defined by {@linkcode Core#setContainer}.
+	 *
+	 * @returns {object}
+	 *     The HTMLElement containing the canvas element or the document body by default.
+	 */
 	core.getContainer = function() {
 		return (_container || document.body);
 	};
 
+	/**
+	 * Sets the window icon.
+	 *
+	 * @param {string} url
+	 *     The location of the icon.
+	 */
 	core.setIcon = function(href) {
 		var head = document.getElementsByTagName("head")[0];
 		if (head) {
@@ -75,10 +87,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	};
 
+	/**
+	 * Sets the window title.
+	 *
+	 * @param {string} title
+	 *     The new window title.
+	 */
 	core.setTitle = function(title) {
 		document.title = title;
 	}
 
+	/**
+	 * Finds the first defined element in the parameters list.
+	 *
+	 * @param {...object} vargs
+	 *     A list of parameters.
+	 *
+	 * @returns {object}
+	 *     The first defined element or `undefined` by default.
+	 */
 	core.defined = function(/* vargs... */) {
 		var i,
 			a = arguments;
