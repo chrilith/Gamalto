@@ -108,22 +108,4 @@ var ENV = self;
 	/* Namespace for special effects objects */
 	ENV.GE = G.Effects = {};
 
-	/* Callbacks */
-
-	/**
-	 * Time-based callback.
-	 * @callback TimingFunc
-	 * @param {Gamalto.Timer} timer
-	 *     An instance of the {@linkcode Gamalto.Timer} object.
-	 */
-
-	/**
-	 * Frames per second callback.
-	 * @callback FPSFunc
-	 * @param {Number} frames
-	 *     The current frame rate.
-	 * @param {Number} rate
-	 *     The expected frame rate.
-	 */
-
 })();
