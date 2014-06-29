@@ -1,7 +1,7 @@
 /*
- * Gamalto Global Environement
+ * Gamalto Core Object
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the Gamalto framework
  * http://www.gamalto.com/
  *
 
@@ -19,7 +19,7 @@ copies or substantial portions of the Software.
 
 For production software, the copyright notice only is required. You must also
 display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+made using this Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -31,42 +31,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-/* Initial execution environement */
-var ENV = self;
-
-/* Gamalto base object and initializer */
 (function() {
 
-	// This is a singleton
-	var core = { env: {} },
+	var _container, undef;
 
-	/* Private */
-	_container;
-
-	// This is supposed to be always accessible
-	core.env.isHttpRangesSupported = false;	// false as of v1.4.1 of CocoonJS
-	core.env.isMobile = false;				// TODO
-	core.env.hasAudio = false;				// Will be iniitalized by the audio lib
-
-	// Object methods
-	var init = function(loader/*, debug*/) { // TODO: debug level
-		// Check for dependencies
-		gamalto.checkDependencies__();
-
-		// Run the application
-		if (document.readyState == 'complete') {
-			setTimeout(loader, 0);
-		} else {
-			document.addEventListener('DOMContentLoaded', loader, false);
-		}
+	/**
+	 * Core object of the Gamalto framework.
+	 *
+	 * @constructor
+	 * @global
+	 * @protected
+	 */
+	var Core = function() {
+		this.debug = undef;
+		this.env = undef;
 	};
 
+	/** @alias Core.prototype */
+	var core = Core.prototype;
+
+	/**
+	 * Sets the container of the canvas element.
+	 *
+	 * @param {(string|object)} container
+	 *     The name or the HTMLElement which will receive the main canvas object.
+	 */
 	core.setContainer = function(container) {
 		_container = (typeof container == "string") ?
 			document.getElementById(container) : container;
-		
-		/* For scanlines positioning and some other stuff... */
-		_container.style.position = "relative";	// FIXME, bad way to do this
 	};
 	
 	core.getContainer = function() {
@@ -89,16 +81,15 @@ var ENV = self;
 
 	core.defined = function(/* vargs... */) {
 		var i,
-			a = arguments,
-			u; // undefined
+			a = arguments;
 
 		for (i = 0; i < a.length; i++) {
-			if (a[i] !== u) { return a[i]; }
+			if (a[i] !== undef) { return a[i]; }
 		}
-		return u;
+		return undef;
 	};
 
-	/* Private methods */
+	/* Pseudo-Private methods */
 
 	core._isName = function(name) {
 		return name && name.indexOf("G__") == 0;
@@ -124,58 +115,14 @@ var ENV = self;
 		return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
 	};
 
-	/* #defines */
-	var constant = {
-
-		N: function(name) {
-			return "G__" + name;
-		},
-		
-		H: function(name) {
-			return "_" + name + "Handler";
-		}
-	};
-
-	/* Global contants */
-	constant.NONE			= undefined;
-	
-	constant.ALIGN_LEFT		= 1 << 0;
-	constant.ALIGN_RIGHT		= 1 << 1;
-	constant.ALIGN_TOP		= 1 << 2;
-	constant.ALIGN_BOTTOM	= 1 << 3;
-
-	constant.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
-	constant.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
-
-	/* Initiamization */
-	constant.init = init;
-
 	/* Register the singleton */
-	ENV.gamalto = core;
-
-	/* Globalization */
-	/** @namespace Gamalto */
-	ENV.G = ENV.Gamalto = constant;
-
-	/* Namespace for special effects objects */
-	ENV.GE = G.Effects = {};
-
-	/* Callbacks */
 
 	/**
-	 * Time-based callback.
-	 * @callback TimingFunc
-	 * @param {Gamalto.Timer} timer
-	 *     An instance of the {@linkcode Gamalto.Timer} object.
+	 * Main object to access the Gamalto core properties.
+	 *
+	 * @global
+	 * @type {Core}
 	 */
-
-	/**
-	 * Frames per second callback.
-	 * @callback FPSFunc
-	 * @param {Number} frames
-	 *     The current frame rate.
-	 * @param {Number} rate
-	 *     The expected frame rate.
-	 */
+	self.gamalto = new Core();
 
 })();
