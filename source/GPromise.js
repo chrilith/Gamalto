@@ -1,11 +1,11 @@
 /*
  * Gamalto.Promise
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the Gamalto framework
  * http://www.gamalto.com/
  *
 
-Copyright (C)2011-2013 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2011-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,7 +19,7 @@ copies or substantial portions of the Software.
 
 For production software, the copyright notice only is required. You must also
 display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+made using this Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -40,26 +40,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		STATE_CANCELED	= 4;
 
 	/**
-	 * @constructor
+	 * Creates a new promise object to handle the completion of asynchronous actions.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Promise
+	 * @augments Gamalto.Object
 	 */
-	G.Promise = function() {
+	var _Object = G.Promise = function() {
 		this._resolve = [];
 		this._reject = [];
 		this._progress = [];
 		this._state = STATE_PENDING;
 	}
 	
-	/* Inheritance and shortcut */
-	var proto = G.Promise.inherits(G.Object);
+	/** @alias Gamalto.Promise.prototype */
+	var proto = _Object.inherits(G.Object);
 	
+	/**
+	 * Resolves the promise and call the completion callbacks if any.
+	 *
+	 * @param {object} [value]
+	 *     The resulting value of the action.
+	 */
 	proto.resolve = function(value) {
 		this._complete(STATE_RESOLVED, value);
 	}
-		
+	
+	/**
+	 * Rejects the promise and call the completion callbacks if any.
+	 *
+	 * @param {string} reason
+	 *     The reason of the rejection. Usually the raised exception message which has lead to the rejection.
+	 */
 	proto.reject = function(reason) {
 		this._complete(STATE_REJECTED, reason);
 	}
 
+	/**
+	 * Calls the progress callbacks if any.
+	 */
 	proto.progress = function(value) {
 		var progress = this._progress;
 		for (var i = 0; i < progress.length; i++) {
@@ -67,6 +86,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
+	/**
+	 * Cancels the promise and calls the reject completion callbacks if any.
+	 * The method has the same behavior of the {@linkcode Gamalto.Promise#reject} method. The reason is implicit and will be an exception with the message: *Canceled*.
+	 */
 	proto.cancel = function() {
 		this._complete(STATE_CANCELED, new Error("Canceled"));
 	}
@@ -124,6 +147,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return value;		
 	}
 
+	/**
+	 * Defines the callbacks to be used upon action completion or error.
+	 * The sucess callback can return a new promise, this is why a promise is always returned by `then()`. This allows actions pipelining and eases code readability.
+	 *
+	 * @param {CompletionFunc} [resolve]
+	 *     A callback to be called upon action success.
+	 * @param {CompletionFunc} [reject]
+	 *     A callback to be called upon action error.
+	 * @param {CompletionFunc} [progress]
+	 *     A callback to be called to handle action progression notification.
+	 *
+	 * @returns {Gamalto.Promise} A new promise to handle the completion of another action.
+	 */
 	proto.then = function(resolve, reject, progress) {
 		var undef, promise = new G.Promise();
 
@@ -173,7 +209,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return promise;
 	}
 	
-	G.Promise.all = function(/* args */) {
+	/**
+	 * Waits for all the promises.
+	 *
+	 * @kind function
+	 * @name all
+	 * @memberof Gamalto.Promise
+	 *
+	 * @param {...Gamalto.Promise} vargs
+	 *     A list of promises to wait for.
+	 * @returns {Gamalto.Promise} A new promise to handle completions.
+	 */
+	_Object.all = function(/* vargs */) {
 		// Get all promises to be completed
 		var all = Array.prototype.slice.call(arguments, 0),
 			count = 0,
