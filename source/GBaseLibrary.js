@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @returns {Gamalto.Promise} A promise to handle the loading states.
 	 */
 	proto.load = function() {
-		this._exception();
+		gamalto.assert_(!this._loading, "The libary is already loading items.");
 		this._loading = true;
 
 		var that = this,
