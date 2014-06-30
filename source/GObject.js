@@ -1,7 +1,7 @@
 /*
  * Gamalto.Object
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the Gamalto framework
  * http://www.gamalto.com/
  *
 
@@ -19,7 +19,7 @@ copies or substantial portions of the Software.
 
 For production software, the copyright notice only is required. You must also
 display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+made using this Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
