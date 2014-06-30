@@ -42,9 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Object methods */
 	stat.add = function(name, module) {
 		var ext = G.N(name);
-		if (modules[ext]) {
-			throw "Module conflict encountered adding [" + name + "].";
-		}
+		gamalto.assert_(!modules[ext], "Module conflict encountered adding [" + name + "].");
 		modules[ext] = module;
 	}
 
