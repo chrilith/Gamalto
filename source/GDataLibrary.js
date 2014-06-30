@@ -37,14 +37,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("XMLLibrary");
 
 	/**
-	 * @constructor
+	 * Creates a JSON resource manager.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.DataLibrary
+	 * @augments Gamalto.XMLLibrary
 	 */
-	G.DataLibrary = function() {
+	var _Object = G.DataLibrary = function() {
 		Object.base(this);
 	}
 
-	var proto = G.DataLibrary.inherits(G.XMLLibrary);
+	/** @alias Gamalto.DataLibrary.prototype */
+	var proto = _Object.inherits(G.XMLLibrary);
 	
+	/**
+	 * Transforms data before sorting the resource.
+	 *
+	 * @see {@link Gamalto.XMLLibrary}
+	 * @ignore
+	 */
 	proto._toData = function(o) {
 		return JSON.parse(o.responseText);
 	}

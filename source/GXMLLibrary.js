@@ -36,16 +36,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("BaseLibrary");
 
 	/**
-	 * @constructor
+	 * Creates an XML resource manager.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.XMLLibrary
+	 * @augments Gamalto.BaseLibrary
 	 */
-	G.XMLLibrary = function() {
+	var _Object = G.XMLLibrary = function() {
 		Object.base(this);
 	}
 	
-	var proto = G.XMLLibrary.inherits(G.BaseLibrary);
+	/** @alias Gamalto.XMLLibrary.prototype */
+	var proto = _Object.inherits(G.BaseLibrary);
 
+	/**
+	 * Tries to load a new resource into the library.
+	 *
+	 * @param {string} name
+	 *     The name of the resource.
+	 * @param {string} src
+	 *     The location of the item to load.
+	 * @param {string} [data]
+	 *     Data to send with the request. If set, the request will use POST instead of GET.
+	 * @returns {Gamalto.Promise} A promise to handle the loading states.
+	 */
 	proto.loadItem = function(name, src, data) {
-		var promise = G.XMLLibrary.base.loadItem.call(this),
+		var promise = _Object.base.loadItem.call(this),
 		
 			x = new XMLHttpRequest(),
 			that = this;
@@ -84,6 +100,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return promise;
 	}
 	
+	/**
+	 * Transforms data before sorting the resource.
+	 *
+	 * @virtual
+	 * @protected
+	 * @ignore
+	 */
 	proto._toData = function(x) {
 		return x.responseXML;
 	}

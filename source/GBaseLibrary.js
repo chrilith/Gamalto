@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.using_("Promise");
 
 	/**
-	 * Base object to implement resources managers. It's not meant to be used directly in the client code.
+	 * Base object to implement resources managers. It's not meant to be used directly by the client code.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.BaseLibrary
@@ -75,13 +75,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Tries to load a new resource into the library.
 	 *
+	 * @virtual
 	 * @param {string} name
 	 *     The name of the resource.
 	 * @param {string} src
 	 *     The location of the item to load.
+	 * @param {...object} [vargs]
+	 *     Extra parameters.
 	 * @returns {Gamalto.Promise} A promise to handle the loading states.
 	 */
-	proto.loadItem = function(name, src) {
+	proto.loadItem = function(name, src/* vargs */) {
 		return new G.Promise();
 	}
 
