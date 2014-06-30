@@ -205,5 +205,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		
 		return promise;
 	}
-	
+
+	/* Callbacks */
+
+	/**
+	 * Completion callback.
+	 * @callback CompletionFunc
+	 * @param {object} [value]
+	 *     A result object.
+	 */
+
 })();
