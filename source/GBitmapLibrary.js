@@ -1,11 +1,11 @@
 /*
  * Gamalto.BitmapLibrary
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the Gamalto framework
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,7 +19,7 @@ copies or substantial portions of the Software.
 
 For production software, the copyright notice only is required. You must also
 display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+made using this Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -40,17 +40,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.using_("IndexedImage");
 
 	/**
-	 * @constructor
+	 * Creates a bitmap resource manager.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.BitmapLibrary
+	 * @augments Gamalto.BaseLibrary
 	 */
-	G.BitmapLibrary = function() {
+	var _Object = G.BitmapLibrary = function() {
 		Object.base(this);
 	}
 	
-	/* Inheritance and shortcut */
-	var proto = G.BitmapLibrary.inherits(G.BaseLibrary);
+	/** @alias Gamalto.BitmapLibrary.prototype */
+	var proto = _Object.inherits(G.BaseLibrary);
 	
-	proto.loadItem = function(name, src, indexed) {
-		var promise = G.BitmapLibrary.base.loadItem.call(this),
+	/**
+	 * Tries to load a new resource into the library.
+	 *
+	 * @param {string} name
+	 *     The name of the resource.
+	 * @param {string} src
+	 *     The location of the item to load.
+	 * @param {boolean} [indexed]
+	 *     Whether the resource is an {@linkcode Gamalto.IndexedImage}.
+	 * @returns {Gamalto.Promise} A promise to handle the loading states.
+	 */
+	 proto.loadItem = function(name, src, indexed) {
+		var promise = _Object.base.loadItem.call(this),
 
 			i = (indexed) ? new G.IndexedImage() : new Image(),
 			that = this;
