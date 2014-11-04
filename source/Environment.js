@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.hasAudio = false;				// Will be iniitalized by the audio lib
 	}
 
-	Environement.prototype.init = function() {
+	Environment.prototype.init = function() {
 		// TODO
 		return this;
 	}
