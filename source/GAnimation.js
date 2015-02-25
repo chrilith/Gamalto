@@ -36,7 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var core = gamalto;
 
 	/* Dependencies */
-	gamalto.require_("SpriteSheet");
+	gamalto.require_("Animator");
+	gamalto.using_("SpriteSheet");
 	gamalto.using_("Rect");
 	gamalto.using_("Timer");
 
