@@ -43,10 +43,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Screen = function(width, height, mode) {
+	G.Screen = function(width, height, renderer) {
 		// Real screen
-		this._screen = new G.Surface(width, height, mode);
-		Object.base(this, width, height, mode);
+		this._screen = new G.Surface(width, height, renderer);
+		Object.base(this, width, height, renderer);
 	};
 
 	/* Inheritance and shortcut */
