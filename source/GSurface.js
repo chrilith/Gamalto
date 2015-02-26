@@ -37,14 +37,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("Buffer");
 	gamalto.using_("Rect");
 	gamalto.using_("Renderer2D");
-	gamalto.using_("RendererWebGL");
 
 	/**
 	 * @constructor
 	 */
-	G.Surface = function(width, height, mode) {
-		Object.base(this, width, height, mode);
-		this.renderer = new G["Renderer" + (this._mode == G.Buffer.OPTIMIZED ? "WebGL" : "2D")](this);
+	G.Surface = function(width, height, renderer) {
+		Object.base(this, width, height, renderer);
+		this.renderer =  new (renderer || G.Renderer2D)(this);
 		this.disableClipping();
 	};
 	
