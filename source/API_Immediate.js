@@ -69,7 +69,7 @@
 				tryRunTask(+data.substr(_magic.length));
 			}
 		}
-		/* Using Message API
+		/* Using W3C Messaging API
 		 * See: http://www.nonblocking.io/2011/06/windownexttick.html
 		 */
 		global.addEventListener("message", handler, false);
