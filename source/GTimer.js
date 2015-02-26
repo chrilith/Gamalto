@@ -31,7 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function() {
+	var global = this;
+
+	/* Enable standard version of the method */
+	Object.defineMethod(global, "requestAnimationFrame");
 
 	/* Dependencies */
 	/* ... */
@@ -129,7 +133,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var that = this,
 			last = Date.now(),						// Last execution is now
 			// TODO: use AnimationFrame but check for expected frame time
-			func = strict ? null : env.requestAnimationFrame,	
+			func = strict ? null : global.requestAnimationFrame,	
 			next,									// Next iteration duration
 			skip, before;
 	
@@ -161,7 +165,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			
 			// If we have a real timer, use it
 			if (func)	{ func(callback); }
-			else		{ env.setTimeout(callback, next); }
+			else		{ setTimeout(callback, next); }
 		})();
 	}
 
@@ -216,4 +220,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._tickIndex = 0;
 	};
 
-})(ENV);
+})();
