@@ -90,7 +90,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		var cst = G.Event,
 			evt = new G.KeyboardEvent(e.type);
-		evt.keyCode = (e.keyCode || e.which);
+		evt.keyCode = (e.keyCode || e.which);	// FIXME: http://javascript.info/tutorial/keyboard-events
+		evt.charCode = e.charCode;	// FIXME: old IE??
 		evt._time = e.timeStamp; // || Date.now();
 		evt.modifiers =
 			(e.shiftKey		&& evt.keyCode != 16	? cst.KMOD_SHIFT: 0) |
