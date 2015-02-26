@@ -37,17 +37,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Bitmap = function(source) {
-		this.width = source.width;
-		this.height = source.height;
-
-		this._source = source;	// This is the source object
+		this.setSource(source);
 	}
 	
 	/* Inheritance */
 	var proto = G.Bitmap.inherits(G.Object);
 
+	proto.setSource = function(source) {
+		if (source) {
+			this.width = source.width;
+			this.height = source.height;
+			this._source = source;
+		}
+	}
+
 	proto._getCanvas = function() {
 		return this._source;
 	}
+
+	proto._getSourceType = function() {
+		return Image;
+	}
+
 })();
 

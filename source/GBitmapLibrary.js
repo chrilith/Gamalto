@@ -36,8 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.require_("BaseLibrary");
 	gamalto.using_("Bitmap");
-	gamalto.using_("IndexedBitmap");	// TODO: allow optional indexed usage
-	gamalto.using_("IndexedImage");
 
 	/**
 	 * Creates a bitmap resource manager.
@@ -60,14 +58,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 *     The name of the resource.
 	 * @param {string} src
 	 *     The location of the item to load.
-	 * @param {boolean} [indexed]
-	 *     Whether the resource is an {@linkcode Gamalto.IndexedImage}.
+	 * @param {Gamalto.Bitmap} [type]
+	 *     The type of the bitmap object to be instanciated.
 	 * @returns {Gamalto.Promise} A promise to handle the loading states.
 	 */
-	 proto.loadItem = function(name, src, indexed) {
+	 proto.loadItem = function(name, src, type) {
 		var promise = _Object.base.loadItem.call(this),
+			bitmap = new (type || G.Bitmap),
 
-			i = (indexed) ? new G.IndexedImage() : new Image(),
+			i = new bitmap._getSourceType(),
 			that = this;
 
 		i.onabort = i.onerror = function(e) {
@@ -75,8 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		i.onload = function() {
-			that._list[G.N(name)] = (indexed) ?
-				new G.IndexedBitmap(i) : new G.Bitmap(i);
+			that._list[G.N(name)] = bitmap;
 			promise.resolve({
 				source: that,
 				item: name
