@@ -83,9 +83,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	stat.immediate = function() {
 		var promise = new G.Promise();
 
-		setTimeout(function() {
+		setImmediate(function() {
 			promise.resolve();
-		}, 0);
+		});
 
 		return promise;
 	}
