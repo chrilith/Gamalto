@@ -82,7 +82,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.progress = function(value) {
 		var progress = this._progress;
 		for (var i = 0; i < progress.length; i++) {
-			this._immediate(progress[i], value);
+			setImmediate(progress[i], value);
 		}
 	}
 
@@ -120,14 +120,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._exec = function(func, value) {
 		while (func.length) {
-			this._immediate(func.shift(), value);
+			setImmediate(func.shift(), value);
 		}
-	}
-
-	proto._immediate = function(func, value) {
-		setTimeout(function() {
-			func.call(func, value);
-		}, 0);
 	}
 
 	proto._prepare = function(resolver) {
