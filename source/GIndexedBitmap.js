@@ -67,4 +67,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._source._getCanvas(refresh);	
 	}
 
+	proto._getSourceType = function() {
+		return G.IndexedImage;
+	}
+
 })();
