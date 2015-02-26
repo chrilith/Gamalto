@@ -62,6 +62,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._screen._getCanvas();
 	}
 
+	proto.getSurface = function() {
+		return this._screen;
+	}
+
 	proto.setActive = function() {
 		// Disable scanlines
 		this.setScanlines();
