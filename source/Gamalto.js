@@ -37,7 +37,8 @@ var ENV = self;
 /* Gamalto base object and initializer */
 (function() {
 
-	var _Object = {
+	var _initializers = [],
+		_Object = {
 
 		/**
 		 * This is the first function to call before using the Gamalto framework.
@@ -56,12 +57,15 @@ var ENV = self;
 			// Check for dependencies
 			gamalto.checkDependencies__();
 
-			// Run the application
-			if (document.readyState == 'complete') {
-				setTimeout(loader, 0);
-			} else {
-				document.addEventListener('DOMContentLoaded', loader, false);
-			}
+			_initializers.push(function() {
+				// Run the application
+				if (document.readyState == 'complete') {
+					setTimeout(loader, 0);
+				} else {
+					document.addEventListener('DOMContentLoaded', loader, false);
+				}
+			});
+			this.nextInitializer();
 		},
 
 		N: function(name) {
@@ -70,6 +74,21 @@ var ENV = self;
 		
 		H: function(name) {
 			return "_" + name + "Handler";
+		},
+
+		addInitializer: function(func) {
+			_initializers.push(func);
+		},
+
+		nextInitializer: function() {
+			var next = _initializers.shift();
+			if (next) { next(); }
+		},
+
+		getCurrentPath: function() {
+			var all = document.getElementsByTagName('script'),
+				path = all[all.length - 1].src;
+			return path.substr(0, path.lastIndexOf("/") + 1);
 		}
 
 	};
