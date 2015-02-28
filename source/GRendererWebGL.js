@@ -35,64 +35,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // http://learningwebgl.com/blog/?p=859
 // http://media.tojicode.com/webgl-samples/js/webgl-tilemap.js
 
-(function() {
-
-	var shaders = [
-		[	"attribute vec2 aPosition;",
-			"attribute vec2 aTexCoord;",
-			"uniform vec2 uResolution;",
-			"varying vec2 vTexCoord;",
-
-			"void main() {",
-			   // convert the rectangle from pixels to 0.0 to 1.0
-			  "vec2 zeroToOne = aPosition / uResolution;",
-
-			   // convert from 0->1 to 0->2
-			   "vec2 zeroToTwo = zeroToOne * 2.0;",
-
-			   // convert from 0->2 to -1->+1 (clipspace)
-			   "vec2 clipSpace = zeroToTwo - 1.0;",
-
-			   "gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);",
-
-				// pass the texCoord to the fragment shader
-				// The GPU will interpolate this value between points.
-				"vTexCoord = aTexCoord;",
-
-			"}"].join('\n'),
-
-		[	"precision mediump float;",
-			"uniform vec4 uColor;",
-
-			"void main() {",
-			"	gl_FragColor = uColor;",
-
-			"}"].join('\n'),
-
-		[	"precision mediump float;",
-
-			// our texture
-			"uniform sampler2D uImage;",
-			"uniform vec4 uClip;",
-
-			// the texCoords passed in from the vertex shader.
-			"varying vec2 vTexCoord;",
-
-			"void main() {",
-  			"	gl_FragColor = texture2D(uImage, (vec2(vTexCoord.x * uClip.z, vTexCoord.y * uClip.w) + uClip.xy));",
-//			"   gl_FragColor = texture2D(uImage, vTexCoord);",
-
-			"}"].join('\n'),
-	];
+(function(initializer) {
 
 	/**
 	 * Dependencies
 	 */
 	gamalto.require_("BaseRenderer");
+	gamalto.require_("TextLibrary");
 	gamalto.using_("Bitmap");
 	gamalto.using_("Rect");
 	gamalto.using_("BaseCanvas");
 	
+	/* Initialization */
+	var _shaders;
+
+	initializer.addInitializer(function() {
+		var path = initializer.getCurrentPath(),
+		
+		_shaders = new G.TextLibrary();
+		_shaders.pushItem("position", path + "shaders/rdr_position.vert");
+		_shaders.pushItem("fillColor", path + "shaders/rdr_fill-color.frag");
+		_shaders.pushItem("fillTexture", path + "shaders/rdr_fill-texture.frag");
+
+		_shaders.load().then(function() {
+			initializer.nextInitializer();
+		});
+	});
+
 	/**
 	 * @constructor
 	 */
@@ -109,9 +78,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		var gl = this._getContext();
 
-		var s1 = G.Shader.load(gl, shaders[0], gl.VERTEX_SHADER);
-		var s2 = G.Shader.load(gl, shaders[1], gl.FRAGMENT_SHADER);
-		var s3 = G.Shader.load(gl, shaders[2], gl.FRAGMENT_SHADER);
+		var s1 = G.Shader.load(gl, _shaders.getItem("positions"), gl.VERTEX_SHADER);
+		var s2 = G.Shader.load(gl, _shaders.getItem("fillColor"), gl.FRAGMENT_SHADER);
+		var s3 = G.Shader.load(gl, _shaders.getItem("fillTexture"), gl.FRAGMENT_SHADER);
 
 		this._program = [
 			G.Shader.program(gl, [s1, s2]),
@@ -323,4 +292,4 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		}
 	}
 
-})();
+})(Gamalto);

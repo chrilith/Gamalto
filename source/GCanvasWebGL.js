@@ -6,33 +6,27 @@
  *
  */
 
-(function() {
-
-	var shaders = [
-		[	"attribute vec4 aPosition;",
-			"varying vec2 vTexCoord;",
-
-			"void main() {",
-			"	gl_Position = aPosition;",
-			"	vTexCoord = aPosition.xy * vec2(0.5, -0.5) + 0.5;",
-			"}"].join('\n'),
-
-		[	"precision mediump float;",
-
-			"varying vec2 vTexCoord;",
-			"uniform sampler2D uPalette;",
-			"uniform sampler2D uImage;",
-
-			"void main() {",
-			"	float index = texture2D(uImage, vTexCoord).a;",
-			"	gl_FragColor = texture2D(uPalette, vec2(index, 0));",
-			"}"].join('\n'),
-	];
+(function(initializer) {
 
 	/* Dependencies */
 	gamalto.require_("BaseCanvas");
 	gamalto.using_	("RendererWebGL");
 	gamalto.using_	("Shader");
+
+	/* Initialization */
+	var _shaders;
+
+	initializer.addInitializer(function() {
+		var path = initializer.getCurrentPath();
+
+		_shaders = new G.TextLibrary();
+		_shaders.pushItem("position", path + "shaders/cvs-position.vert");
+		_shaders.pushItem("fillTexture", path + "shaders/cvs-fill-texture-indexed.frag");
+
+		_shaders.load().then(function() {
+			initializer.nextInitializer();
+		});
+	});
 
 	/**
 	 * @constructor
@@ -50,8 +44,8 @@
 			gl = this._context = canvas.getContext("webgl", opt) ||
 								 canvas.getContext("experimental-webgl", opt);
 
-			var s1 = G.Shader.load(gl, shaders[0], gl.VERTEX_SHADER);
-			var s2 = G.Shader.load(gl, shaders[1], gl.FRAGMENT_SHADER);
+			var s1 = G.Shader.load(gl, _shaders.getItem("position"), gl.VERTEX_SHADER);
+			var s2 = G.Shader.load(gl, _shaders.getItem("fillTexture"), gl.FRAGMENT_SHADER);
 
 			this._program = [G.Shader.program(gl, [s1, s2])];
 		} catch(e) {  }
@@ -131,4 +125,4 @@
 		gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2);		
 	};
 
-})();
+})(Gamalto);
