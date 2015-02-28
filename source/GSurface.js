@@ -34,21 +34,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("Buffer");
-	gamalto.using_("Rect");
-	gamalto.using_("Renderer2D");
+	gamalto.require_("Canvas2D");
+	gamalto.using_	("BaseRenderer");
+	gamalto.using_	("Rect");
 
 	/**
 	 * @constructor
 	 */
-	G.Surface = function(width, height, renderer) {
-		Object.base(this, width, height, renderer);
-		this.renderer =  new (renderer || G.Renderer2D)(this);
+	G.Surface = function(width, height, canvas) {
+		var canvas = this.__canvas = new (canvas || G.Canvas2D)(width, height);
+		this.renderer =  new (canvas.getRendererType())(canvas);
+		this.width	= canvas.width;
+		this.height	= canvas.height;
 		this.disableClipping();
 	};
 	
 	/* Inheritance and shortcut */
-	var proto = G.Surface.inherits(G.Buffer);
+	var proto = G.Surface.inherits(G.Object);
 
 	/* Instance methods */
 	proto.enableClipping = function(x, y, width, height) {
@@ -93,21 +95,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// TODO: exception if accessing other methods while locked
 	proto.lock = function() {
 		if (!this._locked) {
-			return (this._locked = this._getRawBuffer());
+			return (this._locked = this.__canvas._getRawBuffer());
 		}
 		return null;
 	}
 
 	proto.unlock = function() {
 		if (this._locked) {
-			this._copyRawBuffer(this._locked);
+			this.__canvas._copyRawBuffer(this._locked);
 			this._locked = null;
 		}
 	}
 
 	proto._getCanvas = function() {
 		this.renderer.flush();
-		return G.Surface.base._getCanvas.call(this);
+		return this.__canvas._getCanvas();
 	}
 
 })();

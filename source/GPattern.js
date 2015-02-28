@@ -44,7 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
 		var s = new G.Surface(r.width, r.height);	
 		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
-		this._pattern = s._context.createPattern(s._getCanvas(), "repeat");
+		// FIXME: only renderers should directly access context methods
+		this._pattern = s.__canvas._context.createPattern(s._getCanvas(), "repeat");
 	}
 
 	/* Inheritance and shortcut */

@@ -43,21 +43,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Screen = function(width, height, renderer) {
+	G.Screen = function(width, height, canvas) {
 		// Real screen
-		this._screen = new G.Surface(width, height, renderer);
-		Object.base(this, width, height, renderer);
+		this._screen = new G.Surface(width, height, canvas);
+		Object.base(this, width, height, canvas);
 	};
 
 	/* Inheritance and shortcut */
 	var proto = G.Screen.inherits(G.Surface);
 	
 	/* Instance methods */
-	proto.setSize = function(width, height) {
-		this._screen.setSize(width, height);
-		G.Screen.base.setSize.call(this, width, height);
-	}
-
 	proto.__screenCanvas = function() {
 		return this._screen._getCanvas();
 	}

@@ -41,15 +41,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.BaseRenderer = function(surface) {
-		this._surface = surface;
-		this.reset();
+	G.BaseRenderer = function(canvas) {
+		this._canvas = canvas;
+		this._init();
 	};
 	
 	/* Inheritance and shortcut */
 	var proto = G.BaseRenderer.inherits(G.Object);
 	
 	/* Instance methods */	
+	proto._init = function() {
+		this.reset();		
+	}
+
 	proto.setFlipX = function(isOn) {
 		this._flipX = !!isOn;
 	}
@@ -109,7 +113,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Used only when altering the canvas content */
 	proto._getContext = function() {
-		return this._surface._context;
+		return this._canvas._context;
 	}
 
 })();

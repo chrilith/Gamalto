@@ -39,13 +39,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("BaseRenderer");
 	gamalto.using_("Bitmap");
 	gamalto.using_("Rect");
-	gamalto.using_("Surface");
+	gamalto.using_("BaseCanvas");
 	
 	/**
 	 * @constructor
 	 */
-	G.Renderer2D = function(surface) {
-		Object.base(this, surface);
+	G.Renderer2D = function(canvas) {
+		Object.base(this, canvas);
 	};
 	
 	/* Inheritance and shortcut */
@@ -79,7 +79,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.fillRect = function(r, style) {
-		var s = this._surface,
+		var s = this._canvas,
 			x = 0,
 			y = 0, w, h, v;
 
@@ -151,7 +151,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// TODO: compute matrices members in an array and use apply() once per change?
 		var o  = this, dx = 0, dy = 0,
-			c  = o._surface._context,
+			c  = o._canvas._context,
 			cx = x + (w >> 1) + this._origin.x,
 			cy = y + (h >> 1) + this._origin.y,
 			fx = (o._flipX ? -1 : +1) * o._scaleX,
@@ -204,14 +204,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		ctx.globalAlpha = 1;
 		ctx.globalCompositeOperation = "source-over";
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-	}
-
-	/* Should be called before accessing _canvas */
-	proto.flush = function() { /* Nothing to do */ }
-
-	/* Used only when altering the canvas content */
-	proto._getContext = function() {
-		return this._surface._context;
 	}
 
 })();
