@@ -91,13 +91,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("BaseRenderer");
 	gamalto.using_("Bitmap");
 	gamalto.using_("Rect");
-	gamalto.using_("Surface");
+	gamalto.using_("BaseCanvas");
 	
 	/**
 	 * @constructor
 	 */
-	G.RendererWebGL = function(surface) {
-		Object.base(this, surface);
+	var _Object = G.RendererWebGL = function(canvas) {
+		Object.base(this, canvas);
+	};
+	
+	/* Inheritance and shortcut */
+	var proto = _Object.inherits(G.BaseRenderer);
+	
+	/* Instance methods */
+	proto._init = function() {
+		_Object.base._init.call(this);
 
 		var gl = this._getContext();
 
@@ -111,12 +119,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	};
-	
-	/* Inheritance and shortcut */
-	var proto = G.RendererWebGL.inherits(G.BaseRenderer);
-	
-	/* Instance methods */
+	}
+
 	proto.drawBitmap = function(bitmap, x, y) {
 		this.drawBitmapSection(bitmap, x, y);
 	}
@@ -213,7 +217,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 
 	proto._initDraw = function(program, points) {
 		var gl = this._getContext(),
-			s = this._surface;
+			s = this._canvas;
 
 		var positionLocation = gl.getAttribLocation(program, "aPosition");
 		var resolutionLocation = gl.getUniformLocation(program, "uResolution");
@@ -240,7 +244,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	}
 	
 	proto.fillRect = function(r, style) {
-		var s = this._surface,
+		var s = this._canvas,
 			x = 0,
 			y = 0, w, h, v;
 
@@ -312,16 +316,11 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		if (!r) {
 			gl.disable(gl.SCISSOR_TEST);
 		} else {
-			var y = this._surface.height - r.height - r.tL.y;
+			var y = this._canvas.height - r.height - r.tL.y;
 
 			gl.enable(gl.SCISSOR_TEST);
 			gl.scissor(r.tL.x, y, r.width, r.height);
 		}
 	}
-
-	proto._reset = function() { }
-
-	/* Should be called before accessing _canvas */
-	proto.flush = function() { /* Nothing to do */ }
 
 })();
