@@ -33,22 +33,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // TODO: optimize memory and speed
 
-(function(env) {
+(function() {
 
 	/* Dependencies */
-	gamalto.using_("Buffer");
+	gamalto.using_("Canvas2D");
 	gamalto.using_("File");
 	gamalto.using_("AsyncFile");
 	gamalto.using_("MemoryStream");
 	gamalto.using_("Palette");
 
 	/* Local */
-	var modules = [];
+	var modules = [], _bufferType;
 
 	/**
 	 * @constructor
 	 */
-	G.IndexedImage = function() {
+	var _Object = G.IndexedImage = function() {
 		this._file = new G.AsyncFile();
 		
 		Object.defineProperty(this, "src", {
@@ -63,15 +63,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	var stat = G.IndexedImage;
+	var stat = _Object;
 
 	stat.addModule = function(module) {
 		module.mime.push(G.Stream.BIN_MIMETYPE);
 		modules.push(module);
 	}
 
+	stat.setBufferType = function(type) {
+		var old = _bufferType;
+		_bufferType = type;
+		return old;
+	};
+
 	/* Inheritance and shortcut */
-	var proto = G.IndexedImage.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	proto._findModule = function() {
 		var i, u = this._url,
@@ -142,8 +148,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.width		= data[2];
 			this.height		= data[3];			
 
-			// Always try to get an optimized buffer to handle indexed data
-			this._buffer = new G.Buffer(data[2], data[3], G.Buffer.OPTIMIZED);
+			this._buffer = new (_bufferType || G.Canvas2D)(data[2], data[3]);
 
 			// TODO
 			if (this.onload) {
@@ -157,7 +162,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		if (pal._changed || refresh) {
 			pal._changed = false;
-			this._buffer._copyRawDataIndexed(pal._list, {
+			this._buffer._copyRawBufferIndexed(pal._list, {
 				data: this._data._data,
 				width: this.width,
 				height: this.height
@@ -167,4 +172,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._buffer._getCanvas();
 	}
 
-})(ENV);
+})();
