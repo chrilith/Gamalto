@@ -47,15 +47,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.using_("BaseCanvas");
 	
 	/* Initialization */
-	var _shaders;
+	var _shaders,
+		_path = initializer.getCurrentPath();
 
-	initializer.addInitializer(function() {
-		var path = initializer.getCurrentPath(),
-		
+	initializer.addInitializer(function() {		
 		_shaders = new G.TextLibrary();
-		_shaders.pushItem("position", path + "shaders/rdr_position.vert");
-		_shaders.pushItem("fillColor", path + "shaders/rdr_fill-color.frag");
-		_shaders.pushItem("fillTexture", path + "shaders/rdr_fill-texture.frag");
+		_shaders.pushItem("position", _path + "shaders/rdr_position.vert");
+		_shaders.pushItem("fillColor", _path + "shaders/rdr_fill-color.frag");
+		_shaders.pushItem("fillTexture", _path + "shaders/rdr_fill-texture.frag");
 
 		_shaders.load().then(function() {
 			initializer.nextInitializer();

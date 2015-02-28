@@ -14,14 +14,13 @@
 	gamalto.using_	("Shader");
 
 	/* Initialization */
-	var _shaders;
+	var _shaders,
+		_path = initializer.getCurrentPath();
 
 	initializer.addInitializer(function() {
-		var path = initializer.getCurrentPath();
-
 		_shaders = new G.TextLibrary();
-		_shaders.pushItem("position", path + "shaders/cvs-position.vert");
-		_shaders.pushItem("fillTexture", path + "shaders/cvs-fill-texture-indexed.frag");
+		_shaders.pushItem("position", _path + "shaders/cvs-position.vert");
+		_shaders.pushItem("fillTexture", _path + "shaders/cvs-fill-texture-indexed.frag");
 
 		_shaders.load().then(function() {
 			initializer.nextInitializer();
