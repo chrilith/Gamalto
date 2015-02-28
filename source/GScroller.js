@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/* Dependencies */
 	gamalto.using_("Rect");
-	gamalto.using_("Renderer2D");
+	gamalto.using_("BaseRenderer");
 	gamalto.using_("Bitmap");
 	gamalto.using_("ScrollingRegion");
 	gamalto.using_("Surface");
@@ -97,7 +97,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			w = b.width,
 			h = b.height,
 	
-			src = s._context,
+			src = s.__canvas._context,		// FIXME: nodirect access to canvas
 			dst = region._buffer._context,
 		
 		/* We cannot use negative value using this signature of drawImage()
@@ -137,7 +137,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Force no transformation without altering current surface configuration
-		var r = this._surface.renderer;
+		var r = s.renderer;
 
 		var old = r.setTransform(false);
 		r.clearRect(new G.Rect(x, y, w, h));

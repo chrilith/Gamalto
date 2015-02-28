@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
+	gamalto.using_("Canvas2D");
 	gamalto.using_("Rect");
 	gamalto.using_("Surface");
 	gamalto.using_("Timer");
@@ -48,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._curr = new G.Vector(0, 0);
 		this._speed = new G.Vector(0, 0);
 	
-		this.setBounds(x, y, width, height);
+		this._setBounds(x, y, width, height);
 		this.setLoop(loop);
 	};
 	
@@ -60,13 +61,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._loop = !!isOn;
 	}
 	
-	proto.setBounds = function(x, y, width, height) {
+	proto._setBounds = function(x, y, width, height) {
 		var r = this._bounds;	
 		r.tL.x = x;
 		r.tL.y = y;
 		r.bR.x = x + width - 1;
 		r.bR.y = y + height - 1;
-		this._allocBuffer(width, height);
+		// TODO: alloc buffer only if setLoop(true), else free the buffer if any
+		// or if alhpa channel?
+		// Double buffer seems to be always faster...
+		this._buffer = new G.Canvas2D(width, height);
 	}
 	
 	proto.setSpeed = function(px, py) {
@@ -110,21 +114,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		p.y -= c.y;
 
 		return c;
-	}
-	
-	// TODO: alloc buffer only if setLoop(true), else free the buffer if any
-	// or if alhpa channel?
-	// Double buffer seems to be always faster...
-	proto._allocBuffer = function(width, height) {
-		if (!(width && height)) {
-			this._buffer = null;
-		} else {
-			if (this._buffer) {
-				this._buffer.setSize(width, height);
-			} else {
-				this._buffer = new G.Buffer(width, height);
-			}
-		}
 	}
 
 })();
