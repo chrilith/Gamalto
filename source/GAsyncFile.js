@@ -314,6 +314,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.seek = function(offset, origin) {
+		this._shouldRead();
 		G.AsyncFile.base.seek.apply(this, arguments);
 
 		// Invalidate current cached data if needed

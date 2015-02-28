@@ -76,6 +76,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.seek = function(offset, origin) {
+		this._shouldRead();
 		G.File.base.seek.apply(this, arguments);
 		
 		// Invalidate current cached data if needed
@@ -102,7 +103,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		status = r.status;
 		this.mimeType = r.getResponseHeader("Content-Type") ||
 							"application/octet-stream";
-		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+		this._rangeSupported = false;// !!r.getResponseHeader("Accept-Ranges");
 		
 		// Length should be -1 only using "file" URL scheme...
 		if (-1 == (this.length =
