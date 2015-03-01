@@ -97,8 +97,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				that.mimeType = r.getResponseHeader("Content-Type") ||
 									"application/octet-stream";
 				
-				that._rangeSupported = gamalto.env.isHttpRangesSupported
-									&& !!r.getResponseHeader("Accept-Ranges");
+				that._rangeSupported = false; /*gamalto.env.isHttpRangesSupported
+									&& !!r.getResponseHeader("Accept-Ranges");*/
 
 				// Length should be -1 only using "file" URL scheme...
 				if (-1 == (that.length =
