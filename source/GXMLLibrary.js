@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function() {
+(function(global) {
 	/* Dependencies */
 	gamalto.require_("BaseLibrary");
 
@@ -63,7 +63,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.loadItem = function(name, src, data) {
 		var promise = _Object.base.loadItem.call(this),
 		
-			x = new XMLHttpRequest(),
+			/* See: API_CORS.js */
+			x = new (global._XDomainRequest || XMLHttpRequest),
 			that = this;
 
 		x.onreadystatechange = function() {
@@ -95,8 +96,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 
-		x.open(data ? "POST" : "GET", src);
-		x.send(data || null);
+		try {
+			x.open(data ? "POST" : "GET", src);
+			x.send(data || null);
+		} catch(exception) {
+			promise.reject(this._failed(name, src, exception));
+		}
 		return promise;
 	}
 	
@@ -111,4 +116,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return x.responseXML;
 	}
 
-})();
+})(this);
