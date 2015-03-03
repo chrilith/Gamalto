@@ -35,7 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	var Environment = function() {
 		// This is supposed to be always accessible
-		this.isHttpRangesSupported = false;	// false as of v1.4.1 of CocoonJS
 		this.isMobile = false;				// TODO
 		this.hasAudio = false;				// Will be iniitalized by the audio lib
 	}
