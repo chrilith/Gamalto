@@ -50,6 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = G.AsyncFile.inherits(G.SeekableStream);
 
 	proto.open = function(url) {
+		this._initPos = 0;
 		this._position = 0;
 		this._url = url;
 		// TODO: detect file not found
@@ -97,25 +98,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				that.mimeType = r.getResponseHeader("Content-Type") ||
 									"application/octet-stream";
 				
-				that._rangeSupported = false; /*gamalto.env.isHttpRangesSupported
-									&& !!r.getResponseHeader("Accept-Ranges");*/
+				that._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
 
 				// Length should be -1 only using "file" URL scheme...
 				if (-1 == (that.length =
 								(status & 200 != 200) ? u :
 								(status == 0) ? -1 /* local */ :
 									(r.getResponseHeader("Content-Length") | 0))) {
-					/*
-						Here, the whole data is loaded into memory since HTTP is not
-						supported. TODO: Optimization may apply.
-					*/
+
+					/* Here, the whole data is loaded into memory since HTTP is not supported. */
 					if (r.response) {
 						that.length = r.response.byteLength;
 					} else {
 						that.length = (r.responseText || "").length;
 					}
 				}
-				gamalto.log_("Loading async file size:", that.length);
 				// TODO: handle error with "status"
 				promise.resolve(that);
 			}
@@ -166,9 +163,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Optimize loading needed bytes only!
 		if (this._rangeSupported) {
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
+			this._initPos = p;
 		}
-		this._initPos = p;
 		return this._send(r).then(function(data) {
+			// There is a bug in some WebKit version like Safari 8.0.3
+			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
+			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
+			if (!r.getResponseHeader("Content-Range")) {
+				that._initPos = 0;
+				that._rangeSupported = false;
+			}
 			that._data = typeof data == "object" ? new Uint8Array(data) : data;
 			that._bufSize = (r.getResponseHeader("Content-Length") | 0)
 								|| that._data.length; // for local files...
@@ -314,7 +318,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.seek = function(offset, origin) {
-		this._shouldRead();
 		G.AsyncFile.base.seek.apply(this, arguments);
 
 		// Invalidate current cached data if needed
