@@ -33,15 +33,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
-	G.Stream = {};
+	var _Object = G.Stream = function() {
+		this._position = 0;
+		this.length = 0;
+	},
+
+	/* Inheritance and shortcut */
+	_proto = _Object.inherits(G.Object);
+
+	_proto.eos = function() {
+		return this._position >= this.length;
+	};
+
+	_proto.pos = function() {
+		return this._position;
+	};
 
 	/* Constants */
-	var constant = G.Stream;
+	_Object.SEEK_SET = 0;
+	_Object.SEEK_CUR = 1;
+	_Object.SEEK_END = 2;
 
-	constant.SEEK_SET = 0;
-	constant.SEEK_CUR = 1;
-	constant.SEEK_END = 2;
-
-	constant.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
+	_Object.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
 
 })();

@@ -33,22 +33,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
+	gamalto.require_("Stream");
+
 	/**
 	 * @constructor
 	 */
-	G.SeekableStream = function() {
-		this._position = 0;
-		this.length = 0;
-	}
+	var _Object = G.SeekableStream = function() {
+		Object.base(this);
+	},
 
 	/* Inheritance and shortcut */
-	var proto = G.SeekableStream.inherits(G.Object);
+	_proto = _Object.inherits(G.Stream);
 
-	proto.eos = function() {
-		return this._position >= this.length;
-	}
-
-	proto.seek = function(offset, origin) {
+	_proto.seek = function(offset, origin) {
 		var C = G.Stream,
 			undef;
 

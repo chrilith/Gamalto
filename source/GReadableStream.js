@@ -35,24 +35,85 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.require_("SeekableStream");
+	gamalto.using_	("Convert");
 
 	/**
-	 * @constructor
+	 * Base object to create readable stream.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.ReadableStream
+	 * @augments Gamalto.SeekableStream
 	 */
-	G.ReadableStream = function(unit) {
+	var _Object = G.ReadableStream = function(unit) {
 		Object.base(this);
-		this._unit = (unit || 1) >> 1;
-	}
+		/**
+		 * The unit of the data. For instance 4 for UInt32.
+		 * Will be converted into ceofficient.
+		 * 
+		 * @ignore
+		 * @member {Number}
+		 */
+		this._unit = (+unit | 0 || 1) >> 1;
+	},
+	_converter = G.Convert,
 
 	/* Inheritance and shortcut */
-	var proto = G.ReadableStream.inherits(G.SeekableStream);
+
+	/** @alias Gamalto.ReadableStream.prototype */
+	proto = _Object.inherits(G.SeekableStream);
+
+	/* Instance methods */
+
+	/**
+	 * Utility method to compute stream access position based on the stream unit.
+	 * 
+	 * @ignore
+	 * @protected
+	 * 
+	 * @param  {Number} len
+	 *     The number of bytes to be accessed.
+	 * @param  {Number} [from]
+	 *     The position from where to access the stream data in stream unit.
+	 *     Defaults to the current stream position.
+	 *     Setting this parameter will not increment stream position.
+	 *
+	 * @return {Number} The position from where to access stream data in bytes.
+	 */
+	proto._at = function(len, from) {
+		var undef;
+
+		if (from === undef) {
+			// Read from the current position...
+			from = this._position;
+			// ...and increment pointer
+			this._position += len;
+		} else {
+			// Position is based on the stream unit
+			from <<= this._unit;
+		}
+		return from;
+	}
+
+	/**
+	 * Main method to read data from teh sream.
+	 *
+	 * @ignore
+	 * @protected
+	 * @abstract
+	 * 
+	 * @param  {[type]} [position]
+	 *     The position from where to read a byte.
+	 */
+	proto._readByte = function(position) {
+		gamalto.error_("_readByte(position) is not implemented");
+	}
 
 	proto.readUInt8 = function(at) {
 		return this._readByte(this._at(1, at));
 	}
 
 	proto.readSInt8 = function(at) {
-		return G.Convert.toSInt8(this.readUInt8(at));
+		return _converter.toSInt8(this.readUInt8(at));
 	}
 
 	/* Big Endian */
@@ -65,7 +126,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readSInt16BE = function(at) {
-		return G.Convert.toSInt16(this.readUInt16LE(at));
+		return _converter.toSInt16(this.readUInt16LE(at));
 	}
 
 	proto.readUInt32BE = function(at) {
@@ -78,7 +139,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readSInt32BE = function(at) {
-		return G.Convert.toSInt32(this.readUInt32BE(at));
+		return _converter.toSInt32(this.readUInt32BE(at));
 	}
 
 	/* Little Endian (JavaScript is little endian) */
@@ -91,7 +152,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readSInt16LE = function(at) {
-		return G.Convert.toSInt16(this.readUInt16LE(at));
+		return _converter.toSInt16(this.readUInt16LE(at));
 	}
 
 	proto.readUInt32LE = function(at) {
@@ -104,7 +165,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readSInt32LE = function(at) {
-		return G.Convert.toSInt32(this.readUInt32LE(at));
+		return _converter.toSInt32(this.readUInt32LE(at));
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -117,15 +178,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.pos = function(offset) {
-		return this._position + (offset | 0);
+		return this._position + (+offset | 0);
 	}
 
 	proto.rew = function(by) {
-		this.seek(-(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(-(+by | 0 || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 	proto.fwd = function(by) {
-		this.seek(+(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(+(+by | 0 || 1) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 })();
