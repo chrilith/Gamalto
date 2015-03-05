@@ -126,7 +126,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readSInt16BE = function(at) {
-		return _converter.toSInt16(this.readUInt16LE(at));
+		return _converter.toSInt16(this.readUInt16BE(at));
 	}
 
 	proto.readUInt32BE = function(at) {
