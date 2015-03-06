@@ -49,10 +49,11 @@
 			pixel	= 0,
 			pos		= -1,
 			buf		= this._createRawBuffer(),	// TODO: cache raw buffer
-			dest	= buf.data;
+			dest	= buf.data,
+			data	= raw.data;
 
-		while (++pos < raw.data.length) {
-			index = raw.data[pos];
+		while (++pos < (data.length || data.byteLength)) {
+			index = data[pos];
 			color = palette[index];
 
 			dest[pixel++] = color.r;
