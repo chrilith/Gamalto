@@ -52,7 +52,7 @@
 	};
 
 	_proto.getInt8 = function(byteOffset) {
-		return _Convert.toSInt8(this.readUInt8(byteOffset));
+		return _Convert.toSInt8(this.getUint8(byteOffset));
 	};
 
 	_proto.getInt16 = function(byteOffset, littleEndian) {
