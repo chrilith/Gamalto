@@ -31,86 +31,53 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function() {
-
-	// TODO: use DataView for better performance with getXX/setXX?
-	var recent = ('Uint8Array' in self),
-		object = recent ? Uint8Array : Array;
+(function(global) {
 
 	/* Dependencies */
 	gamalto.require_("ReadStream");
+	gamalto.using_	("ArrayWriter");
 
 	/**
 	 * @constructor
 	 */
 	G.MemoryStream = function(size, unit) {
 		// Do we have a source data?
-		var data = typeof size != 'number' ? size : this._alloc(size);
+		var data = typeof size == 'object' ? size : this._alloc(+size);
 
 		// Base constructor
 		Object.base(this, data, unit);
+		this._writer = (data.byteLength) ? this._reader : new G.ArrayWriter(data);
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 
-	// TODO: use DataView for better performance with getXX/setXX?
 	proto._alloc = function(size) {
-		if (size > 0) {
-			return new object(size);
-		}
-	}
-
-	// FIXME: still a problem here, _data may be initialized with an normal array
-	// Change ReadStream _data initialization to copy data to the proper typed array
-	// or set a _writeByteN() and _writeByteA() in the constructor?
-	if (recent) {
-		proto._writeByte = function(data, position) {
-			this._data[this._startAt + position] = data;
-		}
-	} else {
-		proto._writeByte = function(data, position) {
-			// Be sure to always have a usigned value written in the array,
-			// this is slower but prevent error using simple arrays
-			this._data[this._startAt + position] = String.fromCharCode(data).charCodeAt(0);
-		}
+		return new (global.ArrayBuffer || Array)(size);
 	}
 
 	proto.writeInt8 = function(data, at) {
-		at = this._at(1, at);
-		this._writeByte(data, at);
+		this._writer.setInt8(this._at(1, at), data);
 	}
 
 	/* Big Endian */
 
 	proto.writeInt16BE = function(data, at) {
-		at = this._at(2, at);
-		this._writeByte((data >> 8), at + 0);
-		this._writeByte((data     ), at + 1);
+		this._writer.setInt16(this._at(2, at), data);
 	}
 
 	proto.writeInt32BE = function(data, at) {
-		at = this._at(4, at);
-		this._writeByte((data >> 24), at + 0);
-		this._writeByte((data >> 16), at + 1);
-		this._writeByte((data >>  8), at + 2);
-		this._writeByte((data      ), at + 3);
+		this._writer.setInt32(this._at(4, at), data);
 	}	
 
 	/* Little Endian (JavaScript is little endian) */
 	
 	proto.writeInt16LE = function(data, at) {
-		at = this._at(2, at);
-		this._writeByte((data     ), at + 0);
-		this._writeByte((data >> 8), at + 1);
+		this._writer.setInt8(this._at(2, at), data, true);
 	}
 	
 	proto.writeInt32LE = function(data, at) {
-		at = this._at(4, at);
-		this._writeByte((data      ), at + 0);
-		this._writeByte((data >>  8), at + 1);
-		this._writeByte((data >> 16), at + 2);
-		this._writeByte((data >> 24), at + 3);
+		this._writer.setInt32(this._at(4, at), data, true);
 	}
 
 	proto.writeString = function(str, stopChar) {
@@ -122,10 +89,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.copy = function(src, length) {
-		if ('set' in this._data && 'subarray' in src._data) {
+		if (this.buffer.set && src.buffer.subarray) {
 			var pos = src.addr(),
-				src = src._data.subarray(pos, pos + length);
-			this._data.set(src, this.addr());
+				src = src.buffer.subarray(pos, pos + length);
+			this.buffer.set(src, this.addr());
 		} else {
 			while(length-- > 0) {
 				this.writeInt8(src.readUInt8());
@@ -139,4 +106,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-})();
+})(this);

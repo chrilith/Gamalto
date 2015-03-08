@@ -46,11 +46,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	var _Object = G.ReadableStream = function(unit) {
 		Object.base(this);
+
+		/**
+		 * The DataView or ArrayReader instance used to access stream data.
+		 * 
+		 * @ignore
+		 * @protected
+		 * 
+		 * @member {Object}
+		 */
+		this._reader = null;
+
 		/**
 		 * The unit of the data. For instance 4 for UInt32.
 		 * Will be converted into ceofficient.
 		 * 
 		 * @ignore
+		 * @protected
+		 * 
 		 * @member {Number}
 		 */
 		this._unit = (+unit | 0 || 1) >> 1;
@@ -95,77 +108,59 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/**
-	 * Main method to read data from teh sream.
+	 * Gets the reader object to access data.
 	 *
 	 * @ignore
 	 * @protected
-	 * @abstract
 	 * 
-	 * @param  {[type]} [position]
-	 *     The position from where to read a byte.
+	 * @return {Object} The reader object.
 	 */
-	proto._readByte = function(position) {
-		gamalto.error_("_readByte(position) is not implemented");
+	proto._getReader = function() {
+		return this._reader;
 	}
 
 	proto.readUInt8 = function(at) {
-		return this._readByte(this._at(1, at));
+		return this._getReader().getUint8(this._at(1, at));
 	}
 
 	proto.readSInt8 = function(at) {
-		return _converter.toSInt8(this.readUInt8(at));
+		return this._getReader().getInt8(this._at(1, at));
 	}
 
 	/* Big Endian */
 
 	proto.readUInt16BE = function(at) {
-		var p = this._at(2, at),
-			b = this._readByte(p + 0),
-			a = this._readByte(p + 1);
-		return (b << 8) | a;
+		return this._getReader().getUint16(this._at(2, at));
 	}
 
 	proto.readSInt16BE = function(at) {
-		return _converter.toSInt16(this.readUInt16BE(at));
+		return this._getReader().getInt16(this._at(2, at));
 	}
 
 	proto.readUInt32BE = function(at) {
-		var p = this._at(4, at),
-			d = this._readByte(p + 0),
-			c = this._readByte(p + 1),
-			b = this._readByte(p + 2),
-			a = this._readByte(p + 3);
-		return (d << 24) | (c << 16) | (b << 8) | a;
+		return this._getReader().getUint32(this._at(4, at));
 	}
 
 	proto.readSInt32BE = function(at) {
-		return _converter.toSInt32(this.readUInt32BE(at));
+		return this._getReader().getInt32(this._at(4, at));
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function(at) {
-		var p = this._at(2, at),
-			a = this._readByte(p + 0),
-			b = this._readByte(p + 1);
-		return (b << 8) | a;
+		return this._getReader().getUint16(this._at(2, at), true);
 	}
 
 	proto.readSInt16LE = function(at) {
-		return _converter.toSInt16(this.readUInt16LE(at));
+		return this._getReader().getInt16(this._at(2, at), true);
 	}
 
 	proto.readUInt32LE = function(at) {
-		var p = this._at(4, at),
-			a = this._readByte(p + 0),
-			b = this._readByte(p + 1),
-			c = this._readByte(p + 2),
-			d = this._readByte(p + 3);
-		return (d << 24) | (c << 16) | (b << 8) | a;
+		return this._getReader().getUint32(this._at(4, at), true);
 	}
 
 	proto.readSInt32LE = function(at) {
-		return _converter.toSInt32(this.readUInt32LE(at));
+		return this._getReader().getInt32(this._at(4, at), true);
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -182,11 +177,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.rew = function(by) {
-		this.seek(-(+by | 0 || 1) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(-(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 	proto.fwd = function(by) {
-		this.seek(+(+by | 0 || 1) << this._unit, G.Stream.SEEK_CUR);
+		this.seek(+(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
 	}
 
 })();
