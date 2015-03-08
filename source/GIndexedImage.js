@@ -158,12 +158,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._getCanvas = function(refresh) {
-		var pal = this._palette;
+		var buf, pal = this._palette;
 
 		if (pal._changed || refresh) {
 			pal._changed = false;
+			buf = this._data.buffer;
 			this._buffer._copyRawBufferIndexed(pal._list, {
-				data: this._data._data,
+				data: buf.byteLength ? new Uint8Array(buf) : buf,
 				width: this.width,
 				height: this.height
 			});
