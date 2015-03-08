@@ -35,18 +35,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.require_("ReadableStream");
-	gamalto.using_("Convert");
+	gamalto.using_	("TextReader");
 
 	/**
 	 * @constructor
 	 */
-	G.File = function() {
+	var _Object = G.File = function() {
 		Object.base(this, 0);
 		this.cacheSize = 4096;	// Initial cache size
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.File.inherits(G.ReadableStream);
+	var proto = _Object.inherits(G.ReadableStream);
 
 	proto.open = function(url) {
 		this._initPos = 0;
@@ -57,18 +57,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.close = function() {
-		this._data = null;
+		this.buffer = null;
 		this._bufSize = 0;
 		this._url = null;
 	}
 
 	// Specific data format
-	proto._readByte = function() {
+	proto._getReader = function() {
 		this._shouldRead();
-		return this._data.charCodeAt(-(this._initPos - this._position++)) & 0xff;
+		return _Object.base._getReader.call(this);
 	}
+
 	// No position
-	proto._at = function(at, relative) { return 0; }
+	proto._at = function(len, from) {
+		// "from" is ignored in G.File
+		from = -(this._initPos - this._position);
+		this._position += len;
+		return from;
+	}
 
 	proto.read = function(buffer, size) {
 		while(size--) {
@@ -77,13 +83,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.seek = function(offset, origin) {
-		this._shouldRead();
-		G.File.base.seek.apply(this, arguments);
+		_Object.base.seek.apply(this, arguments);
 		
 		// Invalidate current cached data if needed
 		if (!(this._position >= this._initPos &&
 			  this._position < (this._initPos + this._bufSize))) {
-			this._data = null;
+			this.buffer = null;
 			this._bufSize = 0;
 		}
 	}
@@ -145,16 +150,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
 			this._initPos = p;
 		}
-		this._data = this._send(r);
+		this.buffer = this._send(r);
+		this._reader = new G.TextReader(this.buffer);
 		// There is a bug in some WebKit version like Safari 8.0.3
 		// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
 		// See: https://bugs.webkit.org/show_bug.cgi?id=82672
 		if (!r.getResponseHeader("Content-Range")) {
-			that._initPos = 0;
-			that._rangeSupported = false;
+			this._initPos = 0;
+			this._rangeSupported = false;
 		}
 		this._bufSize = (r.getResponseHeader("Content-Length") | 0)
-							|| this._data.length; // for local files...
+							|| this.buffer.length; // for local files...
 		return r;
 	}
 
