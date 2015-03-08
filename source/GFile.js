@@ -116,19 +116,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						(status & 200 != 200) ? u :
 						(status == 0) ? -1 /* local */ :
 							(r.getResponseHeader("Content-Length") | 0))) {
-			/* Here, the whole data is loaded into memory since HTTP is not supported. */
-			this.length = (r.responseText || "").length;
+			/*
+				Here, the whole data is loaded into memory since HTTP is not
+				supported. TODO: Optimization may apply.
+			*/
+			var response = r.response || r.responseText || "";
+			this.length = response.byteLength || response.length || 0;
 		}
 
 		// TODO: handle error with "status"
 	}
 
-	proto._open = function(mode/*, async */) {
+	proto._open = function(mode) {
 		var r = new XMLHttpRequest();
-		r.open(mode || "GET", this._url, arguments[1]);	// [1] = async, internal use only
-		//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
-		// Should set responseType one day and read "reponse" to get an ArrayBuffer
-		r.overrideMimeType(G.Stream.BIN_MIMETYPE);
+		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
+		// detrimental effects to the end user's experience. For more help,
+		// check http://xhr.spec.whatwg.org/.
+		r.open(mode || "GET", this._url, false);
+
+		if (typeof r.responseType == "string") {
+			try { r.responseType = "arraybuffer"; } catch(e) {}
+		}
+
+		if (!r.responseType) {
+			if (r.overrideMimeType) {
+				//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
+				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
+			} else {
+				gamalto.error_("Binary load not supported!");
+			}
+		}
 
 		return r;
 	}
@@ -136,7 +153,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._send = function(r) {
 		r.send(null);		
 		var status = (r.status || 200);
-		return (status < 200 || status > 206) ? "" : r.responseText;
+		return (status < 200 || status > 206) ? "" : (r.response || r.responseText);
 	}
 
 	proto._part = function(length) {
@@ -150,8 +167,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
 			this._initPos = p;
 		}
-		this.buffer = this._send(r);
-		this._reader = new G.TextReader(this.buffer);
+		var data = this.buffer = this._send(r);
+		this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
 		// There is a bug in some WebKit version like Safari 8.0.3
 		// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
 		// See: https://bugs.webkit.org/show_bug.cgi?id=82672
