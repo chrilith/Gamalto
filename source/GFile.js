@@ -177,7 +177,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._rangeSupported = false;
 		}
 		this._bufSize = (r.getResponseHeader("Content-Length") | 0)
-							|| this.buffer.length; // for local files...
+							|| this.buffer.byteLength || this.buffer.length; // for local files...
 		return r;
 	}
 
