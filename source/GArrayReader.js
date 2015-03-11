@@ -12,7 +12,6 @@
 		this.buffer = buffer;
 		this.byteLength = buffer.length;
 	},
-	_Convert = G.Convert,
 	_proto = _Object.inherits(G.Object);
 
 	_proto._readByte = function(byteOffset) {
@@ -37,6 +36,18 @@
 	};
 
 	_proto.getUint32 = function(byteOffset, littleEndian) {
+		return this.getInt32(byteOffset, littleEndian) >>> 0;
+	};
+
+	_proto.getInt8 = function(byteOffset) {
+		return this.getUint8(byteOffset) << 24 >> 24;
+	};
+
+	_proto.getInt16 = function(byteOffset, littleEndian) {
+		return this.getUint16(byteOffset, littleEndian) << 16 >> 18;
+	};
+
+	_proto.getInt32 = function(byteOffset, littleEndian) {
 		var inc = +1;
 		if (littleEndian) {
 			byteOffset--;
@@ -49,18 +60,6 @@
 			c = this._readByte(byteOffset += inc),
 			d = this._readByte(byteOffset += inc);
 		return (d << 24) | (c << 16) | (b << 8) | a;
-	};
-
-	_proto.getInt8 = function(byteOffset) {
-		return _Convert.toSInt8(this.getUint8(byteOffset));
-	};
-
-	_proto.getInt16 = function(byteOffset, littleEndian) {
-		return _Convert.toSInt16(this.getUint16(byteOffset, littleEndian));
-	};
-
-	_proto.getInt32 = function(byteOffset, littleEndian) {
-		return _Convert.toSInt32(this.getUint32(byteOffset, littleEndian));
 	};
 
 })();
