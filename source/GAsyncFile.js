@@ -219,12 +219,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 
 	proto.readSInt16BE = function() {
-		return this.readUInt16LE().then(function(value) {
+		return this.readUInt16BE().then(function(value) {
 			return G.Convert.toSInt16(value);
 		});
 	};
 
-	proto.readSInt32BE = function(at) {
+	proto.readSInt32BE = function() {
 		var a, b, c, d, that = this;
 
 		return this._ensureCapacity(4).then(function() {
@@ -236,7 +236,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	proto.readUInt32BE = function(at) {
+	proto.readUInt32BE = function() {
 		return this.readSInt32BE().then(function(value) {
 			return G.Convert.toUInt32(value);
 		});
@@ -244,7 +244,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Little Endian (JavaScript is little endian) */
 
-	proto.readUInt16LE = function(at) {
+	proto.readUInt16LE = function() {
 		var a, b, that = this;
 
 		return this._ensureCapacity(2).then(function() {
@@ -254,13 +254,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	proto.readSInt16LE = function(at) {
+	proto.readSInt16LE = function() {
 		return this.readUInt16LE().then(function(value) {
 			return G.Convert.toSInt16(value);
 		});
 	}
 
-	proto.readSInt32LE = function(at) {
+	proto.readSInt32LE = function() {
 		var a, b, c, d, that = this;
 
 		return this._ensureCapacity(4).then(function() {
@@ -272,7 +272,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	proto.readUInt32LE = function(at) {
+	proto.readUInt32LE = function() {
 		return this.readSInt32LE().then(function(value) {
 			return G.Convert.toUInt32(value);
 		});
