@@ -40,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	stat.toSInt8 = function(value) {
-		return toSigned(value, 0x7f, 0xff);
+		return value << 24 >> 24;
 	}
 
 	stat.toUInt16 = function(value) {
@@ -48,31 +48,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	stat.toSInt16 = function(value) {
-		return toSigned(value, 0x7fff, 0xffff);
+		return value << 16 >> 16;
 	}
 
 	stat.toUInt32 = function(value) {
-		return value & 0xffffffff;
+		return value >>> 0;
 	}
 
 	stat.toSInt32 = function(value) {
-		return toSigned(value, 0x7fffffff, 0xffffffff);
-	}
-
-	function toSigned(value, SM, UM) {
-		var lower = - (SM + 1);
-
-		if (value <= lower) {
-			value = value & UM;
-		}
-
-		if (value > SM) {
-			var s = value & SM,
-				u = value & UM;
-			value = (s < u ? s + lower : u);
-		}
-
-		return value;
+		return value | 0;
 	}
 	
 	/* Base64 encoder for binary data */
