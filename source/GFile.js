@@ -64,7 +64,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// Specific data format
 	proto._getReader = function() {
-		this._shouldRead();
+		this._ensureCapacity(4);
 		return _Object.base._getReader.call(this);
 	}
 
@@ -157,7 +157,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._part = function(length) {
-		length = length || this.cacheSize;
+		length = length > this.cacheSize ? length : this.cacheSize;
 
 		var r = this._open(),
 			p = this._position;
@@ -181,13 +181,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 
-	proto._shouldRead = function() {
-		if (!this._bufSize ||
-			 this._position < this._initPos ||
-			 this._position > this._initPos + this._bufSize) {
+	proto._ensureCapacity = function(size) {
+		var position = this._position,
+			bufSize = this._bufSize,
+			bufStart = this._initPos,
+			bufEnd = bufStart + bufSize;
 
-			this._part();
-		}		
+			 // Do we have a buffer?
+		if (!bufSize ||
+			 // Are we behind the buffer position?
+			 position < bufStart ||
+			 // Are we over the current buffer?
+			 position > bufEnd ||
+			 // Do we have enough buffer the the rrequested size?
+			 position + size > bufEnd
+			) {
+
+			// No? read new buffer...
+			this._part(size);
+		}
 	}
 
 })();
