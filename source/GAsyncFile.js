@@ -64,17 +64,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	// Specific data format
-	proto._readData = function() {
+	proto._readByte = function() {
 		var pos = -(this._initPos - this._position++);
 		return (typeof this._data == "object") ? 
 			this._data[pos] : this._data.charCodeAt(pos) & 0xff;
-	}
-
-	proto._readByte = function() {
-		var that = this;
-		return this._shouldRead().then(function() {
-			return that._readData();
-		});
 	}
 
 	proto.pos = function() {
@@ -154,7 +147,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._part = function(length) {
-		length = length || this.cacheSize;
+		length = length > this.cacheSize ? length : this.cacheSize;
 
 		var r = this._open(),
 			p = this._position,
@@ -179,19 +172,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	proto._shouldRead = function() {
-		if (!this._bufSize ||
-			 this._position < this._initPos ||
-			 this._position > this._initPos + this._bufSize) {
+	proto._ensureCapacity = function(size) {
+		var position = this._position,
+			bufSize = this._bufSize,
+			bufStart = this._initPos,
+			bufEnd = bufStart + bufSize;
 
-			return this._part();
-		} else {
-			return G.Async.immediate();
+			 // Do we have a buffer?
+		if (!bufSize ||
+			 // Are we behind the buffer position?
+			 position < bufStart ||
+			 // Are we over the current buffer?
+			 position > bufEnd ||
+			 // Do we have enough buffer the the rrequested size?
+			 position + size > bufEnd
+			) {
+
+			// No? read new buffer...
+			return this._part(size);
 		}
+		return G.Async.immediate();
 	}
 
 	proto.readUInt8 = function() {
-		return this._readByte();
+		return this._ensureCapacity(1).then(function(value) {
+			return that._readByte();
+		});
 	}
 
 	proto.readSInt8 = function() {
@@ -205,11 +211,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readUInt16BE = function() {
 		var a, b, that = this;
 
-		return this._readByte().then(function(value) {
-			b = value;
-			return that._readByte();
-		}).then(function(value) {
-			a = value;
+		return this._ensureCapacity(2).then(function() {
+			b = that._readByte();
+			a = that._readByte();
 			return (b << 8) | a;
 		});
 	};
@@ -220,27 +224,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	};
 
-	proto.readUInt32BE = function(at) {
+	proto.readSInt32BE = function(at) {
 		var a, b, c, d, that = this;
 
-		return this._readByte().then(function(value) {
-			d = value;
-			return that._readByte();
-		}).then(function(value) {
-			c = value;
-			return that._readByte();
-		}).then(function(value) {
-			b = value;
-			return that._readByte();
-		}).then(function(value) {
-			a = value;
+		return this._ensureCapacity(4).then(function() {
+			d = that._readByte();
+			c = that._readByte();
+			b = that._readByte();
+			a = that._readByte();
 			return (d << 24) | (c << 16) | (b << 8) | a;
 		});
 	}
 
-	proto.readSInt32BE = function(at) {
-		return this.readUInt32BE().then(function(value) {
-			return G.Convert.toSInt32(value);
+	proto.readUInt32BE = function(at) {
+		return this.readSInt32BE().then(function(value) {
+			return G.Convert.toUInt32(value);
 		});
 	}
 
@@ -249,11 +247,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readUInt16LE = function(at) {
 		var a, b, that = this;
 
-		return this._readByte().then(function(value) {
-			a = value;
-			return that._readByte();
-		}).then(function(value) {
-			b = value;
+		return this._ensureCapacity(2).then(function() {
+			a = that._readByte();
+			b = that._readByte();
 			return (b << 8) | a;
 		});
 	}
@@ -264,27 +260,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 	}
 
-	proto.readUInt32LE = function(at) {
+	proto.readSInt32LE = function(at) {
 		var a, b, c, d, that = this;
 
-		return this._readByte().then(function(value) {
-			a = value;
-			return that._readByte();
-		}).then(function(value) {
-			b = value;
-			return that._readByte();
-		}).then(function(value) {
-			c = value;
-			return that._readByte();
-		}).then(function(value) {
-			d = value;
+		return this._ensureCapacity(4).then(function() {
+			a = that._readByte();
+			b = that._readByte();
+			c = that._readByte();
+			d = that._readByte();
 			return (d << 24) | (c << 16) | (b << 8) | a;
 		});
 	}
 
-	proto.readSInt32LE = function(at) {
-		return this.readUInt32LE().then(function(value) {
-			return G.Convert.toSInt32(value);
+	proto.readUInt32LE = function(at) {
+		return this.readSInt32LE().then(function(value) {
+			return G.Convert.toUInt32(value);
 		});
 	}
 
@@ -294,15 +284,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			s = "",
 			that = this;
 
-		return G.Async.loop(function() {
-			return that.readUInt8().then(function(value) {
-				if ((c = value) == (stopChar | 0)) { return true; }
+		return this._ensureCapacity(length).then(function() {
+			for (i = 0; i < length & 0xffff; i++) {
+				if ((c = that._readByte()) == (stopChar | 0)) { break; }
 				s += String.fromCharCode(c);
-
-				return ++i >= (length & 0xffff);
-			});
-
-		}).then(function() {
+			}
 			return s;
 		});
 	}
@@ -310,9 +296,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.read = function(buffer, size) {
 		var that = this;
 
-		return this._part(size).then(function() {
+		return this._ensureCapacity(size).then(function() {
 			while (size--) {
-				buffer.writeInt8(that._readData());
+				buffer.writeInt8(that._readByte());
 			}
 		});
 	}
