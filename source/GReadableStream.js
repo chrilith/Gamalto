@@ -35,7 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.require_("SeekableStream");
-	gamalto.using_	("Convert");
 
 	/**
 	 * Base object to create readable stream.
@@ -68,7 +67,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		 */
 		this._unit = (+unit | 0 || 1) >> 1;
 	},
-	_converter = G.Convert,
 
 	/* Inheritance and shortcut */
 
