@@ -34,141 +34,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("SeekableStream");
-	gamalto.using_("Convert");
+	gamalto.require_("File");
 	gamalto.using_("Async");
+	gamalto.using_("Promise");
 
 	/**
 	 * @constructor
 	 */
-	G.AsyncFile = function() {
+	var _Object = G.AsyncFile = function() {
 		Object.base(this);
-		this.cacheSize = 4096;	// Initial cache size
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.AsyncFile.inherits(G.SeekableStream);
+	var proto = _Object.inherits(G.File);
 
-	proto.open = function(url) {
-		this._initPos = 0;
-		this._position = 0;
-		this._url = url;
-		// TODO: detect file not found
-		return this._info();
+	proto._getReader = function() {
+		return this._reader;
 	}
 
-	proto.close = function() {
-		this._data = null;
-		this._bufSize = 0;
-		this._url = null;
-	}
-
-	// Specific data format
-	proto._readByte = function() {
-		var pos = -(this._initPos - this._position++);
-		return (typeof this._data == "object") ? 
-			this._data[pos] : this._data.charCodeAt(pos) & 0xff;
-	}
-
-	proto.pos = function() {
-		return (this._initPos + this._position);
-	}
-	
-	proto.error = function() {
-		return false;	// TODO
+	proto.isAsync = function() {
+		return true;
 	}
 
 	proto._info = function() {
-		var u,	// = undefined
-			status, 
-			that = this,
+		var that = this,
 			r = this._open("HEAD"),
 			promise = new G.Promise();
 
 		r.onreadystatechange = function() {
 			if (r.readyState == r.DONE) {
-				status = r.status;
-				that.mimeType = r.getResponseHeader("Content-Type") ||
-									"application/octet-stream";
-				
-				that._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
-
-				// Length should be -1 only using "file" URL scheme...
-				if (-1 == (that.length =
-								(status & 200 != 200) ? u :
-								(status == 0) ? -1 /* local */ :
-									(r.getResponseHeader("Content-Length") | 0))) {
-
-					/* Here, the whole data is loaded into memory since HTTP is not supported. */
-					if (r.response) {
-						that.length = r.response.byteLength;
-					} else {
-						that.length = (r.responseText || "").length;
-					}
-				}
+				that._infoHandler(r);
 				// TODO: handle error with "status"
 				promise.resolve(that);
 			}
-		};
-
+		}
 		r.send(null);
 		return promise;
-	}
-
-	proto._open = function(mode) {
-		var r = new XMLHttpRequest();
-		r.open(mode || "GET", this._url, true);
-
-		if (typeof r.responseType == "string") {
-			try { r.responseType = "arraybuffer"; } catch(e) {}
-		}
-		if (!r.responseType) {
-			if (r.overrideMimeType) {
-				//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
-				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
-			} else {
-				gamalto.error_("Binary load not supported!");
-			}
-		}
-		return r;
 	}
 
 	proto._send = function(r) {
-		var promise = new G.Promise();
+		var that = this,
+			promise = new G.Promise();
 		r.onreadystatechange = function() {
 			if (r.readyState == r.DONE) {
-				var status = (r.status || 200);
-				promise.resolve((status < 200 || status > 206) ? "" : (r.response || r.responseText));
+				var data = that._sendHandler(r);
+				promise.resolve(data);
 			}
 		};
-
 		r.send(null);
 		return promise;
 	}
 
-	proto._part = function(length) {
-		length = length > this.cacheSize ? length : this.cacheSize;
-
-		var r = this._open(),
-			p = this._position,
-			that = this;
-
-		// Optimize loading needed bytes only!
-		if (this._rangeSupported) {
-			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
-			this._initPos = p;
-		}
+	proto._partSend = function(r) {
+		var that = this;
 		return this._send(r).then(function(data) {
-			// There is a bug in some WebKit version like Safari 8.0.3
-			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
-			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
-			if (!r.getResponseHeader("Content-Range")) {
-				that._initPos = 0;
-				that._rangeSupported = false;
-			}
-			that._data = typeof data == "object" ? new Uint8Array(data) : data;
-			that._bufSize = (r.getResponseHeader("Content-Length") | 0)
-								|| that._data.length; // for local files...
+			that._partHandler(r, data);
 		});
 	}
 
@@ -194,88 +114,59 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return G.Async.immediate();
 	}
 
-	proto.readUInt8 = function() {
-		return this._ensureCapacity(1).then(function(value) {
-			return that._readByte();
+	proto._readAny = function(size, method) {
+		var that = this;
+		return this._ensureCapacity(size).then(function() {
+			return _Object.base[method].call(that);
 		});
 	}
 
+	proto._readByte = function() {
+		return _Object.base.readUInt8.call(this);
+	}
+
+	proto.readUInt8 = function() {
+		return this._readAny(1, "readUInt8");
+	}
+
 	proto.readSInt8 = function() {
-		return this.readUInt8().then(function(value) {
-			return G.Convert.toSInt8(value);
-		});
+		return this._readAny(1, "readSInt8");
 	}
 
 	/* Big Endian */
 
 	proto.readUInt16BE = function() {
-		var a, b, that = this;
-
-		return this._ensureCapacity(2).then(function() {
-			b = that._readByte();
-			a = that._readByte();
-			return (b << 8) | a;
-		});
+		return this._readAny(2, "readUInt16BE");
 	};
 
 	proto.readSInt16BE = function() {
-		return this.readUInt16BE().then(function(value) {
-			return G.Convert.toSInt16(value);
-		});
+		return this._readAny(2, "readSInt16BE");
 	};
 
 	proto.readSInt32BE = function() {
-		var a, b, c, d, that = this;
-
-		return this._ensureCapacity(4).then(function() {
-			d = that._readByte();
-			c = that._readByte();
-			b = that._readByte();
-			a = that._readByte();
-			return (d << 24) | (c << 16) | (b << 8) | a;
-		});
+		return this._readAny(4, "readSInt32BE");
 	}
 
 	proto.readUInt32BE = function() {
-		return this.readSInt32BE().then(function(value) {
-			return G.Convert.toUInt32(value);
-		});
+		return this._readAny(4, "readUInt32BE");
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function() {
-		var a, b, that = this;
-
-		return this._ensureCapacity(2).then(function() {
-			a = that._readByte();
-			b = that._readByte();
-			return (b << 8) | a;
-		});
+		return this._readAny(2, "readUInt16LE");
 	}
 
 	proto.readSInt16LE = function() {
-		return this.readUInt16LE().then(function(value) {
-			return G.Convert.toSInt16(value);
-		});
+		return this._readAny(2, "readSInt16LE");
 	}
 
-	proto.readSInt32LE = function() {
-		var a, b, c, d, that = this;
-
-		return this._ensureCapacity(4).then(function() {
-			a = that._readByte();
-			b = that._readByte();
-			c = that._readByte();
-			d = that._readByte();
-			return (d << 24) | (c << 16) | (b << 8) | a;
-		});
+	proto.readSInt32LE = function(at) {
+		return this._readAny(4, "readSInt32LE");
 	}
 
-	proto.readUInt32LE = function() {
-		return this.readSInt32LE().then(function(value) {
-			return G.Convert.toUInt32(value);
-		});
+	proto.readUInt32LE = function(at) {
+		return this._readAny(4, "readUInt32LE");
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -302,24 +193,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		});
 	}
-
-	proto.seek = function(offset, origin) {
-		G.AsyncFile.base.seek.apply(this, arguments);
-
-		// Invalidate current cached data if needed
-		if (!(this._position >= this._initPos &&
-			  this._position < (this._initPos + this._bufSize))) {
-			this._data = null;
-			this._bufSize = 0;
-		}
-	}
 	
-	proto.pos = function() {
-		return (this._initPos + this._position);
-	}
-	
-	proto.error = function() {
-		return false;	// TODO
-	}
-
 })();

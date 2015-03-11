@@ -53,7 +53,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._position = 0;
 		this._url = url;
 		// TODO: detect file not found
-		this._info();
+		return this._info();
 	}
 	
 	proto.close = function() {
@@ -102,15 +102,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._info = function() {
-		var u,	// = undefined
-			status, r = this._open("HEAD");
-
+		var r = this._open("HEAD");
 		r.send(null);
-		status = r.status;
+		this._infoHandler(r);
+		// TODO: handle error with "status"
+	}
+
+	proto._infoHandler = function(r) {
+		var u, // undefined
+			status = r.status;
 		this.mimeType = r.getResponseHeader("Content-Type") ||
 							"application/octet-stream";
 		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
-		
+
 		// Length should be -1 only using "file" URL scheme...
 		if (-1 == (this.length =
 						(status & 200 != 200) ? u :
@@ -123,8 +127,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			var response = r.response || r.responseText || "";
 			this.length = response.byteLength || response.length || 0;
 		}
+	}
 
-		// TODO: handle error with "status"
+	proto.isAsync = function() {
+		return false;
 	}
 
 	proto._open = function(mode) {
@@ -132,7 +138,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
 		// detrimental effects to the end user's experience. For more help,
 		// check http://xhr.spec.whatwg.org/.
-		r.open(mode || "GET", this._url, false);
+		r.open(mode || "GET", this._url, this.isAsync());
 
 		if (typeof r.responseType == "string") {
 			try { r.responseType = "arraybuffer"; } catch(e) {}
@@ -151,7 +157,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._send = function(r) {
-		r.send(null);		
+		r.send(null);
+		return this._sendHandler(r);
+	}
+
+	proto._sendHandler = function(r) {
 		var status = (r.status || 200);
 		return (status < 200 || status > 206) ? "" : (r.response || r.responseText);
 	}
@@ -167,7 +177,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
 			this._initPos = p;
 		}
-		var data = this.buffer = this._send(r);
+		return this._partSend(r);
+	}
+
+	proto._partSend = function(r) {
+		var data = this._send(r);
+		this._partHandler(r, data);
+		return r;
+	}
+
+	proto._partHandler = function(r, data) {
+		this.buffer = data;
 		this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
 		// There is a bug in some WebKit version like Safari 8.0.3
 		// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
@@ -178,7 +198,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		this._bufSize = (r.getResponseHeader("Content-Length") | 0)
 							|| this.buffer.byteLength || this.buffer.length; // for local files...
-		return r;
 	}
 
 	proto._ensureCapacity = function(size) {
@@ -196,7 +215,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 // Do we have enough buffer the the rrequested size?
 			 position + size > bufEnd
 			) {
-
 			// No? read new buffer...
 			this._part(size);
 		}
