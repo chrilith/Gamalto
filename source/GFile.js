@@ -134,11 +134,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._open = function(mode) {
-		var r = new XMLHttpRequest();
+		var r = new XMLHttpRequest(),
+			// FIXME: cached files may not return Content-Length header!
+			random = (this._url.indexOf("?") != -1 ? "&" : "?") + Math.random();
+
 		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
 		// detrimental effects to the end user's experience. For more help,
 		// check http://xhr.spec.whatwg.org/.
-		r.open(mode || "GET", this._url, this.isAsync());
+		r.open(mode || "GET", this._url + random, this.isAsync());
 
 		if (typeof r.responseType == "string") {
 			try { r.responseType = "arraybuffer"; } catch(e) {}
