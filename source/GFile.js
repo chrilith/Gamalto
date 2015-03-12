@@ -204,7 +204,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var position = this._position,
 			bufSize = this._bufSize,
 			bufStart = this._initPos,
-			bufEnd = bufStart + bufSize;
+			bufEnd = bufStart + bufSize,
+			reqEnd = position + size,
+			//Important for G.File since size always === 4
+			eos = reqEnd - this.length;	// Are we reading eos?
 
 			 // Do we have a buffer?
 		if (!bufSize ||
@@ -213,7 +216,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 // Are we over the current buffer?
 			 position > bufEnd ||
 			 // Do we have enough buffer the the rrequested size?
-			 position + size > bufEnd
+			 reqEnd - eos > bufEnd
 			) {
 			// No? read new buffer...
 			this._part(size);
