@@ -69,4 +69,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
+	_proto.rewind = function() {
+		this.seek(0, G.Stream.SEEK_SET);
+	};
+
 })();
