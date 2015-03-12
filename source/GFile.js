@@ -102,105 +102,108 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._info = function() {
-		var r = this._open("HEAD");
-		r.send(null);
-		this._infoHandler(r);
-		// TODO: handle error with "status"
+		return this._send(this._open(this._infoHandler, "HEAD"));
 	}
 
 	proto._infoHandler = function(r) {
 		var u, // undefined
-			status = r.status;
-		this.mimeType = r.getResponseHeader("Content-Type") ||
-							"application/octet-stream";
-		this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+			status, state = r.readyState;
 
-		// Length should be -1 only using "file" URL scheme...
-		if (-1 == (this.length =
-						(status & 200 != 200) ? u :
-						(status == 0) ? -1 /* local */ :
-							(r.getResponseHeader("Content-Length") | 0))) {
-			/*
-				Here, the whole data is loaded into memory since HTTP is not
-				supported. TODO: Optimization may apply.
-			*/
-			var response = r.response || r.responseText || "";
-			this.length = response.byteLength || response.length || 0;
+		if (state == r.DONE) {
+			status = r.status;
+			this.mimeType = r.getResponseHeader("Content-Type") ||
+								"application/octet-stream";
+			this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+
+			// Length should be -1 only using "file" URL scheme...
+			if (-1 == (this.length =
+							(status & 200 != 200) ? u :
+							(status == 0) ? -1 /* local */ :
+								(r.getResponseHeader("Content-Length") | 0))) {
+				/*
+					Here, the whole data is loaded into memory since HTTP is not
+					supported. TODO: Optimization may apply.
+				*/
+				var response = r.response || r.responseText || "";
+				this.length = response.byteLength || response.length || 0;
+			}
 		}
+
+		return state;
 	}
 
 	proto.isAsync = function() {
 		return false;
 	}
 
-	proto._open = function(mode) {
+	proto._open = function(handler, mode) {
 		var r = new XMLHttpRequest(),
 			// FIXME: cached files may not return Content-Length header!
 			random = (this._url.indexOf("?") != -1 ? "&" : "?") + Math.random();
+
+		// Set the handler...
+		r.onreadystatechange = handler.bind(this, r);
 
 		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
 		// detrimental effects to the end user's experience. For more help,
 		// check http://xhr.spec.whatwg.org/.
 		r.open(mode || "GET", this._url + random, this.isAsync());
+		return r;	
+	}
 
+	proto._send = function(r) {
+
+		// Set response type
 		if (typeof r.responseType == "string") {
 			try { r.responseType = "arraybuffer"; } catch(e) {}
 		}
-
 		if (!r.responseType) {
 			if (r.overrideMimeType) {
-				//XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
+				// XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 			} else {
 				gamalto.error_("Binary load not supported!");
 			}
 		}
 
+		r.send(null);
 		return r;
 	}
 
-	proto._send = function(r) {
-		r.send(null);
-		return this._sendHandler(r);
-	}
+	proto._openPart = function(handler, length) {
+		length = Math.max(length, this.cacheSize);
 
-	proto._sendHandler = function(r) {
-		var status = (r.status || 200);
-		return (status < 200 || status > 206) ? "" : (r.response || r.responseText);
-	}
-
-	proto._part = function(length) {
-		length = length > this.cacheSize ? length : this.cacheSize;
-
-		var r = this._open(),
+		var r = this._open(handler),
 			p = this._position;
 
-		// Optimize loading needed bytes only!
+		// State must be OPENED to set headers
 		if (this._rangeSupported) {
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
 			this._initPos = p;
 		}
-		return this._partSend(r);
-	}
-
-	proto._partSend = function(r) {
-		var data = this._send(r);
-		this._partHandler(r, data);
 		return r;
 	}
 
-	proto._partHandler = function(r, data) {
-		this.buffer = data;
-		this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
-		// There is a bug in some WebKit version like Safari 8.0.3
-		// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
-		// See: https://bugs.webkit.org/show_bug.cgi?id=82672
-		if (!r.getResponseHeader("Content-Range")) {
-			this._initPos = 0;
-			this._rangeSupported = false;
+	proto._part = function() {
+		return this._send(this._openPart(this._partHandler));
+	}
+
+	proto._partHandler = function(r) {
+		var data, state = r.readyState
+		if (state == r.DONE) {
+			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : (r.response || r.responseText);
+			this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
+			// There is a bug in some WebKit version like Safari 8.0.3
+			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
+			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
+			if (!r.getResponseHeader("Content-Range")) {
+				this._initPos = 0;
+				this._rangeSupported = false;
+			}
+			this._bufSize = (r.getResponseHeader("Content-Length") | 0)
+								|| this.buffer.byteLength || this.buffer.length; // for local files...
 		}
-		this._bufSize = (r.getResponseHeader("Content-Length") | 0)
-							|| this.buffer.byteLength || this.buffer.length; // for local files...
+		return state;
 	}
 
 	proto._shouldRead = function(size) {

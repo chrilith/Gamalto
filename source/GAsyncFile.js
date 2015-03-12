@@ -58,38 +58,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._info = function() {
 		var that = this,
-			r = this._open("HEAD"),
 			promise = new G.Promise();
 
-		r.onreadystatechange = function() {
-			if (r.readyState == r.DONE) {
-				that._infoHandler(r);
+		this._send(this._open(function(r) {
+			var state = that._infoHandler(r);
+			if (state == r.DONE) {
 				// TODO: handle error with "status"
 				promise.resolve(that);
 			}
-		}
-		r.send(null);
+		}, "HEAD"));
+
 		return promise;
 	}
 
-	proto._send = function(r) {
+	proto._part = function() {
 		var that = this,
 			promise = new G.Promise();
-		r.onreadystatechange = function() {
-			if (r.readyState == r.DONE) {
-				var data = that._sendHandler(r);
-				promise.resolve(data);
-			}
-		};
-		r.send(null);
-		return promise;
-	}
 
-	proto._partSend = function(r) {
-		var that = this;
-		return this._send(r).then(function(data) {
-			that._partHandler(r, data);
-		});
+		this._send(this._openPart(function(r) {
+			var state = that._partHandler(r);
+			if (state == r.DONE) {
+				// TODO: handle error with "status"
+				promise.resolve(that);
+			}
+		}));
+
+		return promise;
 	}
 
 	proto._ensureCapacity = function(size) {
