@@ -93,25 +93,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._ensureCapacity = function(size) {
-		var position = this._position,
-			bufSize = this._bufSize,
-			bufStart = this._initPos,
-			bufEnd = bufStart + bufSize;
-
-			 // Do we have a buffer?
-		if (!bufSize ||
-			 // Are we behind the buffer position?
-			 position < bufStart ||
-			 // Are we over the current buffer?
-			 position > bufEnd ||
-			 // Do we have enough buffer the the rrequested size?
-			 position + size > bufEnd
-			) {
-
-			// No? read new buffer...
-			return this._part(size);
-		}
-		return G.Async.immediate();
+		// Read new buffer...
+		return (this._shouldRead(size))
+			? this._part(size) 
+			: G.Async.immediate();
 	}
 
 	proto._readAny = function(size, method) {

@@ -203,7 +203,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 							|| this.buffer.byteLength || this.buffer.length; // for local files...
 	}
 
-	proto._ensureCapacity = function(size) {
+	proto._shouldRead = function(size) {
 		var position = this._position,
 			bufSize = this._bufSize,
 			bufStart = this._initPos,
@@ -213,15 +213,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			eos = reqEnd - this.length;	// Are we reading eos?
 
 			 // Do we have a buffer?
-		if (!bufSize ||
+		return (!bufSize ||
 			 // Are we behind the buffer position?
 			 position < bufStart ||
 			 // Are we over the current buffer?
 			 position > bufEnd ||
 			 // Do we have enough buffer the the rrequested size?
-			 reqEnd - eos > bufEnd
-			) {
-			// No? read new buffer...
+			 reqEnd - eos > bufEnd);
+	}
+
+	proto._ensureCapacity = function(size) {
+		if (this._shouldRead(size)) {
 			this._part(size);
 		}
 	}
