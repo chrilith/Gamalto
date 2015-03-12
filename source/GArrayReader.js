@@ -44,7 +44,7 @@
 	};
 
 	_proto.getInt16 = function(byteOffset, littleEndian) {
-		return this.getUint16(byteOffset, littleEndian) << 16 >> 18;
+		return this.getUint16(byteOffset, littleEndian) << 16 >> 16;
 	};
 
 	_proto.getInt32 = function(byteOffset, littleEndian) {
