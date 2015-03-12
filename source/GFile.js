@@ -120,12 +120,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 							(status & 200 != 200) ? u :
 							(status == 0) ? -1 /* local */ :
 								(r.getResponseHeader("Content-Length") | 0))) {
-				/*
-					Here, the whole data is loaded into memory since HTTP is not
-					supported. TODO: Optimization may apply.
-				*/
-				var response = r.response || r.responseText || "";
-				this.length = response.byteLength || response.length || 0;
+				
+				// With "file" URL scheme, the whole data is already loaded
+				this._partHandler(r);
+				this.length = this._bufSize;
 			}
 		}
 
