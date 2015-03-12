@@ -64,7 +64,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				break;
 
 			case C.SEEK_END:
-				this._position = this.length - offset;
+				this._position = this.length + offset;
 				break;
 		}
 	}
