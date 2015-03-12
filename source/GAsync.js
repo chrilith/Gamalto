@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto._iter = function(promise) {
 		var that = this;
 
-		setTimeout(function() {
+		setImmediate(function() {
 			var value = that._func.call(that);
 
 			if (!value) {
@@ -68,7 +68,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			}
 
-		}, 0);
+		});
 	}
 
 	/* Helper */
