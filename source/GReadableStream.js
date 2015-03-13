@@ -142,8 +142,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return s;
 	}
 
-	proto.tell = function(offset) {
-		return this.position_ + (+offset | 0);
-	}
-
 })();
