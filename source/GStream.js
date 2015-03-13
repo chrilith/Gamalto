@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this.position_ >= this.length;
 	};
 
-	proto.pos = function() {
+	proto.tell = function() {
 		return this.position_;
 	};
 
