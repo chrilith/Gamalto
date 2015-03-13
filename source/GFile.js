@@ -62,12 +62,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.url_ = null;
 	}
 
-	// Specific data format
-	proto.getReader_ = function() {
-		this.ensureCapacity_(4);
-		return _Object.base.getReader_.call(this);
-	}
-
 	// No position
 	proto.at_ = function(len, from) {
 		// "from" is ignored in G.File
@@ -216,6 +210,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 								|| this.buffer.byteLength || this.buffer.length; // for local files...
 		}
 		return state;
+	}
+
+	proto.readAny_ = function(size, method) {
+		this.ensureCapacity_(size);
+		return _Object.base["read" + method].call(this);
+	}
+
+	proto.readUint8 = function() {
+		return this.readAny_(1, "Uint8");
+	}
+
+	proto.readInt8 = function() {
+		return this.readAny_(1, "Int8");
+	}
+
+	proto.readUint16 = function() {
+		return this.readAny_(2, "Uint16");
+	};
+
+	proto.readInt16 = function() {
+		return this.readAny_(2, "Int16");
+	};
+
+	proto.readUint32 = function() {
+		return this.readAny_(4, "Uint32");
+	}
+
+	proto.readInt32 = function() {
+		return this.readAny_(4, "Int32");
 	}
 
 	proto.shouldRead_ = function(size) {

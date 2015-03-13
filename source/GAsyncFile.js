@@ -48,10 +48,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Inheritance and shortcut */
 	var proto = _Object.inherits(G.File);
 
-	proto.getReader_ = function() {
-		return this.reader_;
-	}
-
 	proto.isAsync = function() {
 		return true;
 	}
@@ -96,56 +92,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readAny_ = function(size, method) {
 		var that = this;
 		return this.ensureCapacity_(size).then(function() {
-			return _Object.base[method].call(that);
+			return G.File.base["read" + method].call(that);
 		});
 	}
 
 	proto.readByte_ = function() {
-		return _Object.base.readUInt8.call(this);
-	}
-
-	proto.readUInt8 = function() {
-		return this.readAny_(1, "readUInt8");
-	}
-
-	proto.readSInt8 = function() {
-		return this.readAny_(1, "readSInt8");
-	}
-
-	/* Big Endian */
-
-	proto.readUInt16BE = function() {
-		return this.readAny_(2, "readUInt16BE");
-	};
-
-	proto.readSInt16BE = function() {
-		return this.readAny_(2, "readSInt16BE");
-	};
-
-	proto.readSInt32BE = function() {
-		return this.readAny_(4, "readSInt32BE");
-	}
-
-	proto.readUInt32BE = function() {
-		return this.readAny_(4, "readUInt32BE");
-	}
-
-	/* Little Endian (JavaScript is little endian) */
-
-	proto.readUInt16LE = function() {
-		return this.readAny_(2, "readUInt16LE");
-	}
-
-	proto.readSInt16LE = function() {
-		return this.readAny_(2, "readSInt16LE");
-	}
-
-	proto.readSInt32LE = function(at) {
-		return this.readAny_(4, "readSInt32LE");
-	}
-
-	proto.readUInt32LE = function(at) {
-		return this.readAny_(4, "readUInt32LE");
+		return G.File.base.readUint8.call(this);
 	}
 
 	proto.readString = function(length, stopChar) {
