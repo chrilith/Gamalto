@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor Gamalto.ReadableStream
 	 * @augments Gamalto.SeekableStream
 	 */
-	var _Object = G.ReadableStream = function(unit) {
+	var _Object = G.ReadableStream = function() {
 		Object.base(this);
 
 		/**
@@ -57,15 +57,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.reader_ = null;
 
 		/**
-		 * The unit of the data. For instance 4 for UInt32.
-		 * Will be converted into ceofficient.
+		 * The unit of the data. For instance 4 for Uint32.
+		 * Will be converted into ceofficient. Defaults to 0.
 		 * 
 		 * @ignore
 		 * @protected
 		 * 
 		 * @member {Number}
 		 */
-		this.unit_ = (+unit | 0 || 1) >> 1;
+		this.unit_ = 0;
 	},
 
 	/* Inheritance and shortcut */
