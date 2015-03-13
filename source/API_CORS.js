@@ -1,12 +1,31 @@
-/*
- *  Implementation: pseudo XMLHttpRequest CORS support extending XDomainRequest
- *
- *  This is a minimal extension to XDomainRequest to handle Gamalto needs only.
- * 
- * This file is part of the Gamalto Project
- * http://www.gamalto.com/
- *
- */
+/*********************************************************************************
+ #################################################################################
+
+ API CORS
+ ________
+
+ Implementation: pseudo XMLHttpRequest CORS support extending XDomainRequest.
+ This is a minimal extension to XDomainRequest to handle Gamalto needs only.
+ ________
+
+ This file is part of the GAMALTO JavaScript Development Framework.
+ http://www.gamalto.com/
+
+ (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
+
+ #################################################################################
+ #################################################################################
+  _________   _________   _________   _________   _        _________   _________
+ |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
+ | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
+ | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
+ | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
+ |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
+
+                       «< javascript development framework >»                    
+
+ #################################################################################
+ *********************************************************************************/
 
 (function(global) {
 
