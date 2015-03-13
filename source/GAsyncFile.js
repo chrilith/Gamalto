@@ -61,7 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			promise = new G.Promise();
 
 		this.send_(this.open_(function(r) {
-			var state = that.infoHandler_(r);
+			var state = that.onInfoReceived_(r);
 			if (state == r.DONE) {
 				// TODO: handle error with "status"
 				promise.resolve(that);
@@ -71,12 +71,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return promise;
 	}
 
-	proto.part_ = function() {
+	proto.range_ = function() {
 		var that = this,
 			promise = new G.Promise();
 
-		this.send_(this.openPart_(function(r) {
-			var state = that.partHandler_(r);
+		this.send_(this.openRange_(function(r) {
+			var state = that.onRangeReceived_(r);
 			if (state == r.DONE) {
 				// TODO: handle error with "status"
 				promise.resolve(that);
@@ -89,7 +89,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.ensureCapacity_ = function(size) {
 		// Read new buffer...
 		return (this.shouldRead_(size))
-			? this.part_(size) 
+			? this.range_(size) 
 			: G.Async.immediate();
 	}
 

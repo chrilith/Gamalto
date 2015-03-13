@@ -102,10 +102,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.info_ = function() {
-		return this.send_(this.open_(this.infoHandler_, "HEAD"));
+		return this.send_(this.open_(this.onInfoReceived_, "HEAD"));
 	}
 
-	proto.infoHandler_ = function(r) {
+	proto.onInfoReceived_ = function(r) {
 		var u, // undefined
 			status, state = r.readyState;
 
@@ -122,7 +122,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 								(r.getResponseHeader("Content-Length") | 0))) {
 				
 				// With "file" URL scheme, the whole data is already loaded
-				this.partHandler_(r);
+				this.onRangeReceived_(r);
 				this.length = this.bufSize_;
 			}
 		}
@@ -169,7 +169,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 
-	proto.openPart_ = function(handler, length) {
+	proto.openRange_ = function(handler, length) {
 		length = Math.max(length, this.cacheSize);
 
 		var r = this.open_(handler),
@@ -183,8 +183,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 
-	proto.part_ = function() {
-		return this.send_(this.openPart_(this.partHandler_));
+	proto.range_ = function() {
+		return this.send_(this.openRange_(this.onRangeReceived_));
 	}
 
 	proto.response_ = function(r) {
@@ -200,7 +200,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return response;
 	}
 
-	proto.partHandler_ = function(r) {
+	proto.onRangeReceived_ = function(r) {
 		var data, state = r.readyState
 		if (state == r.DONE) {
 			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : this.response_(r);
@@ -239,7 +239,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.ensureCapacity_ = function(size) {
 		if (this.shouldRead_(size)) {
-			this.part_(size);
+			this.range_(size);
 		}
 	}
 
