@@ -83,7 +83,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.buffer.set(src, this.addr());
 		} else {
 			while(length-- > 0) {
-				this.writeInt8(src.readUInt8());
+				this.writeInt8(src.readUint8());
 			}
 		}
 	}

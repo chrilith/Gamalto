@@ -106,7 +106,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.littleEndian = function(isOn) {
-		this.littleEndian_ = isOn;
+		this.le_ = isOn;
 	}
 
 	proto.readUint8 = function(at) {
@@ -118,25 +118,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readUint16 = function(at) {
-		return this.reader_.getUint16(this.at_(2, at), this.littleEndian_);
+		return this.reader_.getUint16(this.at_(2, at), this.le_);
 	}
 
 	proto.readInt16 = function(at) {
-		return this.reader_.getInt16(this.at_(2, at), this.littleEndian_);
+		return this.reader_.getInt16(this.at_(2, at), this.le_);
 	}
 
 	proto.readUint32 = function(at) {
-		return this.reader_.getUint32(this.at_(4, at), this.littleEndian_);
+		return this.reader_.getUint32(this.at_(4, at), this.le_);
 	}
 
 	proto.readInt32 = function(at) {
-		return this.reader_.getInt32(this.at_(4, at), this.littleEndian_);
+		return this.reader_.getInt32(this.at_(4, at), this.le_);
 	}
 
 	proto.readString = function(length, stopChar) {
 		var c, s = "";
 		for (var i = 0; i < length & 0xffff; i++) {
-			if ((c = this.readUInt8()) == (stopChar | 0)) { break; }
+			if ((c = this.readUint8()) == (stopChar | 0)) { break; }
 			s += String.fromCharCode(c);
 		}
 		return s;
