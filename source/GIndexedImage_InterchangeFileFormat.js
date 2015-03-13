@@ -56,34 +56,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Entry point
 		chunk = buffer.readString(4);
 		if (chunk == "FORM") {
-			size  = buffer.readUInt32BE(),
+			size  = buffer.readUint32(),
 			base = buffer.readString(4);
 			if (base == "ILBM" || base == "PBM ") {
 				do {
 					chunk = buffer.readString(4);
-					size = buffer.readUInt32BE();
+					size = buffer.readUint32();
 
 					if (chunk == "BMHD") {
-						width = buffer.readUInt16BE();
-						height = buffer.readUInt16BE();
-						buffer.readUInt16BE(); // x offset
-						buffer.readUInt16BE(); // y offset
-						bits = buffer.readUInt8();
-						masking = buffer.readUInt8();
-						packed = buffer.readUInt8(); // compress
-						buffer.readUInt8(); // padding
-						transparency = buffer.readUInt16BE();
-						buffer.readUInt8(); // horiz pixel ratio
-						buffer.readUInt8(); // vert pixel ratio
-						buffer.readUInt16BE(); // display page width
-						buffer.readUInt16BE(); // display page height
+						width = buffer.readUint16();
+						height = buffer.readUint16();
+						buffer.readUint16(); // x offset
+						buffer.readUint16(); // y offset
+						bits = buffer.readUint8();
+						masking = buffer.readUint8();
+						packed = buffer.readUint8(); // compress
+						buffer.readUint8(); // padding
+						transparency = buffer.readUint16();
+						buffer.readUint8(); // horiz pixel ratio
+						buffer.readUint8(); // vert pixel ratio
+						buffer.readUint16(); // display page width
+						buffer.readUint16(); // display page height
 
 					} else if (chunk == "CMAP") {
 						palette = new G.Palette();
 						for (x = 0; x < size; x += 3) {
-							var r = buffer.readUInt8(),
-								g = buffer.readUInt8(),
-								b = buffer.readUInt8();
+							var r = buffer.readUint8(),
+								g = buffer.readUint8(),
+								b = buffer.readUint8();
 							palette.addColor(new G.Color(r, g, b));
 						}
 						// FIXME: masking is supposed to be set to 2 (mskHasTransparentColor)
@@ -95,11 +95,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					} else if (chunk == "TMAP") {
 
 					} else if (chunk == "CRNG") {		// TODO: CCRT
-						buffer.readUInt16BE(); // padding
-						var rate	= buffer.readUInt16BE(),
-							active	= buffer.readUInt16BE(),
-							from	= buffer.readUInt8(),
-							to		= buffer.readUInt8();
+						buffer.readUint16(); // padding
+						var rate	= buffer.readUint16(),
+							active	= buffer.readUint16(),
+							from	= buffer.readUint8(),
+							to		= buffer.readUint8();
 
 						if (active & 1) {
 							palette.addAnimator(

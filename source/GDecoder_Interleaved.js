@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			for (x = 0; x < width / 16; x++) {
 
 				for (i = 0; i < bits; i++) {
-					word[i] = source.readUInt16BE();
+					word[i] = source.readUint16();
 				}
 
 				for (b = 0; b < 16; b++) {

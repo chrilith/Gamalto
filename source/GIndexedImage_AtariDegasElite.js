@@ -52,8 +52,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var palette, data, width, height, x, y, bits;
 	
 		// Not low resolution?
-		var packed = !!buffer.readUInt8(),
-			rez	= buffer.readUInt8();
+		var packed = !!buffer.readUint8(),
+			rez	= buffer.readUint8();
 
 		if (rez == 0) {
 			width	= 320;
@@ -72,7 +72,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Get palette
 		palette = new G.Palette();
 		for (x = 0; x < 16; x++) {
-			var o = buffer.readUInt16BE();
+			var o = buffer.readUint16();
 				var b = ((o >> 0) & 0x7) << 5,
 					g = ((o >> 4) & 0x7) << 5,
 					r = ((o >> 8) & 0x7) << 5;
@@ -97,7 +97,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Palette animations if any
 		if (!buffer.eos()) {
-			var pos  = buffer.pos(),
+			var pos  = buffer.tell(),
 				info = []; /* 0 = start color
 						      1 = end color
 						      2 = direction (0 = left, 1 = none, 2 = right)
@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				buffer.seek(pos + y * 2, buffer.SEEK_SET);
 	
 				x = 0; do {
-					info[x] = buffer.readUInt16BE();
+					info[x] = buffer.readUint16();
 					buffer.seek(8 - 2);
 				} while (++x < 4);
 
