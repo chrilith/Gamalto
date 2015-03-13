@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function() {
 	
 	G.CommandLine = function() {
 		this._list = {};
@@ -57,7 +57,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto._readParams = function() {
 		var i, all,
-			hash = env.location.hash;
+			hash = location.hash;
 
 		if (hash.substr(0, 3) == "#!/") {
 			all = hash.substr(3).split('/');
@@ -67,4 +67,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-})(ENV);
+})();
