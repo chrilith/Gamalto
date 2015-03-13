@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function(global) {
 	
 	/**
 	 * Dependencies
@@ -53,13 +53,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.init = function(){}
 
 	proto.listen = function() {
-		env.addEventListener("keydown", this, false);
-		env.addEventListener("keyup", this, false);
+		global.addEventListener("keydown", this, false);
+		global.addEventListener("keyup", this, false);
 	}
 
 	proto.release = function() {
-		env.removeEventListener("keydown", this, false);
-		env.removeEventListener("keyup", this, false);
+		global.removeEventListener("keydown", this, false);
+		global.removeEventListener("keyup", this, false);
 	}
 	
 	
@@ -140,4 +140,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-})(ENV);
+})(this);

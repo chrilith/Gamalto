@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function(global) {
 	/* Shortcut */
 	var core = gamalto;
 
@@ -57,15 +57,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 
 	proto.listen = function() {
-		env.addEventListener("mousemove", this, false);
-		env.addEventListener("mouseup", this, false);
-		env.addEventListener("mousedown", this, false);
+		global.addEventListener("mousemove", this, false);
+		global.addEventListener("mouseup", this, false);
+		global.addEventListener("mousedown", this, false);
 	};
 
 	proto.release = function() {
-		env.removeEventListener("mousemove", this, false);
-		env.removeEventListener("mouseup", this, false);
-		env.removeEventListener("mousedown", this, false);
+		global.removeEventListener("mousemove", this, false);
+		global.removeEventListener("mouseup", this, false);
+		global.removeEventListener("mousedown", this, false);
 	};
 
 	proto._handle = function(e) {
@@ -129,4 +129,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	};
 
-})(ENV);
+})(this);

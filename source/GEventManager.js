@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(env) {
+(function() {
 
 	var managers = [],
 		bit = 1;		/* For extra manager bit */	
@@ -76,9 +76,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// Prevent useless events registration
-		env.clearTimeout(o._timerID);
+		clearTimeout(o._timerID);
 		// Polling is reset here, but set again if _isPolling == false
-		o._timerID = env.setTimeout(this._release.bind(this), 10000);
+		o._timerID = setTimeout(this._release.bind(this), 10000);
 	
 		var q = this._q;
 		if (!q.length) {
@@ -97,4 +97,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._isPolling = false;
 	}
 
-})(ENV);
+})();
