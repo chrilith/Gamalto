@@ -31,11 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-/* Initial execution environement */
-var ENV = self;
-
 /* Gamalto base object and initializer */
-(function() {
+(function(global) {
 
 	var _initializers = [],
 		_Object = {
@@ -122,9 +119,9 @@ var ENV = self;
 	 *
 	 * <p>It is the perfect companion for retrogaming style game developers with support for tile-based games, palettized graphics and much more!
 	 */
-	ENV.G = ENV.Gamalto = _Object;
+	global.G = global.Gamalto = _Object;
 
 	/* Namespace for special effects objects */
-	ENV.GE = G.Effects = {};
+	global.GE = G.Effects = {};
 
-})();
+})(this);
