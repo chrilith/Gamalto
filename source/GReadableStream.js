@@ -174,12 +174,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._position + (+offset | 0);
 	}
 
-	proto.rew = function(by) {
-		this.seek(-(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
-	}
-
-	proto.fwd = function(by) {
-		this.seek(+(isNaN(by) ? 1 : by) << this._unit, G.Stream.SEEK_CUR);
-	}
-
 })();

@@ -47,11 +47,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	_proto = _Object.inherits(G.Stream);
 
 	_proto.seek = function(offset, origin) {
-		var C = G.Stream,
+		var C = this,
 			undef;
 
 		if (origin === undef) {
-			origin = C.SEEK_SET;
+			origin = C.SEEK_CUR;
 		}
 
 		switch (origin) {
@@ -70,7 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	_proto.rewind = function() {
-		this.seek(0, G.Stream.SEEK_SET);
+		this.seek(0, this.SEEK_SET);
 	};
 
 })();

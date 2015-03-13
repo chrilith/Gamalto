@@ -50,9 +50,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 
 	/* Constants */
-	_Object.SEEK_SET = 0;
-	_Object.SEEK_CUR = 1;
-	_Object.SEEK_END = 2;
+	_proto.SEEK_SET = 0;
+	_proto.SEEK_CUR = 1;
+	_proto.SEEK_END = 2;
 
 	_Object.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
 
