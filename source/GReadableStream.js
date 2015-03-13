@@ -114,7 +114,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readInt8 = function(at) {
-		return this.getReader_().getInt8(this.at_(1, at));
+		return this.reader_.getInt8(this.at_(1, at));
 	}
 
 	proto.readUint16 = function(at) {
