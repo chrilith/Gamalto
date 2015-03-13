@@ -72,7 +72,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.read = function(buffer, size) {
 		while(size--) {
-			buffer.writeInt8(this.readUInt8());
+			buffer.writeInt8(this.readUint8());
 		}		
 	}
 
