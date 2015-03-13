@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(window) {
+(function(global) {
 
 	/**
 	 * Dependencies
@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 	mixer.canUse = function() {
-		return !!window.Audio && !window.ontouchstart;
+		return !!global.Audio && !global.ontouchstart;
 	}
 
 	base._addMixer("BIT_HTML5AUDIO", mixer);
@@ -103,4 +103,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 
-})(ENV);
+})(this);
