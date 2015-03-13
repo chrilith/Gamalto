@@ -105,60 +105,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return from;
 	}
 
-	/**
-	 * Gets the reader object to access data.
-	 *
-	 * @ignore
-	 * @protected
-	 * 
-	 * @return {Object} The reader object.
-	 */
-	proto.getReader_ = function() {
-		return this.reader_;
+	proto.littleEndian = function(isOn) {
+		this.littleEndian_ = isOn;
 	}
 
-	proto.readUInt8 = function(at) {
-		return this.getReader_().getUint8(this.at_(1, at));
+	proto.readUint8 = function(at) {
+		return this.reader_.getUint8(this.at_(1, at));
 	}
 
-	proto.readSInt8 = function(at) {
+	proto.readInt8 = function(at) {
 		return this.getReader_().getInt8(this.at_(1, at));
 	}
 
-	/* Big Endian */
-
-	proto.readUInt16BE = function(at) {
-		return this.getReader_().getUint16(this.at_(2, at));
+	proto.readUint16 = function(at) {
+		return this.reader_.getUint16(this.at_(2, at), this.littleEndian_);
 	}
 
-	proto.readSInt16BE = function(at) {
-		return this.getReader_().getInt16(this.at_(2, at));
+	proto.readInt16 = function(at) {
+		return this.reader_.getInt16(this.at_(2, at), this.littleEndian_);
 	}
 
-	proto.readUInt32BE = function(at) {
-		return this.getReader_().getUint32(this.at_(4, at));
+	proto.readUint32 = function(at) {
+		return this.reader_.getUint32(this.at_(4, at), this.littleEndian_);
 	}
 
-	proto.readSInt32BE = function(at) {
-		return this.getReader_().getInt32(this.at_(4, at));
-	}
-
-	/* Little Endian (JavaScript is little endian) */
-
-	proto.readUInt16LE = function(at) {
-		return this.getReader_().getUint16(this.at_(2, at), true);
-	}
-
-	proto.readSInt16LE = function(at) {
-		return this.getReader_().getInt16(this.at_(2, at), true);
-	}
-
-	proto.readUInt32LE = function(at) {
-		return this.getReader_().getUint32(this.at_(4, at), true);
-	}
-
-	proto.readSInt32LE = function(at) {
-		return this.getReader_().getInt32(this.at_(4, at), true);
+	proto.readInt32 = function(at) {
+		return this.reader_.getInt32(this.at_(4, at), this.littleEndian_);
 	}
 
 	proto.readString = function(length, stopChar) {

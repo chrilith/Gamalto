@@ -60,24 +60,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.writer_.setInt8(this.at_(1, at), data);
 	}
 
-	/* Big Endian */
-
-	proto.writeInt16BE = function(data, at) {
-		this.writer_.setInt16(this.at_(2, at), data);
+	proto.writeInt16 = function(data, at) {
+		this.writer_.setInt16(this.at_(2, at), data, this.le_);
 	}
 
-	proto.writeInt32BE = function(data, at) {
-		this.writer_.setInt32(this.at_(4, at), data);
-	}	
-
-	/* Little Endian (JavaScript is little endian) */
-	
-	proto.writeInt16LE = function(data, at) {
-		this.writer_.setInt8(this.at_(2, at), data, true);
-	}
-	
-	proto.writeInt32LE = function(data, at) {
-		this.writer_.setInt32(this.at_(4, at), data, true);
+	proto.writeInt32 = function(data, at) {
+		this.writer_.setInt32(this.at_(4, at), data, this.le_);
 	}
 
 	proto.writeString = function(str, stopChar) {
