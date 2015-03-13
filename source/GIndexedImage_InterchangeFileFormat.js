@@ -115,7 +115,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 							data = new G.MemoryStream(width * height * bits / 8);
 							dec.get("RLE" + (base == "ILBM" ? "-IFF" : ""))
 								(buffer, data, bits, width, height);
-							data.seek(0);
+							data.rewind();
 						} else {
 							data = buffer;
 						}
@@ -132,13 +132,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					} else {
 						// Always read at an even position
 						if (size % 2 == 1) { size++; }
-						buffer.seek(size, G.Stream.SEEK_CUR);
+						buffer.seek(size);
 					}
 				} while(!buffer.eos());
 			}
 		}
 
-		data.seek(0);
+		data.rewind();
 		return [palette, data, width, height];
 	}
 

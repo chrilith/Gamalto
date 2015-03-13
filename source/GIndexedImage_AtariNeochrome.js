@@ -51,7 +51,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	function module(buffer) {
 		var palette, data, width, height, x, y, bits;
 	
-		buffer.seek(2);
+		buffer.seek(2, buffer.SEEK_SET);
 		// Not low resolution?
 		var rez	= buffer.readUInt16BE();
 
@@ -81,7 +81,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		
 		// Skip filename
-		buffer.fwd(12)
+		buffer.seek(12)
 
 		// Palette animations if any
 		var valid	= !!(buffer.readUInt8() & 0x80),
@@ -99,12 +99,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// skip more...
-		buffer.fwd(2 * 5 + 2 * 33, G.Stream.SEEK_CUR);
+		buffer.seek(2 * 5 + 2 * 33);
 
 		// Image data
 		var temp = new G.MemoryStream(width * height);
 		data = G.Decoder.get("Interleaved")(buffer, temp, width, height, bits);
-		data.seek(0);
+		data.rewind();
 
 		return [palette, data, width, height];
 	}

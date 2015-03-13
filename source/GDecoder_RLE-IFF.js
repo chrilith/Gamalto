@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					}
 
 					do {
-						dest.seek(scan_off + scan_in++);
+						dest.seek(scan_off + scan_in++, dest.SEEK_SET);
 						dest.writeInt8(data != -1 ? data : source.readUInt8());
 
 						if (scan_in % 2 == 0) {

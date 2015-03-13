@@ -86,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			data = new G.MemoryStream(32000);
 			dec.get("RLE-IFF")
 				(buffer, data, bits, width, height);
-			data.seek(0);
+			data.rewind();
 		} else {
 			data = buffer;
 		}
@@ -105,11 +105,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						   */
 	
 			y = 0; do {
-				buffer.seek(pos + y * 2);
+				buffer.seek(pos + y * 2, buffer.SEEK_SET);
 	
 				x = 0; do {
 					info[x] = buffer.readUInt16BE();
-					buffer.seek(8 - 2, G.Stream.SEEK_CUR);
+					buffer.seek(8 - 2);
 				} while (++x < 4);
 
 				if (info[2] != 1) {
@@ -121,7 +121,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			} while (++y < 4);
 		}
 
-		data.seek(0);
+		data.rewind();
 		return [palette, data, width, height];
 	}
 
