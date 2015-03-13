@@ -48,20 +48,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Inheritance and shortcut */
 	var proto = _Object.inherits(G.File);
 
-	proto._getReader = function() {
-		return this._reader;
+	proto.getReader_ = function() {
+		return this.reader_;
 	}
 
 	proto.isAsync = function() {
 		return true;
 	}
 
-	proto._info = function() {
+	proto.info_ = function() {
 		var that = this,
 			promise = new G.Promise();
 
-		this._send(this._open(function(r) {
-			var state = that._infoHandler(r);
+		this.send_(this.open_(function(r) {
+			var state = that.infoHandler_(r);
 			if (state == r.DONE) {
 				// TODO: handle error with "status"
 				promise.resolve(that);
@@ -71,12 +71,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return promise;
 	}
 
-	proto._part = function() {
+	proto.part_ = function() {
 		var that = this,
 			promise = new G.Promise();
 
-		this._send(this._openPart(function(r) {
-			var state = that._partHandler(r);
+		this.send_(this.openPart_(function(r) {
+			var state = that.partHandler_(r);
 			if (state == r.DONE) {
 				// TODO: handle error with "status"
 				promise.resolve(that);
@@ -86,66 +86,66 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return promise;
 	}
 
-	proto._ensureCapacity = function(size) {
+	proto.ensureCapacity_ = function(size) {
 		// Read new buffer...
-		return (this._shouldRead(size))
-			? this._part(size) 
+		return (this.shouldRead_(size))
+			? this.part_(size) 
 			: G.Async.immediate();
 	}
 
-	proto._readAny = function(size, method) {
+	proto.readAny_ = function(size, method) {
 		var that = this;
-		return this._ensureCapacity(size).then(function() {
+		return this.ensureCapacity_(size).then(function() {
 			return _Object.base[method].call(that);
 		});
 	}
 
-	proto._readByte = function() {
+	proto.readByte_ = function() {
 		return _Object.base.readUInt8.call(this);
 	}
 
 	proto.readUInt8 = function() {
-		return this._readAny(1, "readUInt8");
+		return this.readAny_(1, "readUInt8");
 	}
 
 	proto.readSInt8 = function() {
-		return this._readAny(1, "readSInt8");
+		return this.readAny_(1, "readSInt8");
 	}
 
 	/* Big Endian */
 
 	proto.readUInt16BE = function() {
-		return this._readAny(2, "readUInt16BE");
+		return this.readAny_(2, "readUInt16BE");
 	};
 
 	proto.readSInt16BE = function() {
-		return this._readAny(2, "readSInt16BE");
+		return this.readAny_(2, "readSInt16BE");
 	};
 
 	proto.readSInt32BE = function() {
-		return this._readAny(4, "readSInt32BE");
+		return this.readAny_(4, "readSInt32BE");
 	}
 
 	proto.readUInt32BE = function() {
-		return this._readAny(4, "readUInt32BE");
+		return this.readAny_(4, "readUInt32BE");
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function() {
-		return this._readAny(2, "readUInt16LE");
+		return this.readAny_(2, "readUInt16LE");
 	}
 
 	proto.readSInt16LE = function() {
-		return this._readAny(2, "readSInt16LE");
+		return this.readAny_(2, "readSInt16LE");
 	}
 
 	proto.readSInt32LE = function(at) {
-		return this._readAny(4, "readSInt32LE");
+		return this.readAny_(4, "readSInt32LE");
 	}
 
 	proto.readUInt32LE = function(at) {
-		return this._readAny(4, "readUInt32LE");
+		return this.readAny_(4, "readUInt32LE");
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -154,9 +154,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			s = "",
 			that = this;
 
-		return this._ensureCapacity(length).then(function() {
+		return this.ensureCapacity_(length).then(function() {
 			for (i = 0; i < length & 0xffff; i++) {
-				if ((c = that._readByte()) == (stopChar | 0)) { break; }
+				if ((c = that.readByte_()) == (stopChar | 0)) { break; }
 				s += String.fromCharCode(c);
 			}
 			return s;
@@ -166,9 +166,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.read = function(buffer, size) {
 		var that = this;
 
-		return this._ensureCapacity(size).then(function() {
+		return this.ensureCapacity_(size).then(function() {
 			while (size--) {
-				buffer.writeInt8(that._readByte());
+				buffer.writeInt8(that.readByte_());
 			}
 		});
 	}

@@ -49,30 +49,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = _Object.inherits(G.ReadableStream);
 
 	proto.open = function(url) {
-		this._initPos = 0;
-		this._position = 0;
-		this._url = url;
+		this.initPos_ = 0;
+		this.position_ = 0;
+		this.url_ = url;
 		// TODO: detect file not found
-		return this._info();
+		return this.info_();
 	}
 	
 	proto.close = function() {
 		this.buffer = null;
-		this._bufSize = 0;
-		this._url = null;
+		this.bufSize_ = 0;
+		this.url_ = null;
 	}
 
 	// Specific data format
-	proto._getReader = function() {
-		this._ensureCapacity(4);
+	proto.getReader_ = function() {
+		this.ensureCapacity_(4);
 		return _Object.base._getReader.call(this);
 	}
 
 	// No position
-	proto._at = function(len, from) {
+	proto.at_ = function(len, from) {
 		// "from" is ignored in G.File
-		from = -(this._initPos - this._position);
-		this._position += len;
+		from = -(this.initPos_ - this.position_);
+		this.position_ += len;
 		return from;
 	}
 
@@ -86,26 +86,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		_Object.base.seek.apply(this, arguments);
 		
 		// Invalidate current cached data if needed
-		if (!(this._position >= this._initPos &&
-			  this._position < (this._initPos + this._bufSize))) {
+		if (!(this.position_ >= this.initPos_ &&
+			  this.position_ < (this.initPos_ + this.bufSize_))) {
 			this.buffer = null;
-			this._bufSize = 0;
+			this.bufSize_ = 0;
 		}
 	}
 	
 	proto.pos = function() {
-		return (this._initPos + this._position);
+		return (this.initPos_ + this.position_);
 	}
 	
 	proto.error = function() {
 		return false;	// TODO
 	}
 
-	proto._info = function() {
-		return this._send(this._open(this._infoHandler, "HEAD"));
+	proto.info_ = function() {
+		return this.send_(this.open_(this.infoHandler_, "HEAD"));
 	}
 
-	proto._infoHandler = function(r) {
+	proto.infoHandler_ = function(r) {
 		var u, // undefined
 			status, state = r.readyState;
 
@@ -113,7 +113,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			status = r.status;
 			this.mimeType = r.getResponseHeader("Content-Type") ||
 								"application/octet-stream";
-			this._rangeSupported = !!r.getResponseHeader("Accept-Ranges");
+			this.rangeSupported_ = !!r.getResponseHeader("Accept-Ranges");
 
 			// Length should be -1 only using "file" URL scheme...
 			if (-1 == (this.length =
@@ -122,8 +122,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 								(r.getResponseHeader("Content-Length") | 0))) {
 				
 				// With "file" URL scheme, the whole data is already loaded
-				this._partHandler(r);
-				this.length = this._bufSize;
+				this.partHandler_(r);
+				this.length = this.bufSize_;
 			}
 		}
 
@@ -134,10 +134,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return false;
 	}
 
-	proto._open = function(handler, mode) {
+	proto.open_ = function(handler, mode) {
 		var r = new XMLHttpRequest(),
 			// FIXME: cached files may not return Content-Length header!
-			random = (this._url.indexOf("?") != -1 ? "&" : "?") + Math.random();
+			random = (this.url_.indexOf("?") != -1 ? "&" : "?") + Math.random();
 
 		// Set the handler...
 		r.onreadystatechange = handler.bind(this, r);
@@ -145,11 +145,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
 		// detrimental effects to the end user's experience. For more help,
 		// check http://xhr.spec.whatwg.org/.
-		r.open(mode || "GET", this._url + random, this.isAsync());
+		r.open(mode || "GET", this.url_ + random, this.isAsync());
 		return r;	
 	}
 
-	proto._send = function(r) {
+	proto.send_ = function(r) {
 
 		// Set response type (sync request doesn't allow responseType change)
 		if ('responseType' in r) {
@@ -161,7 +161,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 			} else {
 				// for IE9 compatibility only
-				this._useVB = !r.setRequestHeader('Accept-Charset', 'x-user-defined');
+				this.useVB_ = !r.setRequestHeader('Accept-Charset', 'x-user-defined');
 			}
 		}
 
@@ -169,26 +169,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 
-	proto._openPart = function(handler, length) {
+	proto.openPart_ = function(handler, length) {
 		length = Math.max(length, this.cacheSize);
 
-		var r = this._open(handler),
-			p = this._position;
+		var r = this.open_(handler),
+			p = this.position_;
 
 		// State must be OPENED to set headers
-		if (this._rangeSupported) {
+		if (this.rangeSupported_) {
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
-			this._initPos = p;
+			this.initPos_ = p;
 		}
 		return r;
 	}
 
-	proto._part = function() {
-		return this._send(this._openPart(this._partHandler));
+	proto.part_ = function() {
+		return this.send_(this.openPart_(this.partHandler_));
 	}
 
-	proto._response = function(r) {
-		if (!this._useVB) {
+	proto.response_ = function(r) {
+		if (!this.useVB_) {
 			return r.response || r.responseText;
 		}
 		var array = new VBArray(r.responseBody).toArray(),
@@ -200,28 +200,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return response;
 	}
 
-	proto._partHandler = function(r) {
+	proto.partHandler_ = function(r) {
 		var data, state = r.readyState
 		if (state == r.DONE) {
-			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : this._response(r);
-			this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
+			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : this.response_(r);
+			this.reader_ = new ((data.byteLength) ? DataView : G.TextReader)(data);
 			// There is a bug in some WebKit version like Safari 8.0.3
 			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
 			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
 			if (!r.getResponseHeader("Content-Range")) {
-				this._initPos = 0;
-				this._rangeSupported = false;
+				this.initPos_ = 0;
+				this.rangeSupported_ = false;
 			}
-			this._bufSize = (r.getResponseHeader("Content-Length") | 0)
+			this.bufSize_ = (r.getResponseHeader("Content-Length") | 0)
 								|| this.buffer.byteLength || this.buffer.length; // for local files...
 		}
 		return state;
 	}
 
-	proto._shouldRead = function(size) {
-		var position = this._position,
-			bufSize = this._bufSize,
-			bufStart = this._initPos,
+	proto.shouldRead_ = function(size) {
+		var position = this.position_,
+			bufSize = this.bufSize_,
+			bufStart = this.initPos_,
 			bufEnd = bufStart + bufSize,
 			reqEnd = position + size,
 			//Important for G.File since size always === 4
@@ -237,9 +237,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 reqEnd - eos > bufEnd);
 	}
 
-	proto._ensureCapacity = function(size) {
-		if (this._shouldRead(size)) {
-			this._part(size);
+	proto.ensureCapacity_ = function(size) {
+		if (this.shouldRead_(size)) {
+			this.part_(size);
 		}
 	}
 
