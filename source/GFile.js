@@ -151,8 +151,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto._send = function(r) {
 
-		// Set response type
-		if (typeof r.responseType == "string") {
+		// Set response type (sync request doesn't allow responseType change)
+		if ('responseType' in r) {
 			try { r.responseType = "arraybuffer"; } catch(e) {}
 		}
 		if (!r.responseType) {
@@ -160,7 +160,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				// XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 			} else {
-				gamalto.error_("Binary load not supported!");
+				// for IE9 compatibility only
+				this._useVB = !r.setRequestHeader('Accept-Charset', 'x-user-defined');
 			}
 		}
 
@@ -186,10 +187,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this._send(this._openPart(this._partHandler));
 	}
 
+	proto._response = function(r) {
+		if (!this._useVB) {
+			return r.response || r.responseText;
+		}
+		var array = new VBArray(r.responseBody).toArray(),
+			response = "";
+		// Array.map() is extremely slow
+		array.forEach(function(chr) {
+			response += String.fromCharCode(chr);
+		});
+		return response;
+	}
+
 	proto._partHandler = function(r) {
 		var data, state = r.readyState
 		if (state == r.DONE) {
-			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : (r.response || r.responseText);
+			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : this._response(r);
 			this._reader = new ((data.byteLength) ? DataView : G.TextReader)(data);
 			// There is a bug in some WebKit version like Safari 8.0.3
 			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
