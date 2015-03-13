@@ -65,7 +65,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// Specific data format
 	proto.getReader_ = function() {
 		this.ensureCapacity_(4);
-		return _Object.base._getReader.call(this);
+		return _Object.base.getReader_.call(this);
 	}
 
 	// No position
