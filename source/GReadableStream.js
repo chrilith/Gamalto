@@ -54,7 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		 * 
 		 * @member {Object}
 		 */
-		this._reader = null;
+		this.reader_ = null;
 
 		/**
 		 * The unit of the data. For instance 4 for UInt32.
@@ -65,7 +65,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		 * 
 		 * @member {Number}
 		 */
-		this._unit = (+unit | 0 || 1) >> 1;
+		this.unit_ = (+unit | 0 || 1) >> 1;
 	},
 
 	/* Inheritance and shortcut */
@@ -90,17 +90,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 *
 	 * @return {Number} The position from where to access stream data in bytes.
 	 */
-	proto._at = function(len, from) {
+	proto.at_ = function(len, from) {
 		var undef;
 
 		if (from === undef) {
 			// Read from the current position...
-			from = this._position;
+			from = this.position_;
 			// ...and increment pointer
-			this._position += len;
+			this.position_ += len;
 		} else {
 			// Position is based on the stream unit
-			from <<= this._unit;
+			from <<= this.unit_;
 		}
 		return from;
 	}
@@ -113,52 +113,52 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * 
 	 * @return {Object} The reader object.
 	 */
-	proto._getReader = function() {
-		return this._reader;
+	proto.getReader_ = function() {
+		return this.reader_;
 	}
 
 	proto.readUInt8 = function(at) {
-		return this._getReader().getUint8(this._at(1, at));
+		return this.getReader_().getUint8(this.at_(1, at));
 	}
 
 	proto.readSInt8 = function(at) {
-		return this._getReader().getInt8(this._at(1, at));
+		return this.getReader_().getInt8(this.at_(1, at));
 	}
 
 	/* Big Endian */
 
 	proto.readUInt16BE = function(at) {
-		return this._getReader().getUint16(this._at(2, at));
+		return this.getReader_().getUint16(this.at_(2, at));
 	}
 
 	proto.readSInt16BE = function(at) {
-		return this._getReader().getInt16(this._at(2, at));
+		return this.getReader_().getInt16(this.at_(2, at));
 	}
 
 	proto.readUInt32BE = function(at) {
-		return this._getReader().getUint32(this._at(4, at));
+		return this.getReader_().getUint32(this.at_(4, at));
 	}
 
 	proto.readSInt32BE = function(at) {
-		return this._getReader().getInt32(this._at(4, at));
+		return this.getReader_().getInt32(this.at_(4, at));
 	}
 
 	/* Little Endian (JavaScript is little endian) */
 
 	proto.readUInt16LE = function(at) {
-		return this._getReader().getUint16(this._at(2, at), true);
+		return this.getReader_().getUint16(this.at_(2, at), true);
 	}
 
 	proto.readSInt16LE = function(at) {
-		return this._getReader().getInt16(this._at(2, at), true);
+		return this.getReader_().getInt16(this.at_(2, at), true);
 	}
 
 	proto.readUInt32LE = function(at) {
-		return this._getReader().getUint32(this._at(4, at), true);
+		return this.getReader_().getUint32(this.at_(4, at), true);
 	}
 
 	proto.readSInt32LE = function(at) {
-		return this._getReader().getInt32(this._at(4, at), true);
+		return this.getReader_().getInt32(this.at_(4, at), true);
 	}
 
 	proto.readString = function(length, stopChar) {
@@ -171,7 +171,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.pos = function(offset) {
-		return this._position + (+offset | 0);
+		return this.position_ + (+offset | 0);
 	}
 
 })();

@@ -42,42 +42,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.MemoryStream = function(size, unit) {
 		// Do we have a source data?
-		var data = typeof size == 'object' ? size : this._alloc(+size);
+		var data = typeof size == 'object' ? size : this.alloc_(+size);
 
 		// Base constructor
 		Object.base(this, data, unit);
-		this._writer = (data.byteLength) ? this._reader : new G.ArrayWriter(data);
+		this.writer_ = (data.byteLength) ? this.reader_ : new G.ArrayWriter(data);
 	}
 
 	/* Inheritance and shortcut */
 	var proto = G.MemoryStream.inherits(G.ReadStream);
 
-	proto._alloc = function(size) {
+	proto.alloc_ = function(size) {
 		return new (global.ArrayBuffer || Array)(size);
 	}
 
 	proto.writeInt8 = function(data, at) {
-		this._writer.setInt8(this._at(1, at), data);
+		this.writer_.setInt8(this.at_(1, at), data);
 	}
 
 	/* Big Endian */
 
 	proto.writeInt16BE = function(data, at) {
-		this._writer.setInt16(this._at(2, at), data);
+		this.writer_.setInt16(this.at_(2, at), data);
 	}
 
 	proto.writeInt32BE = function(data, at) {
-		this._writer.setInt32(this._at(4, at), data);
+		this.writer_.setInt32(this.at_(4, at), data);
 	}	
 
 	/* Little Endian (JavaScript is little endian) */
 	
 	proto.writeInt16LE = function(data, at) {
-		this._writer.setInt8(this._at(2, at), data, true);
+		this.writer_.setInt8(this.at_(2, at), data, true);
 	}
 	
 	proto.writeInt32LE = function(data, at) {
-		this._writer.setInt32(this._at(4, at), data, true);
+		this.writer_.setInt32(this.at_(4, at), data, true);
 	}
 
 	proto.writeString = function(str, stopChar) {

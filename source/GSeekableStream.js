@@ -44,9 +44,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	},
 
 	/* Inheritance and shortcut */
-	_proto = _Object.inherits(G.Stream);
+	proto = _Object.inherits(G.Stream);
 
-	_proto.seek = function(offset, origin) {
+	proto.seek = function(offset, origin) {
 		var C = this,
 			undef;
 
@@ -56,20 +56,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		switch (origin) {
 			case C.SEEK_SET:
-				this._position = offset;
+				this.position_ = offset;
 				break;
 
 			case C.SEEK_CUR:
-				this._position += offset;
+				this.position_ += offset;
 				break;
 
 			case C.SEEK_END:
-				this._position = this.length + offset;
+				this.position_ = this.length + offset;
 				break;
 		}
 	}
 
-	_proto.rewind = function() {
+	proto.rewind = function() {
 		this.seek(0, this.SEEK_SET);
 	};
 

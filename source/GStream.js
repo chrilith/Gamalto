@@ -34,25 +34,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	var _Object = G.Stream = function() {
-		this._position = 0;
+		this.position_ = 0;
 		this.length = 0;
 	},
 
 	/* Inheritance and shortcut */
-	_proto = _Object.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 
-	_proto.eos = function() {
-		return this._position >= this.length;
+	proto.eos = function() {
+		return this.position_ >= this.length;
 	};
 
-	_proto.pos = function() {
-		return this._position;
+	proto.pos = function() {
+		return this.position_;
 	};
 
 	/* Constants */
-	_proto.SEEK_SET = 0;
-	_proto.SEEK_CUR = 1;
-	_proto.SEEK_END = 2;
+	proto.SEEK_SET = 0;
+	proto.SEEK_CUR = 1;
+	proto.SEEK_END = 2;
 
 	_Object.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
 
