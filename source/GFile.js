@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var proto = _Object.inherits(G.ReadableStream);
 
 	proto.open = function(url) {
-		this.initPos_ = 0;
+		this.bufPos_ = 0;
 		this.position_ = 0;
 		this.url_ = url;
 		// TODO: detect file not found
@@ -71,7 +71,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// No position
 	proto.at_ = function(len, from) {
 		// "from" is ignored in G.File
-		from = -(this.initPos_ - this.position_);
+		from = -(this.bufPos_ - this.position_);
 		this.position_ += len;
 		return from;
 	}
@@ -86,15 +86,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		_Object.base.seek.apply(this, arguments);
 		
 		// Invalidate current cached data if needed
-		if (!(this.position_ >= this.initPos_ &&
-			  this.position_ < (this.initPos_ + this.bufSize_))) {
+		if (!(this.position_ >= this.bufPos_ &&
+			  this.position_ < (this.bufPos_ + this.bufSize_))) {
 			this.buffer = null;
 			this.bufSize_ = 0;
 		}
 	}
 	
 	proto.pos = function() {
-		return (this.initPos_ + this.position_);
+		return (this.bufPos_ + this.position_);
 	}
 	
 	proto.error = function() {
@@ -178,7 +178,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// State must be OPENED to set headers
 		if (this.rangeSupported_) {
 			r.setRequestHeader("Range", "bytes=" + p + "-" + (p + length - 1));
-			this.initPos_ = p;
+			this.bufPos_ = p;
 		}
 		return r;
 	}
@@ -209,7 +209,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
 			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
 			if (!r.getResponseHeader("Content-Range")) {
-				this.initPos_ = 0;
+				this.bufPos_ = 0;
 				this.rangeSupported_ = false;
 			}
 			this.bufSize_ = (r.getResponseHeader("Content-Length") | 0)
@@ -221,7 +221,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.shouldRead_ = function(size) {
 		var position = this.position_,
 			bufSize = this.bufSize_,
-			bufStart = this.initPos_,
+			bufStart = this.bufPos_,
 			bufEnd = bufStart + bufSize,
 			reqEnd = position + size,
 			//Important for G.File since size always === 4
