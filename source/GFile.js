@@ -93,7 +93,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	}
 	
-	proto.pos = function() {
+	proto.tell = function() {
 		return (this.bufPos_ + this.position_);
 	}
 	
