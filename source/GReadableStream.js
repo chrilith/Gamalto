@@ -57,8 +57,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.reader_ = null;
 
 		/**
-		 * The unit of the data. For instance 4 for Uint32.
-		 * Will be converted into ceofficient. Defaults to 0.
+		 * The data pointer unit. For instance 4 for Uint32.
+		 * Internally changed into a power of 2. Defaults to 0.
 		 * 
 		 * @ignore
 		 * @protected
