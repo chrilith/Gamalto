@@ -117,6 +117,6 @@ if (GAMALTO_DEBUG) (function() {
 	temp.error = debug.error_;
 	temp.log = debug.log_;
 	temp.warn = debug.warn_;
-	temp.mem = mem_;
+	temp.mem = debug.mem_;
 
 })();
