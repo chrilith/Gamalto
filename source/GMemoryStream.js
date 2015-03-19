@@ -40,33 +40,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.MemoryStream = function(size, unit) {
+	G.MemoryStream = function(data, unit) {
 		// Do we have a source data?
-		var data = typeof size == 'object' ? size : this.alloc_(+size);
+		data = typeof data == 'object' ? data : this.alloc_(+data);
 
 		// Base constructor
 		Object.base(this, data, unit);
 		this.writer_ = (data.byteLength) ? this.reader_ : new G.ArrayWriter(data);
-	}
+	},
 
 	/* Inheritance and shortcut */
-	var proto = G.MemoryStream.inherits(G.StreamReader);
+	proto = G.MemoryStream.inherits(G.StreamReader);
 
 	proto.alloc_ = function(size) {
 		return new (global.ArrayBuffer || Array)(size);
-	}
+	};
+
+	proto.writeUint8 = function(data, at) {
+		this.writer_.setUint8(this.at_(1, at), data);
+	};
 
 	proto.writeInt8 = function(data, at) {
 		this.writer_.setInt8(this.at_(1, at), data);
-	}
+	};
+
+	proto.writeUint16 = function(data, at) {
+		this.writer_.setUint16(this.at_(2, at), data, this.le_);
+	};
 
 	proto.writeInt16 = function(data, at) {
 		this.writer_.setInt16(this.at_(2, at), data, this.le_);
-	}
+	};
+
+	proto.writeUint32 = function(data, at) {
+		this.writer_.setUint32(this.at_(4, at), data, this.le_);
+	};
 
 	proto.writeInt32 = function(data, at) {
 		this.writer_.setInt32(this.at_(4, at), data, this.le_);
-	}
+	};
 
 	proto.writeString = function(str, stopChar) {
 		var i, c;
@@ -74,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if ((c = str.charCodeAt(i)) == (stopChar | 0)) { break; }
 			this.writeInt8(c);
 		}
-	}
+	};
 
 	proto.copy = function(src, length) {
 		if (this.buffer.set && src.buffer.subarray) {
@@ -86,12 +98,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this.writeInt8(src.readUint8());
 			}
 		}
-	}
+	};
 
 	proto.fill = function(value, length) {
 		while(length-- > 0) {
 			this.writeInt8(value);
 		}
-	}
+	};
 
 })(this);
