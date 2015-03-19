@@ -80,6 +80,7 @@ if (GAMALTO_DEBUG) (function() {
 		console.warn.apply(console, arguments);
 	}
 
+	// TODO: move to ReadableStream
 	debug.mem_ = function(stream, addr, len) {
 		if (stream.is(G.ReadableStream)) {
 			var i, val, str = "",
@@ -107,5 +108,15 @@ if (GAMALTO_DEBUG) (function() {
 			debug.log_("Offset(h)  " + str.toUpperCase());
 		}
 	}
+
+	// Dirty hack to prepare code migration
+	var temp = gamalto.dev = {};
+	temp.using = debug.using_;
+	temp.require = debug.require_;
+	temp.assert = debug.assert_;
+	temp.error = debug.error_;
+	temp.log = debug.log_;
+	temp.warn = debug.warn_;
+	temp.mem = mem_;
 
 })();
