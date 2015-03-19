@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.base(this);
 		data = data || "";
 
-		this.unit(unit);
+		this.setUnit(unit);
 		// Default value, may be changed making a view stream using ptr()
 		this.startAt_ = 0;
 
@@ -105,8 +105,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.ptr = function(offset, relative) {
 		// Create a new stream
-		var	unit = this.getUnit(),
-			clone = new this.constructor(this.buffer, unit);
+		var	clone = new this.constructor(this.buffer, this.getUnit());
 
 		// No parameter get a pointer to the current position
 		if (isNaN(offset)) {
@@ -116,7 +115,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// new pointer position
-		clone.startAt_ = (offset << unit) + this.startAt_;
+		clone.startAt_ = (offset << this.unit_) + this.startAt_;
 		clone.length = this.length - clone.startAt_ + this.startAt_;
 
 		return clone;
