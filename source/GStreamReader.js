@@ -70,7 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.at_ = function(len, from) {
 		return _Object.base.at_.call(this, len, from) + this.startAt_;
-	}
+	};
 
 	/**
 	 * Gets the position of the stream pointer at the given offset.
@@ -83,7 +83,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	proto.addr = function(offset) {
 		return this.tell() + (+offset | 0);
-	}
+	};
 
 	/**
 	 * Sets the data pointer unit. The read/write position will be based on this value.
@@ -93,15 +93,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * 
 	 * @return {[type]} The previous data pointer unit.
 	 */
-	proto.unit = function(unit) {
+	proto.setUnit = function(unit) {
 		var old = this.unit_;
 		this.unit_ = (+unit | 0 || 1) >> 1;
 		return 1 << old;
-	}
+	};
+
+	proto.getUnit = function() {
+		return 1 << this.unit_;
+	};
 
 	proto.ptr = function(offset, relative) {
 		// Create a new stream
-		var clone = new this.constructor(this.buffer, 1 << this.unit_);
+		var	unit = this.getUnit(),
+			clone = new this.constructor(this.buffer, unit);
 
 		// No parameter get a pointer to the current position
 		if (isNaN(offset)) {
@@ -111,10 +116,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		// new pointer position
-		clone.startAt_ = (offset << this.unit_) + this.startAt_;
+		clone.startAt_ = (offset << unit) + this.startAt_;
 		clone.length = this.length - clone.startAt_ + this.startAt_;
 
 		return clone;
-	}
+	};
 
 })();
