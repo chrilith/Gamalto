@@ -1,37 +1,31 @@
-/*
- * Gamalto.Promise
- * 
- * This file is part of the Gamalto framework
- * http://www.gamalto.com/
- *
+/*********************************************************************************
+ #################################################################################
 
-Copyright (C)2011-2014 Chris Apers and The Gamalto Project, all rights reserved.
+ Gamalto.Promise
+ _______________
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+ This file is part of the GAMALTO JavaScript Development Framework.
+ http://www.gamalto.com/
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
 
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this Software.
+ #################################################################################
+ #################################################################################
+  _________   _________   _________   _________   _        _________   _________
+ |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
+ | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
+ | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
+ | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
+ |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                       «< javascript development framework >»                    
 
- *
- */
+ #################################################################################
+ *********************************************************************************/
 
-(function() {	
+(function() {
+
+	// TODO: comply to Promise/A+ / ES6
 	
 	var STATE_PENDING	= 0,
 		STATE_PROGRESS	= 1,
@@ -47,14 +41,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @augments Gamalto.Object
 	 */
 	var _Object = G.Promise = function() {
-		this._resolve = [];
-		this._reject = [];
-		this._progress = [];
-		this._state = STATE_PENDING;
-	}
+		this.resolve_ = [];
+		this.reject_ = [];
+		this.progress_ = [];
+		this.state_ = STATE_PENDING;
+	},
 	
 	/** @alias Gamalto.Promise.prototype */
-	var proto = _Object.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 	
 	/**
 	 * Resolves the promise and call the completion callbacks if any.
@@ -63,8 +57,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 *     The resulting value of the action.
 	 */
 	proto.resolve = function(value) {
-		this._complete(STATE_RESOLVED, value);
-	}
+		this.complete_(STATE_RESOLVED, value);
+	};
 	
 	/**
 	 * Rejects the promise and call the completion callbacks if any.
@@ -73,65 +67,64 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 *     The reason of the rejection. Usually the raised exception message which has lead to the rejection.
 	 */
 	proto.reject = function(reason) {
-		this._complete(STATE_REJECTED, reason);
-	}
+		this.complete_(STATE_REJECTED, reason);
+	};
 
 	/**
 	 * Calls the progress callbacks if any.
 	 */
 	proto.progress = function(value) {
-		var progress = this._progress;
-		for (var i = 0; i < progress.length; i++) {
-			setImmediate(progress[i], value);
-		}
-	}
+		this.progress_.forEach(function(progress) {
+			setImmediate(progress, value);
+		});
+	};
 
 	/**
 	 * Cancels the promise and calls the reject completion callbacks if any.
 	 * The method has the same behavior of the {@linkcode Gamalto.Promise#reject} method. The reason is implicit and will be an exception with the message: *Canceled*.
 	 */
 	proto.cancel = function() {
-		this._complete(STATE_CANCELED, new Error("Canceled"));
-	}
+		this.complete_(STATE_CANCELED, new Error("Canceled"));
+	};
 
-	proto._complete = function(state, value) {
-		if (this._state <= STATE_PROGRESS) {
-			this._state = state;
+	proto.complete_ = function(state, value) {
+		if (this.state_ <= STATE_PROGRESS) {
+			this.state_ = state;
 		}
-		this._completed(value);
-	}
+		this.completed_(value);
+	};
 
-	proto._completed = function(value) {
+	proto.completed_ = function(value) {
 		var func;
 
-		switch (this._state) {
+		switch (this.state_) {
 			case STATE_RESOLVED:
-				func = this._resolve;
+				func = this.resolve_;
 				break;
 			case STATE_CANCELED:
 			case STATE_REJECTED:
-				func = this._reject;
+				func = this.reject_;
 				break;
 		}
 
-		if (func) { this._exec(func, value); }
+		if (func) { this.exec_(func, value); }
 		this.value = value;
-	}
+	};
 
-	proto._exec = function(func, value) {
+	proto.exec_ = function(func, value) {
 		while (func.length) {
 			setImmediate(func.shift(), value);
 		}
-	}
+	};
 
-	proto._prepare = function(resolver) {
+	proto.prepare_ = function(resolver) {
 		var that = this;
 		return function(value) {
-			return that._resolver(value, resolver);
+			return that.resolver_(value, resolver);
 		}
-	}
+	};
 
-	proto._resolver = function(value, resolver) {
+	proto.resolver_ = function(value, resolver) {
 		try {
 			value = (resolver || this.resolve)(value);
 		} catch(e) {
@@ -139,7 +132,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.reject(e);
 		}
 		return value;		
-	}
+	};
 
 	/**
 	 * Defines the callbacks to be used upon action completion or error.
@@ -158,11 +151,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var undef, promise = new G.Promise();
 
 		// Set the "resolve" callback
-		this._resolve.push(function(value) {
-			value = promise._resolver(value, resolve);
+		this.resolve_.push(function(value) {
+			value = promise.resolver_(value, resolve);
 
 			// Prepare internal callback
-			var complete = promise._prepare(function(value) {
+			var complete = promise.prepare_(function(value) {
 				promise.resolve(value);
 			});
 
@@ -184,24 +177,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 
 		// Set the "reject" callback, this one cuts the pipeline
-		this._reject.push(promise._prepare(function(value) {
+		this.reject_.push(promise.prepare_(function(value) {
 			value = !reject ? undef : reject(value);
 			promise.resolve(value);
 
 		}));
 
-		if (this._state > STATE_PROGRESS) {
-			this._completed(this.value);
+		if (this.state_ > STATE_PROGRESS) {
+			this.completed_(this.value);
 		} else {
 			// Progression callback if any
 			if (progress) {
-				this._progress.push(progress);
+				this.progress_.push(progress);
 			}
 		}
 
 		// Return the new promise for pipelining
 		return promise;
-	}
+	};
 	
 	/**
 	 * Waits for all the promises.
@@ -245,7 +238,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 		
 		return promise;
-	}
+	};
 
 	/* Callbacks */
 

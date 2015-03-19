@@ -1,15 +1,37 @@
-/*
- *  Implementation: setImmediate()
- *  Implementation: clearImmediate()
- *  See: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
- * 
- * This file is part of the Gamalto Project
- * http://www.gamalto.com/
- *
- */
+/*********************************************************************************
+ #################################################################################
 
-(function() {
-	var global = this;
+ API Efficient Script Yielding
+ _____________________________
+
+ Implementation: setImmediate()
+ Implementation: clearImmediate()
+ See: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
+ _____________________________
+
+ This file is part of the GAMALTO JavaScript Development Framework.
+ http://www.gamalto.com/
+
+ (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
+
+ #################################################################################
+ #################################################################################
+  _________   _________   _________   _________   _        _________   _________
+ |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
+ | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
+ | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
+ | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
+ |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
+
+                       «< javascript development framework >»                    
+
+ #################################################################################
+ *********************************************************************************/
+
+(function(global) {
+
+	// FIXME: postMessage() is defined in CocoonJS Canvas+ but does nothing
+	// and so this code doesn't work as expected and breaks Promise and Async.
 
 	/* Enable standard version of the methods */
 	Object.defineMethod(global, "setImmediate", implSetImmediate);
@@ -23,9 +45,9 @@
 	// API IMPLETENTATION //
 	// For a similar implementation see: https://github.com/YuzuJS/setImmediate */
 
-	var _magic = "com.gamalto.impl.immediate" + Math.random();
-		_tasks = {},
-		_taskHandle = 1;
+	var magic = "com.gamalto.impl.immediate" + Math.random();
+		tasks = {},
+		taskHandle = 1;
 
 	function processHandler(vargs) {
 		var handler = vargs[0];
@@ -43,15 +65,15 @@
 	function registerTask(vargs) {
 		var handler;
 		if ((handler = processHandler(vargs))) {
-			_tasks[_taskHandle] = handler;
+			tasks[taskHandle] = handler;
 		}
 		/* Always returns a new handle */
-		return _taskHandle++;
+		return taskHandle++;
 	}
 
 	function tryRunTask(handle) {
 		var task;
-		if ((task = _tasks[handle])) {
+		if ((task = tasks[handle])) {
 			try {
 				task();
 			} finally {
@@ -63,10 +85,10 @@
 	function init() {
 		var handler = function(event) {
 			var data = event.data;
-			if (event.source == global && typeof data == "string" && data.indexOf(_magic) == 0) {
+			if (event.source == global && typeof data == "string" && data.indexOf(magic) == 0) {
 				event.stopPropagation();
 				/* + instead of |0 can return NaN */
-				tryRunTask(+data.substr(_magic.length));
+				tryRunTask(+data.substr(magic.length));
 			}
 		}
 		/* Using W3C Messaging API
@@ -79,12 +101,12 @@
 
 	function implSetImmediate(/*handler, vargs*/) {
 		var handle = registerTask(arguments);
-		global.postMessage(_magic + handle, "*");
+		global.postMessage(magic + handle, "*");
 		return handle;
 	}
 
 	function implClearImmediate(handle) {
-		delete _tasks[handle];
+		delete tasks[handle];
 	}
 
-})();
+})(this);

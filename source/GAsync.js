@@ -1,35 +1,27 @@
-/*
- * Gamalto.Async
- * 
- * This file is part of the Gamalto middleware
- * http://www.gamalto.com/
- *
+/*********************************************************************************
+ #################################################################################
 
-Copyright (C)2011-2013 Chris Apers and The Gamalto Project, all rights reserved.
+ Gamalto.Async
+ _____________
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+ This file is part of the GAMALTO JavaScript Development Framework.
+ http://www.gamalto.com/
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
 
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+ #################################################################################
+ #################################################################################
+  _________   _________   _________   _________   _        _________   _________
+ |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
+ | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
+ | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
+ | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
+ |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                       «< javascript development framework >»                    
 
- *
- */
+ #################################################################################
+ *********************************************************************************/
 
 (function() {
 
@@ -39,21 +31,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	var loop = function(func) {
-		this._func = func;
-	}
+	var Loop = function(func) {
+		this.func_ = func;
+	},
 
 	/* Inheritance and shortcut */
-	var proto = loop.prototype;
+	proto = Loop.prototype;
 
-	proto._iter = function(promise) {
+	proto.iterator_ = function(promise) {
 		var that = this;
 
 		setImmediate(function() {
-			var value = that._func.call(that);
+			var value = that.func_.call(that);
 
 			if (!value) {
-				that._iter(promise);
+				that.iterator_(promise);
 			} else {
 				if (!value.is(G.Promise)) {
 					promise.resolve();
@@ -62,25 +54,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						if (value) {
 							promise.resolve();
 						} else {
-							that._iter(promise);
+							that.iterator_(promise);
 						}
 					});
 				}
 			}
 
 		});
-	}
+	};
 
 	/* Helper */
-	var stat = G.Async = {};
+	var _Object = G.Async = {};
 
-	stat.loop = function(func) {
+	_Object.loop = function(func) {
 		var promise = new G.Promise();
-		new loop(func)._iter(promise);
+		new Loop(func).iterator_(promise);
 		return promise;
-	}
+	};
 
-	stat.immediate = function() {
+	_Object.immediate = function() {
 		var promise = new G.Promise();
 
 		setImmediate(function() {
@@ -88,9 +80,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 
 		return promise;
-	}
+	};
 
-	stat.delay = function(msecs) {
+	_Object.delay = function(msecs) {
 		var promise = new G.Promise();
 
 		setTimeout(function() {
@@ -99,6 +91,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		return promise;
 	};
-
 
 })();
