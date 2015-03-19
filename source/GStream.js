@@ -49,11 +49,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this.position_;
 	};
 
-	/* Constants */
-	proto.SEEK_SET = 0;
-	proto.SEEK_CUR = 1;
-	proto.SEEK_END = 2;
-
 	_Object.BIN_MIMETYPE = "text/plain;charset=x-user-defined";
 
 })();
