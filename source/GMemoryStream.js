@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function(global) {
 
 	/* Dependencies */
-	gamalto.require_("ReadStream");
+	gamalto.require_("StreamReader");
 	gamalto.using_	("ArrayWriter");
 
 	/**
@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/* Inheritance and shortcut */
-	var proto = G.MemoryStream.inherits(G.ReadStream);
+	var proto = G.MemoryStream.inherits(G.StreamReader);
 
 	proto.alloc_ = function(size) {
 		return new (global.ArrayBuffer || Array)(size);
