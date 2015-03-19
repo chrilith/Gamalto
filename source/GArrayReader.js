@@ -12,17 +12,17 @@
 		this.buffer = buffer;
 		this.byteLength = buffer.length;
 	},
-	_proto = _Object.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 
-	_proto._readByte = function(byteOffset) {
+	proto.readByte_ = function(byteOffset) {
 		return this.buffer[byteOffset] & 0xff;
 	};
 
-	_proto.getUint8 = function(byteOffset) {
-		return this._readByte(byteOffset);
+	proto.getUint8 = function(byteOffset) {
+		return this.readByte_(byteOffset);
 	};
 
-	_proto.getUint16 = function(byteOffset, littleEndian) {
+	proto.getUint16 = function(byteOffset, littleEndian) {
 		var inc = +1;
 		if (littleEndian) {
 			byteOffset--;
@@ -30,24 +30,24 @@
 			byteOffset += 2;
 			inc = -1;
 		}
-		var a = this._readByte(byteOffset += inc),
-			b = this._readByte(byteOffset += inc);
+		var a = this.readByte_(byteOffset += inc),
+			b = this.readByte_(byteOffset += inc);
 		return (b << 8) | a;
 	};
 
-	_proto.getUint32 = function(byteOffset, littleEndian) {
+	proto.getUint32 = function(byteOffset, littleEndian) {
 		return this.getInt32(byteOffset, littleEndian) >>> 0;
 	};
 
-	_proto.getInt8 = function(byteOffset) {
+	proto.getInt8 = function(byteOffset) {
 		return this.getUint8(byteOffset) << 24 >> 24;
 	};
 
-	_proto.getInt16 = function(byteOffset, littleEndian) {
+	proto.getInt16 = function(byteOffset, littleEndian) {
 		return this.getUint16(byteOffset, littleEndian) << 16 >> 16;
 	};
 
-	_proto.getInt32 = function(byteOffset, littleEndian) {
+	proto.getInt32 = function(byteOffset, littleEndian) {
 		var inc = +1;
 		if (littleEndian) {
 			byteOffset--;
@@ -55,10 +55,10 @@
 			byteOffset += 4;
 			inc = -1;
 		}
-		var a = this._readByte(byteOffset += inc),
-			b = this._readByte(byteOffset += inc),
-			c = this._readByte(byteOffset += inc),
-			d = this._readByte(byteOffset += inc);
+		var a = this.readByte_(byteOffset += inc),
+			b = this.readByte_(byteOffset += inc),
+			c = this.readByte_(byteOffset += inc),
+			d = this.readByte_(byteOffset += inc);
 		return (d << 24) | (c << 16) | (b << 8) | a;
 	};
 

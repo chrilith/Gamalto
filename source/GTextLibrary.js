@@ -23,7 +23,7 @@
 	},
 
 	/** @alias Gamalto.TextLibrary.prototype */
-	_proto = _Object.inherits(G.XMLLibrary);
+	proto = _Object.inherits(G.XMLLibrary);
 
 	/**
 	 * Transforms data before sorting the resource.
@@ -31,7 +31,7 @@
 	 * @see {@link Gamalto.XMLLibrary}
 	 * @ignore
 	 */
-	_proto._toData = function(o) {
+	proto.toData_ = function(o) {
 		return o.responseText;
 	};
 

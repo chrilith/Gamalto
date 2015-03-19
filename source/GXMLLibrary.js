@@ -44,10 +44,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	var _Object = G.XMLLibrary = function() {
 		Object.base(this);
-	}
+	},
 	
 	/** @alias Gamalto.XMLLibrary.prototype */
-	var proto = _Object.inherits(G.BaseLibrary);
+	proto = _Object.inherits(G.BaseLibrary);
 
 	/**
 	 * Tries to load a new resource into the library.
@@ -76,7 +76,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				case x.DONE:
 					if (data && (success = (x.status || 200)) == 200) {
 						try {
-							data = that._toData(x);
+							data = that.toData_(x);
 						} catch(e) {
 							exception = e;
 						}
@@ -84,9 +84,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					}
 	
 					if (!success) {
-						promise.reject(that._failed(name, src, exception));
+						promise.reject(that.failed_(name, src, exception));
 					} else {
-						that._list[G.N(name)] = data;
+						that.list_[G.N(name)] = data;
 						promise.resolve({
 							source: that,
 							item: name
@@ -100,10 +100,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			x.open(data ? "POST" : "GET", src);
 			x.send(data || null);
 		} catch(exception) {
-			promise.reject(this._failed(name, src, exception));
+			promise.reject(this.failed_(name, src, exception));
 		}
 		return promise;
-	}
+	};
 	
 	/**
 	 * Transforms data before sorting the resource.
@@ -112,8 +112,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @protected
 	 * @ignore
 	 */
-	proto._toData = function(x) {
+	proto.toData_ = function(x) {
 		return x.responseXML;
-	}
+	};
 
 })(this);

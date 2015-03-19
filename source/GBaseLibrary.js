@@ -44,12 +44,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @augments Gamalto.Object
 	 */
 	 var _Object = G.BaseLibrary = function() {
-		this._list = {};
-		this._pending = [];
-	}
+		this.list_ = {};
+		this.pending_ = [];
+	},
 	
 	/** @alias Gamalto.BaseLibrary.prototype */
-	var proto = _Object.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 	
 	/**
 	 * Gets a resource from the library.
@@ -59,8 +59,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @returns {object} The requested item if it exists.
 	 */
 	proto.getItem = function(name) {
-		return this._list[G.N(name)];
-	}
+		return this.list_[G.N(name)];
+	};
 	
 	/**
 	 * Releases the resource.
@@ -69,8 +69,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 *     The name of the resource.
 	 */
 	proto.unloadItem = function(name) {
-		delete this._list[G.N(name)];
-	}
+		delete this.list_[G.N(name)];
+	};
 
 	/**
 	 * Tries to load a new resource into the library.
@@ -86,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	proto.loadItem = function(name, src/* vargs */) {
 		return new G.Promise();
-	}
+	};
 
 	/**
 	 * Pushes a new resource into the list.
@@ -96,11 +96,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @param {string} src
 	 *     The location of the item to load.
 	 */
-	proto.pushItem = function(name, src) {
-		gamalto.assert_(!this._loading, "The libary is already loading items.");
+	proto.pushItem = function(name, src/*, vargs*/) {
+		gamalto.assert_(!this.loading_, "The libary is already loading items.");
 		// Here we can have more than just 'src', save all parameters
-		this._pending.push(Array.prototype.slice.call(arguments, 0));
-	}
+		this.pending_.push(Array.prototype.slice.call(arguments, 0));
+	};
 	
 	/**
 	 * Tries to load all the resources pushed into the library.
@@ -108,26 +108,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @returns {Gamalto.Promise} A promise to handle the loading states.
 	 */
 	proto.load = function() {
-		gamalto.assert_(!this._loading, "The libary is already loading items.");
-		this._loading = true;
+		gamalto.assert_(!this.loading_, "The libary is already loading items.");
+		this.loading_ = true;
 
 		var that = this,
 			args = [],
 			promise = new G.Promise();
 
-		this._pending.forEach(function(val, i) {
+		this.pending_.forEach(function(val) {
 			args.push(that.loadItem.apply(that, val));
 		});
 
 		G.Promise.all.apply(null, args)
 			.then(
 				function(value) {
-					that._loading = false;
-					that._pending = [];
+					that.loading_ = false;
+					that.pending_.length = 0;
 					promise.resolve(value);
 				},
 				function(error) {
-					that._loading = false;
+					that.loading_ = false;
 					promise.reject(error);
 				},
 				function(value) {
@@ -136,19 +136,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			);
 
 		return promise;
-	}
+	};
 
-	proto._add = function(name, item) {
-		this._list[G.N(name)] = item;
-	}
+	proto.add_ = function(name, item) {
+		this.list_[G.N(name)] = item;
+	};
 	
-	proto._failed = function(name, src, e) {
+	proto.failed_ = function(name, src, e) {
 		var err = new Error("Failed to load item '" + name + "' from '" + src + "'.");
 		err.source	= this;
 		err.item = name;
 		err.innerException = e;
 		return err;
-	}
+	};
 	
 	/**
 	 * Tests whether a resource is available.
@@ -158,8 +158,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @returns {boolean} Returns true is the resource exists and has been properly loaded.
 	 */
 	proto.hasItem = function(name) {
-		var u;	// undefined
-		return this._list[G.N(name)] !== u;
-	}
+		var undef;
+		return this.list_[G.N(name)] !== undef;
+	};
 
 })();

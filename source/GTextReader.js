@@ -11,9 +11,9 @@
 	var _Object = G.TextReader = function(buffer) {
 		Object.base(this, buffer);
 	},
-	_proto = _Object.inherits(G.ArrayReader);
+	proto = _Object.inherits(G.ArrayReader);
 
-	_proto._readByte = function(byteOffset) {
+	proto.readByte_ = function(byteOffset) {
 		return this.buffer.charCodeAt(byteOffset) & 0xff;
 	};
 

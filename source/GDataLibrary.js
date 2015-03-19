@@ -45,10 +45,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	var _Object = G.DataLibrary = function() {
 		Object.base(this);
-	}
+	},
 
 	/** @alias Gamalto.DataLibrary.prototype */
-	var proto = _Object.inherits(G.XMLLibrary);
+	proto = _Object.inherits(G.XMLLibrary);
 	
 	/**
 	 * Transforms data before sorting the resource.
@@ -56,8 +56,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @see {@link Gamalto.XMLLibrary}
 	 * @ignore
 	 */
-	proto._toData = function(o) {
+	proto.toData_ = function(o) {
 		return JSON.parse(o.responseText);
-	}
+	};
 
 })();
