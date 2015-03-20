@@ -34,26 +34,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("BaseLibrary");
-	gamalto.using_("Sound");
+	gamalto.dev.require("BaseLibrary");
+	gamalto.dev.using("Sound");
 
 	/**
 	 * @constructor
 	 */
-	var stat = G.SoundPool = function() {
+	var _Object = G.SoundPool = function() {
 		Object.base(this);
 	}
 
-	var proto = G.SoundPool.inherits(G.BaseLibrary);
+	var proto = _Object.inherits(G.BaseLibrary);
 
 	proto.loadItem = function(name, src) {
-		var promise = G.SoundPool.base.loadItem.call(this),
+		var promise = _Object.base.loadItem.call(this),
 			event = "loadedmetadata",	// Supported in CocoonJS 1.4
 			audio = new Audio(),
 			that = this;
 
 		audio.onabort = audio.onerror = function(e) {
-			promise.reject(that._failed(name, src, e));
+			promise.reject(that.failed_(name, src, e));
 		}
 
 		audio.addEventListener(event, function(e) {
@@ -74,17 +74,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	/* Constants */
-	var constant = stat;
 
-	constant.MP3	= ["audio/mpeg", "audio/mpg3"];
-	constant.MP4	= ["audio/mpg4"];
-	constant.OGG	= ["audio/ogg"];
-	constant.WAVE	= ["audio/wav", "audio/x-wav"];
+	_Object.MP3	 = ["audio/mpeg", "audio/mpg3"];
+	_Object.MP4	 = ["audio/mpg4"];
+	_Object.OGG	 = ["audio/ogg"];
+	_Object.WAVE = ["audio/wav", "audio/x-wav"];
 
 	/* Static */
-	var test = new Audio();
 
-	stat.isSupported = function(mime) {
+	_Object.isSupported = function(mime) {
+		var test = new Audio();
 		if (typeof mime == "string") { mime = [mime]; }
 
 		var supported;
