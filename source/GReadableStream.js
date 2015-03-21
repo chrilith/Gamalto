@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("SeekableStream");
 
 	/**
-	 * Base object to create readable stream.
+	 * Base object to create readable stream. It's not meant to be used directly.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.ReadableStream
@@ -134,11 +134,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readString = function(length, stopChar) {
-		var c, s = "";
-		for (var i = 0; i < length & 0xffff; i++) {
-			if ((c = this.readUint8()) == (stopChar | 0)) { break; }
+		var i, c, s = "", shouldStop;
+
+		for (i = 0; i < length & 0xffff; i++) {
+			shouldStop = ((c = this.readUint8()) == (stopChar | 0));
 			s += String.fromCharCode(c);
+			if (shouldStop) { break; }
 		}
+
 		return s;
 	}
 
