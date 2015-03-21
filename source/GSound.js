@@ -33,91 +33,94 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	
-	G.Sound = function(audio, priority) {
-		var that = this,
+	var _Object = G.Sound = function(src) {
+		Object.base(this, src);
+		this.canPlay_ = false;
+	},
+
+	proto = G.Sound.inherits(G.BaseSound);
+
+	proto.load = function() {
+		var promise = new G.Promise(),
+			audio = new Audio(),
 			handler = this.handleEvent.bind(this); // passing "this" is not supported by CocoonJS
-		this._audio = audio;
-		this.priority = priority | 0;				// May be use on signle channel platform
-		this._canPlay = false;
 
 		// When data is available try to play the sound if needed
 		audio.addEventListener("canplaythrough", handler, false);
 
 		// Loop handling
 		audio.addEventListener("ended", handler, false);
-	}
 
-	var proto = G.Sound.inherits(G.Object);
-	
-	proto.play = function(loop) {
-		var audio = this._audio;
+		audio.addEventListener("loadedmetadata", function() {
+			audio.removeEventListener("loadedmetadata", arguments.callee, false);
+			promise.resolve();
+		}, false);
 
-		// Loop the sound
-		this._loop = loop || 1;
+		audio.onabort = audio.onerror = promise.reject.bind(promise);
+
+		this.audio_ = audio;
+		audio.preload = "auto";
+		audio.src = this.src_;
+		audio.load();
+
+		return promise;
+	};
+
+	proto.play = function(repeat) {
+		_Object.base.play.call(this, repeat);
 
 		// Save start time if the sound cannot be played immediately
-		this._startTime = Date.now();
+		this.startTime_ = Date.now();
 
 		// Try to play the sound from the beginning
-		try { audio.currentTime = 0; } catch(e) {}		// Expection if metadata are not available
-		audio.play();
-
-		// Should be playing now
-		this._playing = true;
-	}
-
-	proto.pause = function() {
-		this._playing = false;
-		this._audio.pause();
-	}
+		var audio = this.audio_;
+		try {
+			audio.currentTime = 0;
+		// Expection if metadata is not available
+		} finally {
+			audio.play();
+		}		
+	};
 
 	proto.stop = function() {
-		this._loop = 0;
-		this.pause();
-	}
-
-	proto.equals = function(snd) {
-		return this._audio.src == snd._audio.src &&
-			this.priority == snd.priority;
-	}
+		_Object.base.stop.call(this);
+		this.audio_.pause();
+	};
 	
 	proto.clone = function() {
-		var audio = new Audio();
-		audio.src = this._audio.src;
-		return new G.Sound(audio, this.priority);
-	}
+		var sound = new G.Sound(this.src_);
+		sound.load();
+		return sound;
+	};
 
 	/* Events handling */
 
 	proto.handleEvent = function(e) {
 		if (e.type == "canplaythrough") {
-			this._canplaythrough();
-		} else if (e.type == "ended") {
-			if (--this._loop) {
-				this.play(this._loop);
-			} else {
-				this.stop();
-			}
-		}
-	}
+			this.onCanPlayThrough_();
 
-	proto._canplaythrough = function() {
-		if (this._playing && !this._canPlay) {
-			var elapsed		= (Date.now() - this._startTime) / 1000,
-				audio		= this._audio,
+		} else if (e.type == "ended") {
+			this.onEnded_();
+		}
+	};
+
+	proto.onCanPlayThrough_ = function() {
+		if (this.playing_ && !this.canPlay_) {
+			var elapsed		= (Date.now() - this.startTime_) / 1000,
+				audio		= this.audio_,
 				duration	= audio.duration,
 				// Adjust
 				loop		= elapsed / duration | 0,
 				played		= elapsed % duration;
 
-				if ((this._loop -= loop) > 0) {
-					this._audio.currentTime = played;
-					this._audio.play();
+				if ((this.toPlay_ -= loop) >= 0) {
+					audio.currentTime = played;
+					audio.play();
 				} else {
 					this.stop();
 				}
 		}
-		this._canPlay = true;
-	}
+		this.canPlay_ = true;
+	};
 	
 })();

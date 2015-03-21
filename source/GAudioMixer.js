@@ -31,48 +31,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
-(function(window) {
+(function() {
 
 	var mixers = [],
-		bit = 1;		/* For extra mixer bit */
+		count = 0;
 
 	/**
 	 * @constructor
 	 */
-	G.AudioMixer = function(channels, modes) {
-		for (var i = 0; i < mixers.length; i++) {
-			var current = (1 << i);
-			if ((modes & current) && mixers[i].canUse()) {
-				this._mixer = new mixers[i](this);
-				this._numChannels = this._mixer.init(channels);
-				return current;
+	var _Object = G.AudioMixer = new G.Object();
+
+	_Object.create = function(channels/*, ...preferedMode*/) {
+		var i, current, mixer,
+			preferedMode = Array.prototype.slice.call(arguments, 1);
+
+		for (i = 0; i < preferedMode.length; i++) {
+			current = preferedMode[i];
+
+			if (mixers[current].canUse()) {
+				mixer = new mixers[current](this);
+				this.numChannels_ = mixer.init(channels);
+				return mixer;
 			}
 		}
-		gamalto.assert_(this._mixer, "Failed to initialize audio mixer.");
-		return 0;
-	}
 
-	var stat = G.AudioMixer;
+		gamalto.dev.assert(this.mixer_, "Failed to initialize audio mixer");
+		return null;
+	};
 
-	stat._addMixer = function(name, mixer) {
-		stat[name] = bit;
-		bit <<= 1;				// For next mixer registration
+	_Object.addMixer_ = function(name, mixer) {
+		_Object[name] = count++;
 		mixers.push(mixer);
-	}
-
-	/* Inheritance and shortcut */
-	var proto = G.AudioMixer.inherits(G.Object);
-
-	proto.playSound = function(sound, loop) {
-		this._mixer.playSound(sound, loop);
-	}
-
-	proto.playMusic = function(sound, loop) {
-		this._mixer.playMusic(sound, loop);		
-	}
-	
-	proto.stopAll = function() {
-		this._mixer.stopAll();
 	}
 
 })();

@@ -35,40 +35,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.dev.require("BaseLibrary");
-	gamalto.dev.using("Sound");
 
 	/**
 	 * @constructor
 	 */
-	var _Object = G.SoundPool = function() {
+	var _Object = G.SoundPool = function(mixer) {
 		Object.base(this);
+		this.mixer = mixer;
 	}
 
 	var proto = _Object.inherits(G.BaseLibrary);
 
-	proto.loadItem = function(name, src) {
-		var promise = _Object.base.loadItem.call(this),
-			event = "loadedmetadata",	// Supported in CocoonJS 1.4
-			audio = new Audio(),
-			that = this;
+	proto.loadItem = function(name, src, type/*, ...vargs*/) {
+		var that = this,
+			vargs = Array.prototype.slice.call(arguments, 3),
+			promise = _Object.base.loadItem.call(this),
+			sound = type ? new type(src) :
+				this.mixer ? this.mixer.createSound(src) : null;
 
-		audio.onabort = audio.onerror = function(e) {
-			promise.reject(that.failed_(name, src, e));
+		gamalto.dev.assert(sound, "Failed to initialize sound object " + name + ".");
+
+		if (vargs.length) {
+			sound.init.apply(sound, vargs);
 		}
-
-		audio.addEventListener(event, function(e) {
-			audio.removeEventListener(event, arguments.callee, false);
-			that._add(name, new G.Sound(audio));
-
+		sound.load()
+		.then(function() {
+			that.add_(name, sound);
 			promise.resolve({
 				source: that,
 				item: name
 			});
-		}, false);
 
-		audio.preload = "auto";
-		audio.src = src;
-		audio.load();
+		}, function() {
+			promise.reject(that.failed_(name, src, e));
+		});
 
 		return promise;
 	}
@@ -82,8 +82,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Static */
 
+	var test = new Audio();
 	_Object.isSupported = function(mime) {
-		var test = new Audio();
 		if (typeof mime == "string") { mime = [mime]; }
 
 		var supported;

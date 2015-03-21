@@ -42,44 +42,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.AudioChannel = function(duplicateSource) {
-		this._ds = duplicateSource;
-	}
+		// Allows a same sound to be played on many channels
+		this.ds_ = duplicateSource;
+	},
 
-	var proto = G.AudioChannel.inherits(G.Object);
-	
-	proto.push = function(snd) {
-		this.stop();
-
-		// Allow the same sound to be played on many channels
-		if (this._ds) {
-			if (!this._sound ||
-				!this._sound.equals(snd)) {
-					this._sound = snd.clone();
-			}
-		// Mostly for single channel systems
-		} else {
-			this._sound = snd;
-		}
-	}
+	proto = G.AudioChannel.inherits(G.Object);
 
 	proto.getPriority = function() {
-		return this._sound ? this._sound.priority : 0;
-	}
+		return this.priority_;
+	};
 
 	proto.isPlaying = function() {
-		return this._sound ? this._sound._playing : false;
-	}
+		return this.sound_ ? this.sound_.isPlaying() : false;
+	};
 
-	proto.play = function(loop) {
-		if (this._sound) { this._sound.play(loop);}
-	}
-
-	proto.pause = function() {
-		if (this._sound) { this._sound.pause();}
-	}
+	proto.play = function(sound, repeat, priority) {
+		this.stop();
+		this.priority_ = (+priority | 0);
+		if (!(this.sound_ && this.sound_ === sound)) {
+			this.sound_ = (this.ds_) ? sound.clone() : sound;
+		}
+		this.sound_.play(repeat);
+	};
 
 	proto.stop = function() {
-		if (this._sound) { this._sound.stop();}
-	}
+		if (this.sound_) {
+			this.sound_.stop();
+		}
+	};
 	
 })();
