@@ -11,7 +11,7 @@
 
 	var _Base = G.AudioMixer,
 
-		_Object = function() {
+		_Object = function() {
 			Object.base(this);
 		},
 

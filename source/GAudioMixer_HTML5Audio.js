@@ -41,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	var _Base = G.AudioMixer,
 
-		_Object = function() {
+		_Object = function() {
 			Object.base(this);
 			this.duplicateSource_ = true;
 		},
