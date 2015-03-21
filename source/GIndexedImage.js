@@ -132,8 +132,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto._ended = function(buffer) {
-		buffer.rewind();
-
 		var dec  = this._module,
 			data = dec ? dec.call(this, buffer) : null;
 
