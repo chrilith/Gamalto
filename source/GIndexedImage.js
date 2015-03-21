@@ -113,10 +113,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return file.open(this._url).then(function() {
 			// Find the proper module
 			if ((that._module = that._findModule())) {
-				// Allocate temporary buffer
-				var buf = new G.MemoryStream(file.length);
-				// Read data
-				file.read(buf, file.length).then(function() {
+				file.readAll().then(function() {
+					var buf = new G.StreamReader(file.buffer);
 					file.close();
 					that._ended(buf);
 				});
