@@ -66,15 +66,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var promise = _Object.base.loadItem.call(this),
 			bitmap = new (type || G.Bitmap),
 
-			i = new bitmap._getSourceType(),
+			i = new (bitmap._getSourceType()),
 			that = this;
+
 
 		i.onabort = i.onerror = function(e) {
 			promise.reject(that._failed(name, src));
 		}
 
 		i.onload = function() {
-			that._list[G.N(name)] = bitmap;
+			bitmap.setSource(i);
+			that.list_[G.N(name)] = bitmap;
 			promise.resolve({
 				source: that,
 				item: name
