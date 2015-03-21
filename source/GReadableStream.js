@@ -134,14 +134,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.readString = function(length, stopChar) {
-		var i, c, s = "", shouldStop;
-
-		for (i = 0; i < length & 0xffff; i++) {
-			shouldStop = ((c = this.readUint8()) == (stopChar | 0));
+		var c, s = "";
+		for (var i = 0; i < length & 0xffff; i++) {
+			if ((c = this.readUint8()) == (stopChar | 0)) { break; }
 			s += String.fromCharCode(c);
-			if (shouldStop) { break; }
 		}
-
 		return s;
 	}
 
