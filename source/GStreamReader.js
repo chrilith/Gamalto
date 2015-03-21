@@ -86,7 +86,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	};
 
 	/**
-	 * Sets the data pointer unit. The read/write position will be based on this value.
+	 * Sets the data pointer unit. The access position will be based on this value.
 	 * 
 	 * @param  {Number} unit
 	 *     The new data pointer unit.
