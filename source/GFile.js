@@ -241,14 +241,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return this.readAny_(4, "Int32");
 	}
 
+	/**
+	 * Reads the whole file data into the internal buffer.
+	 * 
+	 * @return {Gamalto.Promise} A promise if this file object is asynchronous or nothing if not.
+	 */
+	proto.readAll = function() {
+		this.rewind();
+		return this.ensureCapacity_(this.length);
+	}
+
 	proto.shouldRead_ = function(size) {
 		var position = this.position_,
 			bufSize = this.bufSize_,
 			bufStart = this.bufPos_,
 			bufEnd = bufStart + bufSize,
 			reqEnd = position + size,
-			//Important for G.File since size always === 4
-			eos = reqEnd - this.length;	// Are we reading eos?
+			eos = reqEnd - this.length;	// Are we reading at eos?
 
 			 // Do we have a buffer?
 		return (!bufSize ||
@@ -256,7 +265,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 position < bufStart ||
 			 // Are we over the current buffer?
 			 position > bufEnd ||
-			 // Do we have enough buffer the the rrequested size?
+			 // Do we have enough buffer for the requested size?
 			 reqEnd - eos > bufEnd);
 	}
 
