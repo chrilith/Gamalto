@@ -52,7 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.bufPos_ = 0;
 		this.position_ = 0;
 		this.url_ = url;
-		// TODO: detect file not found
+		this.error = 0;
 		return this.info_();
 	}
 	
@@ -90,51 +90,64 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.tell = function() {
 		return (this.bufPos_ + this.position_);
 	}
-	
-	proto.error = function() {
-		return false;	// TODO
-	}
 
 	proto.info_ = function() {
-		return this.send_(this.open_(this.onInfoReceived_, "HEAD"));
+		return this.send_(this.open_(
+			this.onInfoReceived_,
+			this.onError_, "HEAD"));
 	}
 
 	proto.onInfoReceived_ = function(r) {
-		var u, // undefined
-			status, state = r.readyState;
+		var status = r.status,
+			isOK = (status == 200 || status == 206),
+			state = r.readyState;
 
 		if (state == r.DONE) {
-			status = r.status;
 			this.mimeType = r.getResponseHeader("Content-Type") ||
 								"application/octet-stream";
 			this.rangeSupported_ = !!r.getResponseHeader("Accept-Ranges");
 
 			// Length should be -1 only using "file" URL scheme...
 			if (-1 == (this.length =
-							(status & 200 != 200) ? u :
 							(status == 0) ? -1 /* local */ :
+							!isOK ? 0 :
 								(r.getResponseHeader("Content-Length") | 0))) {
-				
+
 				// With "file" URL scheme, the whole data is already loaded
 				this.onRangeReceived_(r);
 				this.length = this.bufSize_;
 			}
+			this.setError_(isOK, status);
 		}
 
 		return state;
+	}
+
+	proto.setError_ = function(isOK, status) {
+		this.error = isOK ? 0 : status;
+		// For file scheme which return always status == 0
+		if (status == 0 && this.length <= 0) {
+			this.error = 404;
+		}
+	}
+
+	proto.onError_ = function(r, msg) {
+		// CHECKME: are status and stausText realy set?
+		return new Error("Error " + (this.error = r.status) + "(" + (r.statusText || "Unknown Error") + ") occured " + msg + ".");
 	}
 
 	proto.isAsync = function() {
 		return false;
 	}
 
-	proto.open_ = function(handler, mode) {
+	proto.open_ = function(loadHandler, errorHandler, mode) {
 		var r = new XMLHttpRequest(),
 			// FIXME: cached files may not return Content-Length header!
 			random = (this.url_.indexOf("?") != -1 ? "&" : "?") + Math.random();
 
 		// Set the handler...
-		r.onreadystatechange = handler.bind(this, r);
+		r.onreadystatechange = loadHandler.bind(this, r);
+		r.onerror = errorHandler.bind(this, r);
 
 		// Synchronous XMLHttpRequest on the main thread is deprecated because of its
 		// detrimental effects to the end user's experience. For more help,
@@ -163,10 +176,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return r;
 	}
 
-	proto.openRange_ = function(handler, length) {
+	proto.openRange_ = function(loadHandler, errorHandler, length) {
 		length = Math.max(length, this.cacheSize);
 
-		var r = this.open_(handler),
+		var r = this.open_(loadHandler, errorHandler),
 			p = this.position_;
 
 		// State must be OPENED to set headers
@@ -178,7 +191,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.range_ = function() {
-		return this.send_(this.openRange_(this.onRangeReceived_));
+		return this.send_(this.openRange_(
+			this.onRangeReceived_,
+			this.onError_));
 	}
 
 	proto.response_ = function(r) {
@@ -195,9 +210,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.onRangeReceived_ = function(r) {
-		var data, state = r.readyState
+		var data, state = r.readyState,
+			status = r.status,
+			isOK = ((status || 200) == 200 || status == 206);
+
 		if (state == r.DONE) {
-			data = this.buffer = ((r.status || 200) & 200 != 200) ? "" : this.response_(r);
+			data = this.buffer = !isOK ? "" : this.response_(r);
 			this.reader_ = new ((data.byteLength) ? DataView : G.TextReader)(data);
 			// There is a bug in some WebKit version like Safari 8.0.3
 			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
@@ -207,7 +225,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this.rangeSupported_ = false;
 			}
 			this.bufSize_ = (r.getResponseHeader("Content-Length") | 0)
-								|| this.buffer.byteLength || this.buffer.length; // for local files...
+								|| this.buffer.byteLength || this.buffer.length || 0; // for local files...
+			this.setError_(isOK, status);
 		}
 		return state;
 	}

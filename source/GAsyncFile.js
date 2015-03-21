@@ -53,30 +53,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.info_ = function() {
-		var that = this,
-			promise = new G.Promise();
+		var promise = new G.Promise();
 
 		this.send_(this.open_(function(r) {
-			var state = that.onInfoReceived_(r);
+			var state = this.onInfoReceived_(r);
 			if (state == r.DONE) {
-				// TODO: handle error with "status"
-				promise.resolve(that);
+				promise.resolve(this);
 			}
+		}, function(r) {
+			promise.reject(this.onError_(r, "getting file info"));
 		}, "HEAD"));
 
 		return promise;
 	}
 
 	proto.range_ = function() {
-		var that = this,
-			promise = new G.Promise();
+		var promise = new G.Promise();
 
 		this.send_(this.openRange_(function(r) {
-			var state = that.onRangeReceived_(r);
+			var state = this.onRangeReceived_(r);
 			if (state == r.DONE) {
-				// TODO: handle error with "status"
-				promise.resolve(that);
+				promise.resolve(this);
 			}
+		}, function(r) {
+			promise.reject(this.onError_(r, "loading file data"));
 		}));
 
 		return promise;
