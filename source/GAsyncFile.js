@@ -61,7 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				promise.resolve(this);
 			}
 		}, function(r) {
-			promise.reject(this.onError_(r, "getting file info"));
+			promise.reject(this.onError_(r));
 		}, "HEAD"));
 
 		return promise;
@@ -76,7 +76,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				promise.resolve(this);
 			}
 		}, function(r) {
-			promise.reject(this.onError_(r, "loading file data"));
+			promise.reject(this.onError_(r));
 		}));
 
 		return promise;

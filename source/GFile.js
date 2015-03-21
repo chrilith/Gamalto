@@ -127,13 +127,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.error = isOK ? 0 : status;
 		// For file scheme which return always status == 0
 		if (status == 0 && this.length <= 0) {
-			this.error = 404;
+			this.error = 400;
 		}
 	}
 
-	proto.onError_ = function(r, msg) {
-		// CHECKME: are status and stausText realy set?
-		return new Error("Error " + (this.error = r.status) + "(" + (r.statusText || "Unknown Error") + ") occured " + msg + ".");
+	proto.onError_ = function(r) {
+		// Will be raised on network or CORS errors
+		return new Error("An unexpected error occured. Check the console for more info");
 	}
 
 	proto.isAsync = function() {
@@ -172,8 +172,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 
-		r.send(null);
-		return r;
+		try {
+			r.send(null);
+		} finally {
+			return r;
+		}
 	}
 
 	proto.openRange_ = function(loadHandler, errorHandler, length) {
