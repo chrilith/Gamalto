@@ -63,10 +63,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
-		var sx = r.tL.x,
-			sy = r.tL.y,
-			sw = r.width,
-			sh = r.height,
+		var sx = r.origin.x,
+			sy = r.origin.y,
+			sw = r.extent.x,
+			sh = r.extent.y,
 			xy = this._transform(x, y, sw, sh),
 			gc = bitmap._getCanvas;
 
@@ -84,10 +84,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			y = 0, w, h, v;
 
 		if (r) {
-			x = r.tL.x;
-			y = r.tL.y;
-			w = r.width;
-			h = r.height;
+			x = r.origin.x;
+			y = r.origin.y;
+			w = r.extent.x;
+			h = r.extent.y;
 		} else {
 			w = s.width;
 			h = s.height;
@@ -100,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.clearRect = function(r) {
-		this._getContext().clearRect(r.tL.x, r.tL.y, r.width, r.height);
+		this._getContext().clearRect(r.origin.x, r.origin.y, r.extent.x, r.extent.y);
 	}
 
 	proto.hLine = function(x, y, w, style) {
@@ -194,7 +194,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} else {
 			ctx.save();
 			ctx.beginPath();
-			ctx.rect(r.tL.x, r.tL.y, r.width, r.height);
+			ctx.rect(r.origin.x, r.origin.y, r.extent.x, r.extent.y);
 			ctx.clip();
 		}
 	}

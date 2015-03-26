@@ -36,18 +36,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	// ...
+	gamalto.dev.using("Vector2");
 	
 	/**
 	 * @constructor
 	 */
-	G.BaseRenderer = function(canvas) {
+	var _Object = G.BaseRenderer = function(canvas) {
 		this._canvas = canvas;
 		this._init();
-	};
+	},
 	
 	/* Inheritance and shortcut */
-	var proto = G.BaseRenderer.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 	
 	/* Instance methods */	
 	proto._init = function() {
@@ -75,7 +75,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.setOrigin = function(x, y) {
-		this._origin = new G.Vector(x, y);
+		this._origin = new G.Vector2(x, y);
 	}
 	
 	proto.setScale = function(x, y) {

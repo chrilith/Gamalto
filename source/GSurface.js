@@ -79,7 +79,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				len = list.length | 0,
 				old = renderer.setTransform(false);
 			list.forEach(function(r) {
-				renderer.drawBitmapSection(s, r.tL.x + x, r.tL.y + y, r);
+				renderer.drawBitmapSection(s, r.origin.x + x, r.origin.y + y, r);
 			});
 			renderer.setTransform(old);
 		}

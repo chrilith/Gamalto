@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 */
 	G.Pattern = function(bitmap, r) {
 		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
-		var s = new G.Surface(r.width, r.height);	
+		var s = new G.Surface(r.extent.x, r.extent.y);
 		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
 		// FIXME: only renderers should directly access context methods
 		this._pattern = s.__canvas._context.createPattern(s._getCanvas(), "repeat");
