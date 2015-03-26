@@ -44,6 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.require_("TextLibrary");
 	gamalto.using_("Bitmap");
 	gamalto.using_("Rect");
+	gamalto.using_("Box");
 	gamalto.using_("BaseCanvas");
 	
 	/* Initialization */
@@ -112,10 +113,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (!r) {
 			gl.uniform4f(cropLocation, 0, 0, 1, 1);
 		} else {
-			var xx = r.tL.x / iw,
-				yy = r.tL.y / ih;
-			ww = r.width / iw;
-			hh = r.height / ih;
+			var xx = r.origin.x / iw,
+				yy = r.origin.y / ih;
+			ww = r.extent.x / iw;
+			hh = r.extent.y / ih;
 
 			gl.uniform4f(cropLocation, xx, yy, ww, hh);
 		}
@@ -217,10 +218,10 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			y = 0, w, h, v;
 
 		if (r) {
-			x = r.tL.x;
-			y = r.tL.y;
-			w = r.width;
-			h = r.height;
+			x = r.origin.x;
+			y = r.origin.y;
+			w = r.extent.x;
+			h = r.extent.y;
 		} else {
 			w = s.width;
 			h = s.height;
@@ -284,10 +285,10 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		if (!r) {
 			gl.disable(gl.SCISSOR_TEST);
 		} else {
-			var y = this._canvas.height - r.height - r.tL.y;
+			var y = this._canvas.height - r.extent.y - r.origin.y;
 
 			gl.enable(gl.SCISSOR_TEST);
-			gl.scissor(r.tL.x, y, r.width, r.height);
+			gl.scissor(r.origin.x, y, r.extent.x, r.extent.y);
 		}
 	}
 
