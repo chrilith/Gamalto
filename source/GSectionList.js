@@ -35,7 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.using_("Rect");
-	gamalto.using_("Vector");
 	
 	/**
 	 * @constructor
@@ -64,12 +63,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.addSections = function(count, r, size) {
 		var tw = size.width,
 			th = size.height,
+			// Format
 			mg = this._margin,
-			sp = this._spacing;
+			sp = this._spacing,
+			// Rectangle
+			tL = r.origin,
+			bR = G.Vector2.add(tL, r.extent).substractFloat(1);
+
 		this.length += count;
 
-		for (var y = r.tL.y + mg.y; y < r.bR.y - mg.y; y += th + sp.y) {
-			for (var x = r.tL.x - mg.x; x < r.bR.x - mg.x; x += tw + sp.x) {
+		for (var y = tL.y + mg.y; y < bR.y - mg.y; y += th + sp.y) {
+			for (var x = tL.x - mg.x; x < bR.x - mg.x; x += tw + sp.x) {
 				this._list.push(this._createSection(x, y, tw, th));
 				if (!--count) {
 					return this;
