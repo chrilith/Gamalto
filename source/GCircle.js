@@ -33,28 +33,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
-	/* Dependencies */
-	gamalto.require_("Shape");
-	gamalto.using_("Vector");
+	gamalto.dev.require("Shape");
+	gamalto.dev.using("Rect");
+	gamalto.dev.using("Vector2");
 
 	/**
-	 * @constructor
+	 * Creates a circle object.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Circle
+	 * @augments Gamalto.Shape
+	 * 
+	 * @param {number} x
+	 *     Horizontal component of the size object.
+	 * 
+	 * @param {number} y
+	 *     Vertical component of the size object.
+	 *
+	 * @example
+	 * // Getting an object instance
+	 * var size = new Gamalto.Size(320, 240);
 	 */
-	G.Circle = function(p1, p2, radius) {
-		var u, // undefined
-			c = this;
 
-		if (radius === u) {
-			c.origin = p1.clone();
-			c.radius = p2;			
-		} else {
-			c.origin = new G.Vector(p1, p2);
-			c.radius = radius;
-		}
-	}
+	/**
+	 * [Circle description]
+	 * @param {[type]} p1     [description]
+	 * @param {[type]} p2     [description]
+	 * @param {[type]} radius [description]
+	 */
+	var _Object = G.Circle = function(x, y, radius) {
+		/**
+		 * Origin of the circle.
+		 * @member {Gamalto.Vector2}
+		 */
+		Object.base(this, x, y);
+		/**
+		 * Radius of the circle.
+		 * @member {number}
+		 */
+		this.radius = radius;
+	},
 
-	/* Inheritance and shortcut */
-	var proto = G.Circle.inherits(G.Shape);
+	/** @alias Gamalto.Circle.prototype */
+	proto = _Object.inherits(G.Shape);
 
 	proto.intersects = function(c2) {
 		var c1 = this,
@@ -70,7 +91,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.clone = function() {
-		return new G.Circle(this.origin, this.radius);
+		return new _Object(this.origin.x, this.origin.y, this.radius);
 	}
 
 	proto.pointInShape = function(x, y) {
@@ -87,11 +108,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.getBoundingBox = function() {
+		var radius = this.radius;
 		return new G.Rect(
-			this.origin.x - this.radius,
-			this.origin.y - this.radius,
-			this.radius * 2,
-			this.radius * 2
+			this.origin.x - radius,
+			this.origin.y - radius,
+			radius + radius,
+			radius + radius
 		);
 	}
 	

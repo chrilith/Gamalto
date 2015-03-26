@@ -34,14 +34,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/**
-	 * @constructor
+	 * Creates a simple size object from the specified dimensions.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Size
+	 * @augments Gamalto.Object
+	 * 
+	 * @param {number} width
+	 *     Horizontal component of the size object.
+	 * 
+	 * @param {number} height
+	 *     Vertical component of the size object.
+	 *
+	 * @example
+	 * // Getting an object instance
+	 * var size = new Gamalto.Size(320, 240);
 	 */
 	G.Size = function(width, height) {
-		this.width = width;
-		this.height = height;
-	}
+		/**
+		 * Horizontal component of the size object.
+		 * @member {number}
+		 */
+		this.width = +width || 0;
 
-	/* Inheritance */
-	G.Size.inherits(G.Object);
+		/**
+		 * Vertical component of the size object.
+		 * @member {number}
+		 */
+		this.height = +height || 0;
+	},
+
+	/** @alias Gamalto.Size.prototype */
+	proto = G.Size.inherits(G.Object);
+
+	/**
+	 * Tests whether the object has width and height of 0.
+	 * @return {boolean}
+	 */
+	proto.isEmpty = function() {
+		return this.width === 0 && this.height === 0
+	};
 
 })();

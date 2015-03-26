@@ -34,107 +34,126 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("Shape");
-	gamalto.using_("Size");
-	gamalto.using_("Vector");
+	gamalto.dev.require("Shape");
+	gamalto.dev.using("Size");
+	gamalto.dev.using("Vector2");
 
 	/**
 	 * @constructor
 	 */
-	G.Rect = function(x, y, width, height) {
-		this._setRect(x, y, width, height);
-	
-		Object.defineProperty(this, "width", {
-			get: function() { return (this.bR.x - this.tL.x + 1); },
-			enumerable: true
-		});
-	
-		Object.defineProperty(this, "height", {
-			get: function() { return (this.bR.y - this.tL.y + 1); },
-			enumerable: true
-		});
-	}
+	var _Object = G.Rect = function(x, y, width, height) {
+		var bottomRight = new _Vector2(x + width - 1, y + height - 1),
+			points = [
+				// Origin will be added by the base constructor
+				new _Vector2(bottomRight.x, y),
+				bottomRight,
+				new _Vector2(x, bottomRight.y)
+			];
+		Object.base(this, x, y, points);
+		this.extent_ = new _Vector2(width, height);
+	},
+	_Vector2 = G.Vector2,
 	
 	/* Inheritance and shortcut */
-	var proto = G.Rect.inherits(G.Shape);
+	proto = _Object.inherits(G.Polygon);
 	
 	/* Instance methods */
-	proto._setRect = function(x, y, width, height) {
-		var u, // = undefined
-			r = this;
-	
-		if (width === u && height === u) {
-			r.tL = x.clone();
-			r.bR = y.clone();
-		} else {
-			r.tL = new G.Vector(x, y);
-			r.bR = new G.Vector(x + width - 1, y + height - 1);
-		}
-	}
-	
-	proto.getSize = function() {
-		var r = this;
-		return new G.Size(
-			r.bR.x - r.tL.x + 1,
-			r.bR.y - r.tL.y + 1);
-	}
-	
 	proto.intersects = function(r2) {
-		var r1 = this;
+		var r1 = _Object.getBox_(this);
+			r2 = _Object.getBox_(r2);
+
 		return !(
 				 r1.tL.x > r2.bR.x ||
 				 r1.bR.x < r2.tL.x ||
 				 r1.tL.y > r2.bR.y ||
 				 r1.bR.y < r2.tL.y);
-	}
+	};
 	
-	proto.intersecting = function(r2) {
-		var r1 = this;
+	proto.getIntersecting = function(r2) {
+		var r1 = _Object.getBox_(this);
+			r2 = _Object.getBox_(r2);
+
 		return !r1.intersects(r2) ? null :	
-			new G.Rect(
-				new G.Vector(
+			new _Object(
+				new _Vector2(
 					(r1.tL.x > r2.tL.x ? r1.tL.x : r2.tL.x),
 					(r1.tL.y > r2.tL.y ? r1.tL.y : r2.tL.y)),
-				new G.Vector(
+				new _Vector2(
 					(r1.bR.x < r2.bR.x ? r1.bR.x : r2.bR.x),
 					(r1.bR.y < r2.bR.y ? r1.bR.y : r2.bR.y))
 			);
-	}
+	};
 	
 	proto.containts = function(r2) {
-		return (this.vectorInShape(r2.tL) &&
-				this.vectorInShape(r2.bR));
-	}
-	
+		return (this.vectorInShape(r2.origin_) &&
+				this.vectorInShape(r2.vertices_[2]));
+	};
+
 	proto.equals = function(r2) {
 		var r1 = this;
-		return (r1.tL.x == r2.tL.x &&
-				r1.tL.y == r2.tL.y &&
-				r1.bR.x == r2.bR.x &&
-				r1.bR.y == r2.bR.y);
-	}
-	
+		return (r1.origin_.x == r2.origin_.x &&
+				r1.origin_.y == r2.origin_.y &&
+				r1.extent_.x == r2.extent_.x &&
+				r1.extent_.y == r2.extent_.y);
+	};
+
 	proto.offset = function(x, y) {
-		return new G.Rect(
-			this.tL.add(x, y),
-			this.bR.add(x, y)
-		);
-	}
-	
+		_Object.base.offset.call(this, vec);
+		var bR = this.vertices_[2];
+		this.extent_.x = bR.x - this.origin_.x + 1;
+		this.extent_.y = bR.y - this.origin_.y + 1;
+	};
+
 	proto.clone = function() {
-		return new G.Rect(this.tL, this.bR);
-	}
+		var origin = this.origin_,
+			extent = this.extent_;
+		return new _Object(origin.x, origin.y, extent.x, extent.y);
+	};
 
 	proto.pointInShape = function(x, y) {
-		var r = this;
-		return (x >= r.tL.x &&
-				x <= r.bR.x &&
-				y >= r.tL.y &&
-				y <= r.bR.y);
-	}
-	
-	proto.getBoundingBox = function() {
-		return this.clone();
-	}
+		var tL = this.origin_,
+			bR = this.vertices_[2];
+
+		return (x >= tL.x &&
+				x <= bR.x &&
+				y >= tL.y &&
+				y <= bR.y);
+	};
+
+	proto.toBox = function() {
+		new G.Box(origin.x, origin.y, extent.x, extent.y);
+	};
+
+	proto.getBoundingBox = proto.clone;
+
+	Object.defineProperties(proto, {
+		"extent": {
+			get: function() {
+				return this.extent_;
+			},
+			set: function(value) {
+				var vertices = this.vertices_,
+					tL = this.origin_;
+
+				vertices[1].x = tL.x + value.x - 1;
+				vertices[2].x = vertices[1].x;
+				vertices[2].y = tL.y + value.y - 1;
+				vertices[3].x = tL.x;
+				vertices[3].y = vertices[2].y;
+
+				this.extent_ = value;
+				this.compute_();
+			}
+		},
+		"vertices": {
+			get: function() {
+				return this.vertices_;
+			}
+		}
+	});
+
+	_Object.getBox_ = function(r) {
+		return { tL: r.origin_, bR: r.vertices_[2] };
+	};
 
 })();

@@ -1,5 +1,5 @@
 /*
- * Gamalto.Shape
+ * Gamalto.Box
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
@@ -33,34 +33,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
+	gamalto.dev.using("Vector2");
+
 	/**
 	 * @constructor
 	 */
-	G.Shape = function(x, y){
-		this.origin_ = new G.Vector2(x, y);
+	var _Object = G.Box = function(x, y, width, height) {
+		this.origin = new _Vector2(x, y);
+		this.extent = new _Vector2(width, height);
 	},
 	_Vector2 = G.Vector2,
+	
+	/* Inheritance and shortcut */
+	proto = _Object.inherits(G.Object);
 
-	proto = G.Shape.inherits(G.Object);
-
-	proto.vectorInShape = function(v) {
-		return this.pointInShape(v.x, v.y);
-	}
-
-	proto.compute_ = function() { };
-
-	proto.offset = function(vec) {
-		this.origin_.add(vec);
+	proto.equals = function(b2) {
+		var b1 = this;
+		return (b1.origin.x == b2.origin.x &&
+				b1.origin.y == b2.origin.y &&
+				b1.extent.x == b2.extent.x &&
+				b1.extent.y == b2.extent.y);
 	};
 
-	Object.defineProperty(proto, "origin", {
-		get: function() {
-			return this.origin_;
-		},
-		set: function(value) {
-			var vec = _Vector2.substract(value, this.origin_);
-			this.offset(vec);
-		}
-	});
-	
+	proto.clone = function() {
+		return new _Object(this.origin.x, this.origin.y, this.extent.x, this.extent.y);
+	};
+
 })();
