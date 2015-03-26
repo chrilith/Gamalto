@@ -46,15 +46,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileMap = function(ts) {
+	var _Object = G.TileMap = function(ts) {
 		Object.base(this);
 		this.setViewport(0, 0);
 		this.setOrigin(0, 0);
 		this.setOverflow(0, 0, 0, 0);
 		this._tileSet = ts;
-	}
+	},
+	_Vector2 = G.Vector2,
 	
-	var proto = G.TileMap.inherits(G.TileGroup);
+	proto = _Object.inherits(G.TileGroup);
 		
 	proto.setOrigin = function(x, y) {
 		var o = this;
@@ -69,8 +70,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto.setOverflow = function(x1, y1, x2, y2) {
-		this._tL = new G.Vector(x1, y1);
-		this._bR = new G.Vector(x2, y2);
+		this._tL = new _Vector2(x1, y1);
+		this._bR = new _Vector2(x2, y2);
 	}
 	
 	proto.render = function(renderer, w, h) {
@@ -159,7 +160,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._drawW = w;
 		this._drawH = h;
 	
-		return new G.Vector(mx, my);
+		return new _Vector2(mx, my);
 	}
 	
 	proto.draw = function(renderer) {
