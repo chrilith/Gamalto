@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Dependencies */
 	gamalto.require_("Animator");
 	gamalto.using_("SpriteSheet");
-	gamalto.using_("Rect");
+	gamalto.using_("Vector2");
 	gamalto.using_("Timer");
 
 	/**
@@ -65,12 +65,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		Object.base(this);
 		this.setLoop(true);
-	}
+	},
 
 	/* Inheritance and shortcut */
 
 	/** @alias Gamalto.Animation.prototype */
-	var proto = G.Animation.inherits(G.Animator);
+	proto = _Object.inherits(G.Animator);
 
 	proto.useSectionsRange = function(start, length) {
 		this.length += length;
@@ -114,7 +114,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.setFrameOffset = function(frame, x, y) {
 		gamalto.assert_(frame < this._list.length);
-		this._offs[frame] = new G.Vector(x, y);
+		this._offs[frame] = new G.Vector2(x, y);
 		return this;
 	}
 

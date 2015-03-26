@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 	
 	/* Dependencies */
-	gamalto.using_("Rect");
+	gamalto.using_("Box");
 	gamalto.using_("BaseRenderer");
 	gamalto.using_("Bitmap");
 	gamalto.using_("ScrollingRegion");
@@ -91,11 +91,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	proto._move = function(region, sx, sy) {
 		var b = region._bounds,
-			x = b.tL.x,
-			y = b.tL.y,
+			x = b.origin.x,
+			y = b.origin.y,
 			s = this._surface,
-			w = b.width,
-			h = b.height,
+			w = b.extent.x,
+			h = b.extent.y,
 	
 			src = s.__canvas._context,		// FIXME: nodirect access to canvas
 			dst = region._buffer._context,
@@ -113,6 +113,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Copy a main surface area to the region buffer. Double buffering is far more efficient
 		dst.clearRect(0, 0, w, h);	// The buffer is never transformed
 		dst.drawImage(src.canvas, cx, cy, ww, hh, dx, dy, ww, hh);
+		// FIXME: should be handled by a renderer!!!
 	
 		// Handle auto loop
 		if (region._loop) {
@@ -140,7 +141,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		var r = s.renderer;
 
 		var old = r.setTransform(false);
-		r.clearRect(new G.Rect(x, y, w, h));
+		r.clearRect(new G.Box(x, y, w, h));
 		r.drawBitmap(dst.canvas, x, y);
 		r.setTransform(old);
 	}

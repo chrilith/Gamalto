@@ -35,26 +35,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.using_("Canvas2D");
-	gamalto.using_("Rect");
+	gamalto.using_("Box");
 	gamalto.using_("Surface");
 	gamalto.using_("Timer");
-	gamalto.using_("Vector");
+	gamalto.using_("Vector2");
 
 	/**
 	 * @constructor
 	 */
-	G.ScrollingRegion = function(x, y, width, height, loop) {
-		this._bounds = new G.Rect(0, 0, 0, 0);
-		this._prev = new G.Vector(0, 0);
-		this._curr = new G.Vector(0, 0);
-		this._speed = new G.Vector(0, 0);
+	var _Object = G.ScrollingRegion = function(x, y, width, height, loop) {
+		this._prev = new _Vector2(0, 0);
+		this._curr = new _Vector2(0, 0);
+		this._speed = new _Vector2(0, 0);
 	
 		this._setBounds(x, y, width, height);
 		this.setLoop(loop);
-	};
+	},
+	_Vector2 = G.Vector2,
 	
 	/* Shortcut */
-	var proto = G.ScrollingRegion.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 	
 	/* Instance methods */
 	proto.setLoop = function(isOn) {
@@ -62,11 +62,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 	
 	proto._setBounds = function(x, y, width, height) {
-		var r = this._bounds;	
-		r.tL.x = x;
-		r.tL.y = y;
-		r.bR.x = x + width - 1;
-		r.bR.y = y + height - 1;
+		this._bounds = new G.Box(x, y, width, height);
 		// TODO: alloc buffer only if setLoop(true), else free the buffer if any
 		// or if alhpa channel?
 		// Double buffer seems to be always faster...
@@ -91,7 +87,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// To be overloaded to add acceleration....
 	proto.getDisplacement = function(timer, dx, dy) {
 		var s = this._speed;
-		return new G.Vector(s.x * dx, s.y * dy);	
+		return new _Vector2(s.x * dx, s.y * dy);	
 	}
 	
 	proto.update = function(timer, dx, dy) {
