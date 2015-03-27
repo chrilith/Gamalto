@@ -35,29 +35,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.using_("Rect");
+	gamalto.using_("Vector2");
 	
 	/**
 	 * @constructor
 	 */
-	G.SectionList = function() {
+	var _Object = G.SectionList = function() {
 		var o = this;	
 		o.length = 0;
 		o._list = [];
 		this.setMargin();
 		this.setSpacing();
-	}
+	},
+	_Vector2 = G.Vector2,
 	
 	/* Inheritance and shortcut */
-	var proto = G.SectionList.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 	
 	/* Instance methods */
 
 	proto.setMargin = function(x, y) {
-		this._margin = new G.Vector(x | 0, y | 0);
+		this._margin = new _Vector2(x | 0, y | 0);
 	}
 
 	proto.setSpacing = function(x, y) {
-		this._spacing = new G.Vector(x | 0, y | 0);
+		this._spacing = new _Vector2(x | 0, y | 0);
 	}
 
 	proto.addSections = function(count, r, size) {
@@ -68,7 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			sp = this._spacing,
 			// Rectangle
 			tL = r.origin,
-			bR = G.Vector2.add(tL, r.extent).substractFloat(1);
+			bR = _Vector2.add(tL, r.extent).substractFloat(1);
 
 		this.length += count;
 
