@@ -1,5 +1,5 @@
 /*
- * Gamalto.Sound
+ * Gamalto.HTML5Sound
  * 
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
@@ -33,12 +33,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function() {
 	
-	var _Object = G.Sound = function(src) {
+	var _Object = G.HTML5Sound = function(src) {
 		Object.base(this, src);
 		this.canPlay_ = false;
 	},
 
-	proto = G.Sound.inherits(G.BaseSound);
+	proto = _Object.inherits(G.BaseSound);
 
 	proto.load = function() {
 		var promise = new G.Promise(),

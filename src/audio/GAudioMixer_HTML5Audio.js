@@ -55,7 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	_Base.addMixer_("BIT_HTML5AUDIO", _Object);
 
 	proto.createSound = function(src) {
-		return new G.Sound(src);
+		return new G.HTML5Sound(src);
 	};
 
 })(this);
