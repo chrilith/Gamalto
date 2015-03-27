@@ -126,7 +126,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	    "audio/GAudioMixer_WebAudio.js",
 	    "audio/GAudioChannel.js",
 	    "audio/GBaseSound.js",
-	    "audio/GSound.js",
+	    "audio/GHTML5Sound.js",
 	    "audio/GWebAudioSound.js",
 	    "audio/GSoundPool.js",
 
