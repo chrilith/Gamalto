@@ -35,92 +35,118 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	var all  = document.getElementsByTagName('script'),
 		path = all[all.length - 1].src,
-		dir	 = path.substr(0, path.indexOf("gamalto.debug.js"));
+		dir	 = path.substr(0, path.indexOf("gamalto.debug.js")),
+		files = [
+
+	    "Gamalto.js",
+
+	    "core/Core.js",
+	    "core/Environment.js",
+	    "core/Debug.js",
+	    "core/Compat.js",
+	    "core/GObject.js",
+	    "core/OOP.js",
+	    "core/Extensions.js",
+		
+	    "async/API_Immediate.js",
+	    "async/GPromise.js",
+	    "async/GAsync.js",
+
+	    "system/GConvert.js",
+	    "system/GCommandLine.js",
+	    "system/GTimer.js",
+	    "system/GState.js",
+	    "system/GVersion.js",
+
+		"io/GStream.js",
+	    "io/GSeekableStream.js",
+	    "io/GReadableStream.js",
+	    "io/GStreamReader.js",
+	    "io/GMemoryStream.js",
+	    "io/GFile.js",
+	    "io/GAsyncFile.js",
+
+	    "data/API_CORS.js",
+	    "data/GBaseLibrary.js",
+	    "data/GXMLLibrary.js",
+	    "data/GDataLibrary.js",
+	    "data/GTextLibrary.js",
+	    "data/GArrayReader.js",
+	    "data/GArrayWriter.js",
+	    "data/GTextReader.js",
+
+	    "geometry/GVector2.js",
+	    "geometry/GBox.js",
+	    "geometry/GShape.js",
+	    "geometry/GSize.js",
+	    "geometry/GPolygon.js",
+	    "geometry/GRect.js",
+	    "geometry/GCircle.js",
+
+	    "graphic/GBaseRenderer.js",
+	    "graphic/GBitmap.js",
+	    "graphic/GBitmapLibrary.js",
+	    "graphic/GBaseCanvas.js",
+	    "graphic/GCanvas2D.js",
+	    "graphic/GColor.js",
+	    "graphic/GPalette.js",
+	    "graphic/GRenderer2D.js",
+	    "graphic/GSurface.js",
+	    "graphic/GScreen.js",
+	    "graphic/GPattern.js",
+
+	    "sprite/GSectionList.js",
+	    "sprite/GSpriteSheet.js",
+	    "sprite/GEntity.js",
+
+		"tile/GTile.js",
+		"tile/GTiledAnimation.js",
+		"tile/GTileGroup.js",
+		"tile/GTiledBlock.js",
+		"tile/GTileMap.js",
+		"tile/GTileSet.js",
+
+	    "event/GEvent.js",
+	    "event/GKeyboardEvent.js",
+	    "event/GMouseEvent.js",
+	    "event/GEventManager.js",
+	    "event/GEventManager_Keyboard_iCade.js",
+	    "event/GEventManager_Keyboard.js",
+	    "event/GEventManager_Mouse.js",
+	    "event/GKeyboardEvent_iCade.js",
+	    "event/GTouchGamepad.js",
+
+	    "webgl/GShader.js",
+	    "webgl/GCanvasWebGL.js",
+	    "webgl/GRendererWebGL.js",
+
+	    "audio/GBaseAudioMixer.js",
+	    "audio/GAudioMixer.js",
+	    "audio/GAudioMixer_HTML5Audio.js",
+	    "audio/GAudioMixer_WebAudio.js",
+	    "audio/GAudioChannel.js",
+	    "audio/GBaseSound.js",
+	    "audio/GSound.js",
+	    "audio/GWebAudioSound.js",
+	    "audio/GSoundPool.js",
+
+	    "retro/GDecoder.js",
+	    "retro/GDecoder_Interleaved.js",
+	    "retro/GDecoder_RLE-IFF.js",
+	    "retro/GDecoder_RLE.js",
+	    "retro/GIndexedImage.js",
+	    "retro/GIndexedImage_AtariDegasElite.js",
+	    "retro/GIndexedImage_AtariNeochrome.js",
+	    "retro/GIndexedImage_InterchangeFileFormat.js",
+	    "retro/GIndexedBitmap.js",
+
+	    "text/GFont.js",
+
+	    "effect/EFader.js"
+	];
 	
-	document.write(' \
-		<script src="' + dir + 'Core.js"></script> \
-		<script src="' + dir + 'Environment.js"></script> \
-		<script src="' + dir + 'Debug.js"></script> \
-		<script src="' + dir + 'Gamalto.js"></script> \
-		<script src="' + dir + 'Compat.js"></script> \
-		<script src="' + dir + 'GObject.js"></script> \
-		<script src="' + dir + 'OOP.js"></script> \
-		<script src="' + dir + 'Extensions.js"></script> \
-		<script src="' + dir + 'Missing.js"></script> \
-		<script src="' + dir + 'GPromise.js"></script> \
-	\
-		<script src="' + dir + 'GShader.js"></script> \
-		<script src="' + dir + 'GAnimator.js"></script> \
-		<script src="' + dir + 'GAsync.js"></script> \
-		<script src="' + dir + 'GBuffer.js"></script> \
-		<script src="' + dir + 'GSectionList.js"></script> \
-		<script src="' + dir + 'GSpriteSheet.js"></script> \
-		<script src="' + dir + 'GAnimation.js"></script> \
-		<script src="' + dir + 'GTile.js"></script> \
-		<script src="' + dir + 'GTileSet.js"></script> \
-		<script src="' + dir + 'GTileGroup.js"></script> \
-		<script src="' + dir + 'GTileMap.js"></script> \
-		<script src="' + dir + 'GTiledBlock.js"></script> \
-		<script src="' + dir + 'GTiledAnimation.js"></script> \
-		<script src="' + dir + 'GFont.js"></script> \
-		<script src="' + dir + 'GTimer.js"></script> \
-		<script src="' + dir + 'GVector.js"></script> \
-		<script src="' + dir + 'GShape.js"></script> \
-		<script src="' + dir + 'GCircle.js"></script> \
-		<script src="' + dir + 'GRect.js"></script> \
-		<script src="' + dir + 'GSize.js"></script> \
-		<script src="' + dir + 'GEntity.js"></script> \
-		<script src="' + dir + 'GScroller.js"></script> \
-		<script src="' + dir + 'GScrollingRegion.js"></script> \
-		<script src="' + dir + 'GSurface.js"></script> \
-		<script src="' + dir + 'GBaseRenderer.js"></script> \
-		<script src="' + dir + 'GRenderer2D.js"></script> \
-		<script src="' + dir + 'GRendererWebGL.js"></script> \
-		<script src="' + dir + 'GScreen.js"></script> \
-		<script src="' + dir + 'GBitmap.js"></script> \
-		<script src="' + dir + 'GBaseLibrary.js"></script> \
-		<script src="' + dir + 'GBitmapLibrary.js"></script> \
-		<script src="' + dir + 'GXMLLibrary.js"></script> \
-		<script src="' + dir + 'GDataLibrary.js"></script> \
-		<script src="' + dir + 'GSequence.js"></script> \
-		<script src="' + dir + 'GState.js"></script> \
-		<script src="' + dir + 'GColor.js"></script> \
-		<script src="' + dir + 'GPalette.js"></script> \
-		<script src="' + dir + 'GPattern.js"></script> \
-		<script src="' + dir + 'GEvent.js"></script> \
-		<script src="' + dir + 'GEventManager.js"></script> \
-		<script src="' + dir + 'GKeyboardEvent.js"></script> \
-		<script src="' + dir + 'GKeyboardEvent_iCade.js"></script> \
-		<script src="' + dir + 'GMouseEvent.js"></script> \
-		<script src="' + dir + 'GEventManager_Keyboard.js"></script> \
-		<script src="' + dir + 'GEventManager_Keyboard_iCade.js"></script> \
-		<script src="' + dir + 'GEventManager_Mouse.js"></script> \
-		<script src="' + dir + 'GCommandLine.js"></script> \
-		<script src="' + dir + 'GSound.js"></script> \
-		<script src="' + dir + 'GSoundPool.js"></script> \
-		<script src="' + dir + 'GAudioChannel.js"></script> \
-		<script src="' + dir + 'GAudioMixer.js"></script> \
-		<script src="' + dir + 'GAudioMixer_HTML5Audio.js"></script> \
-		<script src="' + dir + 'GStream.js"></script> \
-		<script src="' + dir + 'GSeekableStream.js"></script> \
-		<script src="' + dir + 'GReadableStream.js"></script> \
-		<script src="' + dir + 'GReadStream.js"></script> \
-		<script src="' + dir + 'GMemoryStream.js"></script> \
-		<script src="' + dir + 'GFile.js"></script> \
-		<script src="' + dir + 'GAsyncFile.js"></script> \
-		<script src="' + dir + 'GConvert.js"></script> \
-		<script src="' + dir + 'GDecoder.js"></script> \
-		<script src="' + dir + 'GDecoder_RLE.js"></script> \
-		<script src="' + dir + 'GDecoder_RLE-IFF.js"></script> \
-		<script src="' + dir + 'GDecoder_Interleaved.js"></script> \
-		<script src="' + dir + 'GIndexedImage.js"></script> \
-		<script src="' + dir + 'GIndexedImage_AtariDegasElite.js"></script> \
-		<script src="' + dir + 'GIndexedImage_AtariNeochrome.js"></script> \
-		<script src="' + dir + 'GIndexedImage_InterchangeFileFormat.js"></script> \
-		<script src="' + dir + 'GIndexedBitmap.js"></script> \
-		<script src="' + dir + 'GTouchGamepad.js"></script> \
-\
-		<script src="' + dir + 'EFader.js"></script> \
-	');
+	files.forEach(function(file) {
+		document.write('<script src="' + dir + file + '"></script>');
+	});
 
 })();

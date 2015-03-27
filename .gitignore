@@ -1,0 +1,14 @@
+*sublime-workspace*
+*.min.*
+*.jar
+.DS_Store
+temp/
+tools/
+compile/old/
+compile/*.js
+compile/*.jar
+test/
+output
+node_modules
+bower_components
+dist
