@@ -142,6 +142,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	    "text/GFont.js",
 
+		"animation/GAnimator.js",
+		"animation/GAnimation.js",
+		"animation/GScrollingRegion.js",
+		"animation/GScroller.js",
+		"animation/GSequence.js",
+
 	    "effect/EFader.js"
 	];
 	
