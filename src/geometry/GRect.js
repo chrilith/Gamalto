@@ -97,7 +97,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				r1.extent_.y == r2.extent_.y);
 	};
 
-	proto.offset = function(x, y) {
+	proto.offset = function(vec) {
 		_Object.base.offset.call(this, vec);
 		var bR = this.vertices_[2];
 		this.extent_.x = bR.x - this.origin_.x + 1;
