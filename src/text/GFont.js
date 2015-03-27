@@ -63,8 +63,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			i = text.charCodeAt(c) - o._firstLetter;
 			if ((s = o.getSection(i))) {
 				renderer.drawBitmapSection(o._bitmap, x + w, y, s);
-				w += s.width;
-				h  = Math.fmax(s.height, h);
+				w += s.extent.x;
+				h  = Math.fmax(s.extent.y, h);
 			}
 		}
 		return new G.Rect(x, y, w, h);
@@ -92,8 +92,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// The line was painted at (0,0) in the buffer, readjust the box
 		// position according to the requested coordinates
-		rect.tL.x = x;
-		rect.tL.y = y;
+		var origin = rect.origin;
+		origin.x = x;
+		origin.y = y;
+		rect.origin = origin;
+
 		return rect;
 	}
 	
@@ -182,8 +185,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		for (c = 0; c < text.length; c++) {
 			i = text.charCodeAt(c) - this._firstLetter;
 			s = this.getSection(i);
-			w += s.width;
-			h  = Math.fmax(s.height, h);
+			w += s.extent.x;
+			h  = Math.fmax(s.extent.y, h);
 		}
 		return { w: w, h:h };
 	}
