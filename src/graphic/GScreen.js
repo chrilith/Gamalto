@@ -98,7 +98,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	proto.clear = function() {
-		var renderer = this._screen.renderer,
+		var renderer = this.renderer,
 			old = renderer.setTransform(false);
 		renderer.fillRect(new G.Rect(0, 0, this.width, this.height), G.Color.BLACK);
 		renderer.setTransform(old);
