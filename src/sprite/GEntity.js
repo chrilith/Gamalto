@@ -35,14 +35,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Entity = function() {
-		this.position = new G.Vector(0, 0);
+	var _Object = G.Entity = function() {
+		this.position = new _Vector2(0, 0);
 		this._options = {};
 		this._active = null;
-	}
+	},
+	_Vector2 = G.Vector2,
 	
 	/* Inheritance and shortcut */
-	var proto = G.Entity.inherits(G.Object);
+	proto = G.Entity.inherits(G.Object);
 	
 	// useful for ennemies duplication
 	proto.clone = function() {
@@ -67,10 +68,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.addAnimation = function(name, anim) {
 		this._options[G.N(name)] = {
 			anim : anim,
-			offs : new G.Vector(0, 0),
-			prev : new G.Vector(0, 0),
-			curr : new G.Vector(0, 0),
-			speed: new G.Vector(0, 0)
+			offs : new _Vector2(0, 0),
+			prev : new _Vector2(0, 0),
+			curr : new _Vector2(0, 0),
+			speed: new _Vector2(0, 0)
 		};
 	}
 
@@ -135,7 +136,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// To overload to add acceleration....
 	proto.getDisplacement = function(timer, dx, dy) {
 		var s = this._options[G.N(this._active)].speed;
-		return new G.Vector(s.x * dx, s.y * dy);	
+		return new _Vector2(s.x * dx, s.y * dy);	
 	}
 	
 	proto.update = function(timer, dx, dy) {
