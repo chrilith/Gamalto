@@ -61,11 +61,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.reset = function() {
 		/**
 		 * Position in the duration array.
+		 * @readonly
 		 * @member {number}
 		 */
 		this.progress = 0;
 		/**
 		 * Whether the animation is playing.
+		 * @readonly
 		 * @member {boolean}
 		 */
 		this.playing = false;
@@ -81,12 +83,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * Updates the animator state.
 	 *
 	 * @protected
+	 *
 	 * @param {Gamalto.Timer} timer
 	 *     The {@linkcode Gamalto.Timer} object from which the elpased time will be read.
 	 * @param {boolean} loop
 	 *     Whether to loop the animation.
 	 * @param {Number[]} duration
 	 *     A list of durations to handle frames time.
+	 *
 	 * @returns {boolean} The playing state.
 	 */
 	proto._update = function(timer, loop, duration) {
@@ -128,7 +132,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		};
 		// Save progression and check for ended animation
 		if ((this.progress = index) == length && !loop) {
-			this.progress = --length; // faster (length - 1)???
+			this.progress = --length;
 			this.playing = false;
 		}
 		// TODO: this.progress + lastTime / duration pour la partie fractionnelle
