@@ -36,17 +36,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.Color = function(r, g, b, a) {
-		var u;	// = undefined
-	
-		this.r = Math.fmin(Math.fmax(r || 0, 0), 255);
-		this.g = Math.fmin(Math.fmax(g || 0, 0), 255);
-		this.b = Math.fmin(Math.fmax(b || 0, 0), 255);
-		this.a = Math.fmin(Math.fmax((a === u) ? 255 : (a || 0), 0), 255);
-	}
+	var _Object = G.Color = function(r, g, b, a) {
+		this.r = Math.fmin(Math.fmax(r | 0, 0), 255);
+		this.g = Math.fmin(Math.fmax(g | 0, 0), 255);
+		this.b = Math.fmin(Math.fmax(b | 0, 0), 255);
+		this.a = Math.fmin(Math.fmax((a === undef) ? 255 : (a | 0), 0), 255);
+	},
 
 	/* Inheritance and shortcut */
-	var proto = G.Color.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
 	proto.__toCanvasStyle = function() {
@@ -54,11 +52,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						+  this.g + ","
 						+  this.b + ","
 						+ (this.a / 255) + ")";
-	}
+	};
 
-	var constant = G.Color;
+	proto.clone = function() {
+		return new _Object(this.r, this.g, this.b, this.a);
+	};
 
-	constant.BLACK	= new G.Color(0, 0, 0);
-	constant.GREY	= new G.Color(128, 128, 128);
-	constant.WHITE	= new G.Color(255, 255, 255);
+	_Object.blend = function(c1, c2, t) {
+		var t1 = 1 - t,
+			r = c1.r * t1 + c2.r * t,
+			g = c1.g * t1 + c2.g * t,
+			b = c1.b * t1 + c2.b * t,
+			a = c1.a * t1 + c2.a * t;
+		return new _Object(r, g, b, a);
+	};
+
+	_Object.BLACK	= new _Object(0, 0, 0);
+	_Object.GREY	= new _Object(128, 128, 128);
+	_Object.WHITE	= new _Object(255, 255, 255);
+
 })();
