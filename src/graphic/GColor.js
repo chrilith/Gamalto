@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.Color = function(r, g, b, a) {
+		var undef;
 		this.r = Math.fmin(Math.fmax(r | 0, 0), 255);
 		this.g = Math.fmin(Math.fmax(g | 0, 0), 255);
 		this.b = Math.fmin(Math.fmax(b | 0, 0), 255);
