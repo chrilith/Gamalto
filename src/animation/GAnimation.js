@@ -133,6 +133,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._offs.splice(dest, 0, offs);
 		this._time.splice(dest, 0, time);
 
+		this.length++;
+
 		return this;
 	}
 
