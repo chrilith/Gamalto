@@ -163,9 +163,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return new _Object(v.x / num, v.y / num);
 	};
 
-	_Object.lerp = function(v1, v2, x) {
-		//return _Object.add(v1, _Object.substract(v2, v1).multiply(x));
-		return _Object.substract(v2, v1).multiply(x).add(v1);
+	_Object.lerp = function(v1, v2, t) {
+		var t1 = 1 - t,
+			x = v1.x * t1 + v2.x * t,
+			y = v1.y * t1 + v2.y * t;
+		return new _Object(x, y);
 	};
 
 	_Object.dot = function(v1, v2) {
