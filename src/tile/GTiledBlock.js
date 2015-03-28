@@ -40,7 +40,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	G.TiledBlock = function(ts, data, rows) {
-		Object.base(this, data, rows, Math.ceil(data.length / rows));
+		Object.base(this);
+		this.setData(data, rows, Math.ceil(data.length / rows));
 		this._tileSet = ts;
 	}
 	
