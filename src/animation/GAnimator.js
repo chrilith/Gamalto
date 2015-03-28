@@ -108,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Handle playing state
 		if (!this.playing) {
 			// animation seems to have ended
-			if (this.progress == length - 1) {
+			if (this.progress == length) {
 				return false;
 			}
 			this.playing = true;
@@ -116,7 +116,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Starting at 'index'
 		while (index < length) {
-			var iter = duration[index] | 0;
+			var iter = duration[index];
 
 			// Does the elapsed time fits the current duration
 			if (time < iter) {
@@ -126,16 +126,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._lastTime = (time -= iter);
 
 			// Reached the end? should we loop?
-			if (++index == length && loop) {
+			if (++index === length && loop) {
 				index = 0;
 			}
 		};
+
 		// Save progression and check for ended animation
-		if ((this.progress = index) == length && !loop) {
-			this.progress = --length;
+		if ((this.progress = index) >= length && !loop) {
+			this.progress = length;
 			this.playing = false;
+		} else {
+			this.progress += this._lastTime / duration[index];
 		}
-		// TODO: this.progress + lastTime / duration pour la partie fractionnelle
 		return this.playing;
 	};
 
