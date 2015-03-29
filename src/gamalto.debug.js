@@ -82,6 +82,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	    "geometry/GPolygon.js",
 	    "geometry/GRect.js",
 	    "geometry/GCircle.js",
+	    "geometry/GPath.js",
 
 	    "graphic/GBaseRenderer.js",
 	    "graphic/GBitmap.js",
@@ -147,6 +148,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		"animation/GScrollingRegion.js",
 		"animation/GScroller.js",
 		"animation/GSequence.js",
+
+	    "geometry/GPathAnimator.js",
 
 	    "effect/EFader.js"
 	];
