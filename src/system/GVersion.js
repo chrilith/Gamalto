@@ -40,10 +40,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor
 	 */
 	var stat = G.Version = function(major, minor, build, revision) {
-		this.major = +major;
-		this.minor = +minor;
-		this.build = +build;
-		this.revision = +revision;
+		this.major = Number(major);
+		this.minor = Number(minor);
+		this.build = Number(build);
+		this.revision = Number(revision);
 		this._mormalize();
 	}
 
