@@ -75,8 +75,10 @@
 			dec3 = enc64.indexOf(data.charAt(i++) || "=");
 			dec4 = enc64.indexOf(data.charAt(i++) || "=");
 
-			// Need at least 2 characters excluding =
-			if (dec2 == 64) {
+			// Check for invalid character
+			if (dec1 == -1 || dec2 == -1 || dec3 == -1 || dec4 == -1 ||
+				// Need at least 2 characters excluding =
+				dec2 == 64) {
 				throw new Error("InvalidCharacterError");
 			}
 
