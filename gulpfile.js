@@ -4,31 +4,46 @@ var plugins = require('gulp-load-plugins')({
 	pattern: ['gulp-*', 'del']
 });
 
-var bower = require("./bower.json")
+/* Command line options:
+
+		--mode		Set it to "production" for complete minification
+ */
+
+var env = plugins.util.env;
+var bower = require("./bower.json");
 
 var config = {
 	dist: './dist',
-	src:  './dist/src',
-	production: true
+	src:  './src',
+	code: './dist/src',
+	production: env.mode == "production"
 };
+
+/* Copy source files in place for mapping */
 
 gulp.task('source', function() {
 
-	gulp.src("src/**/*.js")
+	gulp.src(config.src + "/**/*.js")
 		.pipe(plugins.ignore.exclude("gamalto.debug.js"))
 		.pipe(plugins.flatten())
-		.pipe(gulp.dest(config.src));
+		.pipe(gulp.dest(config.code));
 });
 
+/* Copy shaders files for distribution */
+
 gulp.task('shaders', function() {
-	gulp.src("src/**/*.{vert,frag}")
+
+	gulp.src(config.src + "/**/*.{vert,frag}")
 		.pipe(plugins.flatten())
+		.pipe(config.production ? plugins.stripComments() : plugins.util.noop())
+		.pipe(config.production ? plugins.cleanhtml() : plugins.util.noop())
 		.pipe(gulp.dest(config.dist + "/shaders"));
 });
 
+/* Build Gamalto */
+
 gulp.task('default', ["source", "shaders"], function() {
 
-	/* Build */
 	gulp.src(bower.main)
 		.pipe(plugins.ignore.exclude("**/*.{vert,frag}"))
 		.pipe(plugins.ignore.exclude("gamalto.debug.js"))
@@ -44,6 +59,6 @@ gulp.task('default', ["source", "shaders"], function() {
 			}
 		}))
 		.pipe(plugins.rename({ extname: '.min.js' }))
-		.pipe(plugins.sourcemaps.write('./', { includeContent: false, sourceRoot: './src' }))
+		.pipe(plugins.sourcemaps.write('./', { includeContent: false, sourceRoot: config.src }))
 		.pipe(gulp.dest(config.dist));
 });
