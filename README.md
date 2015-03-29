@@ -1,5 +1,6 @@
 GAMALTO
 =======
+[![Build Status](https://travis-ci.org/chrilith/Gamalto.svg)](https://travis-ci.org/chrilith/Gamalto)
 
 Check the site for updates and examples:
 http://www.gamalto.com/
