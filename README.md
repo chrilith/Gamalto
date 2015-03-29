@@ -11,6 +11,29 @@ Documentation
 The full documentation is available online at:
 http://www.gamalto.com/documentation/
 
+Building Gamalto
+================
+
+To build your own version of Gamalto you'll need [Node.js](http://nodejs.org/) and [Gulp](http://gulpjs.com).
+
+First you need to clone the Gamalto repository to your computer.
+
+```bash
+$ git clone https://github.com/chrilith/Gamalto.git
+```
+
+Then, install the dependencies required to build from source.
+
+```bash
+$ cd Gamalto
+$ npm install
+```
+
+Finally, build Gamalto using the following command.
+
+```bash
+$ gulp --mode production
+```
 
 Support
 =======
@@ -21,7 +44,7 @@ https://github.com/chrilith/Gamalto
 License
 =======
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-2015 Chris Apers and The Gamalto Project, all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
