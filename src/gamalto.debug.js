@@ -52,6 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	    "async/GPromise.js",
 	    "async/GAsync.js",
 
+	    "system/API_Base64.js",
 	    "system/GConvert.js",
 	    "system/GCommandLine.js",
 	    "system/GTimer.js",
