@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var exec = require('child_process').exec;
 
 var plugins = require('gulp-load-plugins')({
 	pattern: ['gulp-*', 'del']
@@ -40,9 +41,17 @@ gulp.task('shaders', function() {
 		.pipe(gulp.dest(config.dist + "/shaders"));
 });
 
+/* Documentation with JSDoc, gulp-jsdoc doesn't feed my needs... */
+
+gulp.task('docs', function(done) {
+	exec('jsdoc -c ./doc/conf.json', function (err, stdout, stderr) {
+		done();
+	});	
+});
+
 /* Build Gamalto */
 
-gulp.task('default', ["source", "shaders"], function() {
+gulp.task('default', ["source", "shaders"/*, "docs"*/], function() {
 
 	gulp.src(bower.main)
 		.pipe(plugins.ignore.exclude("**/*.{vert,frag}"))

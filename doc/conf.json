@@ -1,0 +1,29 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "plugins": [
+        "./doc/plugins/htmlInExample",
+        "./node_modules/jsdoc/plugins/markdown"
+    ],
+    "source": {
+        "include": [ "./src/", "./doc/README.md" ],
+        "exclude": [ "./src/gamalto.debug.js" ]
+    },
+    "opts": {
+        "template": "./doc/templates/gamalto",
+        "destination": "./dist/doc",
+        "recurse": true
+    },
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": true,
+        "default": {
+            "outputSourceFiles" : false
+        },
+        "applicationName": "Gamalto",
+        "previewVersion": true,
+        "disqus": "gamalto",
+        "googleAnalytics": "UA-153441-8"
+    }
+}
