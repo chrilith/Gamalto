@@ -38,28 +38,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	gamalto.dev.using("Vector2");
 
 	/**
-	 * Creates a circle object.
+	 * Defines a circle shape.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Circle
 	 * @augments Gamalto.Shape
-	 * 
+	 *
 	 * @param {number} x
-	 *     Horizontal component of the size object.
-	 * 
+	 *        Horizontal position of the circle center.
 	 * @param {number} y
-	 *     Vertical component of the size object.
+	 *        Vertical position of the circle center.
+	 * @param {number} radius
+	 *        Radius of the circle.
 	 *
 	 * @example
 	 * // Getting an object instance
-	 * var size = new Gamalto.Size(320, 240);
-	 */
-
-	/**
-	 * [Circle description]
-	 * @param {[type]} p1     [description]
-	 * @param {[type]} p2     [description]
-	 * @param {[type]} radius [description]
+	 * var circle = new Gamalto.Circle(100, 100, 50);
 	 */
 	var _Object = G.Circle = function(x, y, radius) {
 		/**

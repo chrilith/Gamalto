@@ -91,7 +91,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @param  {Number} unit
 	 *     The new data pointer unit.
 	 * 
-	 * @return {[type]} The previous data pointer unit.
+	 * @return {number} The previous data pointer unit.
 	 */
 	proto.setUnit = function(unit) {
 		var old = this.unit_;
