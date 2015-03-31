@@ -1,32 +1,22 @@
-/*********************************************************************************
- #################################################################################
-
- API Efficient Script Yielding
- _____________________________
-
- Implementation: setImmediate()
- Implementation: clearImmediate()
- See: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
- _____________________________
+/*
+ * API Efficient Script Yielding
+ * -----------------------------
+ * 
+ * Implementation: setImmediate()
+ * Implementation: clearImmediate()
+ *
+ * See: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
+ * 
+ * -----------------------------
+ * 
 
  This file is part of the GAMALTO JavaScript Development Framework.
  http://www.gamalto.com/
 
  (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
 
- #################################################################################
- #################################################################################
-  _________   _________   _________   _________   _        _________   _________
- |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
- | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
- | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
- | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
- |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
-
-                       «< javascript development framework >»                    
-
- #################################################################################
- *********************************************************************************/
+ *
+ */
 
 (function(global) {
 
@@ -43,7 +33,7 @@
 	}
 
 	// API IMPLETENTATION //
-	// For a similar implementation see: https://github.com/YuzuJS/setImmediate */
+	// For a similar implementation see: https://github.com/YuzuJS/setImmediate
 
 	var magic = "com.gamalto.impl.immediate" + Math.random();
 		tasks = {},

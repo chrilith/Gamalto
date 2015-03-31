@@ -1,27 +1,15 @@
-/*********************************************************************************
- #################################################################################
-
- Gamalto.Promise
- _______________
+/*
+ * Gamalto.Promise
+ * ---------------
+ * 
 
  This file is part of the GAMALTO JavaScript Development Framework.
  http://www.gamalto.com/
 
  (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
 
- #################################################################################
- #################################################################################
-  _________   _________   _________   _________   _        _________   _________
- |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
- | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
- | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
- | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
- |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
-
-                       «< javascript development framework >»                    
-
- #################################################################################
- *********************************************************************************/
+ *
+ */
 
 (function() {
 
@@ -53,8 +41,8 @@
 	/**
 	 * Resolves the promise and call the completion callbacks if any.
 	 *
-	 * @param {object} [value]
-	 *     The resulting value of the action.
+	 * @param  {object} [value]
+	 *         Resulting value of the action.
 	 */
 	proto.resolve = function(value) {
 		this.complete_(STATE_RESOLVED, value);
@@ -63,8 +51,8 @@
 	/**
 	 * Rejects the promise and call the completion callbacks if any.
 	 *
-	 * @param {string} reason
-	 *     The reason of the rejection. Usually the raised exception message which has lead to the rejection.
+	 * @param  {string} reason
+	 *         Reason of the rejection. Usually the raised exception message which has lead to the rejection.
 	 */
 	proto.reject = function(reason) {
 		this.complete_(STATE_REJECTED, reason);
@@ -138,14 +126,14 @@
 	 * Defines the callbacks to be used upon action completion or error.
 	 * The sucess callback can return a new promise, this is why a promise is always returned by `then()`. This allows actions pipelining and eases code readability.
 	 *
-	 * @param {CompletionFunc} [resolve]
-	 *     A callback to be called upon action success.
-	 * @param {CompletionFunc} [reject]
-	 *     A callback to be called upon action error.
-	 * @param {CompletionFunc} [progress]
-	 *     A callback to be called to handle action progression notification.
+	 * @param  {CompletionFunc} [resolve]
+	 *         Callback to be called upon action success.
+	 * @param  {CompletionFunc} [reject]
+	 *         Callback to be called upon action error.
+	 * @param  {CompletionFunc} [progress]
+	 *         Callback to be called to handle action progression notification.
 	 *
-	 * @returns {Gamalto.Promise} A new promise to handle the completion of another action.
+	 * @returns {Gamalto.Promise} New promise to handle the completion of another action.
 	 */
 	proto.then = function(resolve, reject, progress) {
 		var undef, promise = new G.Promise();
@@ -203,8 +191,9 @@
 	 * @name all
 	 * @memberof Gamalto.Promise
 	 *
-	 * @param {...Gamalto.Promise} vargs
-	 *     A list of promises to wait for.
+	 * @param  {...Gamalto.Promise} vargs
+	 *         A list of promises to wait for.
+	 * 
 	 * @returns {Gamalto.Promise} A new promise to handle completions.
 	 */
 	_Object.all = function(/* vargs */) {
