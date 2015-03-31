@@ -33,30 +33,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** @define {boolean} */
 var GAMALTO_DEBUG = true;
-if (GAMALTO_DEBUG) (function() {
+if (GAMALTO_DEBUG) (function(global) {
 
-/* Private */
-	var _using = {},
-		 debug = gamalto;
+	var using = {},
+		debug = {};
 
-	debug.using_ = function(name) {
-		_using["D__" + name] = 1;
-	}
+	gamalto.devel = debug;
+
+	debug.using = function(name) {
+		using["D__" + name] = 1;
+	};
 	
-	debug.require_ = function(name) {
-		debug.assert_(G[name], 'Gamalto dependency error ["' + name + '"].');
-	}
-	
-	debug.checkDependencies__ = function() {
-		for (var use in _using) {
+	debug.require = function(name) {
+		debug.assert(G[name], 'Gamalto dependency error ["' + name + '"].');
+	};
+
+	debug.checkDependencies = function() {
+		for (var use in using) {
 			if (use.substr(0, 3) == "D__") {
 				var module = use.substr(3);
-				debug.assert_(G[module], 'Gamalto cannot find module ["' + module + '"].');
+				debug.assert(G[module], 'Gamalto cannot find module ["' + module + '"].');
 			}
 		}	
-	}
+	};
 
-	debug.assert_ = function(cond, message) {
+	debug.assert = function(cond, message) {
 		if (!cond) {
 			var err = new Error();
 			message  = "Assertion failed" + (message ? " : " + message : "");
@@ -66,26 +67,32 @@ if (GAMALTO_DEBUG) (function() {
 			err.message = message;
 			throw err;
 		}
-	}
+	};
 
-	debug.error_ = function() {
-		console.error.apply(console, arguments);
-	}
+	debug.error = function() {
+		if (global.console) {
+			console.error.apply(console, arguments);
+		}
+	};
 
-	debug.log_ = function() {
-		console.log.apply(console, arguments);
-	}
+	debug.log = function() {
+		if (global.console) {
+			console.log.apply(console, arguments);
+		}
+	};
 
-	debug.warn_ = function() {
-		console.warn.apply(console, arguments);
-	}
+	debug.warn = function() {
+		if (global.console) {
+			console.warn.apply(console, arguments);
+		}
+	};
 
 	// TODO: move to ReadableStream
-	debug.mem_ = function(stream, addr, len) {
+	debug.memory = function(stream, addr, len) {
 		if (stream.is(G.ReadableStream)) {
 			var i, val, str = "",
 				ptr = stream.ptr(addr),
-				unit = (stream._unit << 1 || 1),
+				unit = (stream.unit_ << 1 || 1),
 				pad = Array(16).join(0);
 
 			for (i = 0; i < 16 >> (unit >> 1); i++) {
@@ -95,28 +102,29 @@ if (GAMALTO_DEBUG) (function() {
 
 			for (i = 0; i < len; i++) {
 				if (unit == 1) {
-					val = ptr.readUInt8(i);
+					val = ptr.readUint8(i);
 				} else if (unit == 2) {
-					val = ptr.readUInt16LE(i);
+					val = ptr.readUint16(i);
 				} else if (unit == 4) {
-					val = ptr.readUInt32LE(i);
+					val = ptr.readUint32(i);
 				}
 
 				if (i % (16 >> (unit >> 1)) == 0) { str += "\n" + (pad + (addr + i * unit).toString(16)).substr(-8) + "   "; }
 				str += ((pad + val.toString(16)).substr(-unit << 1) + "  ");
 			}
-			debug.log_("Offset(h)  " + str.toUpperCase());
+			debug.log("Offset(h)  " + str.toUpperCase());
 		}
-	}
+	};
 
-	// Dirty hack to prepare code migration
-	var temp = gamalto.dev = {};
-	temp.using = debug.using_;
-	temp.require = debug.require_;
-	temp.assert = debug.assert_;
-	temp.error = debug.error_;
-	temp.log = debug.log_;
-	temp.warn = debug.warn_;
-	temp.mem = debug.mem_;
+	// Migration code
+	var dev = gamalto.dev = {};
+	dev.require = gamalto.require_ = debug.require;
+	dev.using = gamalto.using_ = debug.using;
+	gamalto.checkDependencies__ = debug.checkDependencies;
+	dev.assert = gamalto.assert_ = debug.require;
+	dev.error = gamalto.error_ = debug.error;
+	dev.log = gamalto.log_ = debug.log;
+	dev.warn = gamalto.warn_ = debug.warn;
+	gamalto.assert_ = debug.memory;
 
-})();
+})(this);
