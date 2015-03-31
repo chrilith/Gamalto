@@ -1,31 +1,37 @@
-/*********************************************************************************
- #################################################################################
+/*
+ * Gamalto.SeekableStream
+ * ----------------------
+ * 
+ * This file is part of the GAMALTO JavaScript Development Framework.
+ * http://www.gamalto.com/
+ *
 
- Gamalto.SeekableStream
- ______________________
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
- This file is part of the GAMALTO JavaScript Development Framework.
- http://www.gamalto.com/
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
- (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
- #################################################################################
- #################################################################################
-  _________   _________   _________   _________   _        _________   _________
- |  _______| |_______  | |  _   _  | |_________| | |      |___   ___| |  _____  |
- | |  _____   _______| | | | | | | |  _________  | |          | |     | |     | |
- | | |____ | |  _____  | | | | | | | |_________| | |          | |     | |     | |
- | |_____| | | |_____| | | | | | | |  _________  | |_______   | |     | |_____| |
- |_________| |_________| |_| |_| |_| |_________| |_________|  |_|     |_________|
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
-                       «< javascript development framework >»                    
-
- #################################################################################
- *********************************************************************************/
+ *
+ */
 
 (function() {
 
-	gamalto.dev.require("Stream");
+	gamalto.devel.require("Stream");
 
 	/**
 	 * Base object to create seekable streams. It's not meant to be used directly.
@@ -46,12 +52,12 @@
 	 *
 	 * @param  {number}  offset
 	 *     Offset to be applied to the stream pointer.
-	 * 
 	 * @param  {number} [origin]
-	 *     Origin of the position change. Defaults to SEEK_CUR.	
-	 *     @see #SEEK_SET
-	 *     @see #SEEK_CUR
-	 *     @see #SEEK_END
+	 *         Origin of the position change. Defaults to [SEEK_CUR]{@link Gamalto.SeekableStream.prototype.SEEK_CUR}.	
+	 * 
+	 * @see [SEEK_SET]{@link Gamalto.SeekableStream.prototype.SEEK_SET}
+	 * @see [SEEK_CUR]{@link Gamalto.SeekableStream.prototype.SEEK_CUR}
+	 * @see [SEEK_END]{@link Gamalto.SeekableStream.prototype.SEEK_END}
 	 */
 	proto.seek = function(offset, origin) {
 		var C = this,
@@ -74,7 +80,7 @@
 				this.position_ = this.length + offset;
 				break;
 		}
-	}
+	};
 
 	/**
 	 * Sets the stream pointer to the beginning of the stream.

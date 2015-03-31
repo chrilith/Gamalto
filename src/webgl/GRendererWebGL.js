@@ -1,64 +1,57 @@
 /*
  * Gamalto.RendererWebGL
+ * ---------------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
 
-
 // http://learningwebgl.com/blog/?p=859
 // http://media.tojicode.com/webgl-samples/js/webgl-tilemap.js
 
-(function(initializer) {
+(function(ns) {
 
 	/**
 	 * Dependencies
 	 */
-	gamalto.require_("BaseRenderer");
-	gamalto.require_("TextLibrary");
-	gamalto.using_("Bitmap");
-	gamalto.using_("Rect");
-	gamalto.using_("Box");
-	gamalto.using_("BaseCanvas");
+	gamalto.devel.require("BaseRenderer");
+	gamalto.devel.require("TextLibrary");
 	
 	/* Initialization */
 	var _shaders,
-		_path = initializer.getCurrentPath();
+		_path = ns.getCurrentPath();
 
-	initializer.addInitializer(function() {		
+	ns.addInitializer(function() {		
 		_shaders = new G.TextLibrary();
 		_shaders.pushItem("position", _path + "shaders/rdr_position.vert");
 		_shaders.pushItem("fillColor", _path + "shaders/rdr_fill-color.frag");
 		_shaders.pushItem("fillTexture", _path + "shaders/rdr_fill-texture.frag");
 
 		_shaders.load().then(function() {
-			initializer.nextInitializer();
+			ns.nextInitializer();
 		});
 	});
 
@@ -88,11 +81,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	}
+	};
 
 	proto.drawBitmap = function(bitmap, x, y) {
 		this.drawBitmapSection(bitmap, x, y);
-	}
+	};
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
 		var gl = this._getContext(),
@@ -171,18 +164,18 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 
 		// draw
 		gl.drawArrays(gl.TRIANGLES, 0, points.length >> 1);
-	}
+	};
 
 	proto.enableFiltering = function(isOn) {
 		this._filtering = !!isOn;
-	}
+	};
 
 	proto._setStyle = function(style) {
 		var gl = this._getContext();
 
 		var colorLocation = gl.getUniformLocation(this._program[0], "uColor");
 		gl.uniform4f(colorLocation, style.r / 255, style.g / 255, style.b / 255, style.a / 255);
-	}
+	};
 
 	proto._initDraw = function(program, points) {
 		var gl = this._getContext(),
@@ -201,7 +194,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
 		return buffer;
-	}
+	};
 
 	proto._drawShape = function(type, points, style) {
 		var gl = this._getContext(),
@@ -210,7 +203,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		this._setStyle(style);
 		this._initDraw(p, points);
 		gl.drawArrays(type, 0, points.length >> 1);
-	}
+	};
 	
 	proto.fillRect = function(r, style) {
 		var s = this._canvas,
@@ -242,7 +235,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			x1, y2,
 			x2, y1,
 			x2, y2], style);
-	}
+	};
 
 	proto.clearRect = function(r) {
 		var gl = this._getContext();
@@ -250,7 +243,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		gl.disable(gl.BLEND);
 		this.fillRect(r, new G.Color(0, 0, 0, 0));
 		gl.enable(gl.BLEND);
-	}
+	};
 
 	proto.hLine = function(x, y, w, style) {
 		var gl = this._getContext();
@@ -262,7 +255,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		this._drawShape(gl.LINES, [
 			x, y,
 			x + w, y], style);
-	}
+	};
 
 	proto.vLine = function(x, y, h, style) {
 		var gl = this._getContext();
@@ -274,10 +267,10 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		this._drawShape(gl.LINES, [
 			x, y,
 			x, y + h], style);
-	}
+	};
 	
 	proto._transform = function(x, y, w, h) {
-	}
+	};
 
 	proto._clip = function(r) {
 		var gl = this._getContext();
@@ -290,6 +283,6 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			gl.enable(gl.SCISSOR_TEST);
 			gl.scissor(r.origin.x, y, r.extent.x, r.extent.y);
 		}
-	}
+	};
 
 })(Gamalto);

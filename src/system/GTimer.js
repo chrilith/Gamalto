@@ -1,38 +1,35 @@
 /*
  * Gamalto.Timer
+ * -------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
 
-(function() {
-	var global = this;
+(function(global) {
 
 	/* Enable standard version of the method */
 	Object.defineMethod(global, "requestAnimationFrame");
@@ -47,12 +44,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor Gamalto.Timer
 	 * @augments Gamalto.Object
 	 *
-	 * @param {TimingFunc} callback
-	 *     The function to be called on every frame.
-	 * @param {number} [rate]
-	 *     The expected minimum frame rate before trying to skip frames. By default, a rate of 25 frames per second is used.
-	 * @param {number} [skip]
-	 *     A value between 0 and 100 representing the percentage of frames to skip. By default, this parameter is set to 0 meaning that no frame skip will occur.
+	 * @param  {TimingFunc} callback
+	 *         Function to be called on every frame.
+	 * @param  {number} [rate]
+	 *         Expected minimum frame rate before trying to skip frames. By default, a rate of 25 frames per second is used.
+	 * @param  {number} [skip]
+	 *         Value between 0 and 100 representing the percentage of frames to skip. By default, this parameter is set to 0 meaning that no frame skip will occur.
 	 */
 	G.Timer = function(callback, rate, skip) {
 		Object.base(this);
@@ -73,25 +70,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Sets the expected timer frame rate.
 	 *
-	 * @param {number} rate
-	 *     A positive interger value.
+	 * @param  {number} rate
+	 *         Positive interger value.
 	 */
 	proto.setFrameRate = function(rate) {
 		this._tolerance = 500 + (this._frameTime = 1000 / rate);
 		this.setSkipRatio(this._frameSkipRatio);
-	}
+	};
 	
 	/**
 	 * Sets the amount of frame that should be automatically skipped if the frame rate cannot be honored.
 	 *
-	 * @param {number} ratio
-	 *     A positive interger value between 0, no frame skip, and 100 allowing full frame skip.
+	 * @param  {number} ratio
+	 *         Positive interger value between 0, no frame skip, and 100 allowing full frame skip.
 	 */
 	proto.setSkipRatio = function(ratio) {
 		this._skipped = 0;
 		this._frameSkipRatio = ratio;
 		this._frameSkip = (1000 / this._frameTime * ratio / 100) | 0;
-	}
+	};
 	
 	proto._nextWait = function(prev) {
 		var that = this,
@@ -111,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		that._overWait = 0;
 		that._shouldSkip = false;
 		return wait;
-	}
+	};
 
 	/**
 	 * Gets the elapsed time since the last iteration.
@@ -119,13 +116,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.getElapsed = function() {
 		var e = (Date.now() - this._lastTime | 0);
 		return e >= this._tolerance ? 0 : e;
-	}
+	};
 
 	/**
 	 * Starts the timer execution.
 	 *
-	 * @param {boolean} [strict]
-	 *      Whether to force maximum frame rate to the set value Useful for non time-based games.
+	 * @param  {boolean} [strict]
+	 *         Whether to force maximum frame rate to the set value Useful for non time-based games.
 	 */
 	proto.start = function(strict) {
 		this._stopped = false;
@@ -167,14 +164,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if (func)	{ func(callback); }
 			else		{ setTimeout(callback, next); }
 		})();
-	}
+	};
 
 	/**
 	 * Stops the timer execution.
 	 */
 	proto.stop = function() {
 		this._stopped = true;
-	}
+	};
 	
 	/*	Frames Per Second (FPS) related methods
 		For debug purpose only */
@@ -204,13 +201,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	
 		return last;
-	}
+	};
 
 	/**
 	 * Sets the callback function which will receive the frame rate information.
 	 *
-	 * @param {FPSFunc} callback
-	 *      The function to be called on every frame counter update. Setting to null will disable the FPS counter.
+	 * @param  {FPSFunc} callback
+	 *         The function to be called on every frame counter update. Setting to null will disable the FPS counter.
 	 */
 	proto.setFPSWatcher_ = function(callback) {
 		this._fpsCb = callback;
@@ -220,4 +217,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this._tickIndex = 0;
 	};
 
-})();
+})(this);

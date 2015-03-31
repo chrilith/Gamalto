@@ -1,32 +1,30 @@
 /*
  * Gamalto.BaseLibrary
+ * -------------------
  * 
- * This file is part of the Gamalto framework
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -34,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.using_("Promise");
+	gamalto.devel.using("Promise");
 
 	/**
 	 * Base object to implement resources managers. It's not meant to be used directly by the client code.
@@ -54,9 +52,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Gets a resource from the library.
 	 *
-	 * @param {string} name
-	 *     The name of the resource.
-	 * @returns {object} The requested item if it exists.
+	 * @param  {string} name
+	 *         Name of the resource.
+	 * 
+	 * @return {object} Requested item if it exists.
 	 */
 	proto.getItem = function(name) {
 		return this.list_[G.N(name)];
@@ -65,8 +64,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Releases the resource.
 	 *
-	 * @param {string} name
-	 *     The name of the resource.
+	 * @param  {string} name
+	 *         Name of the resource.
 	 */
 	proto.unloadItem = function(name) {
 		delete this.list_[G.N(name)];
@@ -76,13 +75,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * Tries to load a new resource into the library.
 	 *
 	 * @virtual
-	 * @param {string} name
-	 *     The name of the resource.
-	 * @param {string} src
-	 *     The location of the item to load.
-	 * @param {...object} [vargs]
-	 *     Extra parameters.
-	 * @returns {Gamalto.Promise} A promise to handle the loading states.
+	 * 
+	 * @param  {string} name
+	 *          Name of the resource.
+	 * @param  {string} src
+	 *          Location of the item to load.
+	 * @param  {...object} [vargs]
+	 *          Extra parameters.
+	 * 
+	 * @return {Gamalto.Promise} Promise to handle the loading states.
 	 */
 	proto.loadItem = function(name, src/* vargs */) {
 		return new G.Promise();
@@ -91,13 +92,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Pushes a new resource into the list.
 	 *
-	 * @param {string} name
-	 *     The name of the resource.
-	 * @param {string} src
-	 *     The location of the item to load.
+	 * @param  {string} name
+	 *         Name of the resource.
+	 * @param  {string} src
+	 *         Location of the item to load.
 	 */
 	proto.pushItem = function(name, src/*, vargs*/) {
-		gamalto.assert_(!this.loading_, "The libary is already loading items.");
+		gamalto.devel.assert(!this.loading_, "The libary is already loading items.");
 		// Here we can have more than just 'src', save all parameters
 		this.pending_.push(Array.prototype.slice.call(arguments, 0));
 	};
@@ -105,10 +106,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Tries to load all the resources pushed into the library.
 	 *
-	 * @returns {Gamalto.Promise} A promise to handle the loading states.
+	 * @return {Gamalto.Promise} Promise to handle the loading states.
 	 */
 	proto.load = function() {
-		gamalto.assert_(!this.loading_, "The libary is already loading items.");
+		gamalto.devel.assert(!this.loading_, "The libary is already loading items.");
 		this.loading_ = true;
 
 		var that = this,
@@ -153,9 +154,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Tests whether a resource is available.
 	 *
-	 * @param {string} name
-	 *     The name of the resource.
-	 * @returns {boolean} Returns true is the resource exists and has been properly loaded.
+	 * @param  {string} name
+	 *         Name of the resource.
+	 * 
+	 * @return {boolean} True is the resource exists and has been properly loaded.
 	 */
 	proto.hasItem = function(name) {
 		var undef;

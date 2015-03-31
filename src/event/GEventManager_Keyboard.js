@@ -1,32 +1,30 @@
 /*
- * Gamalto.GEventManager_Keyboard
+ * Gamalto.EventManager Keyboard Module
+ * ------------------------------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -36,15 +34,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	gamalto.require_("EventManager");
-	gamalto.using_("KeyboardEvent");
+	gamalto.devel.require("EventManager");
+	gamalto.devel.using("KeyboardEvent");
+	gamalto.devel.using("Event");
 
 	
 	/* Local */
 	var base = G.EventManager,
 		manager = function(parent) {
 			this._parent = parent;
-		}
+		};
 
 	base._addManager("BIT_KEYBOARD", manager);	
 	
@@ -55,19 +54,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.listen = function() {
 		global.addEventListener("keydown", this, false);
 		global.addEventListener("keyup", this, false);
-	}
+	};
 
 	proto.release = function() {
 		global.removeEventListener("keydown", this, false);
 		global.removeEventListener("keyup", this, false);
-	}
+	};
 	
 	
 	// EventManager extensions
 	base.prototype.enableKeyRepeat = function(delay, interval) {
 		this._rDelay = delay;		// 500
 		this._rInterval = interval;	// 30
-	}
+	};
 
 	/* TODO: Involve a constant polling (or readable in poll only??).
 	   If needed, _release() will flush Q only
@@ -129,7 +128,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			q[lst]._done = true;
 		}
 		return !!(q.push(evt));
-	}
+	};
 
 	proto.handleEvent = function(e) {
 		switch (e.type) {
@@ -138,6 +137,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._pushKey(e);
 				break;
 		}
-	}
+	};
 
 })(this);

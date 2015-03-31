@@ -1,37 +1,35 @@
 /*
  * Gamalto Core Object
+ * -------------------
  * 
- * This file is part of the Gamalto framework
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
 
-(function() {
+(function(global) {
 
 	var _container, undef;
 
@@ -53,8 +51,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Sets the container of the canvas element.
 	 *
-	 * @param {(string|object)} container
-	 *     The name or the HTMLElement which will receive the main canvas object.
+	 * @param  {(string|object)} container
+	 *         Name or the HTMLElement which will receive the main canvas object.
 	 */
 	core.setContainer = function(container) {
 		_container = (typeof container == "string") ?
@@ -64,8 +62,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Gets the container of the canvas element defined by {@linkcode Core#setContainer}.
 	 *
-	 * @returns {object}
-	 *     The HTMLElement containing the canvas element or the document body by default.
+	 * @returns  {object}
+	 *           HTMLElement containing the canvas element or the document body by default.
 	 */
 	core.getContainer = function() {
 		return (_container || document.body);
@@ -74,8 +72,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Sets the window icon.
 	 *
-	 * @param {string} url
-	 *     The location of the icon.
+	 * @param  {string} url
+	 *         Location of the icon.
 	 */
 	core.setIcon = function(href) {
 		var head = document.getElementsByTagName("head")[0];
@@ -90,8 +88,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Sets the window title.
 	 *
-	 * @param {string} title
-	 *     The new window title.
+	 * @param  {string} title
+	 *         New window title.
 	 */
 	core.setTitle = function(title) {
 		document.title = title;
@@ -100,11 +98,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Finds the first defined element in the parameters list.
 	 *
-	 * @param {...object} vargs
-	 *     A list of parameters.
+	 * @param  {...object} vargs
+	 *         List of parameters.
 	 *
-	 * @returns {object}
-	 *     The first defined element or `undefined` by default.
+	 * @returns  {object}
+	 *           First defined element or `undefined` by default.
 	 */
 	core.defined = function(/* vargs... */) {
 		var i,
@@ -150,6 +148,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @global
 	 * @type {Core}
 	 */
-	self.gamalto = new Core();
+	global.gamalto = new Core();
 
-})();
+})(this);

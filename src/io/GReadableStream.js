@@ -1,32 +1,30 @@
 /*
  * Gamalto.ReadableStream
+ * ----------------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -34,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("SeekableStream");
+	gamalto.devel.require("SeekableStream");
 
 	/**
 	 * Base object to create readable stream. It's not meant to be used directly.
@@ -52,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		 * @ignore
 		 * @protected
 		 * 
-		 * @member {Object}
+		 * @member {object}
 		 */
 		this.reader_ = null;
 
@@ -63,7 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		 * @ignore
 		 * @protected
 		 * 
-		 * @member {Number}
+		 * @member {number}
 		 */
 		this.unit_ = 0;
 	},
@@ -81,14 +79,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @ignore
 	 * @protected
 	 * 
-	 * @param  {Number} len
-	 *     The number of bytes to be accessed.
-	 * @param  {Number} [from]
-	 *     The position from where to access the stream data in stream unit.
-	 *     Defaults to the current stream position.
-	 *     Setting this parameter will not increment stream position.
+	 * @param  {number} len
+	 *         The number of bytes to be accessed.
+	 * @param  {number} [from]
+	 *         The position from where to access the stream data in stream unit.
+	 *         Defaults to the current stream position.
+	 *         Setting this parameter will not increment stream position.
 	 *
-	 * @return {Number} The position from where to access stream data in bytes.
+	 * @return {number} The position from where to access stream data in bytes.
 	 */
 	proto.at_ = function(len, from) {
 		var undef;
@@ -103,35 +101,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			from <<= this.unit_;
 		}
 		return from;
-	}
+	};
 
 	proto.littleEndian = function(isOn) {
 		this.le_ = isOn;
-	}
+	};
 
 	proto.readUint8 = function(at) {
 		return this.reader_.getUint8(this.at_(1, at));
-	}
+	};
 
 	proto.readInt8 = function(at) {
 		return this.reader_.getInt8(this.at_(1, at));
-	}
+	};
 
 	proto.readUint16 = function(at) {
 		return this.reader_.getUint16(this.at_(2, at), this.le_);
-	}
+	};
 
 	proto.readInt16 = function(at) {
 		return this.reader_.getInt16(this.at_(2, at), this.le_);
-	}
+	};
 
 	proto.readUint32 = function(at) {
 		return this.reader_.getUint32(this.at_(4, at), this.le_);
-	}
+	};
 
 	proto.readInt32 = function(at) {
 		return this.reader_.getInt32(this.at_(4, at), this.le_);
-	}
+	};
 
 	proto.readString = function(length, stopChar) {
 		var c, s = "";
@@ -140,6 +138,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			s += String.fromCharCode(c);
 		}
 		return s;
-	}
+	};
 
 })();

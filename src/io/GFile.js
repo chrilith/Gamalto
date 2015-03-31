@@ -1,32 +1,30 @@
 /*
  * Gamalto.File
+ * ------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -34,8 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("ReadableStream");
-	gamalto.using_	("TextReader");
+	gamalto.devel.require("ReadableStream");
+	gamalto.devel.using("TextReader");
 
 	/**
 	 * @constructor
@@ -43,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var _Object = G.File = function() {
 		Object.base(this, 0);
 		this.cacheSize = 4096;	// Initial cache size
-	}
+	};
 
 	/* Inheritance and shortcut */
 	var proto = _Object.inherits(G.ReadableStream);
@@ -54,13 +52,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.url_ = url;
 		this.error = 0;
 		return this.info_();
-	}
+	};
 	
 	proto.close = function() {
 		this.buffer = null;
 		this.bufSize_ = 0;
 		this.url_ = null;
-	}
+	};
 
 	// No position
 	proto.at_ = function(len, from) {
@@ -68,13 +66,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		from = -(this.bufPos_ - this.position_);
 		this.position_ += len;
 		return from;
-	}
+	};
 
 	proto.read = function(buffer, size) {
 		while(size--) {
 			buffer.writeInt8(this.readUint8());
 		}		
-	}
+	};
 
 	proto.seek = function(offset, origin) {
 		_Object.base.seek.apply(this, arguments);
@@ -85,17 +83,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.buffer = null;
 			this.bufSize_ = 0;
 		}
-	}
+	};
 	
 	proto.tell = function() {
 		return (this.bufPos_ + this.position_);
-	}
+	};
 
 	proto.info_ = function() {
 		return this.send_(this.open_(
 			this.onInfoReceived_,
 			this.onError_, "HEAD"));
-	}
+	};
 
 	proto.onInfoReceived_ = function(r) {
 		var status = r.status,
@@ -121,7 +119,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		return state;
-	}
+	};
 
 	proto.setError_ = function(isOK, status) {
 		this.error = isOK ? 0 : status;
@@ -129,16 +127,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (status == 0 && this.length <= 0) {
 			this.error = 400;
 		}
-	}
+	};
 
 	proto.onError_ = function(r) {
 		// Will be raised on network or CORS errors
 		return new Error("An unexpected error occured. Check the console for more info");
-	}
+	};
 
 	proto.isAsync = function() {
 		return false;
-	}
+	};
 
 	proto.open_ = function(loadHandler, errorHandler, mode) {
 		var r = new XMLHttpRequest(),
@@ -154,7 +152,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// check http://xhr.spec.whatwg.org/.
 		r.open(mode || "GET", this.url_ + random, this.isAsync());
 		return r;	
-	}
+	};
 
 	proto.send_ = function(r) {
 
@@ -177,7 +175,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} finally {
 			return r;
 		}
-	}
+	};
 
 	proto.openRange_ = function(loadHandler, errorHandler, length) {
 		length = Math.max(length, this.cacheSize);
@@ -191,13 +189,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.bufPos_ = p;
 		}
 		return r;
-	}
+	};
 
 	proto.range_ = function() {
 		return this.send_(this.openRange_(
 			this.onRangeReceived_,
 			this.onError_));
-	}
+	};
 
 	proto.response_ = function(r) {
 		if (!this.useVB_) {
@@ -210,7 +208,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			response += String.fromCharCode(chr);
 		});
 		return response;
-	}
+	};
 
 	proto.onRangeReceived_ = function(r) {
 		var data, state = r.readyState,
@@ -232,20 +230,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.setError_(isOK, status);
 		}
 		return state;
-	}
+	};
 
 	proto.readAny_ = function(size, method) {
 		this.ensureCapacity_(size);
 		return _Object.base["read" + method].call(this);
-	}
+	};
 
 	proto.readUint8 = function() {
 		return this.readAny_(1, "Uint8");
-	}
+	};
 
 	proto.readInt8 = function() {
 		return this.readAny_(1, "Int8");
-	}
+	};
 
 	proto.readUint16 = function() {
 		return this.readAny_(2, "Uint16");
@@ -257,11 +255,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	proto.readUint32 = function() {
 		return this.readAny_(4, "Uint32");
-	}
+	};
 
 	proto.readInt32 = function() {
 		return this.readAny_(4, "Int32");
-	}
+	};
 
 	/**
 	 * Reads the whole file data into the internal buffer.
@@ -271,7 +269,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	proto.readAll = function() {
 		this.rewind();
 		return this.ensureCapacity_(this.length);
-	}
+	};
 
 	proto.shouldRead_ = function(size) {
 		var position = this.position_,
@@ -289,12 +287,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 position > bufEnd ||
 			 // Do we have enough buffer for the requested size?
 			 reqEnd - eos > bufEnd);
-	}
+	};
 
 	proto.ensureCapacity_ = function(size) {
 		if (this.shouldRead_(size)) {
 			this.range_(size);
 		}
-	}
+	};
 
 })();

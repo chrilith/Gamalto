@@ -1,32 +1,30 @@
 /*
  * Gamalto.TouchGamepad
+ * --------------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -38,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var core = gamalto;
 
 	/* Dependencies */
-	gamalto.require_("Shape");
+	gamalto.devel.require("Shape");
 
 	/* Local */
 	var AXES	= 0,
@@ -62,13 +60,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		};
 
 		this.reflow();
-	}
+	};
 
 	var stat = G.TouchGamepad;
 	
 	stat.isSupported = function() {
 		return ('ontouchstart' in window);
-	}
+	};
 
 	var proto = G.TouchGamepad.inherits(G.Object);
 
@@ -87,7 +85,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._parent[action](events[i], this, false);
 			}
 		}
-	}
+	};
 	
 	proto.handleEvent = function(e) {
 		if (e.type == "resize") {
@@ -97,7 +95,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} else {
 			this._mouseHandler(e);
 		}
-	}
+	};
 	
 	/* Mouse handler for desktop testing */
 	proto._mouseHandler = function(e) {
@@ -111,7 +109,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._handleAction(e, !end);
 		}
 		if (end) { this._capture = false; }
-	}
+	};
 
 	proto._handleAction = function(e, active) {
 		// Handle both touch and mouse for desktop testing
@@ -131,7 +129,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				y = touch[i].clientY;
 			this._check(x, y, active);
 		}
-	}
+	};
 	
 	proto.reflow = function() {
 		// Parent must be displayed in order to compute its size
@@ -141,7 +139,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		for (i = 0; i < p.length; i++) {
 			p[i].bbox = p[i].shape.getBoundingBox();
 		}
-	}
+	};
 
 	proto.addAxes = function(shape, align) {
 		this.axes.push(0);
@@ -152,7 +150,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			align: align,
 			bbox : shape.getBoundingBox()
 		});
-	}
+	};
 	
 	proto.addButton = function(shape, align) {
 		this.buttons.push(0);
@@ -161,7 +159,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			shape: shape,
 			align: align
 		});
-	}
+	};
 
 	proto._checkAxes = function(i, x, y, active) {
 		var p = this._shapes.nfo[AXES][i];
@@ -184,7 +182,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			return true;
 		}
 		return false;
-	}
+	};
 	
 	proto._checkButton = function(i, x, y, active) {
 		var p = this._shapes.nfo[BUTTONS][i];
@@ -194,7 +192,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			return true;
 		}
 		return false;
-	}
+	};
 
 	proto._check = function(x, y, active) {
 		var j, i, xx, yy, tc,
@@ -222,6 +220,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			}
 		}
-	}
+	};
 
 })();

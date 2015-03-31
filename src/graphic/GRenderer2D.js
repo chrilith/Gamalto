@@ -1,32 +1,30 @@
 /*
  * Gamalto.Renderer2D
+ * ------------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012-2014 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -36,10 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/**
 	 * Dependencies
 	 */
-	gamalto.require_("BaseRenderer");
-	gamalto.using_("Bitmap");
-	gamalto.using_("Rect");
-	gamalto.using_("BaseCanvas");
+	gamalto.devel.require("BaseRenderer");
 	
 	/**
 	 * @constructor
@@ -60,7 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		this._getContext()
 			.drawImage(gc ? gc.call(bitmap) : bitmap, xy[0], xy[1]);
-	}
+	};
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
 		var sx = r.origin.x,
@@ -72,11 +67,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		this._getContext()
 			.drawImage(gc ? gc.call(bitmap) : bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);
-	}
+	};
 
 	proto.enableFiltering = function(isOn) {
 		this._getContext().setMember("imageSmoothingEnabled", !!isOn);
-	}
+	};
 	
 	proto.fillRect = function(r, style) {
 		var s = this._canvas,
@@ -97,11 +92,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			xy  = this._transform(x, y, w, h);
 		ctx.fillStyle = style.__toCanvasStyle();
 		ctx.fillRect(xy[0], xy[1], w, h);
-	}
+	};
 
 	proto.clearRect = function(r) {
 		this._getContext().clearRect(r.origin.x, r.origin.y, r.extent.x, r.extent.y);
-	}
+	};
 
 	proto.hLine = function(x, y, w, style) {
 		var ctx = this._getContext(),
@@ -115,7 +110,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		ctx.moveTo(x, y);
 		ctx.lineTo(x + w - 1, y);
 		ctx.stroke();
-	}
+	};
 
 	proto.vLine = function(x, y, h, style) {
 		var ctx = this._getContext(),
@@ -129,7 +124,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		ctx.moveTo(x, y);
 		ctx.lineTo(x, y + h - 1);
 		ctx.stroke();
-	}
+	};
 	
 	// http://en.wikipedia.org/wiki/Transformation_matrix
 	// http://cairographics.org/matrix_transform/
@@ -184,7 +179,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		return [x - dx, y + dy];
-	}
+	};
 
 	proto._clip = function(r) {
 		var ctx = this._getContext();
@@ -197,13 +192,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			ctx.rect(r.origin.x, r.origin.y, r.extent.x, r.extent.y);
 			ctx.clip();
 		}
-	}
+	};
 
 	proto._reset = function() {
 		var ctx = this._getContext();
 		ctx.globalAlpha = 1;
 		ctx.globalCompositeOperation = "source-over";
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-	}
+	};
 
 })();

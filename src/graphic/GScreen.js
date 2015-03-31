@@ -1,32 +1,30 @@
 /*
  * Gamalto.Screen
+ * --------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -36,9 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		COCOON = navigator.isCocoonJS;
 
 	/* Dependencies */
-	gamalto.require_("Surface");
-	gamalto.using_("Color");
-	gamalto.using_("Rect");
+	gamalto.devel.require("Surface");
+	gamalto.devel.using("Color");
+	gamalto.devel.using("Rect");
 
 	/**
 	 * @constructor
@@ -55,11 +53,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	/* Instance methods */
 	proto.__screenCanvas = function() {
 		return this._screen._getCanvas();
-	}
+	};
 
 	proto.getSurface = function() {
 		return this._screen;
-	}
+	};
 
 	proto.setActive = function() {
 		// Disable scanlines
@@ -76,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Adjust the screen stretching
 		this.setStretch();
-	}
+	};
 
 	proto.enableMouse = function(isOn) {
 		this.__screenCanvas().style.cursor = isOn ? "" : "none";
@@ -95,14 +93,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			 style.setMember("imageRendering", null);
 			 style.setMember("interpolationMode", null);
 		}
-	}
+	};
 
 	proto.clear = function() {
 		var renderer = this.renderer,
 			old = renderer.setTransform(false);
 		renderer.fillRect(new G.Rect(0, 0, this.width, this.height), G.Color.BLACK);
 		renderer.setTransform(old);
-	}
+	};
 	
 	proto.setScanlines = function(dark, light) {
 		if (!(dark || light)) {
@@ -120,18 +118,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			this._scanlines = new G.Pattern(s);
 		}
-	}
+	};
 
 	proto.refresh = function() {
 		this._screen.blit(this, 0, 0);
 		if (this._scanlines) {
 			this._screen.renderer.fillRect(null, this._scanlines);
 		}
-	}
+	};
 
 	proto.handleEvent = function(e) {
 		this.setStretch();
-	}
+	};
 	
 	proto.setStretch = (COCOON)
 	?function(mode) {
@@ -190,7 +188,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		s.width  = rw + "px";
 		s.height = rh + "px";
-	}
+	};
 
 	var stat = G.Screen;
 	

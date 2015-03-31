@@ -1,32 +1,30 @@
 /*
  * Gamalto.Animation
+ * -----------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -36,10 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	var core = gamalto;
 
 	/* Dependencies */
-	gamalto.require_("Animator");
-	gamalto.using_("SpriteSheet");
-	gamalto.using_("Vector2");
-	gamalto.using_("Timer");
+	gamalto.devel.require("Animator");
+	gamalto.devel.using("SpriteSheet");
+	gamalto.devel.using("Vector2");
+	gamalto.devel.using("Timer");
 
 	/**
 	 * Creates a new animation sequence from a sprites sheet.
@@ -48,8 +46,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * @constructor Gamalto.Animation
 	 * @augments Gamalto.Animator
 	 *
-	 * @param {Gamalto.SpriteSheet} sheet
-	 *     The sprites sheet containing the sections for the animation.
+	 * @param  {Gamalto.SpriteSheet} sheet
+	 *         Sprites sheet containing the sections for the animation.
 	 *
 	 * @example
 	 * // Getting an object instance
@@ -79,7 +77,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._time.push(0);
 		}
 		return this;
-	}
+	};
 
 	proto.useSections = function(list) {
 		var arr = this._list,
@@ -91,11 +89,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._time.push(0);
 		}
 		return this;
-	}
+	};
 
 	proto.getSection = function(frame) {
 		return this.sheet.getSection(this._list[frame]);
-	}
+	};
 
 	proto.setDuration = function(time) {
 		var len = this.length,
@@ -104,23 +102,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this._time[len] = slice;
 		}
 		return this;
-	}
+	};
 
 	proto.setFrameDuration = function(frame, time) {
 		gamalto.assert_(frame < this._list.length);
 		this._time[frame] = time;
 		return this;
-	}
+	};
 
 	proto.setFrameOffset = function(frame, x, y) {
 		gamalto.assert_(frame < this._list.length);
 		this._offs[frame] = new G.Vector2(x, y);
 		return this;
-	}
+	};
 
 	proto.getFrameOffset = function(frame) {
 		return this._offs[frame] || G.Vector.ZERO;
-	}
+	};
 
 	proto.duplicateFrame = function(index, dest) {
 		gamalto.assert_(dest <= this._list.length);
@@ -136,51 +134,54 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		this.length++;
 
 		return this;
-	}
+	};
 
 	/**
 	 * Sets the loop state of the animation.
 	 *
-	 * @param {boolean} isOn
-	 *     Whether to loop the animation.
-	 * @returns {Gamalto.Animation} The current object for function calls chaining.
+	 * @param  {boolean} isOn
+	 *         Whether to loop the animation.
+	 * 
+	 * @return {Gamalto.Animation} The current object for function calls chaining.
 	 */
 	proto.setLoop = function(isOn) {
 		this._loop = !!isOn;
 		return this;
-	}
+	};
 
 	/**
 	 * Gets the loop state of the animation.
 	 */
 	proto.getLoop = function() {
 		return this._loop;
-	}
+	};
 
 	/**
 	 * Updates the animation state.
 	 *
-	 * @param {Gamalto.Timer} timer
-	 *     The {@linkcode Gamalto.Timer} object from which the elpased time will be read. Internally calls the {@linkcode Gamalto.Animator#_update} method.
-	 * @returns {boolean} The playing state.
+	 * @param  {Gamalto.Timer} timer
+	 *         {@linkcode Gamalto.Timer} object from which the elpased time will be read. Internally calls the {@linkcode Gamalto.Animator#_update} method.
+	 * 
+	 * @return {boolean} The playing state.
 	 */
 	proto.update = function(timer) {
 		return _Object.base
 			._update.call(this, timer, this._loop, this._time);
-	}
+	};
 
 	/**
 	 * Draws the current animation frame.
 	 *
-	 * @param {Gamalto.BaseRenderer} renderer
-	 *     The renderer of the {@linkcode Gamalto.surface} to which the animation frame will be rendered.
-	 * @param {number} x
-	 *     The horizontal drawing position.
-	 * @param {number} y
-	 *     The vertical drawing position.
-	 * @param {number} [frame]
-	 *     The index of the frame to draw. Usually, the frame index is internally calculated.
-	 * @returns {number} The drawn frame index.
+	 * @param  {Gamalto.BaseRenderer} renderer
+	 *         Renderer of the {@linkcode Gamalto.surface} to which the animation frame will be rendered.
+	 * @param  {number} x
+	 *         Horizontal drawing position.
+	 * @param  {number} y
+	 *         Vertical drawing position.
+	 * @param  {number} [frame]
+	 *         Index of the frame to draw. Usually, the frame index is internally calculated.
+	 * 
+	 * @return {number} The drawn frame index.
 	 */
 	proto.draw = function(renderer, x, y, frame) {
 		frame = core.defined(frame, this.progress, 0) | 0;
@@ -194,11 +195,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		this.sheet.draw(renderer, x, y, this._list[frame]);
 		return frame;
-	}
+	};
 
 	/**
 	 * Creates a clone of the current object.
-	 * @returns {Gamalto.Animation} A deep copy of the object.
+	 * @return {Gamalto.Animation} A deep copy of the object.
 	 */
 	proto.clone = function() {
 		var clone = new _Object(this.sheet);
@@ -206,6 +207,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		clone._offs = this._offs.slice();
 		clone._time = this._time.slice();
 		_Object.base.clone.call(this);
-	}
+	};
 
 })();

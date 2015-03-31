@@ -1,32 +1,30 @@
 /*
  * Gamalto.Font
+ * ------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2012 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -34,12 +32,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.require_("SpriteSheet");
-	gamalto.using_("Bitmap");
-	gamalto.using_("Rect");
-	gamalto.using_("Renderer2D");
-	gamalto.using_("Size");
-	gamalto.using_("Surface");
+	gamalto.devel.require("SpriteSheet");
+	gamalto.devel.using("Rect");
+	gamalto.devel.using("Size");
+	gamalto.devel.using("Surface");
 
 	/**
 	 * @constructor
@@ -48,7 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		Object.base(this, bitmap);
 		this._firstLetter = firstLetter.charCodeAt(0);
 		this.setAlign();
-	}
+	};
 	
 	/* Inheritance and shortcut */
 	var proto = G.Font.inherits(G.SpriteSheet);
@@ -68,7 +64,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 		return new G.Rect(x, y, w, h);
-	}
+	};
 	
 	proto._paintStyle = function(renderer, text, x, y) {
 		var rect, area,
@@ -98,7 +94,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		rect.origin = origin;
 
 		return rect;
-	}
+	};
 	
 	proto.draw = function(renderer, text, x, y) {
 		var shadow = this._shadow;
@@ -110,7 +106,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	
 		return this._paint.apply(this, arguments);
-	}
+	};
 	
 	proto._paint = function(renderer, text, x, y) {
 		var o  = this,
@@ -148,22 +144,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	
 		return r;
-	}
+	};
 	
 	proto.setStyle = function(style) {
 		var prev = this._style;
 		this._style = style;
 		return prev;
-	}
+	};
 	
 	proto.setShadow = function(offsetX, offsetY, style) {
 		// FIXME: really create a new object?
 		this._shadow = !offsetX && !offsetY ? null : { x: offsetX, y: offsetY, style: style };
-	}
+	};
 
 	proto.setAlign = function(align) {
 		this._align = align;
-	}
+	};
 
 	proto.getBounds = function(text) {
 		var c, i, s,
@@ -176,7 +172,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			h += s.h;
 		}	
 		return new G.Size(w, h);
-	}
+	};
 	
 	proto._getBBox = function(text) {
 		var c, i, s,
@@ -189,6 +185,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			h  = Math.fmax(s.extent.y, h);
 		}
 		return { w: w, h:h };
-	}
+	};
 
 })();

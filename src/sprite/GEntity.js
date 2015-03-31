@@ -1,37 +1,38 @@
 /*
  * Gamalto.Entity
+ * --------------
  * 
- * This file is part of the Gamalto middleware
+ * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
 
-Copyright (C)2011-2013 Chris Apers and The Gamalto Project, all rights reserved.
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-For production software, the copyright notice only is required. You must also
-display a splash screen showing the Gamalto logo in your game of other software
-made using this middleware.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
 
 (function() {
+
+	gamalto.devel.require("Vector2");
+
 	/**
 	 * @constructor
 	 */
@@ -63,7 +64,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		clone._active = this._active;
 		clone.position = this.position.clone();
-	}
+	};
 	
 	proto.addAnimation = function(name, anim) {
 		this._options[G.N(name)] = {
@@ -73,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			curr : new _Vector2(0, 0),
 			speed: new _Vector2(0, 0)
 		};
-	}
+	};
 
 	proto.isPlaying = function() {
 		var name = this._active;
@@ -81,20 +82,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			return false;
 		}
 		return this._options[G.N(name)].anim.playing;
-	}
+	};
 	
 	// Displacement speed for the given animation
 	proto.setSpeed = function(name, px, py) {
 		var o = this._options[G.N(name)];
 		o.speed.x = px / 1000;
 		o.speed.y = py / 1000;
-	}
+	};
 
 	proto.setOffset = function(name, ox, oy) {
 		var o = this._options[G.N(name)];
 		o.offs.x = ox;
 		o.offs.y = oy;
-	}
+	};
 	
 	proto.reset = function(name) {
 		var o = this._options[G.N(name)],
@@ -104,11 +105,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		p.y = 0;
 		c.x = 0;
 		c.y = 0;
-	}
+	};
 
 	proto.getActive = function() {
 		return this._active;
-	}
+	};
 	
 	proto.setActive = function(name) {
 		if (name != this._active) {
@@ -119,25 +120,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			options.anim.reset();
 			this._active = name;
 		}
-	}
+	};
 	
 	proto.setPosition = function(x, y) {
 		var p = this.position;
 		p.x = x;
 		p.y = y;
 		this.reset(this._active);
-	}
+	};
 	
 	proto.moveBy = function(dx, dy) {
 		var p = this.position;
 		this.setPosition(p.x + dx, p.y + dy);
-	}
+	};
 	
 	// To overload to add acceleration....
 	proto.getDisplacement = function(timer, dx, dy) {
 		var s = this._options[G.N(this._active)].speed;
 		return new _Vector2(s.x * dx, s.y * dy);	
-	}
+	};
 	
 	proto.update = function(timer, dx, dy) {
 		var o = this._options[G.N(this._active)],
@@ -166,7 +167,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		o.anim.update(timer);
 
 		return c;
-	}
+	};
 	
 	// TODO: save current and previous BBox for collision tests
 	proto.draw = function(renderer, x, y, i) {
@@ -179,6 +180,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.setPosition(x, y);
 		}
 		return o.anim.draw(renderer, p.x + d.x, p.y + d.y, i);
-	}
+	};
 
 })();
