@@ -52,7 +52,7 @@ THE SOFTWARE.
 	
 	/* Instance methods */
 	proto.__screenCanvas = function() {
-		return this._screen._getCanvas();
+		return this._screen.getCanvas_();
 	};
 
 	proto.getSurface = function() {
@@ -136,7 +136,7 @@ THE SOFTWARE.
 		var prefix = "idtkscale:";
 		mode = (this._stretch = (mode || this._stretch) | 0);
 
-		this._getCanvas().style.cssText =
+		this.getCanvas_().style.cssText =
 			(mode === stat.STRETCH_DEFAULT) ? "" :
 			(mode & stat.STRETCH_UNIFORM) ?
 				(mode & stat.STRETCH_FILL) ?

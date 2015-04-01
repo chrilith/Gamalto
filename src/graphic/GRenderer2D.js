@@ -51,7 +51,7 @@ THE SOFTWARE.
 		var sw = bitmap.width,
 			sh = bitmap.height,
 			xy = this._transform(x, y, sw, sh),
-			gc = bitmap._getCanvas;
+			gc = bitmap.getCanvas_;
 
 		this._getContext()
 			.drawImage(gc ? gc.call(bitmap) : bitmap, xy[0], xy[1]);
@@ -63,7 +63,7 @@ THE SOFTWARE.
 			sw = r.extent.x,
 			sh = r.extent.y,
 			xy = this._transform(x, y, sw, sh),
-			gc = bitmap._getCanvas;
+			gc = bitmap.getCanvas_;
 
 		this._getContext()
 			.drawImage(gc ? gc.call(bitmap) : bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);

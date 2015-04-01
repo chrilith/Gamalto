@@ -105,9 +105,9 @@ THE SOFTWARE.
 		}
 	};
 
-	proto._getCanvas = function() {
+	proto.getCanvas_ = function() {
 		this.renderer.flush();
-		return this.__canvas._getCanvas();
+		return this.__canvas.getCanvas_();
 	};
 
 })();

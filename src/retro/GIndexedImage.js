@@ -148,7 +148,7 @@ THE SOFTWARE.
 		}
 	};
 
-	proto._getCanvas = function(refresh) {
+	proto.getCanvas_ = function(refresh) {
 		var buf, pal = this._palette;
 
 		if (pal._changed || refresh) {
@@ -161,7 +161,7 @@ THE SOFTWARE.
 			});
 		}
 
-		return this._buffer._getCanvas();
+		return this._buffer.getCanvas_();
 	};
 
 })();

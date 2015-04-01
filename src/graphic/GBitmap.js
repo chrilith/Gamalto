@@ -49,7 +49,7 @@ THE SOFTWARE.
 		}
 	};
 
-	proto._getCanvas = function() {
+	proto.getCanvas_ = function() {
 		return this._source;
 	};
 

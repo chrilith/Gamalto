@@ -54,7 +54,7 @@ THE SOFTWARE.
 		this.__canvas = document.createElement("canvas");	
 	};
 
-	_proto._getCanvas = function() {
+	_proto.getCanvas_ = function() {
 		return this.__canvas;
 	};
 

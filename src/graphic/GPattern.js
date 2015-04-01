@@ -44,7 +44,7 @@ THE SOFTWARE.
 		var s = new G.Surface(r.extent.x, r.extent.y);
 		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
 		// FIXME: only renderers should directly access context methods
-		this._pattern = s.__canvas._context.createPattern(s._getCanvas(), "repeat");
+		this._pattern = s.__canvas._context.createPattern(s.getCanvas_(), "repeat");
 	};
 
 	/* Inheritance and shortcut */

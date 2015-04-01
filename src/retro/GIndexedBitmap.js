@@ -59,10 +59,10 @@ THE SOFTWARE.
 		this._source._palette.setColor(index, color);
 	};
 
-	proto._getCanvas = function() {
+	proto.getCanvas_ = function() {
 		var refresh = this._updated;
 		this._updated = false;
-		return this._source._getCanvas(refresh);	
+		return this._source.getCanvas_(refresh);
 	};
 
 	proto._getSourceType = function() {

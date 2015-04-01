@@ -90,7 +90,7 @@ THE SOFTWARE.
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
 		var gl = this._getContext(),
 			p = this._program[1],
-			gc = bitmap._getCanvas;
+			gc = bitmap.getCanvas_;
 
 		gl.useProgram(this._program[1]);
 
@@ -145,7 +145,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this._filtering ? gl.NEAREST : gl.LINEAR);
 
 		// For scrolling, we allow passing a context directly
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gc ? bitmap._getCanvas() : bitmap); 
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gc ? bitmap.getCanvas_() : bitmap); 
 
 		var x1 = x,
 			y1 = y,
