@@ -53,11 +53,11 @@ THE SOFTWARE.
 	 * @param  {number}  offset
 	 *     Offset to be applied to the stream pointer.
 	 * @param  {number} [origin]
-	 *         Origin of the position change. Defaults to [SEEK_CUR]{@link Gamalto.SeekableStream.prototype.SEEK_CUR}.	
+	 *         Origin of the position change. Defaults to [SEEK_CUR]{@link Gamalto.SeekableStream#SEEK_CUR}.	
 	 * 
-	 * @see [SEEK_SET]{@link Gamalto.SeekableStream.prototype.SEEK_SET}
-	 * @see [SEEK_CUR]{@link Gamalto.SeekableStream.prototype.SEEK_CUR}
-	 * @see [SEEK_END]{@link Gamalto.SeekableStream.prototype.SEEK_END}
+	 * @see [SEEK_SET]{@link Gamalto.SeekableStream#SEEK_SET}
+	 * @see [SEEK_CUR]{@link Gamalto.SeekableStream#SEEK_CUR}
+	 * @see [SEEK_END]{@link Gamalto.SeekableStream#SEEK_END}
 	 */
 	proto.seek = function(offset, origin) {
 		var C = this,
