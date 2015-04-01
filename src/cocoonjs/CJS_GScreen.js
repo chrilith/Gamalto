@@ -1,6 +1,6 @@
 /*
- * Gamalto.Pattern
- * ---------------
+ * Gamalto.Screen CocoonJS Mode
+ * ----------------------------
  * 
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
@@ -29,30 +29,21 @@ THE SOFTWARE.
  *
  */
 
-(function() {
+if (navigator.isCocoonJS) (function() {
 
-	/* Dependencies */
-	gamalto.devel.using("Surface");
-	gamalto.devel.using("Rect");
-	gamalto.devel.using("Renderer2D");
+	// TODO: only in Canvas+
+	G.Screen.prototype.setStretch = function(mode) {
+		var prefix = "idtkscale:";
+		mode = (this.stretch_ = (mode || this.stretch_) | 0);
 
-	/**
-	 * @constructor
-	 */
-	G.Pattern = function(bitmap, r) {
-		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);
-		var s = new G.Surface(r.extent.x, r.extent.y);
-		s.renderer.drawBitmapSection(bitmap, 0, 0, r);
-		// FIXME: only renderers should directly access context methods
-		this._pattern = s.canvas_._context.createPattern(s.getCanvas_(), "repeat");
-	};
-
-	/* Inheritance and shortcut */
-	var proto = G.Pattern.inherits(G.Object);
-	
-	/* Instance methods */
-	proto.__toCanvasStyle = function() {
-		return this._pattern;
+		this.getCanvas_().style.cssText =
+			(mode === this.STRETCH_DEFAULT) ? "" :
+			(mode & this.STRETCH_UNIFORM) ?
+				(mode & this.STRETCH_FILL) ?
+					prefix + "ScaleAspectFill" :
+				prefix + "ScaleAspectFit" :
+			
+			"";	// Default: ScaleToFill;
 	};
 
 })();

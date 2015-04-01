@@ -29,59 +29,88 @@ THE SOFTWARE.
  *
  */
 
-(function() {
-	var _active, _scanlines,
-		COCOON = navigator.isCocoonJS;
+(function(global) {
 
 	/* Dependencies */
 	gamalto.devel.require("Surface");
 	gamalto.devel.using("Color");
-	gamalto.devel.using("Rect");
+	gamalto.devel.using("Box");
 
 	/**
-	 * @constructor
+	 * Creates a new surface to handle the main display.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Screen
+	 * @augments Gamalto.Surface
+	 *
+	 * @param {number} width
+	 *        Physical horizontal size of the screen.
+	 * @param {number} height
+	 *        Physical vertical size of the screen.
+	 * @param {Gamalto.BaseCanvas} [canvas]
+	 *        Type of the internal canvas.
+	 *
+	 * @example
+	 * var screen = new Gamalto.Screen(320, 240);
 	 */
-	G.Screen = function(width, height, canvas) {
-		// Real screen
-		this._screen = new G.Surface(width, height, canvas);
+	var _Object = G.Screen = function(width, height, canvas) {
+
 		Object.base(this, width, height, canvas);
+		/**
+		 * Surface that will be display on the physical screen.
+		 *
+		 * @private
+		 * @ignore
+		 * 
+		 * @member {Gamalto.Surface}
+		 */
+		this.screen_ = new G.Surface(width, height, canvas);
+	},
+
+	/** @alias Gamalto.Screen.prototype */
+	proto = _Object.inherits(G.Surface);
+
+
+	/**
+	 * Gets the HTMLCanvasElement of the screen.
+	 *
+	 * @private
+	 * @ignore
+	 * 
+	 * @return {HTMLCanvasElement} Screen canvas element.
+	 */
+	proto.getElement_ = function() {
+		return this.screen_.getCanvas_();
 	};
 
-	/* Inheritance and shortcut */
-	var proto = G.Screen.inherits(G.Surface);
-	
-	/* Instance methods */
-	proto.__screenCanvas = function() {
-		return this._screen.getCanvas_();
-	};
-
+	/**
+	 * Gets the displayed screen surface for direct access.
+	 * Accessing the surface may lead to unexpected rendering artifacts.
+	 * 
+	 * @return {Gamalto.Surface} Screen surface.
+	 */
 	proto.getSurface = function() {
-		return this._screen;
+		return this.screen_;
 	};
 
-	proto.setActive = function() {
-		// Disable scanlines
-		this.setScanlines();
-
-		// Add the new screen to the document
-		var container = gamalto.getContainer();
-		if (_active) {
-			window.removeEventListener("resize", _active, false);
-			container.removeChild(_active.__screenCanvas());
-		}
-		window.addEventListener("resize", (_active = this), false);
-		container.appendChild(this.__screenCanvas());
-
-		// Adjust the screen stretching
-		this.setStretch();
-	};
-
+	/**
+	 * Sets the mouse cursor visibility.
+	 * 
+	 * @param {boolean} isOn
+	 *        Whether to show the mouse cursor.
+	 */
 	proto.enableMouse = function(isOn) {
-		this.__screenCanvas().style.cursor = isOn ? "" : "none";
+		this.getElement_().style.cursor = isOn ? "" : "none";
 	};
 
+	/**
+	 * Sets the filtering state.
+	 * 
+	 * @param {boolean} isOn
+	 *        Whether to smooth the screen when stretched.
+	 */
 	proto.enableFiltering = function(isOn) {
-		var style = this.__screenCanvas().style;
+		var style = this.getElement_().style;
 
 		if (!isOn &&
 			(style.setMember("imageRendering", "crisp-edges") ||
@@ -95,74 +124,81 @@ THE SOFTWARE.
 		}
 	};
 
+	/**
+	 * Clears the screen to black.
+	 */
 	proto.clear = function() {
 		var renderer = this.renderer,
 			old = renderer.setTransform(false);
-		renderer.fillRect(new G.Rect(0, 0, this.width, this.height), G.Color.BLACK);
+		renderer.fillRect(new G.Box(0, 0, this.width, this.height), G.Color.BLACK);
 		renderer.setTransform(old);
 	};
 	
+	/**
+	 * Sets the scalines effect state.
+	 * If no parameter is specified, scalines are disabled.
+	 * 
+	 * @param {number} dark
+	 *        The dark lines level between 0 and 1.
+	 * @param {number} light
+	 *        The light lines level between 0 and 1.
+	 */
 	proto.setScanlines = function(dark, light) {
 		if (!(dark || light)) {
-			this._scanlines = null;
+			this.scanlines_ = null;
 
 		} else {
 			var s = new G.Surface(1, 2),
 				r = s.renderer;
 
 			// Create the scanlines effect
-			r.fillRect(new G.Rect(0, 0, 1, 1),
+			r.fillRect(new G.Box(0, 0, 1, 1),
 					   new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
-			r.fillRect(new G.Rect(0, 1, 1, 1),
+			r.fillRect(new G.Box(0, 1, 1, 1),
 					   new G.Color(255, 255, 255, 255 * (light || 0) / 100));			
 
-			this._scanlines = new G.Pattern(s);
+			this.scanlines_ = new G.Pattern(s);
 		}
 	};
 
+	/**
+	 * Displays the screen content.
+	 */
 	proto.refresh = function() {
-		this._screen.blit(this, 0, 0);
-		if (this._scanlines) {
-			this._screen.renderer.fillRect(null, this._scanlines);
+		this.screen_.blit(this, 0, 0);
+		if (this.scanlines_) {
+			this.screen_.renderer.fillRect(null, this.scanlines_);
 		}
 	};
 
-	proto.handleEvent = function(e) {
-		this.setStretch();
-	};
-	
-	proto.setStretch = (COCOON)
-	?function(mode) {
-		var prefix = "idtkscale:";
-		mode = (this._stretch = (mode || this._stretch) | 0);
+	/**
+	 * Adjust the logical screen size.
+	 * 
+	 * @param {number} mode
+	 *        Bitmask indicating the transformation to apply.
+	 */
+	proto.setStretch = function(mode) {
+		var canvas = this.getElement_(),
+			style = canvas.style,
+			parent = canvas.parentNode;
 
-		this.getCanvas_().style.cssText =
-			(mode === stat.STRETCH_DEFAULT) ? "" :
-			(mode & stat.STRETCH_UNIFORM) ?
-				(mode & stat.STRETCH_FILL) ?
-					prefix + "ScaleAspectFill" :
-				prefix + "ScaleAspectFit" :
-			"";	// Default: ScaleToFill;
-	}
-	:function(mode) {
-		var c = this.__screenCanvas(),
-			s = c.style,
-			p = c.parentNode;
+		// Reset styles to default (parent should be set to overflow=hidden)
+		style.marginTop =
+			style.marginLeft =
+			style.width =
+			style.height = "";
 
-		s.marginTop  = s.marginLeft = "";
-		s.width = s.height = "";
-
-		if (!p) { return; }
-		mode = (this._stretch = (mode || this._stretch) | 0);
-		if (mode === stat.STRETCH_DEFAULT) { return; }
+		// Read the requested mode
+		mode = (this.stretch_ = Number(mode || this.stretch_) | 0);
+		if (mode === this.STRETCH_DEFAULT) { return; }
 
 		var rw, rh,
-			w1 = p.offsetWidth;
-			h1 = p.offsetHeight,
-			w2 = c.width,
-			h2 = c.height;
+			w1 = parent.offsetWidth;
+			h1 = parent.offsetHeight,
+			w2 = canvas.width,
+			h2 = canvas.height;
 
-		if (mode & stat.STRETCH_UNIFORM) {
+		if (mode & this.STRETCH_UNIFORM) {
 			if (w1 / h1 < w2 / h2) {
 				rw = w1;
 				rh = rw * (h2 / w2);
@@ -170,30 +206,84 @@ THE SOFTWARE.
 				rh = h1;
 				rw = rh * (w2 / h2);
 			}
+		// Any other non-default mode?
 		} else if (mode) {
 			rw = w1;
 			rh = h1;
 		}
 
-		if (mode & stat.STRETCH_FILL) {
+		if (mode & this.STRETCH_FILL) {
 			if (rw < w1) {
 				rh *= w1 / rw;
 				rw  = w1;
-				s.marginTop = ((h1 - rh) / 2) + "px";
+				style.marginTop = ((h1 - rh) >> 1) + "px";
 			} else {
 				rw *= h1 / rh;
 				rh  = h1;
-				s.marginLeft = ((w1 - rw) / 2) + "px";
+				style.marginLeft = ((w1 - rw) >> 1) + "px";
 			}
 		}
-		s.width  = rw + "px";
-		s.height = rh + "px";
+		// Finally sets the canvas element size
+		style.width  = rw + "px";
+		style.height = rh + "px";
+	};
+	
+	/**
+	 * No specific streching.
+	 * 
+	 * @constant
+	 * @type {number}
+	 */
+	proto.STRETCH_DEFAULT	= 0;
+	/**
+	 * Bit to keep aspect ratio.
+	 * 
+	 * @constant
+	 * @type {number}
+	 */
+	proto.STRETCH_UNIFORM	= 1 << 1;
+	/**
+	 * Bit to fill the parent.
+	 * 
+	 * @constant
+	 * @type {number}
+	 */
+	proto.STRETCH_FILL	= 1 << 2;
+
+	/**
+	 * Active screen.
+	 *
+	 * @ignore
+	 * 
+	 * @type {Gamalto.Screen}
+	 */
+	var active;
+
+	/**
+	 * Sets the visible screen.
+	 *
+	 * @function setActive
+	 * @memberof Gamalto.Screen
+	 * @static
+ 	 * 
+	 * @param {Gamalto.Screen} screen
+	 *        Screen to be shown.
+	 */
+	_Object.setActive = function(screen) {
+		var container = gamalto.getContainer();
+		if (active) {
+			container.removeChild(active.getElement_());
+		}
+		container.appendChild(screen.getElement_());
+		// Adjust the screen size
+		screen.setStretch();
 	};
 
-	var stat = G.Screen;
-	
-	stat.STRETCH_DEFAULT	= 0;
-	stat.STRETCH_UNIFORM	= 1 << 1;	// TODO: what about aspcect ratio only?
-	stat.STRETCH_FILL		= 1 << 2;
+	// Adjusts the screen when the window is resized
+	global.addEventListener("resize", function() {
+		if (active) {
+			active.setStretch();
+		}
+	}, false);
 
-})();
+})(this);

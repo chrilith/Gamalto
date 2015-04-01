@@ -154,7 +154,9 @@ var GAMALTO_DEBUG = true;
 
 	    "geometry/GPathAnimator.js",
 
-	    "effect/EFader.js"
+	    "effect/EFader.js",
+
+	    "cocconjs/CJS_GScreen.js"
 	];
 	
 	files.forEach(function(file) {
