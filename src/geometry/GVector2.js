@@ -35,8 +35,8 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.Vector2 = function(x, y) {
-		this.x = +x || 0;
-		this.y = +y || 0;
+		this.x = Number(x) || 0;
+		this.y = Number(y) || 0;
 	},
 
 	proto = _Object.inherits(G.Object);

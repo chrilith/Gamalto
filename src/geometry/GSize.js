@@ -53,13 +53,13 @@ THE SOFTWARE.
 		 * Horizontal component of the size object.
 		 * @member {number}
 		 */
-		this.width = +width || 0;
+		this.width = Number(width) || 0;
 
 		/**
 		 * Vertical component of the size object.
 		 * @member {number}
 		 */
-		this.height = +height || 0;
+		this.height = Number(height) || 0;
 	},
 
 	/** @alias Gamalto.Size.prototype */

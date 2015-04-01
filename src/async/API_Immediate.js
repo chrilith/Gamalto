@@ -93,8 +93,7 @@ THE SOFTWARE.
 			var data = event.data;
 			if (event.source == global && typeof data == "string" && data.indexOf(magic) == 0) {
 				event.stopPropagation();
-				/* + instead of |0 can return NaN */
-				tryRunTask(+data.substr(magic.length));
+				tryRunTask(Number(data.substr(magic.length)));
 			}
 		}
 		/* Using W3C Messaging API
