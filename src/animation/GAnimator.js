@@ -31,9 +31,6 @@ THE SOFTWARE.
 
 (function() {
 
-	/* Dependencies */
-	// ...
-
 	/**
 	 * Base object to create time-based multiframe animation objects. It's not meant to be used directly.
 	 *
@@ -44,12 +41,10 @@ THE SOFTWARE.
 	var _Object = G.Animator = function() {
 		Object.base(this);
 		this.reset();
-	};
-
-	/* Inheritance and shortcut */
+	},
 
 	/** @alias Gamalto.Animator.prototype */
-	var proto = G.Animator.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
 
@@ -59,44 +54,49 @@ THE SOFTWARE.
 	proto.reset = function() {
 		/**
 		 * Position in the duration array.
-		 * @readonly
+		 * 
 		 * @member {number}
+		 * @readonly
 		 */
 		this.progress = 0;
 		/**
 		 * Whether the animation is playing.
-		 * @readonly
+		 * 
 		 * @member {boolean}
+		 * @readonly
 		 */
 		this.playing = false;
 		/**
 		 * The fractional time of the last iteration.
+		 * 
 		 * @private
+		 * 
 		 * @member {number}
 		 */
-		this._lastTime = 0;
+		this.lastTime_ = 0;
 	};
 
 	/**
 	 * Updates the animator state.
 	 *
 	 * @protected
+	 * @ignore
 	 *
 	 * @param  {Gamalto.Timer} timer
 	 *         {@linkcode Gamalto.Timer} object from which the elpased time will be read.
 	 * @param  {boolean} loop
 	 *         Whether to loop the animation.
-	 * @param  {number[]} duration
+	 * @param  {array.<number>} duration
 	 *         List of durations to handle frames time.
 	 *
 	 * @return {boolean} The playing state.
 	 */
-	proto._update = function(timer, loop, duration) {
+	proto.update_ = function(timer, loop, duration) {
 		var // Where do we start
 			index = this.progress | 0,
 			length = duration.length,
 			// Elapsted time to consider
-			time = (this._lastTime += timer.elapsedTime);
+			time = (this.lastTime_ += timer.elapsedTime);
 
 		// Nothing to animate
 		if (length <= 1 && !duration[0]) {
@@ -121,7 +121,7 @@ THE SOFTWARE.
 				break;
 			}
 			// No, remove the curent duration and move to the next one
-			this._lastTime = (time -= iter);
+			this.lastTime_ = (time -= iter);
 
 			// Reached the end? should we loop?
 			if (++index === length && loop) {
@@ -134,7 +134,7 @@ THE SOFTWARE.
 			this.progress = length;
 			this.playing = false;
 		} else {
-			this.progress += this._lastTime / duration[index];
+			this.progress += this.lastTime_ / duration[index];
 		}
 		return this.playing;
 	};

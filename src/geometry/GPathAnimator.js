@@ -19,7 +19,19 @@
 	gamalto.devel.using("Vector2");
 
 	/**
-	 * @constructor
+	 * Creates a new path animator.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.PathAnimator
+	 * @augments Gamalto.Animator
+	 *
+	 * @param {Gamalto.Path} path
+	 *        Path to be used for the animation.
+	 * @param {number} duration
+	 *        Duration of the animation.
+	 *
+	 * @example
+	 * var anim = new Gamalto.PathAnimator(path, 1000);
 	 */
 	var _Object = G.PathAnimator = function(path, duration) {
 		Object.base(this);
@@ -27,12 +39,19 @@
 		this.duration = duration;	// msecs
 	},
 
-	/* Inheritance and shortcut */
+	/** @alias Gamalto.PathAnimator.prototype */
 	proto = _Object.inherits(G.Animator);
 
-	/* Instance methods */
+	/**
+	 * Updates path animation state.
+	 * 
+	 * @param  {Gamalto.Timer} timer
+	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
+	 * 
+	 * @return {Gamalto.Vector2} New position on the path.
+	 */
 	proto.update = function(timer) {
-		_Object.base._update.call(this, timer, false, [this.duration]);
+		_Object.base.update_.call(this, timer, false, [this.duration]);
 
 		var path = this.path,
 			position = this.progress * path.length,

@@ -30,8 +30,6 @@ THE SOFTWARE.
  */
 
 (function() {
-	/* Shortcut */
-	var core = gamalto;
 
 	/* Dependencies */
 	gamalto.devel.require("Animator");
@@ -50,123 +48,194 @@ THE SOFTWARE.
 	 *         Sprites sheet containing the sections for the animation.
 	 *
 	 * @example
-	 * // Getting an object instance
 	 * var anim = new Gamalto.Animation(sheet);
 	 */
 	var _Object = G.Animation = function(sheet) {
+		/**
+		 * Sprites sheet use by the animation.
+		 * 
+		 * @type {Gamalto.SpriteSheet}
+		 * @readonly
+		 */
 		this.sheet = sheet;
+		/**
+		 * Sprites sheet indices to be used for the animation.
+		 *
+		 * @private
+		 * @ignore
+		 * 
+		 * @type {array.<number>}
+		 */
+		this.list_ = [];
 
-		this._list = [];
-		this._offs = [];
-		this._time = [];
+		/**
+		 * Offsets to be used when drawing a sprite.
+		 * 
+		 * @private
+		 * @ignore
+		 * 
+		 * @type {array.<Gamalto.Vector2>}
+		 */
+		this.offs_ = [];
+		/**
+		 * Frame durations.
+		 * 
+		 * @private
+		 * @ignore
+		 * 
+		 * @type {array.<number>}
+		 */
+		this.time_ = [];
+		/**
+		 * Gets the length of the animation in frames.
+		 * 
+		 * @type {number}
+		 * @readonly
+		 */
 		this.length = 0;
+		/**
+		 * Gets or sets the loop state of the animation.
+		 * 
+		 * @member {boolean}
+		 */
+		this.loop = true;
 
 		Object.base(this);
-		this.setLoop(true);
 	},
-
-	/* Inheritance and shortcut */
 
 	/** @alias Gamalto.Animation.prototype */
 	proto = _Object.inherits(G.Animator);
 
+	/**
+	 * Sets a section indices range to be used for the animation.
+	 * 
+	 * @param  {number} start
+	 *         Start index is the sections list.
+	 * @param  {number} length
+	 *         Number of sections to be used.
+	 */
 	proto.useSectionsRange = function(start, length) {
 		this.length += length;
 		while (length--) {
-			this._list.push(start++);
-			this._time.push(0);
+			this.list_.push(start++);
+			this.time_.push(0);
 		}
-		return this;
 	};
 
+	/**
+	 * Sets a list of section indices to be used for the animation.
+	 * 
+	 * @param  {array.<number>} list
+	 *         List of indices to be used.
+	 */
 	proto.useSections = function(list) {
-		var arr = this._list,
+		var arr = this.list_,
 			len = list.length;
 
 		this.length += len;
 		arr.push.apply(arr, list);
 		while (len--) {
-			this._time.push(0);
+			this.time_.push(0);
 		}
-		return this;
 	};
 
+	/**
+	 * Gets the sprites sheet section for the given frame.
+	 * 
+	 * @param  {number} frame
+	 *         Frame index.
+	 * 
+	 * @return {Gamalto.Rect} Rectangle defining the section.
+	 */
 	proto.getSection = function(frame) {
-		return this.sheet.getSection(this._list[frame]);
+		return this.sheet.getSection(this.list_[frame]);
 	};
 
+	/**
+	 * Sets the global duration of the animation, for the current animation content only.
+	 * This will reset durations set with [setFrameDuration()]{@link Gamalto.Animation#setFrameDuration}
+	 * 
+	 * @param {number} time
+	 *        Duration in milliseconds.
+	 */
 	proto.setDuration = function(time) {
 		var len = this.length,
 			slice = time / len;
 		while (len--) {
-			this._time[len] = slice;
+			this.time_[len] = slice;
 		}
-		return this;
 	};
 
+	/**
+	 * Sets the local duration of a frame.
+	 * 
+	 * @param {number} frame
+	 *        Frame index.
+	 * @param {number} time
+	 *        
+	 */
 	proto.setFrameDuration = function(frame, time) {
-		gamalto.assert_(frame < this._list.length);
-		this._time[frame] = time;
-		return this;
+		gamalto.devel.assert(frame < this.list_.length);
+		this.time_[frame] = time;
 	};
 
+	/**
+	 * Sets the drawing offset of a frame.
+	 * 
+	 * @param {number} frame
+	 *        Frame index.
+	 * @param {number} x
+	 *        Horizontal offset.
+	 * @param {number} y
+	 *        Vertical offset.
+	 */
 	proto.setFrameOffset = function(frame, x, y) {
-		gamalto.assert_(frame < this._list.length);
-		this._offs[frame] = new G.Vector2(x, y);
-		return this;
+		gamalto.devel.assert(frame < this.list_.length);
+		this.offs_[frame] = new G.Vector2(x, y);
 	};
 
+	/**
+	 * Gets the drawing offset of a frame.
+	 * 
+	 * @param {number} frame
+	 *        Frame index.
+	 * 
+	 * @return {Gamalto.Vector2}
+	 *         Drawing offset.
+	 */
 	proto.getFrameOffset = function(frame) {
-		return this._offs[frame] || G.Vector.ZERO;
+		return this.offs_[frame] || G.Vector.zero();
 	};
 
+	/**
+	 * Duplicates a frame including all its properties.
+	 * 
+	 * @param  {number} index
+	 *         Frame index.
+	 * @param  {number} dest
+	 *         New frame destination.
+	 */
 	proto.duplicateFrame = function(index, dest) {
-		gamalto.assert_(dest <= this._list.length);
+		gamalto.devel.assert(dest <= this.list_.length);
 
-		var copy = this._list[index],
-			offs = this._offs[index],
-			time = this._time[index];
-
-		this._list.splice(dest, 0, copy);
-		this._offs.splice(dest, 0, offs);
-		this._time.splice(dest, 0, time);
+		this.list_.splice(dest, 0, this.list_[index]);
+		this.offs_.splice(dest, 0, this.offs_[index]);
+		this.time_.splice(dest, 0, this.time_[index]);
 
 		this.length++;
-
-		return this;
-	};
-
-	/**
-	 * Sets the loop state of the animation.
-	 *
-	 * @param  {boolean} isOn
-	 *         Whether to loop the animation.
-	 * 
-	 * @return {Gamalto.Animation} The current object for function calls chaining.
-	 */
-	proto.setLoop = function(isOn) {
-		this._loop = !!isOn;
-		return this;
-	};
-
-	/**
-	 * Gets the loop state of the animation.
-	 */
-	proto.getLoop = function() {
-		return this._loop;
 	};
 
 	/**
 	 * Updates the animation state.
 	 *
 	 * @param  {Gamalto.Timer} timer
-	 *         {@linkcode Gamalto.Timer} object from which the elpased time will be read. Internally calls the {@linkcode Gamalto.Animator#_update} method.
+	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
 	 * 
 	 * @return {boolean} The playing state.
 	 */
 	proto.update = function(timer) {
 		return _Object.base
-			._update.call(this, timer, this._loop, this._time);
+			.update_.call(this, timer, this.loop, this.time_);
 	};
 
 	/**
@@ -184,28 +253,32 @@ THE SOFTWARE.
 	 * @return {number} The drawn frame index.
 	 */
 	proto.draw = function(renderer, x, y, frame) {
-		frame = core.defined(frame, this.progress, 0) | 0;
+		frame = gamalto.defined(frame, this.progress, 0) | 0;
 
-		var offs = this._offs[frame],
+		var offs = this.offs_[frame],
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
+
 		if (offs) {
 			x += offs.x * invX | 0;
 			y += offs.y * invY | 0;
 		}
-		this.sheet.draw(renderer, x, y, this._list[frame]);
+
+		this.sheet.draw(renderer, x, y, this.list_[frame]);
+
 		return frame;
 	};
 
 	/**
 	 * Creates a clone of the current object.
-	 * @return {Gamalto.Animation} A deep copy of the object.
+	 * 
+	 * @return {Gamalto.Animation} Deep copy of the object.
 	 */
 	proto.clone = function() {
 		var clone = new _Object(this.sheet);
-		clone._list = this._list.slice();
-		clone._offs = this._offs.slice();
-		clone._time = this._time.slice();
+		clone.list_ = this.list_.slice();
+		clone.offs_ = this.offs_.slice();
+		clone.time_ = this.time_.slice();
 		_Object.base.clone.call(this);
 	};
 

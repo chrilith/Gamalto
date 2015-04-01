@@ -35,45 +35,127 @@ THE SOFTWARE.
 	gamalto.devel.require("Animator");
 
 	/**
-	 * @constructor
+	 * Creates a new events sequence.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Sequence
+	 * @augments Gamalto.Animator
+	 *
+	 * @example
+	 * var seq = new Gamalto.Sequence();
 	 */
 	var _Object = G.Sequence = function() {
-		this._list = [];
-		this._time = [];
+		this.list_ = [];
+		this.time_ = [];
 		Object.base(this);
-	};
+	},
 	
-	/* Inheritance and shortcut */
-	var proto = G.Sequence.inherits(G.Animator);
+	/** @alias Gamalto.Sequence.prototype */
+	proto = _Object.inherits(G.Animator);
 	
+	/**
+	 * Adds a new event to the sequence.
+	 * 
+	 * @param  {ISequence} inst
+	 *         Instance of a {@link ISequence} object.
+	 * @param  {number} duration
+	 *         Event duration.
+	 *
+	 * @return {Gamalto.Sequence} Current object for chaining.
+	 */
 	proto.add = function(inst, duration) {
-		this._list.push(inst);
-		this._time.push(duration);
+		this.list_.push(inst);
+		this.time_.push(duration);
 		return this;
 	};
 
+	/**
+	 * Updates the sequence state.
+	 * 
+	 * @param  {Gamalto.Timer} timer
+	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
+
+	 * @return {number} Current playing event.
+	 */
 	proto.update = function(timer) {
 		var p = this.progress | 0,	// remove fractional part for comparison
 			was = this.playing,
-			now = _Object.base._update.call(this, timer, false, this._time),
-			i = this.progress | 0;
+			now = _Object.base.update_.call(this, timer, false, this.time_),
+			i = this.progress | 0;	// changed but update_() call
 
 		// TODO: an action may be skipped upon slowdown. Add a strict parameter
 		// to for complete sequence execution? Important if an action has some
 		// dependance with a previous one...
 		if (!was || p !== i) {
-			if (was) { this._call("exiting", p, timer); }
-			if (now) { this._call("entering", i, timer); }
+			if (was) { this.call_("exiting", p, timer); }
+			if (now) { this.call_("entering", i, timer); }
 		}
-		if (now) { this._call("update", i, timer); }
+		if (now) { this.call_("update", i, timer); }
 
 		return now;
 	};
 
-	proto._call = function(method, exec, data) {
-		if ((exec = this._list[exec]) && exec[method]) {
+	/**
+	 * Calls the given event method if it exists.
+	 *
+	 * @private
+	 * @ignore
+	 * 
+	 * @param  {string} method
+	 *         Method name.
+	 * @param  {number} exec
+	 *         Event index.
+	 * @param  {object} data
+	 *         Extra data. Usually the timer object.
+	 */
+	proto.call_ = function(method, exec, data) {
+		if ((exec = this.list_[exec]) && exec[method]) {
 			exec[method](data);
 		}
 	};
+
+	/**
+	 * Defines methods to handle sequencial events execution.
+	 * 
+	 * @interface ISequence
+	 *
+	 * @example
+	 * // Interface members
+	 * var seq = {
+	 *     entering: function(timer) { /* ... {@literal *}/ },
+	 *     update  : function(timer) { /* ... {@literal *}/ },
+	 *     exiting : function(timer) { /* ... {@literal *}/ }
+	 * };
+	 */
+
+	/**
+	 * Initializes the sequence.
+	 *
+	 * @function
+	 * @name ISequence#entering
+	 *
+	 * @param {[Gamalto.Timer]} timer
+	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 */
+
+	/**
+	 * Updates the sequence state.
+	 *
+	 * @function
+	 * @name ISequence#update
+	 *
+	 * @param {[Gamalto.Timer]} timer
+	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 */
+
+	/**
+	 * Cleans up the sequence.
+	 *
+	 * @function
+	 * @name ISequence#exiting
+	 *
+	 * @param {[Gamalto.Timer]} timer
+	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 */
 
 })();
