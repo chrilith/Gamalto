@@ -71,7 +71,7 @@ THE SOFTWARE.
 	 * @return {boolean}
 	 */
 	proto.isEmpty = function() {
-		return this.width === 0 && this.height === 0
+		return this.width === 0 && this.height === 0;
 	};
 
 })();
