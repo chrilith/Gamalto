@@ -48,7 +48,7 @@ THE SOFTWARE.
 	 * // Getting an object instance
 	 * var size = new Gamalto.Size(320, 240);
 	 */
-	G.Size = function(width, height) {
+	var _Object = G.Size = function(width, height) {
 		/**
 		 * Horizontal component of the size object.
 		 * @member {number}
@@ -63,7 +63,7 @@ THE SOFTWARE.
 	},
 
 	/** @alias Gamalto.Size.prototype */
-	proto = G.Size.inherits(G.Object);
+	proto = _Object.inherits(G.Object);
 
 	/**
 	 * Tests whether the object has width and height of 0.
