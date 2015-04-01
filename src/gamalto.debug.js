@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
+var GAMALTO_DEBUG = true;
+
 (function() {
 
 	var all  = document.getElementsByTagName('script'),

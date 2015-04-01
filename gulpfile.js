@@ -36,8 +36,8 @@ gulp.task('shaders', function() {
 
 	gulp.src(config.src + "/**/*.{vert,frag}")
 		.pipe(plugins.flatten())
-		.pipe(config.production ? plugins.stripComments() : plugins.util.noop())
-		.pipe(config.production ? plugins.cleanhtml() : plugins.util.noop())
+		.pipe(!config.production ? plugins.util.noop() : plugins.stripComments())
+		.pipe(!config.production ? plugins.util.noop() : plugins.cleanhtml())
 		.pipe(gulp.dest(config.dist + "/shaders"));
 });
 
@@ -58,10 +58,17 @@ gulp.task('default', ["source", "shaders"/*, "docs"*/], function() {
 		.pipe(plugins.ignore.exclude("gamalto.debug.js"))
 		.pipe(plugins.sourcemaps.init())
 		.pipe(plugins.concat('gamalto.js'))
+
+		.pipe(!config.production ? plugins.util.noop() :
+			plugins.replace(/gamalto\.devel\.(log|warn|assert|error)/g, "console.$1"))
+		.pipe(!config.production ? plugins.util.noop() :
+			plugins.replace(/gamalto\.devel\.[a-zA-Z]+\(.*?\);/g, ""))
+
 		.pipe(plugins.uglify({
 			mangle: config.production,
 			compress: {
-				unsafe: config.production
+				unsafe: config.production,
+				global_defs: { GAMALTO_DEBUG: !config.production }
 			},
 			output: {
 				beautify: !config.production

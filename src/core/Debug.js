@@ -29,8 +29,6 @@ THE SOFTWARE.
  *
  */
 
-/** @define {boolean} */
-var GAMALTO_DEBUG = true;
 if (GAMALTO_DEBUG) (function(global) {
 
 	var using = {},

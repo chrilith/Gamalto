@@ -128,7 +128,7 @@ THE SOFTWARE.
 		this._stopped = false;
 	
 		var that = this,
-			last = Date.now(),						// Last execution is now
+			last,									// Last execution for fps
 			// TODO: use AnimationFrame but check for expected frame time
 			func = strict ? null : global.requestAnimationFrame,	
 			next,									// Next iteration duration
@@ -155,7 +155,9 @@ THE SOFTWARE.
 			if (!skip) { that._lastTime = before; }
 
 			// Compute FPS
-			last = that._computeFPS_(last, skip);
+			if (GAMALTO_DEBUG) {
+				last = that.computeFPS_(last, skip);
+			}
 	
 			// Next iteration
 			next = that._nextWait(before);
@@ -173,13 +175,21 @@ THE SOFTWARE.
 		this._stopped = true;
 	};
 	
+
 	/*	Frames Per Second (FPS) related methods
 		For debug purpose only */
 
-	proto._computeFPS_ = function(last, skip) {
+	if (!GAMALTO_DEBUG) {
+		return;
+	}
+
+	proto.computeFPS_ = function(last, skip) {
 		var time, elapsed, i, length, sum = 0,
 			list = this._ticks,
 			callback = this._fpsCb;
+
+		// If not set yet
+		last = last || Date.now();
 	
 		if (callback) {
 			elapsed = (time = Date.now()) - last;
@@ -194,7 +204,7 @@ THE SOFTWARE.
 				}
 				callback(this._tickSum / this._ticks.length | 0, (1000 / this._frameTime + .5 | 0));
 				this._frameCount = 0;
-				// If the page is in wait state, "d" whill be far higher than 1000
+				// If the page is in wait state, "elapsed" will be far higher than 1000
 				// so we use a modulo to extract the over time.
 				return time + (elapsed % 1000);
 			}
@@ -209,7 +219,7 @@ THE SOFTWARE.
 	 * @param  {FPSFunc} callback
 	 *         The function to be called on every frame counter update. Setting to null will disable the FPS counter.
 	 */
-	proto.setFPSWatcher_ = function(callback) {
+	proto.setFPSWatcher = function(callback) {
 		this._fpsCb = callback;
 		this._frameCount = 0;
 		this._ticks = [0];
