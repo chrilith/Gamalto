@@ -69,7 +69,7 @@ THE SOFTWARE.
 		 * @readonly
 		 * @alias Gamalto.Surface#renderer
 		 */
-		this.renderer = canvas.createRenderer(canvas);
+		this.renderer = canvas.createRenderer();
 		/**
 		 * Horizontal size of the surface.
 		 * 

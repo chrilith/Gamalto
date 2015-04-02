@@ -73,8 +73,8 @@ THE SOFTWARE.
 		} catch(e) {  }
 	};
 
-	_proto.createRenderer = function(canvas) {
-		return new G.RendererWebGL(canvas);
+	_proto.createRenderer = function() {
+		return new G.RendererWebGL(this);
 	};
 
 	_proto._copyRawBufferIndexed = function(palette, raw, x, y) {
