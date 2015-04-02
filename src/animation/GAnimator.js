@@ -57,6 +57,7 @@ THE SOFTWARE.
 		 * 
 		 * @member {number}
 		 * @readonly
+		 * @alias Gamalto.Animator#progress
 		 */
 		this.progress = 0;
 		/**
@@ -64,6 +65,7 @@ THE SOFTWARE.
 		 * 
 		 * @member {boolean}
 		 * @readonly
+		 * @alias Gamalto.Animator#playing
 		 */
 		this.playing = false;
 		/**

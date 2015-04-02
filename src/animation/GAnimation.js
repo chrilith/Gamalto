@@ -56,6 +56,7 @@ THE SOFTWARE.
 		 * 
 		 * @type {Gamalto.SpriteSheet}
 		 * @readonly
+		 * @alias Gamalto.Animation#sheet
 		 */
 		this.sheet = sheet;
 		/**
@@ -91,12 +92,14 @@ THE SOFTWARE.
 		 * 
 		 * @type {number}
 		 * @readonly
+		 * @alias Gamalto.Animation#length
 		 */
 		this.length = 0;
 		/**
 		 * Gets or sets the loop state of the animation.
 		 * 
 		 * @member {boolean}
+		 * @alias Gamalto.Animation#loop
 		 */
 		this.loop = true;
 
