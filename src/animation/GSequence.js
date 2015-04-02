@@ -73,7 +73,7 @@ THE SOFTWARE.
 	 * Updates the sequence state.
 	 * 
 	 * @param  {Gamalto.Timer} timer
-	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
+	 *         [Timer]{@link Gamalto.Timer} object from which the elpased time will be read.
 
 	 * @return {number} Current playing event.
 	 */
@@ -117,7 +117,7 @@ THE SOFTWARE.
 	/**
 	 * Defines methods to handle sequencial events execution.
 	 * 
-	 * @interface ISequence
+	 * @class ISequence
 	 *
 	 * @example
 	 * // Interface members
@@ -134,7 +134,7 @@ THE SOFTWARE.
 	 * @function
 	 * @name ISequence#entering
 	 *
-	 * @param {[Gamalto.Timer]} timer
+	 * @param {Gamalto.Timer} timer
 	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
 	 */
 
@@ -144,7 +144,7 @@ THE SOFTWARE.
 	 * @function
 	 * @name ISequence#update
 	 *
-	 * @param {[Gamalto.Timer]} timer
+	 * @param {Gamalto.Timer} timer
 	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
 	 */
 
@@ -154,8 +154,8 @@ THE SOFTWARE.
 	 * @function
 	 * @name ISequence#exiting
 	 *
-	 * @param {[Gamalto.Timer]} timer
-	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param {Gamalto.Timer} timer
+	 *        [Timer]{@link Gamalto.Timer} object from which the elpased time will be read.
 	 */
 
 })();
