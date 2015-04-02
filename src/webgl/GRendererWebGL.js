@@ -179,7 +179,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 
 	proto._initDraw = function(program, points) {
 		var gl = this._getContext(),
-			s = this._canvas;
+			s = this.canvas;
 
 		var positionLocation = gl.getAttribLocation(program, "aPosition");
 		var resolutionLocation = gl.getUniformLocation(program, "uResolution");
@@ -206,7 +206,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 	
 	proto.fillRect = function(r, style) {
-		var s = this._canvas,
+		var s = this.canvas,
 			x = 0,
 			y = 0, w, h, v;
 
@@ -278,7 +278,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		if (!r) {
 			gl.disable(gl.SCISSOR_TEST);
 		} else {
-			var y = this._canvas.height - r.extent.y - r.origin.y;
+			var y = this.canvas.height - r.extent.y - r.origin.y;
 
 			gl.enable(gl.SCISSOR_TEST);
 			gl.scissor(r.origin.x, y, r.extent.x, r.extent.y);
