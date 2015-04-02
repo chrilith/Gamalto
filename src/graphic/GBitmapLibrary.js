@@ -65,7 +65,7 @@ THE SOFTWARE.
 		var promise = _Object.base.loadItem.call(this),
 			bitmap = new (type || G.Bitmap),
 
-			i = new (bitmap._getSourceType()),
+			i = bitmap.createSource(),
 			that = this;
 
 

@@ -65,8 +65,8 @@ THE SOFTWARE.
 		return this._source.getCanvas_(refresh);
 	};
 
-	proto._getSourceType = function() {
-		return G.IndexedImage;
+	proto.createSource = function() {
+		return new G.IndexedImage();
 	};
 
 })();

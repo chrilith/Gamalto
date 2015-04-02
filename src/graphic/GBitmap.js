@@ -53,8 +53,8 @@ THE SOFTWARE.
 		return this._source;
 	};
 
-	proto._getSourceType = function() {
-		return Image;
+	proto.createSource = function() {
+		return new Image();
 	};
 
 })();
