@@ -47,8 +47,8 @@ THE SOFTWARE.
 		this._context = this.__canvas.getContext("2d");
 	};
 
-	_proto.getRendererType = function() {
-		return G.Renderer2D;
+	_proto.createRenderer = function(canvas) {
+		return new G.Renderer2D(canvas);
 	};
 
 	_proto._getRawBuffer = function() {

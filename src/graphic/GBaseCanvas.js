@@ -43,7 +43,7 @@ THE SOFTWARE.
 		canvas.height = this.height = +height || 0;
 	};
 
-	_proto.getRendererType = function() { };
+	_proto.createRenderer = function() { };
 
 	_proto.hasContext = function() {
 		return !!this._getContext();

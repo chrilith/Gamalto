@@ -41,12 +41,12 @@ THE SOFTWARE.
 	 */
 	G.Surface = function(width, height, canvas) {
 		var canvas = this.canvas_ = new (canvas || G.Canvas2D)(width, height);
-		this.renderer =  new (canvas.getRendererType())(canvas);
+		this.renderer = canvas.createRenderer(canvas);
 		this.width	= canvas.width;
 		this.height	= canvas.height;
 		this.disableClipping();
 	};
-	
+
 	/* Inheritance and shortcut */
 	var proto = G.Surface.inherits(G.Object);
 
