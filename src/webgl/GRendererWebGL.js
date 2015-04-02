@@ -272,7 +272,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	proto._transform = function(x, y, w, h) {
 	};
 
-	proto._clip = function(r) {
+	proto.clip_ = function(r) {
 		var gl = this._getContext();
 
 		if (!r) {

@@ -34,47 +34,119 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("Canvas2D");
 	gamalto.devel.using("BaseRenderer");
-	gamalto.devel.using("Rect");
+	gamalto.devel.using("Box");
 
 	/**
-	 * @constructor
+	 * Creates a new drawing surface.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Surface
+	 * @augments Gamalto.Object
+	 *
+	 * @param {number} width
+	 *        Physical horizontal size of the surface.
+	 * @param {number} height
+	 *        Physical vertical size of the surface.
+	 * @param {Gamalto.BaseCanvas} [canvas]
+	 *        Type of the internal canvas.
+	 * 
+	 * @example
+	 * var surface = new Gamalto.Surface(320, 240);
 	 */
-	G.Surface = function(width, height, canvas) {
+	var _Object = G.Surface = function(width, height, canvas) {
+		/**
+		 * Drawing canvas.
+		 * 
+		 * @member {Gamalto.BaseCanvas}
+		 * @readonly
+		 * @alias Gamalto.Surface#canvas
+		 */
 		var canvas = this.canvas = new (canvas || G.Canvas2D)(width, height);
+		/**
+		 * Internal canvas.
+		 * 
+		 * @member {Gamalto.BaseRenderer}
+		 * @readonly
+		 * @alias Gamalto.Surface#renderer
+		 */
 		this.renderer = canvas.createRenderer(canvas);
-		this.width	= canvas.width;
+		/**
+		 * Horizontal size of the surface.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.Surface#width
+		 */
+		this.width = canvas.width;
+		/**
+		 * Vertical size of the surface.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.Surface#height
+		 */
 		this.height	= canvas.height;
+
 		this.disableClipping();
-	};
+	},
 
-	/* Inheritance and shortcut */
-	var proto = G.Surface.inherits(G.Object);
+	/** @alias Gamalto.Surface.prototype */
+	proto = _Object.inherits(G.Object);
 
-	/* Instance methods */
-	proto.enableClipping = function(x, y, width, height) {
-		if (this._isClipping) {
+	/**
+	 * Activates the renderering clipping.
+	 * 
+	 * @param  {Gamalto.Box} rect
+	 *         Rectangle representing the clipping area.
+	 */
+	proto.enableClipping = function(rect) {
+		if (this.clipping_) {
 			this.disableClipping();
 		}
-		this._isClipping = true;
-		this.renderer._clip(new G.Rect(x, y, width, height));
+		this.clipping_ = true;
+		this.renderer.clip_(rect);
 	};
 
+	/**
+	 * Disables the renderering clipping.
+	 */
 	proto.disableClipping = function() {
-		this._isClipping = false;
-		this.renderer._clip();
+		this.clipping_ = false;
+		this.renderer.clip_();
 	};
 
-	proto.blit = function(s, x, y) {
+	/**
+	 * Copies a surface content at the given position.
+	 * 
+	 * @param  {Gamalto.Surface} surface
+	 *         Surface to copy.
+	 * @param  {number} x
+	 *         Horizontal origin of the copy.
+	 * @param  {number} y
+	 *         Vertical origin of the copy.
+	 */
+	proto.blit = function(surface, x, y) {
 		var renderer = this.renderer,
 			old = renderer.setTransform(false);
-		renderer.drawBitmap(s, x, y);
+		renderer.drawBitmap(surface, x, y);
 		renderer.setTransform(old);
 	};
 
-	proto.redraw = function(s, x, y, list) {
+	/**
+	 * Redraws parts of the given surface into the current surface.
+	 * 
+	 * @param  {Gamalto.Surface} surface
+	 *         Surface to copy.
+	 * @param  {number} x
+	 *         Horizontal origin of the copy.
+	 * @param  {number} y
+	 *         Vertical origin of the copy.
+	 * @param  {array.<Gamalto.Box>} regions
+	 *         List of the regions to be updated.
+	 */
+	proto.redraw = function(surface, x, y, regions) {
 		if (list) {
 			var renderer = this.renderer,
-				len = list.length | 0,
 				old = renderer.setTransform(false);
 			list.forEach(function(r) {
 				renderer.drawBitmapSection(s, r.origin.x + x, r.origin.y + y, r);
@@ -83,28 +155,43 @@ THE SOFTWARE.
 		}
 	};
 
+	/**
+	 * Clears the surface content.
+	 */
 	proto.clear = function() {
 		var renderer = this.renderer,
 			old = renderer.setTransform(false);
-		renderer.clearRect(new G.Rect(0, 0, this.width, this.height));
+		renderer.clearRect(new G.Box(0, 0, this.width, this.height));
 		renderer.setTransform(old);
 	};
 
-	// TODO: exception if accessing other methods while locked
+	/**
+	 * Gets a buffer for direct drawing.
+	 * 
+	 * @return {object} A buffer or null if the surface is already locked.
+	 */
 	proto.lock = function() {
-		if (!this._locked) {
-			return (this._locked = this.canvas._getRawBuffer());
-		}
-		return null;
+		return this.locked_ ? null : (this.locked_ = this.canvas._getRawBuffer());
 	};
 
+	/**
+	 * Unlocks a previously locked surface.
+	 */
 	proto.unlock = function() {
-		if (this._locked) {
-			this.canvas._copyRawBuffer(this._locked);
-			this._locked = null;
+		if (this.locked_) {
+			this.canvas._copyRawBuffer(this.locked_);
+			this.locked_ = null;
 		}
 	};
 
+	/**
+	 * Gets an object than can be drawn on a HTMLCanvasElement.
+	 *
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {object} HTMLCanvasElement or HTMLImageElement.
+	 */
 	proto.getCanvas_ = function() {
 		this.renderer.flush();
 		return this.canvas.getCanvas_();

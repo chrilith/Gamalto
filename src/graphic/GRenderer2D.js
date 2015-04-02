@@ -181,7 +181,7 @@ THE SOFTWARE.
 		return [x - dx, y + dy];
 	};
 
-	proto._clip = function(r) {
+	proto.clip_ = function(r) {
 		var ctx = this._getContext();
 
 		if (!r) {
