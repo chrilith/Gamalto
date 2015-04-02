@@ -48,7 +48,7 @@ THE SOFTWARE.
 	/** @alias Gamalto.BaseCanvas.prototype */
 	proto = _Object.inherits(G.Object);
 
-	_proto._setSize = function(width, height) {
+	proto._setSize = function(width, height) {
 		var ctx, canvas = this.__canvas;
 		canvas.width  = this.width  = Number(width)  || 0;
 		canvas.height = this.height = Number(height) || 0;
