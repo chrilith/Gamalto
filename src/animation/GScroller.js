@@ -91,7 +91,7 @@ THE SOFTWARE.
 			w = b.extent.x,
 			h = b.extent.y,
 	
-			src = s.canvas_._context,		// FIXME: nodirect access to canvas
+			src = s.canvas._context,		// FIXME: nodirect access to context
 			dst = region._buffer._context,
 		
 		/* We cannot use negative value using this signature of drawImage()

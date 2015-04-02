@@ -40,7 +40,7 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.BaseRenderer = function(canvas) {
-		this._canvas = canvas;
+		this.canvas = canvas;
 		this._init();
 	},
 	
@@ -106,12 +106,12 @@ THE SOFTWARE.
 
 	proto._reset = function() { /* To be implemented, should be replace with setTransform() */ }
 
-	/* Should be called before accessing _canvas */
+	/* Should be called before accessing canvas */
 	proto.flush = function() { /* Nothing to do */ }
 
 	/* Used only when altering the canvas content */
 	proto._getContext = function() {
-		return this._canvas._context;
+		return this.canvas._context;
 	};
 
 })();

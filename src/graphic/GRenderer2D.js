@@ -74,7 +74,7 @@ THE SOFTWARE.
 	};
 	
 	proto.fillRect = function(r, style) {
-		var s = this._canvas,
+		var s = this.canvas,
 			x = 0,
 			y = 0, w, h, v;
 
@@ -146,7 +146,7 @@ THE SOFTWARE.
 
 	// TODO: compute matrices members in an array and use apply() once per change?
 		var o  = this, dx = 0, dy = 0,
-			c  = o._canvas._context,
+			c  = o.canvas._context,
 			cx = x + (w >> 1) + this._origin.x,
 			cy = y + (h >> 1) + this._origin.y,
 			fx = (o._flipX ? -1 : +1) * o._scaleX,

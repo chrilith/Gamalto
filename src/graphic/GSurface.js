@@ -40,7 +40,7 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	G.Surface = function(width, height, canvas) {
-		var canvas = this.canvas_ = new (canvas || G.Canvas2D)(width, height);
+		var canvas = this.canvas = new (canvas || G.Canvas2D)(width, height);
 		this.renderer = canvas.createRenderer(canvas);
 		this.width	= canvas.width;
 		this.height	= canvas.height;
@@ -93,21 +93,21 @@ THE SOFTWARE.
 	// TODO: exception if accessing other methods while locked
 	proto.lock = function() {
 		if (!this._locked) {
-			return (this._locked = this.canvas_._getRawBuffer());
+			return (this._locked = this.canvas._getRawBuffer());
 		}
 		return null;
 	};
 
 	proto.unlock = function() {
 		if (this._locked) {
-			this.canvas_._copyRawBuffer(this._locked);
+			this.canvas._copyRawBuffer(this._locked);
 			this._locked = null;
 		}
 	};
 
 	proto.getCanvas_ = function() {
 		this.renderer.flush();
-		return this.canvas_.getCanvas_();
+		return this.canvas.getCanvas_();
 	};
 
 })();
