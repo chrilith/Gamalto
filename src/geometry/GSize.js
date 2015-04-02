@@ -52,12 +52,14 @@ THE SOFTWARE.
 		/**
 		 * Horizontal component of the size object.
 		 * @member {number}
+		 * @alias Gamalto.Size#width
 		 */
 		this.width = Number(width) || 0;
 
 		/**
 		 * Vertical component of the size object.
 		 * @member {number}
+		 * @alias Gamalto.Size#height
 		 */
 		this.height = Number(height) || 0;
 	},
