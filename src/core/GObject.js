@@ -40,7 +40,9 @@ THE SOFTWARE.
 	G.Object = function() {
 		/**
 		 * An utility property to exchange data between objects.
+		 * 
 		 * @member {object}
+		 * @alias Gamalto.Object#tag
 		 */
 		this.tag = undefined;
 	};
@@ -64,7 +66,7 @@ THE SOFTWARE.
 	 * 
 	 * @virtual
 	 * 
-	 * @return {object} Returns a new instance of the object. Defaults to null.
+	 * @return {object} New instance of the object. Defaults to null.
 	 */
 	proto.clone = function() {
 		return null;
