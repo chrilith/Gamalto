@@ -110,7 +110,7 @@
     "src/animation/GSequence.js",
     "src/geometry/GPathAnimator.js",
     "src/effect/EFader.js",
-    "src/cocconjs/CJS_GScreen.js",
+    "src/cocoonjs/CJS_GScreen.js",
     "src/webgl/shaders/cvs-fill-texture-indexed.frag",
     "src/webgl/shaders/cvs-position.vert",
     "src/webgl/shaders/rdr_fill-color.frag",
