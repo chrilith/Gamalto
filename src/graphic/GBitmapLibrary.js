@@ -50,7 +50,7 @@ THE SOFTWARE.
 	var proto = _Object.inherits(G.BaseLibrary);
 	
 	/**
-	 * Tries to load a new resource into the library.
+	 * Tries to load a new resource in the library.
 	 *
 	 * @param  {string} name
 	 *         Name of the resource.
@@ -59,30 +59,30 @@ THE SOFTWARE.
 	 * @param  {Gamalto.Bitmap} [type]
 	 *         Type of the bitmap object to be instanciated.
 	 * 
-	 * @return {Gamalto.Promise} A promise to handle the loading states.
+	 * @return {Gamalto.Promise} A promise to handle loading states.
 	 */
 	proto.loadItem = function(name, src, type) {
 		var promise = _Object.base.loadItem.call(this),
 			bitmap = new (type || G.Bitmap),
 
-			i = bitmap.createSource(),
+			image = bitmap.createSource_(),
 			that = this;
 
+		image.onabort =
+			image.onerror = function(e) {
+				promise.reject(that.failed_(name, src));
+		};
 
-		i.onabort = i.onerror = function(e) {
-			promise.reject(that._failed(name, src));
-		}
-
-		i.onload = function() {
-			bitmap.setSource(i);
+		image.onload = function() {
 			that.list_[G.N(name)] = bitmap;
 			promise.resolve({
 				source: that,
 				item: name
 			});
-		}
+		};
 
-		i.src = src;
+		image.src = src;
+
 		return promise;
 	};
 

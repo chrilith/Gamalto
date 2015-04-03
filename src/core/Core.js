@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 (function(global) {
 
-	var _container, undef;
+	var container;
 
 	/**
 	 * Core object of the Gamalto framework.
@@ -41,8 +41,8 @@ THE SOFTWARE.
 	 * @protected
 	 */
 	var Core = function() {
-		this.debug = undef;
-		this.env = undef;
+//		this.devel = undef;
+//		this.env = undef;
 	};
 
 	/** @alias Core.prototype */
@@ -51,22 +51,22 @@ THE SOFTWARE.
 	/**
 	 * Sets the container of the canvas element.
 	 *
-	 * @param  {(string|object)} container
+	 * @param  {(string|object)} element
 	 *         Name or the HTMLElement which will receive the main canvas object.
 	 */
-	core.setContainer = function(container) {
-		_container = (typeof container == "string") ?
-			document.getElementById(container) : container;
+	core.setContainer = function(element) {
+		container = (typeof element === "string") ?
+			document.getElementById(element) : element;
 	};
 	
 	/**
 	 * Gets the container of the canvas element defined by {@linkcode Core#setContainer}.
 	 *
-	 * @returns  {object}
-	 *           HTMLElement containing the canvas element or the document body by default.
+	 * @return {object}
+	 *         HTMLElement containing the canvas element or the document body by default.
 	 */
 	core.getContainer = function() {
-		return (_container || document.body);
+		return (container || document.body);
 	};
 
 	/**
@@ -93,7 +93,7 @@ THE SOFTWARE.
 	 */
 	core.setTitle = function(title) {
 		document.title = title;
-	}
+	};
 
 	/**
 	 * Finds the first defined element in the parameters list.
@@ -105,24 +105,21 @@ THE SOFTWARE.
 	 *           First defined element or `undefined` by default.
 	 */
 	core.defined = function(/* vargs... */) {
-		var i,
-			a = arguments;
+		var i, undef, args = arguments;
 
-		for (i = 0; i < a.length; i++) {
-			if (a[i] !== undef) { return a[i]; }
+		for (i = 0; i < args.length; i++) {
+			if (args[i] !== undef) { return args[i]; }
 		}
 		return undef;
 	};
 
+	core.createEvent = function(type) {
+		var e = document.createEvent("Event");
+		e.type = type;
+		return e;
+	};
+
 	/* Pseudo-Private methods */
-
-	core._isName = function(name) {
-		return name && name.indexOf("G__") == 0;
-	};
-
-	core._isObject = function(v) {
-		return (typeof v == "object");
-	};
 
 	core._xywh = function(elem, parent, unit) {
 		var x = 0,

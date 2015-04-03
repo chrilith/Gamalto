@@ -32,29 +32,73 @@ THE SOFTWARE.
 (function() {
 	
 	/**
-	 * @constructor
+	 * Creates a framework compatible bitmap.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Bitmap
+	 * @augments Gamalto.Object
+	 *
+	 * @param {HTMLImageElement} source
+	 *        Image to be used by the bitmap object.
 	 */
-	G.Bitmap = function(source) {
-		this.setSource(source);
-	};
+	var _Object = G.Bitmap = function(source) {
+		this.source_ = source;
+	},
 	
-	/* Inheritance */
-	var proto = G.Bitmap.inherits(G.Object);
+	/** @alias Gamalto.Bitmap.prototype */
+	proto = G.Bitmap.inherits(G.Object);
 
-	proto.setSource = function(source) {
-		if (source) {
-			this.width = source.width;
-			this.height = source.height;
-			this._source = source;
-		}
+	/**
+	 * Creates an image object that can be used as bitmap source.
+	 * 
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {HTMLImageElement}
+	 */
+	proto.createSource_ = function() {
+		return (this.source_ = new Image());
 	};
 
+	/**
+	 * Gets an object than can be drawn on a HTMLCanvasElement.
+	 *
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {HTMLImageElement}
+	 */
 	proto.getCanvas_ = function() {
-		return this._source;
+		return this.source_;
 	};
 
-	proto.createSource = function() {
-		return new Image();
-	};
+	Object.defineProperties(proto, {
+		/**
+		 * Width of the bitmap in pixels.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.Bitmap#width
+		 */
+		"width": {
+			get: function() {
+				var source = this.source_;
+				return source ? source.width : 0;
+			}
+		},
+		/**
+		 * Height of the bitmap in pixels.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.Bitmap#height
+		 */
+		"height": {
+			get: function() {
+				var source = this.source_;
+				return source ? source.height : 0;
+			}
+		}
+	});
 
 })();

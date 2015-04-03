@@ -29,8 +29,6 @@ THE SOFTWARE.
  *
  */
 
-// TODO: optimize memory and speed
-
 (function() {
 
 	/* Dependencies */
@@ -38,130 +36,223 @@ THE SOFTWARE.
 	gamalto.devel.using("AsyncFile");
 
 	/* Local */
-	var modules = [], _bufferType;
+	var modules = [], bufferType;
 
 	/**
-	 * @constructor
+	 * Creates a new image with indexed palette.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.IndexedImage
+	 * @augments Gamalto.Object
 	 */
 	var _Object = G.IndexedImage = function() {
-		this._file = new G.AsyncFile();
-		
-		Object.defineProperty(this, "src", {
-			set: function(value) {
-				this._url = value;
-				this._load();
-			},
-			get: function() {
-				return this._url || "";
-			},
-			enumerable: true
-		});
-	};
+		this.file_ = new G.AsyncFile();
+	},
 
-	var stat = _Object;
+	/** @alias Gamalto.IndexedImage.prototype */
+	proto = _Object.inherits(G.Object);
 
-	stat.addModule = function(module) {
-		module.mime.push(G.Stream.BIN_MIMETYPE);
-		modules.push(module);
-	};
-
-	stat.setBufferType = function(type) {
-		var old = _bufferType;
-		_bufferType = type;
-		return old;
-	};
-
-	/* Inheritance and shortcut */
-	var proto = _Object.inherits(G.Object);
-
-	proto._findModule = function() {
-		var i, u = this._url,
-			p1 = u.indexOf('?'),
-			p2 = u.indexOf('#');
+	/**
+	 * Looks for a compatible module to decode the image data.
+	 *
+	 * @private
+	 * @ignore
+	 * 
+	 * @return {function} A function to decode the image data or null if no module has been found.
+	 */
+	proto.findModule_ = function() {
+		var i, url = this.url_,
+			p1 = url.indexOf('?'),
+			p2 = url.indexOf('#');
 			
 		// Get end of filename
-		u = u.substr(0,
+		url = url.substr(0,
 				p1 != -1 ? p1 :
-				p2 != -1 ? p2 : u.length);
+				p2 != -1 ? p2 : url.length);
 		
-		// Get extention if any
-		p1 = u.lastIndexOf("/");
-		p2 = u.lastIndexOf(".");
-		u = u.substr(p2 > p1 ? p2 : u.length).toLowerCase();
+		// Get file extension if any
+		p1 = url.lastIndexOf("/");
+		p2 = url.lastIndexOf(".");
+		url = url.substr(p2 > p1 ? p2 : url.length).toLowerCase();
 
 		// Module lookup
 		for (i = 0; i < modules.length; i++) {
-			if (modules[i].ext.indexOf(u) != -1 &&
-				~modules[i].mime.indexOf(this._file.mimeType)) {
+			if (modules[i].ext.indexOf(url) != -1 &&
+				~modules[i].mime.indexOf(this.file_.mimeType)) {
 				
 				return modules[i].reader;
 			}
 		}
+
 		return null;
 	};
 
-	proto._load = function() {
-		var file = this._file,
+	/**
+	 * Loads and decodes the image data into memory.
+	 *
+	 * @private
+	 * @ignore
+	 */
+	proto.load_ = function() {
+		var file = this.file_,
 			that = this;
 
 		// Open the file and get info
-		return file.open(this._url).then(function() {
+		return file.open(this.url_).then(function() {
 			// Find the proper module
-			if ((that._module = that._findModule())) {
+			if ((that.module_ = that.findModule_())) {
 				file.readAll().then(function() {
 					var buf = new G.StreamReader(file.buffer);
 					file.close();
-					that._ended(buf);
+					that.onLoad_(buf);
+					this.file_= null;
 				});
 			} else {
-				that._error();
-			}			
+				that.raiseEvent_("error");
+				throw new Error("No image decoder found.");
+			}
 		});
 	};
-	
-	proto._error = function() {
-		// TODO
-		if (this.onerror) {
-			this.onerror();
+
+	/**
+	 * Raises the requested event.
+	 *
+	 * @private
+	 * @ignore
+	 * 
+	 * @param  {string} type
+	 *         Event type, "error" or "load".
+	 */
+	proto.raiseEvent_ = function(type) {
+		var onevent = this["on" + type];
+		if (onevent) {
+			var e = gamalto.createEvent(type);
+			e.path = [this];
+			onevent.call(this, e);			
 		}
 	};
 
-	proto._ended = function(buffer) {
-		var dec  = this._module,
+	/**
+	 * Decodes the image data.
+	 * 
+	 * @private
+	 * @ignore
+	 * 
+	 * @param  {Gamalto.ReadableStream} buffer
+	 *         Stream containing the image data.
+	 */
+	proto.onLoad_ = function(buffer) {
+		var dec  = this.module_,
 			data = dec ? dec.call(this, buffer) : null;
 
 		if (!data) {
-			this._error();
+			this.raiseEvent_("error");
+			throw new Error("Failed to decode image.");
 
 		} else {
-			this._palette	= data[0];
-			this._data		= data[1];	// For full redraw
+			/**
+			 * Image palette.
+			 * 
+			 * @member {Gamalto.Palette}
+			 * @readonly
+			 * 
+			 * @alias Gamalto.IndexedImage#palette
+			 */
+			this.palette	= data[0];
+			this.data_		= data[1];	// For full redraw
+			/**
+			 * Width of the image in pixels.
+			 * 
+			 * @member {number}
+			 * @readonly
+			 * 
+			 * @alias Gamalto.IndexedImage#width
+			 */
 			this.width		= data[2];
+			/**
+			 * Height of the image in pixels.
+			 * 
+			 * @member {number}
+			 * @readonly
+			 * 
+			 * @alias Gamalto.IndexedImage#height
+			 */
 			this.height		= data[3];			
 
-			this._buffer = new (_bufferType || G.Canvas2D)(data[2], data[3]);
+			this.buffer_ = new (bufferType || G.Canvas2D)(data[2], data[3]);
 
-			// TODO
-			if (this.onload) {
-				this.onload();
-			}
+			this.raiseEvent_("load");
 		}
 	};
 
+	/**
+	 * Gets an object than can be drawn on a HTMLCanvasElement.
+	 *
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {HTMLCanvasElement}
+	 */
 	proto.getCanvas_ = function(refresh) {
-		var buf, pal = this._palette;
+		var buf, pal = this.palette;
 
 		if (pal._changed || refresh) {
 			pal._changed = false;
-			buf = this._data.buffer;
-			this._buffer._copyRawBufferIndexed(pal._list, {
+			buf = this.data_.buffer;
+			this.buffer_._copyRawBufferIndexed(pal._list, {
 				data: buf.byteLength ? new Uint8Array(buf) : buf,
 				width: this.width,
 				height: this.height
 			});
 		}
 
-		return this._buffer.getCanvas_();
+		return this.buffer_.getCanvas_();
 	};
+
+	/**
+	 * Adds a new image decoder to the list of avalaible decoding modules.
+	 *
+	 * @memberof Gamalto.IndexedImage
+	 * @function addModule
+	 * @static
+	 * 
+	 * @param {object} module
+	 *        Module descriptor.
+	 */
+	_Object.addModule = function(module) {
+		module.mime.push(G.Stream.BIN_MIMETYPE);
+		modules.push(module);
+	};
+
+	/**
+	 * Sets the type of buffer to be used to render the image.
+	 * 
+	 * @memberof Gamalto.IndexedImage
+	 * @function setBufferType
+	 * @static
+	 * 
+	 * @param {Gamalto.BaseCanvas} type
+	 *        Type implementing BaseCanvas.
+	 */
+	_Object.setBufferType = function(type) {
+		bufferType = type;
+	};
+
+	/**
+	 * Source url of the image.
+	 * 
+	 * @memberof Gamalto.IndexedImage.prototype
+	 * @member {string} src
+	 * @readonly
+	 */
+	Object.defineProperty(proto, "src", {
+		set: function(value) {
+			this.url_ = value;
+			this.load_();
+		},
+		get: function() {
+			return this.url_ || "";
+		}
+	});
 
 })();

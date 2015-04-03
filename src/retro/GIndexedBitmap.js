@@ -35,38 +35,68 @@ THE SOFTWARE.
 	gamalto.devel.require("Bitmap");
 	gamalto.devel.using("IndexedImage");
 
-	
-	G.IndexedBitmap = function(source) {
+	/**
+	 * Creates a framework compatible bitmap with indexed palette.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.IndexedBitmap
+	 * @augments Gamalto.Bitmap
+	 *
+	 * @param {Gamalto.indexedImage} source
+	 *        Image to be used by the bitmap object.
+	 */
+	var _Object = G.IndexedBitmap = function(source) {
 		Object.base(this, source);
-		this._updated = true;	// To force initial image rendering
+		// To force initial image rendering
+		this.updated_ = true;
+	},
+
+	/** @alias Gamalto.IndexedBitmap.prototype */
+	proto = _Object.inherits(G.Bitmap);
+
+	/**
+	 * Creates an image object that can be used as bitmap source.
+	 * 
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {Gamalto.IndexedImage}
+	 */
+	proto.createSource_ = function() {
+		return (this.source_ = new G.IndexedImage());
 	};
 
-	/* Inheritance */
-	var proto = G.IndexedBitmap.inherits(G.Bitmap);
-	
-	/* Instance methods */
-	proto.animate = function(timer) {
-		return (this._updated = this._source._palette.update(timer));
-	};
-	
-	proto.setTransparency = function(index) {
-		this._updated = true;
-		this._source._palette.setTransparency(index);
-	};
-
-	proto.setColor = function(index, color) {
-		this._updated = true;
-		this._source._palette.setColor(index, color);
-	};
-
+	/**
+	 * Gets an object than can be drawn on a HTMLCanvasElement.
+	 *
+	 * @internal
+	 * @ignore
+	 * 
+	 * @return {HTMLCanvasElement}
+	 */
 	proto.getCanvas_ = function() {
-		var refresh = this._updated;
-		this._updated = false;
-		return this._source.getCanvas_(refresh);
+		var refresh = this.updated_;
+		this.updated_ = false;
+		return this.source_.getCanvas_(refresh);
 	};
 
-	proto.createSource = function() {
-		return new G.IndexedImage();
+	/**
+	 * Animates the palette of the bitmap image.
+	 * 
+	 * @param  {Gamalto.Timer} timer
+	 *         [Timer]{@link Gamalto.Timer} object from which the elpased time will be read.
+	 * 
+	 * @return {boolean} Whether the palette has changed.
+	 */
+	proto.animate = function(timer) {
+		return (this.updated_ = this.source_.palette.update(timer));
+	};
+
+	/**
+	 * Forces a refresh of the bitmap.
+	 */
+	proto.refresh = function() {
+		this.updated_ = true;
 	};
 
 })();
