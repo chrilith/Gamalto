@@ -39,7 +39,7 @@ THE SOFTWARE.
 	 */
 	G.Object = function() {
 		/**
-		 * An utility property to exchange data between objects.
+		 * Utility property to exchange data between objects.
 		 * 
 		 * @member {object}
 		 * @alias Gamalto.Object#tag
