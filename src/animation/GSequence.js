@@ -72,8 +72,8 @@ THE SOFTWARE.
 	/**
 	 * Updates the sequence state.
 	 * 
-	 * @param  {Gamalto.Timer} timer
-	 *         [Timer]{@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param  {Gamalto.Timing} timer
+	 *         [Timer]{@link Gamalto.Timing} object from which the elpased time will be read.
 
 	 * @return {number} Current playing event.
 	 */
@@ -117,14 +117,15 @@ THE SOFTWARE.
 	/**
 	 * Defines methods to handle sequencial events execution.
 	 * 
-	 * @class ISequence
+	 * @memberof Gamalto
+	 * @interface ISequence
 	 *
 	 * @example
 	 * // Interface members
 	 * var seq = {
-	 *     entering: function(timer) { /* ... {@literal *}/ },
-	 *     update  : function(timer) { /* ... {@literal *}/ },
-	 *     exiting : function(timer) { /* ... {@literal *}/ }
+	 *     entering: function(timer) { ... },
+	 *     update  : function(timer) { ... },
+	 *     exiting : function(timer) { ... }
 	 * };
 	 */
 
@@ -132,30 +133,30 @@ THE SOFTWARE.
 	 * Initializes the sequence.
 	 *
 	 * @function
-	 * @name ISequence#entering
+	 * @name Gamalto.ISequence#entering
 	 *
-	 * @param {Gamalto.Timer} timer
-	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param {Gamalto.Timing} timer
+	 *        {@link Gamalto.Timing} object from which the elpased time will be read.
 	 */
 
 	/**
 	 * Updates the sequence state.
 	 *
 	 * @function
-	 * @name ISequence#update
+	 * @name Gamalto.ISequence#update
 	 *
-	 * @param {Gamalto.Timer} timer
-	 *        {@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param {Gamalto.Timing} timer
+	 *        {@link Gamalto.Timing} object from which the elpased time will be read.
 	 */
 
 	/**
 	 * Cleans up the sequence.
 	 *
 	 * @function
-	 * @name ISequence#exiting
+	 * @name Gamalto.ISequence#exiting
 	 *
-	 * @param {Gamalto.Timer} timer
-	 *        [Timer]{@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param {Gamalto.Timing} timer
+	 *        [Timer]{@link Gamalto.Timing} object from which the elpased time will be read.
 	 */
 
 })();
