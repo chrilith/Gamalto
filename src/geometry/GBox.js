@@ -35,7 +35,12 @@ THE SOFTWARE.
 	gamalto.devel.require("Vector2");
 
 	/**
-	 * @constructor
+	 * Creates a simple box object.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Box
+	 * @augments Gamalto.Object
+	 * @implements {Gamalto.IBox}
 	 */
 	var _Object = G.Box = function(x, y, width, height) {
 		this.origin = new _Vector2(x, y);
@@ -57,5 +62,25 @@ THE SOFTWARE.
 	proto.clone = function() {
 		return new _Object(this.origin.x, this.origin.y, this.extent.x, this.extent.y);
 	};
+
+
+	/**
+	 * Defines a simple box object.
+	 * 
+	 * @memberof Gamalto
+	 * @interface IBox
+	 */
+
+	/**
+	 * Gets or sets the top left corner of the box.
+	 *
+	 * @member {Gamalto.Vector2} Gamalto.IBox#origin
+	 */
+
+	/**
+	 * Gets or sets the box extent.
+	 *
+	 * @member {Gamalto.Vector2} Gamalto.IBox#extent
+	 */
 
 })();
