@@ -43,6 +43,7 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Timer
 	 * @augments Gamalto.Object
+	 * @implements {Gamalto.ITiming}
 	 *
 	 * @param  {TimingFunc} callback
 	 *         Function to be called on every frame.
@@ -111,7 +112,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Gets the elapsed time since the last iteration.
+	 * Gets the immediate time elapsed since the last iteration.
 	 */
 	proto.getElapsed = function() {
 		var e = (Date.now() - this._lastTime | 0);
@@ -226,5 +227,18 @@ THE SOFTWARE.
 		this._tickSum = 0;
 		this._tickIndex = 0;
 	};
+
+	/**
+	 * Defines an object exposing elapsed time information.
+	 *
+	 * @memberof Gamalto
+	 * @interface ITiming
+	 */
+
+	/**
+	 * Gets the relative time elapsed since the last iteration.
+	 *
+	 * @member {number} Gamalto.ITiming#elapsedTime
+	 */
 
 })(this);
