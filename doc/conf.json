@@ -11,7 +11,6 @@
         "exclude": [ "./src/gamalto.debug.js" ]
     },
     "opts": {
-        "template": "./doc/templates/gamalto",
         "destination": "./dist/doc",
         "recurse": true
     },
