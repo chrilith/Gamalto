@@ -84,8 +84,8 @@ THE SOFTWARE.
 	 * @protected
 	 * @ignore
 	 *
-	 * @param  {Gamalto.Timer} timer
-	 *         {@linkcode Gamalto.Timer} object from which the elpased time will be read.
+	 * @param  {Gamalto.ITiming} timer
+	 *         [Timer]{@linkcode Gamalto.ITiming} object from which the elpased time will be read.
 	 * @param  {boolean} loop
 	 *         Whether to loop the animation.
 	 * @param  {array.<number>} duration

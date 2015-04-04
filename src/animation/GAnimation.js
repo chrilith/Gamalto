@@ -117,7 +117,7 @@ THE SOFTWARE.
 	 * @param  {number} length
 	 *         Number of sections to be used.
 	 */
-	proto.useSectionsRange = function(start, length) {
+	proto.useSectionRange = function(start, length) {
 		this.length += length;
 		while (length--) {
 			this.list_.push(start++);
@@ -231,10 +231,10 @@ THE SOFTWARE.
 	/**
 	 * Updates the animation state.
 	 *
-	 * @param  {Gamalto.Timer} timer
-	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
+	 * @param  {Gamalto.ITiming} timer
+	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
 	 * 
-	 * @return {boolean} The playing state.
+	 * @return {boolean} Playing state.
 	 */
 	proto.update = function(timer) {
 		return _Object.base
@@ -253,7 +253,7 @@ THE SOFTWARE.
 	 * @param  {number} [frame]
 	 *         Index of the frame to draw. Usually, the frame index is internally calculated.
 	 * 
-	 * @return {number} The drawn frame index.
+	 * @return {number} Drawn frame index.
 	 */
 	proto.draw = function(renderer, x, y, frame) {
 		frame = gamalto.defined(frame, this.progress, 0) | 0;
