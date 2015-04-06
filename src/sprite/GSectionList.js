@@ -60,7 +60,7 @@ THE SOFTWARE.
 		this._spacing = new _Vector2(x | 0, y | 0);
 	};
 
-	proto.addSections = function(count, r, size) {
+	proto.addSections = function(size, count, r) {
 		var tw = size.width,
 			th = size.height,
 			// Format

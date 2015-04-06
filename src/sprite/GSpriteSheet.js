@@ -33,34 +33,34 @@ THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.devel.require("SectionList");
-	gamalto.devel.using("Rect");
+	gamalto.devel.using("Box");
 
 	/**
 	 * @constructor
 	 */
-	G.SpriteSheet = function(bitmap) {
+	var _Object = G.SpriteSheet = function(bitmap) {
 		Object.base(this);
-		this._bitmap = bitmap;
-	};
+		this.bitmap_ = bitmap;
+	},
 	
 	/* Inheritance and shortcut */
-	var proto = G.SpriteSheet.inherits(G.SectionList);
+	proto = _Object.inherits(G.SectionList);
 	
 	/* Instance methods */
-	proto.addSections = function(count, r, size) {
-		var b = this._bitmap,
+	proto.addSections = function(size, count, r) {
+		var b = this.bitmap_,
 			w = b.width,
 			h = b.height;
 
-		r = r || new G.Rect(0, 0, w, h);
-		if ((count = count || -1) < 0) {
+		r = r || new G.Box(0, 0, w, h);
+		if ((count = gamalto.defined(count, -1)) < 0) {
 			count = (w / size.width | 0) * (h / size.height | 0);
 		}
-		return G.SpriteSheet.base.addSections.call(this, count, r, size);
+		return _Object.base.addSections.call(this, size, count, r);
 	};
 
 	proto.draw = function(renderer, x, y, i) {
-		renderer.drawBitmapSection(this._bitmap, x, y, this.getSection(i));
+		renderer.drawBitmapSection(this.bitmap_, x, y, this.getSection(i));
 	};
 
 })();
