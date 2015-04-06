@@ -168,6 +168,10 @@ THE SOFTWARE.
 
 		return c;
 	};
+
+	proto.createMovable = function() {
+		return new G.Movable();
+	};
 	
 	// TODO: save current and previous BBox for collision tests
 	proto.draw = function(renderer, x, y, i) {

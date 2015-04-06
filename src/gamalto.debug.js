@@ -148,6 +148,7 @@ var GAMALTO_DEBUG = true;
 
 		"animation/GAnimator.js",
 		"animation/GAnimation.js",
+		"animation/GMovable.js",
 		"animation/GScrollingRegion.js",
 		"animation/GScroller.js",
 		"animation/GSequence.js",

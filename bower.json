@@ -105,6 +105,7 @@
     "src/text/GFont.js",
     "src/animation/GAnimator.js",
     "src/animation/GAnimation.js",
+    "src/animation/GMovable.js",
     "src/animation/GScrollingRegion.js",
     "src/animation/GScroller.js",
     "src/animation/GSequence.js",

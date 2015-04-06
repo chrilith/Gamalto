@@ -36,64 +36,142 @@ THE SOFTWARE.
 	gamalto.devel.using("ScrollingRegion");
 
 	/**
-	 * @constructor
+	 * Creates a multi-region scrolling object.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Scroller
+	 * @augments Gamalto.Object
+	 *
+	 * @param {Gamalto.Surface} surface
+	 *        Surface holding the image to be scrolled.
 	 */
-	G.Scroller = function(surface, region) {
-		this._regs = {};
-		this._surface = surface;
-		this.setRegion("__default", region ||
-			new G.ScrollingRegion(0, 0, surface.width, surface.height));
-	};
+	var _Object = G.Scroller = function(surface) {
+		/**
+		 * Dictionary holding the scrolling regions.
+		 *
+		 * @private
+		 * @ignore
+		 * 
+		 * @member {Object}
+		 */
+		this.regions_ = {};
+		/**
+		 * Surface holding the graphics to be scrolled
+		 *
+		 * @private
+		 * @ignore
+		 * 
+		 * @member {Gamalto.Surface}
+		 */
+		this.surface_ = surface;
+	},
 	
-	/* Inheritance and shortcut */
-	var proto = G.Scroller.inherits(G.Object);
+	/** @alias Gamalto.Scroller.prototype */
+	proto = _Object.inherits(G.Object);
 	
-	/* Instance methods */
-	
-	proto.getRegion = function(name) {
-		return this._regs[G.N(name || "__default")];
-	};
-	
-	proto.setRegion = function(name, region) {
-		name = G.N(name);
-		if (region) {
-			this._regs[name] = region;
-		} else if (this._regs[name]) {
-			delete this._regs[name];
-		}
-	};
-	
-	proto.update = function(timer, dx, dy, name) {
-		return this.getRegion(name).update(timer, dx, dy);
-	};
-	
-	proto.draw = function(sx, sy, name) {
-		var r = this.getRegion(name),
-			c = r._curr;
 
-		if (!isNaN(sx) && !isNaN(sy)) {
+	/**
+	 * Gets the specified registered scrolling region.
+	 * 
+	 * @param  {string} name
+	 *         Name of the requested region.
+	 * 
+	 * @return {Gamalto.ScrollingRegion} Region if it exists.
+	 */
+	proto.getRegion = function(name) {
+		return this.regions_[name];
+	};
+
+	/**
+	 * Regiters a scrolling region.
+	 * 
+	 * @param {string} name
+	 *        Name the region to be registered.
+	 * @param {Gamalto.ScrollingRegion} region
+	 *        [Region]{@link Gamalto.ScrollingRegion} instance to be registered.
+	 */
+	proto.setRegion = function(name, region) {
+		this.regions_[name] = region;
+	};
+
+	/**
+	 * Scrolls the region using the specified displacement, or the internal state if not specified.
+	 * 
+	 * @param  {string} name
+	 *         Name the region to be drawn.
+	 * @param  {number} dx
+	 *         Value beween -1 and +1 indicating the desired horizontal displacement.
+	 * @param  {number} dy
+	 *         Value beween -1 and +1 indicating the desired vertical displacement.
+	 */
+	proto.drawRegion = function(name, dx, dy) {
+		var region = this.getRegion(name);
+
+		if (!isNaN(dx) || !isNaN(dy)) {
 			// In that case, reset the current position
-			r.reset();
+			region.reset();
+			dx = dx || 0;
+			dy = dy || 0;
 		} else {
-			sx = c.x;
-			sy = c.y;
+			dx = region.curr_.x;
+			dy = region.curr_.y;
 		}
-		if (sx || sy) {
-			this._move(r, sx, sy);
+		if (dx || dy) {
+			this.move_(region, dx, dy);
 		}
 	};
-	
-	proto._move = function(region, sx, sy) {
-		var b = region._bounds,
+
+	/**
+	 * Updates the internal displacement state of the registered regions.
+	 * 
+	 * @param  {Gamalto.ITiming} timer
+	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will be read.
+	 * @param  {number} dx
+	 *         Value beween -1 and +1 indicating the horizontal displacement.
+	 * @param  {number} dy
+	 *         Value beween -1 and +1 indicating the vertical displacement.
+	 */
+	proto.update = function(timer, dx, dy) {
+		var regions = this.regions_;
+		for (var name in regions) {
+			regions[name].update(timer, dx, dy);
+		}
+	};
+
+	/**
+	 * Scrolls the registered regions.
+	 */
+	proto.draw = function() {
+		for (var name in this.regions_) {
+			this.drawRegion(name);
+		}
+	};
+
+	/**
+	 * Moves the specified [region]{@link Gamalto.ScrollingRegion}.
+	 *
+	 * @private
+	 * @ignore
+	 * 
+	 * @param  {Gamalto.ScrollingRegion} region
+	 *         Region to be scrolled.
+	 * @param  {number} sx
+	 *         Horizontal displacement in pixels.
+	 * @param  {number} sy
+	 *         Vertical displacement in pixels.
+	 */
+	proto.move_ = function(region, sx, sy) {
+	// FIXME: everything should be handled by a renderer!!!
+		var b = region.bounds_,
 			x = b.origin.x,
 			y = b.origin.y,
-			s = this._surface,
+			s = this.surface_,
 			w = b.extent.x,
 			h = b.extent.y,
 	
 			src = s.canvas._context,		// FIXME: nodirect access to context
-			dst = region._buffer._context,
-		
+			dst = region.buffer_._context,
+
 		/* We cannot use negative value using this signature of drawImage()
 		   and so we have to compute the correct values */
 			cx = (sx < 0 ? -sx : 0) + x,
@@ -103,14 +181,13 @@ THE SOFTWARE.
 			// Destination in the window buffer
 			dx = (sx > 0 ? sx : 0),
 			dy = (sy > 0 ? sy : 0);
-	
+
 		// Copy a main surface area to the region buffer. Double buffering is far more efficient
 		dst.clearRect(0, 0, w, h);	// The buffer is never transformed
 		dst.drawImage(src.canvas, cx, cy, ww, hh, dx, dy, ww, hh);
-		// FIXME: should be handled by a renderer!!!
-	
+
 		// Handle auto loop
-		if (region._loop) {
+		if (region.loop) {
 			if (sx < 0) {
 				dst.drawImage(src.canvas,
 							  x, y, -sx, h,

@@ -32,80 +32,53 @@ THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.devel.require("Vector2");
+	gamalto.devel.require("Movable");
 	gamalto.devel.using("Canvas2D");
-	gamalto.devel.using("Box");
+	gamalto.devel.using("Vector2");
 
 	/**
-	 * @constructor
+	 * Creates an object defining the movable region of a [scroller]{@link Gamalto.Scroller}.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.ScrollingRegion
+	 * @augments Gamalto.Movable
+	 *
+	 * @param {Gamalto.IBox} box
+	 *        Bounds of the region to be scrolled.
+	 * @param {boolean} [loop]
+	 *        Whether to loop the scrolling area. Defaults to "true".
 	 */
-	var _Object = G.ScrollingRegion = function(x, y, width, height, loop) {
-		this._prev = new _Vector2(0, 0);
-		this._curr = new _Vector2(0, 0);
-		this._speed = new _Vector2(0, 0);
-	
-		this._setBounds(x, y, width, height);
-		this.setLoop(loop);
+	var _Object = G.ScrollingRegion = function(box, loop) {
+		Object.base(this);
+		/**
+		 * Bounds of the region to be scrolled.
+		 *
+		 * @internal
+		 * @ignore
+		 * 
+		 * @member {Gamalto.IBox}
+		 */
+		this.bounds_ = box;
+		/**
+		 * Buffer to handle the scrolling of the area.
+		 *
+		 * @internal
+		 * @ignore
+		 * 
+		 * @type {Gamalto.BaseCanvas}
+		 */
+		this.buffer_ = new G.Canvas2D(box.extent.x, box.extent.y);
+		this.setSpeed();
+		/**
+		 * Gets or sets the loop state of the scrolling.
+		 * 
+		 * @member {boolean}
+		 * @alias Gamalto.ScrollingRegion#loop
+		 */
+		this.loop = gamalto.defined(loop, true);
 	},
-	_Vector2 = G.Vector2,
-	
-	/* Shortcut */
-	proto = _Object.inherits(G.Object);
-	
-	/* Instance methods */
-	proto.setLoop = function(isOn) {
-		this._loop = !!isOn;
-	};
-	
-	proto._setBounds = function(x, y, width, height) {
-		this._bounds = new G.Box(x, y, width, height);
-		// TODO: alloc buffer only if setLoop(true), else free the buffer if any
-		// or if alhpa channel?
-		// Double buffer seems to be always faster...
-		this._buffer = new G.Canvas2D(width, height);
-	};
-	
-	proto.setSpeed = function(px, py) {
-		var s = this._speed;
-		s.x = px / 1000;
-		s.y = py / 1000;
-	};
 
-	proto.reset = function() {
-		var p = this._prev,
-			c = this._curr;
-		p.x = 0;
-		p.y = 0;
-		c.x = 0;
-		c.y = 0;
-	};
-	
-	// To be overloaded to add acceleration....
-	proto.getDisplacement = function(timer, dx, dy) {
-		var s = this._speed;
-		return new _Vector2(s.x * dx, s.y * dy);	
-	};
-	
-	proto.update = function(timer, dx, dy) {
-		var o = this,
-			p = o._prev,
-			c = o._curr,
-			d = o.getDisplacement(timer, dx, dy),
-			t = timer.elapsedTime;
-	
-		c.x = t * d.x;	// Step
-		c.y = t * d.y;
-	
-		p.x += c.x;
-		p.y += c.y;
-	
-		c.x = p.x | 0;	// Round
-		c.y = p.y | 0;
-	
-		p.x -= c.x;
-		p.y -= c.y;
-
-		return c;
-	};
+	/** @alias Gamalto.ScrollingRegion.prototype */
+	proto = _Object.inherits(G.Movable);
 
 })();
