@@ -38,25 +38,23 @@ THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileSet = function(bitmap, size) {
-		this._tile = size;
+	var _Object = G.TileSet = function(bitmap, size) {
+		this.tile_ = size;
 		Object.base(this, bitmap);
 	};
 
-	var proto = G.TileSet.inherits(G.SpriteSheet);
+	var proto = _Object.inherits(G.SpriteSheet);
 
-	proto.addSections = function(count, r, size) {
-		// Must be always the same, simply ignore passed parameter
-		size = this._tile;
-		return G.TileSet.base.addSections.call(this, count, r, size);
+	proto.addSections = function(count, r) {
+		return _Object.base.addSections.call(this, this.tile_, count, r);
 	};
 
-	proto._createSection = function(x, y, w, h) {
+	proto.createSection_ = function(x, y, w, h) {
 		return new G.Tile(x, y, w, h);
 	};
 	
 	proto.draw = function(renderer, x, y, i) {
-		renderer.drawBitmapSection(this._bitmap, x, y, this.getSection(i).rect);
+		renderer.drawBitmapSection(this.bitmap_, x, y, this.getSection(i).rect);
 	};
 
 })();

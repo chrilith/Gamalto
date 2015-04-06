@@ -39,9 +39,8 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.SectionList = function() {
-		var o = this;	
-		o.length = 0;
-		o._list = [];
+		this.length = 0;
+		this.list_ = [];
 		this.setMargin();
 		this.setSpacing();
 	},
@@ -53,19 +52,19 @@ THE SOFTWARE.
 	/* Instance methods */
 
 	proto.setMargin = function(x, y) {
-		this._margin = new _Vector2(x | 0, y | 0);
+		this.margin_ = new _Vector2(x | 0, y | 0);
 	};
 
 	proto.setSpacing = function(x, y) {
-		this._spacing = new _Vector2(x | 0, y | 0);
+		this.spacing_ = new _Vector2(x | 0, y | 0);
 	};
 
 	proto.addSections = function(size, count, r) {
 		var tw = size.width,
 			th = size.height,
 			// Format
-			mg = this._margin,
-			sp = this._spacing,
+			mg = this.margin_,
+			sp = this.spacing_,
 			// Rectangle
 			tL = r.origin,
 			bR = _Vector2.add(tL, r.extent).substractFloat(1);
@@ -74,7 +73,7 @@ THE SOFTWARE.
 
 		for (var y = tL.y + mg.y; y < bR.y - mg.y; y += th + sp.y) {
 			for (var x = tL.x - mg.x; x < bR.x - mg.x; x += tw + sp.x) {
-				this._list.push(this._createSection(x, y, tw, th));
+				this.list_.push(this.createSection_(x, y, tw, th));
 				if (!--count) {
 					return this;
 				}
@@ -84,17 +83,17 @@ THE SOFTWARE.
 	};
 
 	proto.insertSection = function(at, section) {
-		gamalto.assert_(at <= this.length);
-		this._list.splice(at, 0, section);
+		gamalto.devel.assert(at <= this.length);
+		this.list_.splice(at, 0, section);
 		this.length++;
 	};
 
-	proto._createSection = function(x, y, w, h) {
+	proto.createSection_ = function(x, y, w, h) {
 		return new G.Rect(x, y, w, h);
 	};
 	
 	proto.getSection = function(i) {
-		return this._list[i | 0];
+		return this.list_[i | 0];
 	};
 
 })();
