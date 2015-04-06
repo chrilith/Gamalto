@@ -32,158 +32,101 @@ THE SOFTWARE.
 (function() {
 
 	gamalto.devel.require("Vector2");
+	gamalto.devel.using("Movable");
 
 	/**
 	 * @constructor
 	 */
 	var _Object = G.Entity = function() {
-		this.position = new _Vector2(0, 0);
-		this._options = {};
-		this._active = null;
+		this.position_ = _Vector2.zero();
+		this.active_ = null;
+
+		this.state_ = {};
+		this.animation_ = {};
 	},
 	_Vector2 = G.Vector2,
-	
-	/* Inheritance and shortcut */
-	proto = G.Entity.inherits(G.Object);
+
+	proto = _Object.inherits(G.Object);
 	
 	// useful for ennemies duplication
 	proto.clone = function() {
-		var clone = new G.Entity(),
-			name, options = this._options;
+		var clone = new _Object();
 	
-		for(name in options) {
-			if (gamalto.isName(name)) {
-				clone._options[name] = {
-					anim : to.anim,
-					offs : to.offs.clone(),
-					prev : to.prev.clone(),
-					curr : to.prev.clone(),
-					speed: to.speed.clone()
-				}
-			}
+		for (var name in anim) {
+			clone.addAnimation(name, this.animation_[name].clone());
 		}
-		clone._active = this._active;
-		clone.position = this.position.clone();
+
+		clone.active_ = this.active_;
+		clone.position_ = this.position_.clone();
 	};
 	
 	proto.addAnimation = function(name, anim) {
-		this._options[G.N(name)] = {
-			anim : anim,
-			offs : new _Vector2(0, 0),
-			prev : new _Vector2(0, 0),
-			curr : new _Vector2(0, 0),
-			speed: new _Vector2(0, 0)
-		};
-	};
-
-	proto.isPlaying = function() {
-		var name = this._active;
-		if (!name) {
-			return false;
-		}
-		return this._options[G.N(name)].anim.playing;
-	};
-	
-	// Displacement speed for the given animation
-	proto.setSpeed = function(name, px, py) {
-		var o = this._options[G.N(name)];
-		o.speed.x = px / 1000;
-		o.speed.y = py / 1000;
-	};
-
-	proto.setOffset = function(name, ox, oy) {
-		var o = this._options[G.N(name)];
-		o.offs.x = ox;
-		o.offs.y = oy;
-	};
-	
-	proto.reset = function(name) {
-		var o = this._options[G.N(name)],
-			p = o.prev,
-			c = o.curr;
-		p.x = 0;
-		p.y = 0;
-		c.x = 0;
-		c.y = 0;
+		this.state_[name] = this.createState_(name);
+		this.animation_[name] = anim;
 	};
 
 	proto.getActive = function() {
-		return this._active;
+		return this.active_;
 	};
-	
+
 	proto.setActive = function(name) {
-		if (name != this._active) {
-			var options = this._options[G.N(name)],
-				v = options.prev;
-			v.x = 0;
-			v.y = 0;
-			options.anim.reset();
-			this._active = name;
+		if (name != this.active_) {
+			this.state_[name].reset();
+			this.animation_[name].reset();
+			this.active_ = name;
 		}
 	};
-	
-	proto.setPosition = function(x, y) {
-		var p = this.position;
-		p.x = x;
-		p.y = y;
-		this.reset(this._active);
-	};
-	
-	proto.moveBy = function(dx, dy) {
-		var p = this.position;
-		this.setPosition(p.x + dx, p.y + dy);
-	};
-	
-	// To overload to add acceleration....
-	proto.getDisplacement = function(timer, dx, dy) {
-		var s = this._options[G.N(this._active)].speed;
-		return new _Vector2(s.x * dx, s.y * dy);	
-	};
-	
+
 	proto.update = function(timer, dx, dy) {
-		var o = this._options[G.N(this._active)],
-			p = o.prev,
-			c = o.curr,
-			d = this.getDisplacement(timer, dx, dy),
-			t = timer.elapsedTime,
-			position = this.position;
-	
-		c.x = t * d.x,	// Step
-		c.y = t * d.y;
-	
-		p.x += c.x;
-		p.y += c.y;
-	
-		c.x = p.x | 0;	// Round
-		c.y = p.y | 0;
-	
-		p.x -= c.x;
-		p.y -= c.y;
-	
-		position.x += c.x;	// Move
-		position.y += c.y;
-		
-		// Always calculate the next frame to stay in sync
-		o.anim.update(timer);
+		var active = this.active_;
+		if (!active) { return _Vector2.zero(); }
 
-		return c;
+		var disp = this.state_[active].update(timer, dx, dy);
+		this.position_.add(disp);
+		this.animation_[active].update(timer);
+
+		return disp;
 	};
 
-	proto.createMovable = function() {
+	proto.getState = function(name) {
+		return this.state_[name];
+	};
+
+	proto.createState_ = function(name) {
 		return new G.Movable();
 	};
-	
+
 	// TODO: save current and previous BBox for collision tests
 	proto.draw = function(renderer, x, y, i) {
-		var o = this._options[G.N(this._active)],
-			p = this.position,
-			d = o.offs;
-	
-		if (!isNaN(x) && !isNaN(y)) {
+		var active = this.active_;
+		if (!active) { return false; }
+
+		var anim = this.animation_[this.active_];
+
+		if (!isNaN(x) || !isNaN(y)) {
 			// In that case, reset the current position
-			this.setPosition(x, y);
+			this.position = new _Vector2(x || 0, y || 0);
 		}
-		return o.anim.draw(renderer, p.x + d.x, p.y + d.y, i);
+
+		var pos = this.position_;
+		return anim.draw(renderer, pos.x, pos.y, i);
 	};
+
+	Object.defineProperties(proto, {
+		"position": {
+			get: function() { return this.position_; },
+			set: function(value) {
+				var active = this.active_;
+				if (active) { this.state_[active].reset(); }
+				this.position_ = value;
+			}
+		},
+		"playing": {
+			get: function() {
+				var active = this.active_;
+				return active ? this.animation_[active].playing : false;
+			}
+		}
+	});
 
 })();
