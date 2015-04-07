@@ -31,36 +31,99 @@ THE SOFTWARE.
 
 (function() {
 
-	var _Object = G.Convert = {};
+	/**
+	 * Helper object to convert numbers.
+	 *
+	 * @namespace
+	 * @memberof Gamalto
+	 * @augments Gamalto.Object
+	 *
+	 * @alias Gamalto.Convert
+	 */
+	var _Object = G.Convert = new G.Object();
 	
+	/**
+	 * Converts a number to an equivalent 8-bit unsigned integer.
+	 *
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Unsgined integer.
+	 */
 	_Object.toUint8 = function(value) {
 		return value & 0xff;
 	};
 
+	/**
+	 * Converts a number to an equivalent 8-bit signed integer.
+	 * 
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Signed integer.
+	 */
 	_Object.toInt8 = function(value) {
 		return value << 24 >> 24;
 	};
 
+	/**
+	 * Converts a number to an equivalent 16-bit unsigned integer.
+	 * 
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Unsgined integer.
+	 */
 	_Object.toUint16 = function(value) {
 		return value & 0xffff;
 	};
 
+	/**
+	 * Converts a number to an equivalent 16-bit signed integer.
+	 * 
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Signed integer.
+	 */
 	_Object.toInt16 = function(value) {
 		return value << 16 >> 16;
 	};
 
+	/**
+	 * Converts a number to an equivalent 32-bit unsigned integer.
+	 * 
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Unsgined integer.
+	 */
 	_Object.toUint32 = function(value) {
 		return value >>> 0;
 	};
 
+	/**
+	 * Converts a number to an equivalent 32-bit signed integer.
+	 * 
+	 * @static
+	 * 
+	 * @param  {number} value
+	 *         Number to be converted.
+	 * 
+	 * @return {number} Signed integer.
+	 */
 	_Object.toInt32 = function(value) {
 		return value | 0;
-	};
-	
-	/* Base64 encoder for binary data */
-	
-	_Object.toBase64 = function(binary) {
-		return btoa(binary);
 	};
 
 })();
