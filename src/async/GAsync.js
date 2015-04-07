@@ -165,7 +165,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Wait until the specified time elapses.
+	 * Wait until the specified time has elasped.
 	 * 
 	 * @static
 	 * 
