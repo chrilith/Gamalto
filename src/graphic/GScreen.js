@@ -112,15 +112,15 @@ THE SOFTWARE.
 	proto.enableFiltering = function(isOn) {
 		var style = this.getElement_().style;
 
+		// No way for IE:(
 		if (!isOn &&
 			(style.setMember("imageRendering", "crisp-edges") ||
 			 style.setMember("imageRendering", "optimize-contrast") ||
-			 style.setMember("interpolationMode",	"nearest-neighbor"))) {
+			 style.setMember("imageRendering", "pixelated") )) {
 	
 		// Off? reset property to its initial state
 		} else if (isOn) {
 			 style.setMember("imageRendering", null);
-			 style.setMember("interpolationMode", null);
 		}
 	};
 
