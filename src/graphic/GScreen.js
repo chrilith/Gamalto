@@ -114,9 +114,9 @@ THE SOFTWARE.
 
 		// No way for IE:(
 		if (!isOn &&
-			(style.setMember("imageRendering", "crisp-edges") ||
-			 style.setMember("imageRendering", "optimize-contrast") ||
-			 style.setMember("imageRendering", "pixelated") )) {
+			(style.setMember("imageRendering", "pixelated") ||
+			 style.setMember("imageRendering", "crisp-edges") ||
+			 style.setMember("imageRendering", "optimize-contrast") )) {
 	
 		// Off? reset property to its initial state
 		} else if (isOn) {
