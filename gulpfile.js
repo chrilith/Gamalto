@@ -68,6 +68,7 @@ gulp.task('default', ["source", "shaders"/*, "docs"*/], function() {
 			mangle: config.production,
 			compress: {
 				unsafe: config.production,
+				drop_console: config.production,
 				global_defs: { GAMALTO_DEBUG: !config.production }
 			},
 			output: {
