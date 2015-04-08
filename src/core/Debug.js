@@ -53,6 +53,7 @@ if (GAMALTO_DEBUG) (function(global) {
 		}	
 	};
 
+	// console.assert() is not supported in CocoonJS
 	debug.assert = function(cond, message) {
 		if (!cond) {
 			var err = new Error();

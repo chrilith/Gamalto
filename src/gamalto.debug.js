@@ -157,7 +157,8 @@ var GAMALTO_DEBUG = true;
 
 	    "effect/EFader.js",
 
-	    "cocoonjs/CJS_GScreen.js"
+	    "cocoonjs/CJS_GScreen.js",
+	    "cocoonjs/CJS_API_Immediate.js"
 	];
 	
 	files.forEach(function(file) {

@@ -112,6 +112,7 @@
     "src/geometry/GPathAnimator.js",
     "src/effect/EFader.js",
     "src/cocoonjs/CJS_GScreen.js",
+    "src/cocoonjs/CJS_API_Immediate.js",
     "src/webgl/shaders/cvs-fill-texture-indexed.frag",
     "src/webgl/shaders/cvs-position.vert",
     "src/webgl/shaders/rdr_fill-color.frag",
