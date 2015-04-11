@@ -3,16 +3,33 @@
     // Content scroller
     var scroller;
 
-    // Current hash
-    var hash = location.hash;
-    window.scrollTo(0,0);
-    location.hash = "";
-
     // Enable :active/:hover on mobile devices
     document.addEventListener("touchstart", new Function(), false);
 
     // Initialize scrolling and anchor!
-    window.onload = function() {
+    window.docLoaded = function() {
+
+        // Disqus handling for iScroll
+        var disqus = $("#disqus_thread");
+        if (disqus.length) {
+            var Observer = window.MutationObserver || window.WebKitMutationObserver;
+            if (Observer) {
+                var observer = new Observer(
+                    function(mutations) {
+                        mutations.forEach(function() {
+                            if (scroller) { scroller.refresh(); }
+                        });
+                    });
+                    observer.observe(disqus[0], { attributes: true, subtree: true });
+
+            } else {
+                // Old way with DOM Mutatuons Events
+                disqus.on("DOMAttrModified DOMSubtreeModified propertychange", function() {
+                    if (scroller) { scroller.refresh(); }
+                });
+            }
+        }
+
         // iScrollers configuration
         var opts = {
             mouseWheel: true,
@@ -27,19 +44,12 @@
         new IScroll("#menu", opts);
         scroller = new IScroll("#content", opts);
 
-        // Set the hash
+        // Current hash
+        var hash = location.hash;
         if (hash) {
+            location.hash = "#_top";
             scroller.scrollToElement(hash);
         }
-
-        // Prevent jump to anchor
-        window.onhashchange = function(e) {
-            window.scrollTo(0,0);
-            hash = location.hash;
-            if (hash) {
-                scroller.scrollToElement(hash);
-            }
-        };
 
         $("#toggler").on("click touchstart", function(e) {
             e.preventDefault();
