@@ -3,26 +3,34 @@
         "allowUnknownTags": true
     },
     "plugins": [
-        "./doc/plugins/htmlInExample",
-        "./node_modules/jsdoc/plugins/markdown"
+        "plugins/markdown"
     ],
     "source": {
         "include": [ "./src/", "./doc/README.md" ],
         "exclude": [ "./src/gamalto.debug.js" ]
     },
     "opts": {
+        "template": "./doc/templates/gamalto",
         "destination": "./dist/doc",
         "recurse": true
     },
     "templates": {
         "cleverLinks": true,
         "monospaceLinks": true,
+        "previewVersion": true,
         "default": {
             "outputSourceFiles" : false
         },
-        "applicationName": "Gamalto",
-        "previewVersion": true,
-        "disqus": "gamalto",
-        "googleAnalytics": "UA-153441-8"
+
+        "app": {
+            "name": "Gam<span>a</span>lto",
+            "url": "http://www.gamalto.com/",
+            "twitter": "https://twitter.com/GamaltoJS",
+            "github": "https://github.com/chrilith/Gamalto.git",
+            "facebook": "",
+            "googlePlus": "",
+            "googleAnalytics": "UA-153441-8",
+            "disqus": "gamalto"
+        }
     }
 }

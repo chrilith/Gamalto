@@ -1,89 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <title><?js= env.conf.templates.app.name.replace(/<(.+?)>/g, "") + " Documentation: " + title.replace(/<(.+?)>/g, "") ?></title>
+    <meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  
 
-    <title><?js=(env.conf.templates.applicationName) ?> Documentation | <?js= ((env.conf.templates.meta && env.conf.templates.meta.title) || title) ?></title>
-    <?js if (env.conf.templates.meta) { ?>
-    <?js if (env.conf.templates.meta.description) { ?><meta name="description" content="<?js= env.conf.templates.meta.description ?>" /><?js } ?>
-    <?js if (env.conf.templates.meta.keyword) { ?>
-        <meta name="keywords" content="<?js= env.conf.templates.meta.keyword ?>" />
-        <meta name="keyword" content="<?js= env.conf.templates.meta.keyword ?>" />
-    <?js } ?>
-    <?js } ?>
-    <?js if (env.conf.templates.openGraph) { ?>
-    <meta property="og:title" content="<?js= env.conf.templates.openGraph.title ?>"/>
-    <meta property="og:type" content="<?js= env.conf.templates.openGraph.type ?>"/>
-    <meta property="og:image" content="<?js= env.conf.templates.openGraph.image ?>"/>
-    <?js if (env.conf.templates.openGraph.site_name) { ?><meta property="og:site_name" content="<?js= env.conf.templates.openGraph.site_name ?>"/><?js } ?>
-    <meta property="og:url" content="<?js= env.conf.templates.openGraph.url ?>"/>
-    <?js } ?>
-    <script src="scripts/jquery.min.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/main.css">
-    
-    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/monokai_sublime.min.css">
-    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="scripts/gamalto.js"></script>    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/iscroll.js"> </script>
 
-
-    <?js if (env.conf.templates) { ?>
-    <script>
-    var config = <?js= JSON.stringify(env.conf.templates) ?>;
-    </script>
-    <?js } ?>
-
-    <?js if (env.conf.templates.googleAnalytics) { ?>
-    <script>
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '<?js=env.conf.templates.googleAnalytics?>']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-    <?js } ?>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-monokai.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-gamalto.css">
+    <link type="text/css" rel="stylesheet" href="styles/fontello.css">
 </head>
+
 <body>
-<div id="wrap" class="clearfix">
-    <?js= this.partial('navigation.tmpl', this) ?>
-    <div class="main-header"></div>
-    <div class="main">
-        <h1 class="page-title" data-filename="<?js= filename ?>"><?js= title ?></h1>
-        <?js if (env.conf.templates.previewVersion) { ?>
-        <p class="text-warning">This documentation is for preview only, and is subject to change in later releases. Blank topics are included as placeholders.</p>
-        <?js } ?>
+
+<header class="main">
+    <i>
+        <a href="#" id="toggler"><i class="icon-menu"></i></a>
+        <?js if (env.conf.templates.app.twitter) { ?><a href="<?js= env.conf.templates.app.twitter ?>" target="_blank" class="icon-twitter" title="Twitter"></a><?js } ?>
+        <?js if (env.conf.templates.app.facebook) { ?><a href="<?js= env.conf.templates.app.facebook ?>" target="_blank" class="icon-facebook" title="Facebook"></a><?js } ?>
+        <?js if (env.conf.templates.app.gplus) { ?><a href="<?js= env.conf.templates.app.gplus ?>" target="_blank" class="icon-gplus" title="Google+"></a><?js } ?>
+        <?js if (env.conf.templates.app.github) { ?><a href="<?js= env.conf.templates.app.github ?>" target="_blank" class="icon-github" title="GitHub"></a><?js } ?>
+    </i>
+    <h1><a href="<?js= env.conf.templates.app.url || "index.html" ?>"><?js= env.conf.templates.app.name ?></a></h1>
+</header>
+
+<nav><div id="menu" class="scroll"><div class="wrapper">
+    <?js= this.nav ?>
+<div></div></nav>
+
+<div id="content" class="scroll"><div class="wrapper">
+
+    <div id="main">
+        <h1 class="page-title<?js= title.indexOf("<span") != -1 ? "" : " simple" ?>"><?js= title ?></h1>
         <?js= content ?>
 
-        <?js if (env.conf.templates.disqus) { ?>
-        <h3 class="subsection-title">Comments</h3>
-        <!-- disqus code -->
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            var disqus_shortname = '<?js= env.conf.templates.disqus?>';
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        <!-- // disqus code -->
-        <?js } ?>
-
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc <?js= env.version.number ?></a> on <?js= (new Date()) ?>
+           Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc <?js= env.version.number ?></a><?js if(env.conf.templates && env.conf.templates.default && env.conf.templates.default.includeDate !== false) { ?> on <?js= (new Date()) ?><?js } ?>
         </footer>
+
     </div>
-</div>
-<script src="scripts/bootstrap.min.js"></script>
-<script src="scripts/main.js"></script>
+
+</div><div>
+
+<script> prettyPrint(); </script>
+<script src="scripts/jquery.min.js"></script>
+
 </body>
 </html>
