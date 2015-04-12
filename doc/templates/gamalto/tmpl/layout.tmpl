@@ -54,20 +54,31 @@
         <h1 class="page-title<?js= title.indexOf("<span") != -1 ? "" : " simple" ?>"><?js= title ?></h1>
         <?js= content ?>
 
-        <?js if (env.conf.templates.app.disqus) { ?>
+        <?js if (env.conf.templates.app.livefry) { ?>
             <h2>Comments</h2>
-            <!-- disqus code -->
-            <div id="disqus_thread"></div>
+            <!-- START: Livefyre Embed -->
+            <div id="livefyre-comments"></div>
+            <script src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
             <script>
-                var disqus_shortname = '<?js= env.conf.templates.app.disqus?>';
-                (function() {
-                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
+            (function () {
+                var articleId = fyre.conv.load.makeArticleId(null);
+                fyre.conv.load({}, [{
+                    el: 'livefyre-comments',
+                    network: "livefyre.com",
+                    siteId: "<?js= env.conf.templates.app.livefry ?>",
+                    articleId: articleId,
+                    signed: false,
+                    collectionMeta: {
+                        articleId: articleId,
+                        url: fyre.conv.load.makeCollectionUrl(),
+                    }
+                }], function(widget) {
+                    widget.on('initialRenderComplete', updateContent);
+                    widget.on('commentPosted', updateContent);
+                });
+            }());
             </script>
-            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-            <!-- // disqus code -->
+            <!-- END: Livefyre Embed -->
         <?js } ?>
 
         <footer>

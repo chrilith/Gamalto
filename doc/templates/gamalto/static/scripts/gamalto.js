@@ -3,15 +3,30 @@
     // Content scroller
     var scroller;
 
+    // Current hash (firefox fix)
+    window.onhashchange = function() {
+        setTimeout(function() { location.hash = "#_top"; }, 0);
+    }
+    var hash = location.hash;
+
     // Enable :active/:hover on mobile devices
     document.addEventListener("touchstart", new Function(), false);
 
+    // Livefry handling for iScroll
+    window.updateContent = function() {
+        setTimeout(function() {
+            if (scroller) { scroller.refresh(); }
+        }, 500);
+    };
+
     // Initialize scrolling and anchor!
     window.docLoaded = function() {
+        // Be sure to have to proper starting position for the scroller (firefox fix)
+        location.hash = "#_top";
 
-        // Disqus handling for iScroll
-        var disqus = $("#disqus_thread");
-        if (disqus.length) {
+        // Livefry handling for iScroll
+        var livefyre = $("#livefyre-comments");
+        if (livefyre.length) {
             var Observer = window.MutationObserver || window.WebKitMutationObserver;
             if (Observer) {
                 var observer = new Observer(
@@ -20,11 +35,11 @@
                             if (scroller) { scroller.refresh(); }
                         });
                     });
-                    observer.observe(disqus[0], { attributes: true, subtree: true });
+                    observer.observe(livefyre[0], { attributes: true, subtree: true });
 
             } else {
                 // Old way with DOM Mutatuons Events
-                disqus.on("DOMAttrModified DOMSubtreeModified propertychange", function() {
+                livefyre.on("DOMAttrModified DOMSubtreeModified propertychange", function() {
                     if (scroller) { scroller.refresh(); }
                 });
             }
@@ -34,7 +49,6 @@
         var opts = {
             mouseWheel: true,
             scrollbars: true,
-            click: true,
             fadeScrollbars: true,
             interactiveScrollbars: true,
             scrollbars: 'custom',
@@ -44,10 +58,7 @@
         new IScroll("#menu", opts);
         scroller = new IScroll("#content", opts);
 
-        // Current hash
-        var hash = location.hash;
         if (hash) {
-            location.hash = "#_top";
             scroller.scrollToElement(hash);
         }
 
