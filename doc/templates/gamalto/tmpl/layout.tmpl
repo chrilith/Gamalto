@@ -15,6 +15,7 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify-monokai.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-gamalto.css">
     <link type="text/css" rel="stylesheet" href="styles/fontello.css">
+    <link type="text/css" rel="stylesheet" href="styles/livefyre.css">
 
     <?js if (env.conf.templates.app.googleAnalytics) { ?>
         <script>
@@ -55,14 +56,18 @@
         <?js= content ?>
 
         <?js if (env.conf.templates.app.livefry) { ?>
-            <h2>Comments</h2>
             <!-- START: Livefyre Embed -->
             <div id="livefyre-comments"></div>
             <script src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
             <script>
             (function () {
                 var articleId = fyre.conv.load.makeArticleId(null);
-                fyre.conv.load({}, [{
+                var networkConfig = {};
+                networkConfig["strings"] = {
+                    commentCountLabel: "Comment (%s)",
+                    commentCountLabelPlural: "Comments (%s)"
+                };
+                fyre.conv.load(networkConfig, [{
                     el: 'livefyre-comments',
                     network: "livefyre.com",
                     siteId: "<?js= env.conf.templates.app.livefry ?>",

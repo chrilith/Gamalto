@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../fonts/fontello.eot?80032649');
-  src: url('../fonts/fontello.eot?80032649#iefix') format('embedded-opentype'),
-       url('../fonts/fontello.woff?80032649') format('woff'),
-       url('../fonts/fontello.ttf?80032649') format('truetype'),
-       url('../fonts/fontello.svg?80032649#fontello') format('svg');
+  src: url('../fonts/fontello.eot?85475127');
+  src: url('../fonts/fontello.eot?85475127#iefix') format('embedded-opentype'),
+       url('../fonts/fontello.woff?85475127') format('woff'),
+       url('../fonts/fontello.ttf?85475127') format('truetype'),
+       url('../fonts/fontello.svg?85475127#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?80032649#fontello') format('svg');
+    src: url('../font/fontello.svg?85475127#fontello') format('svg');
   }
 }
 */
@@ -35,7 +35,7 @@
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
-     
+ 
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
  
@@ -45,6 +45,10 @@
  
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
  
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
@@ -57,3 +61,8 @@
 .icon-facebook:before { content: '\e804'; } /* '' */
 .icon-gplus:before { content: '\e805'; } /* '' */
 .icon-search:before { content: '\e806'; } /* '' */
+.icon-share-squared:before { content: '\e807'; } /* '' */
+.icon-pencil:before { content: '\e808'; } /* '' */
+.icon-down-dir:before { content: '\e809'; } /* '' */
+.icon-picture:before { content: '\e80a'; } /* '' */
+.icon-at:before { content: '\e80b'; } /* '' */

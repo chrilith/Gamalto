@@ -1,0 +1,144 @@
+#livefyre-comments {
+    margin-top:40px;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div>div {
+    background: none !important;
+}
+
+body .fyre-button-left,
+body .fyre-button-right {
+    border-radius: 0 !important;
+    -webkit-border-radius:0 !important;
+    border: 0 !important;
+
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar>div {
+    font-family: 'Oswald', Helvetica, Arial, sans-serif;    
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right {
+    background: #7b848c !important;
+}
+
+.fyre-button-right-inner-box {
+    color:#fff !important;
+    text-shadow:none !important;
+    font-weight: normal !important;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-left-open > div,
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-left-hover > div,
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right-hover > div {
+    background: orangered !important;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.goog-toolbar-separator {
+    border-radius: 0;
+    -webkit-border-radius:0;
+}
+
+body div.fyre-format-button>div:before,
+body div.fyre-mention-button>div:before,
+body div.fyre-embed-button>div:before,
+body .fyre-share-counter:before,
+body .fyre-share-button .fyre-button-right-inner-box:after {
+    position: absolute;
+    font-family: "fontello";
+    content:'\e80a';
+    color:#fff;
+    left:0;
+    right:0;
+    text-align: center;
+    font-size:1.25em;
+    line-height: 2;
+}
+
+body div.fyre-mention-button>div:before {
+    content:'\e80b';
+}
+
+body div.fyre-format-button>div:before {
+    content:'\e808';
+}
+
+body div.fyre-format-button>div:hover:before,
+body div.fyre-mention-button>div:hover:before,
+body div.fyre-embed-button>div:hover:before {
+   color:#fff;
+}
+
+body div.fyre-button-left-open>div:before {
+    color:#fff;
+}
+
+body .fyre-comment-count {
+    font-family: 'Oswald', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 24px;
+    color:#000;
+}
+
+body .fyre-editor {
+    background:#fff;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+body .fyre-editor .fyre-editor-container .fyre-editor-editable {
+    font-family: 'Droid Serif', 'Times New Roman', Times, serif;
+    font-size:14px;
+    background: none;
+    border-color: #ddd;
+    border-radius: 0;
+    -webkit-border-radius:0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div {
+    background:#1d1f21;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.goog-toolbar-separator {
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    border-color:#ddd;
+}
+
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-left .fyre-button-left-outer-box .fyre-button-left-inner-box,
+body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right .fyre-button-right-outer-box .fyre-button-right-inner-box {
+    color:#fff;
+    text-shadow: none;
+    -webkit-text-shadow: none;
+}
+
+.fyre-share-counter.fyre-share-empty,
+.goog-inline-block .fyre-button-right-inner-box {
+    background: none !important;
+}
+
+body label.fyre-share-counter:before {
+    content:none;
+}
+
+body label.fyre-share-counter.fyre-share-empty:before {
+    content:'\e807';
+    line-height: 1;
+}
+
+body .fyre-share-button .fyre-button-right-inner-box:after {
+    content:'\e809';
+    position: absolute;
+    color:#fff;
+    pointer-events:none;
+    left:auto;
+    right:8px;
+    top:0;
+    line-height: 2.2;
+    text-shadow:none;
+    font-size: 14px;
+}
