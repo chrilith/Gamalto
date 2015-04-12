@@ -10,6 +10,9 @@ body .fyre-button-left,
 body .fyre-button-right {
     border-radius: 0 !important;
     -webkit-border-radius:0 !important;
+    -moz-border-radius:0 !important;
+    -ms-border-radius:0 !important;
+    -o-border-radius:0 !important;
     border: 0 !important;
 
 }
@@ -25,6 +28,10 @@ body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right {
 .fyre-button-right-inner-box {
     color:#fff !important;
     text-shadow:none !important;
+    -webkit-text-shadow:none !important;
+    -moz-text-shadow:none !important;
+    -mz-text-shadow:none !important;
+    -o-text-shadow:none !important;
     font-weight: normal !important;
 }
 
@@ -37,6 +44,9 @@ body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right-hov
 body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.goog-toolbar-separator {
     border-radius: 0;
     -webkit-border-radius:0;
+    -moz-border-radius:0;
+    -ms-border-radius:0;
+    -o-border-radius:0;
 }
 
 body div.fyre-format-button>div:before,
@@ -84,8 +94,15 @@ body .fyre-comment-count {
 body .fyre-editor {
     background:#fff;
     border-radius: 0;
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    -ms-border-radius:0;
+    -o-border-radius:0;
     box-shadow: none;
     -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
 }
 
 body .fyre-editor .fyre-editor-container .fyre-editor-editable {
@@ -95,8 +112,14 @@ body .fyre-editor .fyre-editor-container .fyre-editor-editable {
     border-color: #ddd;
     border-radius: 0;
     -webkit-border-radius:0;
+    -moz-border-radius:0;
+    -ms-border-radius:0;
+    -o-border-radius:0;
     box-shadow: none;
     -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
 }
 
 body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div {
@@ -106,6 +129,9 @@ body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div {
 body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.goog-toolbar-separator {
     box-sizing:content-box;
     -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -ms-box-sizing:content-box;
+    -o-box-sizing:content-box;
     border-color:#ddd;
 }
 
@@ -114,6 +140,9 @@ body .fyre-editor .fyre-editor-toolbar .goog-toolbar > div.fyre-button-right .fy
     color:#fff;
     text-shadow: none;
     -webkit-text-shadow: none;
+    -moz-text-shadow: none;
+    -mz-text-shadow: none;
+    -o-text-shadow: none;
 }
 
 .fyre-share-counter.fyre-share-empty,
@@ -139,6 +168,10 @@ body .fyre-share-button .fyre-button-right-inner-box:after {
     right:8px;
     top:0;
     line-height: 2.2;
-    text-shadow:none;
+    text-shadow: none;
+    -webkit-text-shadow: none;
+    -moz-text-shadow: none;
+    -mz-text-shadow: none;
+    -o-text-shadow: none;
     font-size: 14px;
 }
