@@ -67,6 +67,10 @@
             menu();
         });
 
+        $("#content").on("click touchstart", function(e) {
+            window.onresize();
+        });
+
         // Handle click on hash
         $('a[href*="#"]').on('click', function (e) {
             // No change? exit...
