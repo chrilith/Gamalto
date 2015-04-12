@@ -15,7 +15,9 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify-monokai.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-gamalto.css">
     <link type="text/css" rel="stylesheet" href="styles/fontello.css">
-    <link type="text/css" rel="stylesheet" href="styles/livefyre.css">
+    <?js if (env.conf.templates.app.livefry) { ?>
+        <link type="text/css" rel="stylesheet" href="styles/livefyre.css">
+    <?js } ?>
 
     <?js if (env.conf.templates.app.googleAnalytics) { ?>
         <script>
