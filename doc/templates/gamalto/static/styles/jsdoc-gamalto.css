@@ -528,7 +528,7 @@ pre.prettyprint {
     background-color: #fafafa;
 }
 
-.params tbody p {
+.params tbody p, dd p {
     text-align: left;
 }
 
@@ -559,6 +559,10 @@ pre.prettyprint {
     font-weight: bold;
     padding-bottom: 5px;
     border-bottom-width: 2px;
+}
+
+.params thead .name {
+    font-family: 'Droid Serif', 'Times New Roman', Times, serif;    
 }
 
 .params .params thead tr, .props .props thead tr
@@ -664,3 +668,25 @@ pre.prettyprint {
         font-size: 42px;
     }
 }
+
+@media screen and (max-width: 640px) {
+    .params .attributes,
+    .params .defaults {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 38px;
+    }
+
+    .params .type {
+        display: none;
+    }
+
+    .name .type-signature {
+        display: none;
+    }
+}
+
