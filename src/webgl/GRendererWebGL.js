@@ -71,7 +71,7 @@ THE SOFTWARE.
 
 		var gl = this._getContext();
 
-		var s1 = G.Shader.load(gl, _shaders.getItem("positions"), gl.VERTEX_SHADER);
+		var s1 = G.Shader.load(gl, _shaders.getItem("position"), gl.VERTEX_SHADER);
 		var s2 = G.Shader.load(gl, _shaders.getItem("fillColor"), gl.FRAGMENT_SHADER);
 		var s3 = G.Shader.load(gl, _shaders.getItem("fillTexture"), gl.FRAGMENT_SHADER);
 

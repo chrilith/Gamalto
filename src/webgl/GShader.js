@@ -54,7 +54,7 @@ THE SOFTWARE.
 			return shader;
 		}
 
-		gamalto.error_(gl.getShaderInfoLog(shader));
+		gamalto.devel.error(gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
 		return null;
 	};
@@ -71,7 +71,7 @@ THE SOFTWARE.
 		if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
 			return program;
 		}
-		gamalto.error_(gl.getProgramInfoLog(program));
+		gamalto.devel.error(gl.getProgramInfoLog(program));
 		gl.deleteProgram(program);
 		return null;
 	};
