@@ -46,7 +46,7 @@ THE SOFTWARE.
 	var _Object = G.TileSet = function(bitmap, size) {
 		Object.base(this, bitmap);
 		/**
-		 * Gets the size of the tileset.
+		 * Gets the size of a tile in the tileset.
 		 *
 		 * @readonly
 		 * 
@@ -63,6 +63,7 @@ THE SOFTWARE.
 		this.offset = new G.Vector2(0, 0);
 	},
 
+	/** @alias Gamalto.TileSet.prototype */
 	proto = _Object.inherits(G.SpriteSheet);
 
 	proto.addSections = function(count, r) {
@@ -75,7 +76,7 @@ THE SOFTWARE.
 	
 	proto.draw = function(renderer, x, y, i) {
 		var offset = this.offset;
-		renderer.drawBitmapSection(this.bitmap_, x + offset.x, y + offset.y, this.getSection(i));
+		_Object.base.draw.call(this, renderer, x + offset.x, y + offset.y, i);
 	};
 
 })();
