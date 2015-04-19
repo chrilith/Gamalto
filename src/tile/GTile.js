@@ -35,12 +35,16 @@ THE SOFTWARE.
 	gamalto.devel.using("Rect");
 
 	/**
-	 * @constructor
+	 * Basic tile element.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Tile
+	 * @augments Gamalto.Rect
 	 */
-	G.Tile = function(x, y, w, h) {
-		this.rect = new G.Rect(x, y, w, h);
-	};
+	var _Object = G.Tile = function(x, y, w, h) {
+		Object.base(this, x, y, w, h);
+	},
 
-	var proto = G.Tile.inherits(G.Object);
+	proto = _Object.inherits(G.Rect);
 
 })();

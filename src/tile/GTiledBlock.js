@@ -47,8 +47,8 @@ THE SOFTWARE.
 	
 	proto.draw = function(renderer, x, y) {
 		var ts = this._tileSet,
-			tw = ts._tile.width,
-			th = ts._tile.height,
+			tw = ts.size.width,
+			th = ts.size.height,
 			empty = G.TileGroup.NOTILE;
 
 		// TODO: while and inc++ on "t"	

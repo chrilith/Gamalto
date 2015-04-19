@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
 	gamalto.devel.require("TileGroup");
 	gamalto.devel.require("Vector2");
 	gamalto.devel.using("Size");
@@ -81,7 +82,7 @@ THE SOFTWARE.
 			for (var y = 0; y < th; y++) {
 				if (this.data[t] != empty) {
 					var t = (x + tx) + (y + ty) * this.width;
-					ts.draw(renderer, ox + x * ts.tile_.width, oy + y * ts.tile_.height, this.data[t] - 1);
+					ts.draw(renderer, ox + x * ts.size.width, oy + y * ts.size.height, this.data[t] - 1);
 				}
 			}
 		}
@@ -90,8 +91,8 @@ THE SOFTWARE.
 	proto.update = function(mx, my) {
 		var o  = this,
 			ts = o._tileSet,
-			tw = ts.tile_.width,
-			th = ts.tile_.height,
+			tw = ts.size.width,
+			th = ts.size.height,
 			vp = o._viewport,
 
 			// Desired values
@@ -165,8 +166,8 @@ THE SOFTWARE.
 		var o = this,
 			ts = o._tileSet,
 			vp = o._viewport,
-			tw = ts.tile_.width,
-			th = ts.tile_.height,
+			tw = ts.size.width,
+			th = ts.size.height,
 			w = this._drawW,
 			h = this._drawH,
 			redraw = null;

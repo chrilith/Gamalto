@@ -34,19 +34,39 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("SpriteSheet");
 	gamalto.devel.using("Tile");
+	gamalto.devel.using("Vector2");
 
 	/**
-	 * @constructor
+	 * Base object to create a movable entity. It's not meant to be used directly.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.TileSet
+	 * @augments Gamalto.SpriteSheet
 	 */
 	var _Object = G.TileSet = function(bitmap, size) {
-		this.tile_ = size;
 		Object.base(this, bitmap);
-	};
+		/**
+		 * Gets the size of the tileset.
+		 *
+		 * @readonly
+		 * 
+		 * @member {Gamalto.Size}
+		 * @alias Gamalto.TileSet#size
+		 */
+		this.size = size;
+		/**
+		 * Gets or sets the offset in pixels to be applied when drawing a tile from the tileset.
+		 *
+		 * @member {Gamalto.Vector2}
+		 * @alias Gamalto.TileSet#offset
+		 */
+		this.offset = new G.Vector2(0, 0);
+	},
 
-	var proto = _Object.inherits(G.SpriteSheet);
+	proto = _Object.inherits(G.SpriteSheet);
 
 	proto.addSections = function(count, r) {
-		return _Object.base.addSections.call(this, this.tile_, count, r);
+		return _Object.base.addSections.call(this, this.size, count, r);
 	};
 
 	proto.createSection_ = function(x, y, w, h) {
@@ -54,7 +74,8 @@ THE SOFTWARE.
 	};
 	
 	proto.draw = function(renderer, x, y, i) {
-		renderer.drawBitmapSection(this.bitmap_, x, y, this.getSection(i).rect);
+		var offset = this.offset;
+		renderer.drawBitmapSection(this.bitmap_, x + offset.x, y + offset.y, this.getSection(i));
 	};
 
 })();
