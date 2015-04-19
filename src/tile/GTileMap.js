@@ -38,16 +38,6 @@ THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	G.TileInfo = function() {
-		this.left = 0;
-		this.right = 0;
-		this.top = 0;
-		this.bottom = 0;
-	};
-	
-	/**
-	 * @constructor
-	 */
 	var _Object = G.TileMap = function(ts) {
 		Object.base(this);
 		this.setViewport(0, 0);
@@ -162,7 +152,7 @@ THE SOFTWARE.
 		// New drawing offset
 		o._deltaX %= tw;
 		o._deltaY %= th;
-	
+
 		this._drawW = w;
 		this._drawH = h;
 
