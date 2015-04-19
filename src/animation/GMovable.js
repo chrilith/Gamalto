@@ -45,6 +45,7 @@ THE SOFTWARE.
 		/**
 		 * Fractional part of the previous displacement.
 		 *
+		 * @protected
 		 * @internal
 		 * @ignore
 		 * 
@@ -52,8 +53,9 @@ THE SOFTWARE.
 		 */
 		this.frac_ = new _Vector2(0, 0);
 		/**
-		 * Current displacementof the entity in pixels.
+		 * Current expected displacement of the entity in pixels.
 		 *
+		 * @protected
 		 * @internal
 		 * @ignore
 		 * 
