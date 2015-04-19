@@ -91,7 +91,7 @@ THE SOFTWARE.
 			for (var y = 0; y < th; y++) {
 				if (this.data[t] != empty) {
 					var t = (x + tx) + (y + ty) * this.width;
-					ts.draw(renderer, ox + x * ts._tile.width, oy + y * ts._tile.height, this.data[t] - 1);
+					ts.draw(renderer, ox + x * ts.tile_.width, oy + y * ts.tile_.height, this.data[t] - 1);
 				}
 			}
 		}
@@ -100,8 +100,8 @@ THE SOFTWARE.
 	proto.update = function(mx, my) {
 		var o  = this,
 			ts = o._tileSet,
-			tw = ts._tile.width,
-			th = ts._tile.height,
+			tw = ts.tile_.width,
+			th = ts.tile_.height,
 			vp = o._viewport,
 	
 			// New and old directions
@@ -170,10 +170,11 @@ THE SOFTWARE.
 		var o = this,
 			ts = o._tileSet,
 			vp = o._viewport,
-			tw = ts._tile.width,
-			th = ts._tile.height,
+			tw = ts.tile_.width,
+			th = ts.tile_.height,
 			w = this._drawW,
-			h = this._drawH;
+			h = this._drawH,
+			redraw = null;
 	
 		if (!w && !h)
 			return;
@@ -192,6 +193,7 @@ THE SOFTWARE.
 				ox += (vp.width - w) * tw;
 			}
 			this._drawSection(renderer, cx | 0, cy | 0, w, vp.height, ox, oy);
+			(redraw = redraw || []).push(new G.Box(ox, oy, w * tw, vp.height * th));
 		}
 		if (h != 0) {
 			if (h < 0) {
@@ -200,7 +202,10 @@ THE SOFTWARE.
 				oy += (vp.height - h) * th;
 			}
 			o._drawSection(renderer, cx | 0, cy | 0, vp.width, h, ox, oy);
+			(redraw = redraw || []).push(new G.Box(ox, oy, vp.width * tw, h * th));
 		}
+
+		return redraw;
 	};
 
 })();
