@@ -145,11 +145,11 @@ THE SOFTWARE.
 	 *         List of the regions to be updated.
 	 */
 	proto.redraw = function(surface, x, y, regions) {
-		if (list) {
+		if (regions) {
 			var renderer = this.renderer,
 				old = renderer.setTransform(false);
-			list.forEach(function(r) {
-				renderer.drawBitmapSection(s, r.origin.x + x, r.origin.y + y, r);
+			regions.forEach(function(r) {
+				renderer.drawBitmapSection(surface, r.origin.x + x, r.origin.y + y, r);
 			});
 			renderer.setTransform(old);
 		}
