@@ -65,7 +65,7 @@ THE SOFTWARE.
 		 * @member {boolean}
 		 * @alias Gamalto.ScrollingRegion#loop
 		 */
-		this.loop = false;
+		this.loop = !!loop;
 	},
 
 	/** @alias Gamalto.ScrollingRegion.prototype */

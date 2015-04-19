@@ -223,8 +223,8 @@ THE SOFTWARE.
 			ww = w - (sx < 0 ? -sx : sx),
 			hh = h - (sy < 0 ? -sy : sy),
 			// Destination in the window buffer
-			dx = (sx > 0 ? sx : 0),
-			dy = (sy > 0 ? sy : 0),
+			dx = x + (sx > 0 ? sx : 0),
+			dy = y + (sy > 0 ? sy : 0),
 
 			renderer = dst.renderer;
 
