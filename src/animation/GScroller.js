@@ -130,8 +130,8 @@ THE SOFTWARE.
 	proto.drawRegion_ = function(name, dx, dy) {
 		var region = this.getRegion(name);
 
-		dx = region.curr_.x * gamalto.defined(dx, 1);
-		dy = region.curr_.y * gamalto.defined(dy, 1);
+		dx = region.curr_.x * gamalto.defined(dx, 1) | 0;
+		dy = region.curr_.y * gamalto.defined(dy, 1) | 0;
 
 		this.move_(region, dx, dy);
 	};
