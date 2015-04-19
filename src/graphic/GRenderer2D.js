@@ -194,6 +194,11 @@ THE SOFTWARE.
 		}
 	};
 
+	proto.copy_ = function(bitmap, sx, sy, sw, sh, dx, dy, dw, dh) {
+		var getCanvas = bitmap.getCanvas_;
+		this._getContext().drawImage(getCanvas ? getCanvas.call(bitmap) : bitmap, sx, sy, sw, sh, dx, dy, dw, dh);
+	};
+
 	proto._reset = function() {
 		var ctx = this._getContext();
 		ctx.globalAlpha = 1;

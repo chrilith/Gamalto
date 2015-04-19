@@ -33,6 +33,7 @@ THE SOFTWARE.
 	
 	/* Dependencies */
 	gamalto.devel.using("Box");
+	gamalto.devel.using("Surface");
 	gamalto.devel.using("ScrollingRegion");
 
 	/**
@@ -44,8 +45,10 @@ THE SOFTWARE.
 	 *
 	 * @param {Gamalto.Surface} surface
 	 *        Surface holding the image to be scrolled.
+	 * @param {boolean} [doubleBuffer]
+	 *        Whether to active double buffuring. Required for looping and parallax scrolling.
 	 */
-	var _Object = G.Scroller = function(surface) {
+	var _Object = G.Scroller = function(surface, doubleBuffer) {
 		/**
 		 * Dictionary holding the scrolling regions.
 		 *
@@ -63,7 +66,23 @@ THE SOFTWARE.
 		 * 
 		 * @member {Gamalto.Surface}
 		 */
-		this.surface_ = surface;
+		var buffer = this.surface_ = surface;
+
+		if (doubleBuffer) {
+			// TODO: clone the surface instead to have same canvas, same renderer
+			buffer = new G.Surface(surface.width, surface.height);
+			buffer.blit(surface, 0, 0);
+		}
+		/**
+		 * Current surface when double buffer is active or passed surface if not.
+		 * Using double buffer, you must use this property instead of the original surface.
+		 *
+		 * @readonly
+		 * 
+		 * @member {Gamalto.Surface}
+		 * @alias Gamalto.Scroller#surface
+		 */
+		this.surface = buffer;
 	},
 	
 	/** @alias Gamalto.Scroller.prototype */
@@ -96,6 +115,10 @@ THE SOFTWARE.
 
 	/**
 	 * Scrolls the region using the specified displacement, or the internal state if not specified.
+	 * To prevent a region from moving, simply set its speed to 0.
+	 *
+	 * @private
+	 * @ingore
 	 * 
 	 * @param  {string} name
 	 *         Name the region to be drawn.
@@ -104,7 +127,7 @@ THE SOFTWARE.
 	 * @param  {number} dy
 	 *         Value beween -1 and +1 indicating the desired vertical displacement.
 	 */
-	proto.drawRegion = function(name, dx, dy) {
+	proto.drawRegion_ = function(name, dx, dy) {
 		var region = this.getRegion(name);
 
 		if (!isNaN(dx) || !isNaN(dy)) {
@@ -116,9 +139,7 @@ THE SOFTWARE.
 			dx = region.curr_.x;
 			dy = region.curr_.y;
 		}
-		if (dx || dy) {
-			this.move_(region, dx, dy);
-		}
+		this.move_(region, dx, dy);
 	};
 
 	/**
@@ -139,12 +160,39 @@ THE SOFTWARE.
 	};
 
 	/**
+	 * Redraws parts of the current surface into the buffer surface.
+	 * Useful only with double buffering.
+	 * 
+	 * @param  {array.<Gamalto.IBox>} regions
+	 *         List of the regions to be updated.
+	 */
+	proto.redraw = function(regions) {
+		// Get the next destionation surface
+		var surface = this.surface_;
+		// Prepare regions
+		regions = regions || [new G.Box(0, 0, surface.width, surface.height)];
+		// Update the surface
+		surface.redraw(this.surface, 0, 0, regions);
+	};
+
+	/**
 	 * Scrolls the registered regions.
+	 *
+	 * @return {Gamalto.Surface} Currently active surface to be displayed.
 	 */
 	proto.draw = function() {
+		// Swap buffers if double buffering is enabled
+		var	buf1 = this.surface_,
+			buf2 = this.surface;
+
+		this.surface_ = buf2;
+		this.surface  = buf1;
+
 		for (var name in this.regions_) {
-			this.drawRegion(name);
+			this.drawRegion_(name);
 		}
+
+		return this.surface;
 	};
 
 	/**
@@ -161,60 +209,51 @@ THE SOFTWARE.
 	 *         Vertical displacement in pixels.
 	 */
 	proto.move_ = function(region, sx, sy) {
-	// FIXME: everything should be handled by a renderer!!!
 		var b = region.bounds_,
 			x = b.origin.x,
 			y = b.origin.y,
-			s = this.surface_,
 			w = b.extent.x,
 			h = b.extent.y,
 	
-			src = s.canvas._context,		// FIXME: nodirect access to context
-			dst = region.buffer_._context,
+			src = this.surface_,
+			dst = this.surface,
 
-		/* We cannot use negative value using this signature of drawImage()
-		   and so we have to compute the correct values */
+		/* Clip for out of bounds values */
 			cx = (sx < 0 ? -sx : 0) + x,
 			cy = (sy < 0 ? -sy : 0) + y,
 			ww = w - (sx < 0 ? -sx : sx),
 			hh = h - (sy < 0 ? -sy : sy),
 			// Destination in the window buffer
 			dx = (sx > 0 ? sx : 0),
-			dy = (sy > 0 ? sy : 0);
+			dy = (sy > 0 ? sy : 0),
 
-		// Copy a main surface area to the region buffer. Double buffering is far more efficient
-		dst.clearRect(0, 0, w, h);	// The buffer is never transformed
-		dst.drawImage(src.canvas, cx, cy, ww, hh, dx, dy, ww, hh);
+			renderer = dst.renderer;
+
+		// Copy a main surface area to the region buffer
+		if (src !== dst) { renderer.clearRect(b); }
+		renderer.copy_(src, cx, cy, ww, hh, dx, dy, ww, hh);
 
 		// Handle auto loop
 		if (region.loop) {
 			if (sx < 0) {
-				dst.drawImage(src.canvas,
-							  x, y, -sx, h,
-							  w + sx, 0, -sx, h);
+				renderer.copy_(src,
+							  dx, dy, -sx, h,
+							  dx + w + sx, dy, -sx, h);
 			} else if (sx > 0) {
-				dst.drawImage(src.canvas,
-							  x + w - sx, y, sx, h,
-							  0, 0, sx, h);
+				renderer.copy_(src,
+							  dx + w - sx, dy, sx, h,
+							  dx, dy, sx, h);
 			}
 			if (sy < 0) {
-				dst.drawImage(src.canvas,
-							  x, y, w, -sy,
-							  0, h + sy, w, -sy);
+				renderer.copy_(src,
+							  dx, dy, w, -sy,
+							  dx, dy + h + sy, w, -sy);
 			} else if (sy > 0) {
-				dst.drawImage(src.canvas,
-							  x, y + h - sy, w, sy,
-							  0, 0, w, sy);
+				renderer.copy_(src,
+							  dx, dy + h - sy, w, sy,
+							  dx, dy, w, sy);
 			}
 		}
-
-		// Force no transformation without altering current surface configuration
-		var r = s.renderer;
-
-		var old = r.setTransform(false);
-		r.clearRect(new G.Box(x, y, w, h));
-		r.drawBitmap(dst.canvas, x, y);
-		r.setTransform(old);
 	};
 
 })();
