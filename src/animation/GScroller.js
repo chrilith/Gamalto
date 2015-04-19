@@ -123,22 +123,16 @@ THE SOFTWARE.
 	 * @param  {string} name
 	 *         Name the region to be drawn.
 	 * @param  {number} dx
-	 *         Value beween -1 and +1 indicating the desired horizontal displacement.
+	 *         Value beween 0 and 1 indicating the desired horizontal displacement ratio.
 	 * @param  {number} dy
-	 *         Value beween -1 and +1 indicating the desired vertical displacement.
+	 *         Value beween 0 and 1 indicating the desired vertical displacement ratio.
 	 */
 	proto.drawRegion_ = function(name, dx, dy) {
 		var region = this.getRegion(name);
 
-		if (!isNaN(dx) || !isNaN(dy)) {
-			// In that case, reset the current position
-			region.reset();
-			dx = dx || 0;
-			dy = dy || 0;
-		} else {
-			dx = region.curr_.x;
-			dy = region.curr_.y;
-		}
+		dx = region.curr_.x * gamalto.defined(dx, 1);
+		dy = region.curr_.y * gamalto.defined(dy, 1);
+
 		this.move_(region, dx, dy);
 	};
 
@@ -178,9 +172,14 @@ THE SOFTWARE.
 	/**
 	 * Scrolls the registered regions.
 	 *
+	 * @param  {number} dx
+	 *         Value beween 0 and 1 indicating the horizontal displacement ratio.
+	 * @param  {number} dy
+	 *         Value beween 0 and 1 indicating the vertical displacement ratio.
+	 * 
 	 * @return {Gamalto.Surface} Currently active surface to be displayed.
 	 */
-	proto.draw = function() {
+	proto.draw = function(dx, dy) {
 		// Swap buffers if double buffering is enabled
 		var	buf1 = this.surface_,
 			buf2 = this.surface;
@@ -189,7 +188,7 @@ THE SOFTWARE.
 		this.surface  = buf1;
 
 		for (var name in this.regions_) {
-			this.drawRegion_(name);
+			this.drawRegion_(name, dx, dy);
 		}
 
 		return this.surface;

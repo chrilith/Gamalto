@@ -103,6 +103,10 @@ THE SOFTWARE.
 			tw = ts.tile_.width,
 			th = ts.tile_.height,
 			vp = o._viewport,
+
+			// Desired values
+			omx = mx,
+			omy = my,
 	
 			// New and old directions
 			ndx = Math.sign(mx),
@@ -161,8 +165,9 @@ THE SOFTWARE.
 	
 		this._drawW = w;
 		this._drawH = h;
-	
-		return new _Vector2(mx, my);
+
+		// Returns the ratio applied to the desired displacement
+		return new _Vector2(mx / omx, my / omy);
 	};
 	
 	proto.draw = function(renderer) {
