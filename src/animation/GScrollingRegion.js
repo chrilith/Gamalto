@@ -46,7 +46,7 @@ THE SOFTWARE.
 	 * @param {Gamalto.IBox} box
 	 *        Bounds of the region to be scrolled.
 	 * @param {boolean} [loop]
-	 *        Whether to loop the scrolling area. Defaults to "true".
+	 *        Whether to loop the scrolling area.
 	 */
 	var _Object = G.ScrollingRegion = function(box, loop) {
 		Object.base(this);
@@ -60,22 +60,12 @@ THE SOFTWARE.
 		 */
 		this.bounds_ = box;
 		/**
-		 * Buffer to handle the scrolling of the area.
-		 *
-		 * @internal
-		 * @ignore
-		 * 
-		 * @type {Gamalto.BaseCanvas}
-		 */
-		this.buffer_ = new G.Canvas2D(box.extent.x, box.extent.y);
-		this.setSpeed();
-		/**
 		 * Gets or sets the loop state of the scrolling.
 		 * 
 		 * @member {boolean}
 		 * @alias Gamalto.ScrollingRegion#loop
 		 */
-		this.loop = gamalto.defined(loop, true);
+		this.loop = false;
 	},
 
 	/** @alias Gamalto.ScrollingRegion.prototype */
