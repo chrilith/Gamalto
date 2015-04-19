@@ -51,6 +51,9 @@ THE SOFTWARE.
 	var _Object = G.Size = function(width, height) {
 		/**
 		 * Horizontal component of the size object.
+		 *
+		 * @readonly
+		 * 
 		 * @member {number}
 		 * @alias Gamalto.Size#width
 		 */
@@ -58,6 +61,9 @@ THE SOFTWARE.
 
 		/**
 		 * Vertical component of the size object.
+		 *
+		 * @readonly
+		 * 
 		 * @member {number}
 		 * @alias Gamalto.Size#height
 		 */
