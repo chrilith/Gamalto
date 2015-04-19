@@ -71,4 +71,16 @@ THE SOFTWARE.
 	/** @alias Gamalto.ScrollingRegion.prototype */
 	proto = _Object.inherits(G.Movable);
 
+	/**
+	 * Current expected displacement of the region in pixels.
+	 * 
+	 * @memberof Gamalto.ScrollingRegion.prototype
+	 * @member {Gamalto.Vector2} moving
+	 * @readonly
+	 */
+	Object.defineProperty(proto, "moving", {
+		get: function() {
+			return this.curr_;
+		}
+	});
 })();
