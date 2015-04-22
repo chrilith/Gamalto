@@ -35,7 +35,9 @@ THE SOFTWARE.
 	gamalto.devel.require("BaseLibrary");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.SoundPool
+	 * @augments Gamalto.BaseLibrary
 	 */
 	var _Object = G.SoundPool = function(mixer) {
 		Object.base(this);

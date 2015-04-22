@@ -36,7 +36,9 @@ THE SOFTWARE.
 	gamalto.devel.using("ArrayWriter");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.MemoryStream
+	 * @augments Gamalto.StreamReader
 	 */
 	G.MemoryStream = function(data, unit) {
 		// Do we have a source data?

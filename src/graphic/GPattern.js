@@ -37,7 +37,9 @@ THE SOFTWARE.
 	gamalto.devel.using("Renderer2D");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Pattern
+	 * @augments Gamalto.Object
 	 */
 	G.Pattern = function(bitmap, r) {
 		r = r || new G.Rect(0, 0, bitmap.width, bitmap.height);

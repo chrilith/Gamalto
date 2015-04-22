@@ -37,7 +37,9 @@ THE SOFTWARE.
 	gamalto.devel.require("Event");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.MouseEvent
+	 * @augments Gamalto.Event
 	 */
 	G.MouseEvent = function(type) {
 		Object.base(this, type);

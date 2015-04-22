@@ -37,7 +37,9 @@ THE SOFTWARE.
 	gamalto.devel.require("BaseRenderer");
 	
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Renderer2D
+	 * @augments Gamalto.BaseRenderer
 	 */
 	G.Renderer2D = function(canvas) {
 		Object.base(this, canvas);

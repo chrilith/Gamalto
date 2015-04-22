@@ -35,7 +35,9 @@ THE SOFTWARE.
 		bit = 1;		/* For extra manager bit */	
 	
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.EventManager
+	 * @augments Gamalto.Object
 	 */
 	G.EventManager = function(listen) {
 //->	this._isPolling = false;

@@ -32,12 +32,9 @@ THE SOFTWARE.
 (function(window) {
 
 	/**
-	 * Dependencies
-	 */
-	// ...
-
-	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.AudioChannel
+	 * @augments Gamalto.Object
 	 */
 	G.AudioChannel = function(duplicateSource) {
 		// Allows a same sound to be played on many channels

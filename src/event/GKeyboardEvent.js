@@ -37,7 +37,9 @@ THE SOFTWARE.
 	gamalto.devel.require("Event");
 	
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.KeyboardEvent
+	 * @augments Gamalto.Event
 	 */
 	G.KeyboardEvent = function(type) {
 		Object.base(this, type);

@@ -38,7 +38,9 @@ THE SOFTWARE.
 	gamalto.devel.using("Surface");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Font
+	 * @augments Gamalto.SpriteSheet
 	 */
 	G.Font = function(bitmap, firstLetter) {
 		Object.base(this, bitmap);

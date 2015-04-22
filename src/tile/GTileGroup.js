@@ -35,7 +35,9 @@ THE SOFTWARE.
 	// ...
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.TileGroup
+	 * @augments Gamalto.Object
 	 */
 	var stat = G.TileGroup = function() { };
 	

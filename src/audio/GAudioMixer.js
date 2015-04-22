@@ -35,7 +35,11 @@ THE SOFTWARE.
 		count = 0;
 
 	/**
-	 * @constructor
+	 * @namespace
+	 * @memberof Gamalto
+	 * @augments Gamalto.Object
+	 *
+	 * @alias Gamalto.AudioMixer
 	 */
 	var _Object = G.AudioMixer = new G.Object();
 

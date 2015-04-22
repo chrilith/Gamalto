@@ -34,6 +34,12 @@ THE SOFTWARE.
 	gamalto.devel.require("BaseSound");
 	gamalto.devel.using("Promise");
 	
+
+	/**
+	 * @memberof Gamalto
+	 * @constructor Gamalto.HTML5Sound
+	 * @augments Gamalto.BaseSound
+	 */
 	var _Object = G.HTML5Sound = function(src) {
 		Object.base(this, src);
 		this.canPlay_ = false;

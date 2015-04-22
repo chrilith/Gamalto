@@ -35,7 +35,9 @@ THE SOFTWARE.
 	gamalto.devel.require("TileGroup");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.TiledBlock
+	 * @augments Gamalto.TileGroup
 	 */
 	G.TiledBlock = function(ts, data, rows) {
 		Object.base(this);

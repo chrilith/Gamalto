@@ -38,7 +38,9 @@ THE SOFTWARE.
 	gamalto.devel.using("Timer");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.TiledAnimation
+	 * @augments Gamalto.Object
 	 */
 	G.TiledAnimation = function() {
 		this._list = [];

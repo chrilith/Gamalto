@@ -32,7 +32,9 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Palette
+	 * @augments Gamalto.Object
 	 */
 	G.Palette = function(colors) {
 		this._list = colors || [];

@@ -34,7 +34,9 @@ THE SOFTWARE.
 	gamalto.devel.require("Vector2");
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Shape
+	 * @augments Gamalto.Object
 	 */
 	G.Shape = function(x, y){
 		this.origin_ = new G.Vector2(x, y);

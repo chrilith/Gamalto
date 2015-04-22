@@ -33,6 +33,15 @@ THE SOFTWARE.
 
 	gamalto.devel.using("AudioChannel");
 
+	/**
+	 * Abstract object to create an audio mixer. It is not meant to be used directly by the client code.
+	 * 
+	 * @abstract
+	 * 
+	 * @memberof Gamalto
+	 * @constructor Gamalto.BaseAudioMixer
+	 * @augments Gamalto.Object
+	 */
 	var _Object = G.BaseAudioMixer = function() {
 		this.duplicateSource_ = false;
 	},

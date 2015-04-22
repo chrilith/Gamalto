@@ -36,8 +36,9 @@ THE SOFTWARE.
 	/**
 	 * Core object of the Gamalto framework.
 	 *
-	 * @constructor
-	 * @global
+	 * @memberof Gamalto
+	 * @constructor Core
+	 * @augments Gamalto.Object
 	 * @protected
 	 */
 	var Core = function() {
@@ -46,7 +47,7 @@ THE SOFTWARE.
 	};
 
 	/** @alias Core.prototype */
-	var core = Core.prototype;
+	var core = Core.inherits(G.Object);
 
 	/**
 	 * Sets the container of the canvas element.
@@ -143,7 +144,7 @@ THE SOFTWARE.
 	 * Main object to access the Gamalto core properties.
 	 *
 	 * @global
-	 * @type {Core}
+	 * @type {Gamalto.Core}
 	 */
 	global.gamalto = new Core();
 

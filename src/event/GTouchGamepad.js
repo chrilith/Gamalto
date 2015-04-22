@@ -43,9 +43,6 @@ THE SOFTWARE.
 		BUTTONS	= 1,
 		COUNT	= 2;
 
-	/**
-	 * @constructor
-	 */
 	G.TouchGamepad = function(name, container) {
 		this.id = name;
 		this.axes = [];

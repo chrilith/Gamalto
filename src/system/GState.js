@@ -32,7 +32,9 @@ THE SOFTWARE.
 (function() {
 	
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.State
+	 * @augments Gamalto.Object
 	 */
 	G.State = function() {
 		this._list = [];

@@ -32,7 +32,11 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * @constructor
+	 * @abstract
+	 * 
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Event
+	 * @augments Gamalto.Object
 	 */
 	G.Event = function(type) {
 		this.type = type;

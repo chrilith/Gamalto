@@ -38,6 +38,11 @@ THE SOFTWARE.
 	gamalto.devel.using("AsyncFile");
 	gamalto.devel.using("Promise");
 
+	/**
+	 * @memberof Gamalto
+	 * @constructor Gamalto.WebAudioSound
+	 * @augments Gamalto.BaseSound
+	 */
 	var _Object = G.WebAudioSound = function(src, context) {
 		Object.base(this, src);
 		this.init(context);

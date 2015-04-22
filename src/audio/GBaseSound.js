@@ -31,6 +31,15 @@ THE SOFTWARE.
 
 (function() {
 
+	/**
+	 * Abstract object to create an audio mixer compatible sound. It is not meant to be used directly by the client code.
+	 * 
+	 * @abstract
+	 * 
+	 * @memberof Gamalto
+	 * @constructor Gamalto.BaseSound
+	 * @augments Gamalto.Object
+	 */
 	var _Object = G.BaseSound = function(src) {
 		this.src_ = src;
 
