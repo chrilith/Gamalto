@@ -37,7 +37,7 @@ THE SOFTWARE.
 	gamalto.devel.using("Vector2");
 
 	/**
-	 * Base object to create a movable entity. It's not meant to be used directly.
+	 * Creates a set of tiles from a bitmap to render tile-based graphics.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TileSet
