@@ -36,17 +36,32 @@ THE SOFTWARE.
 	gamalto.devel.using("Box");
 
 	/**
-	 * @constructor
+	 * Creates a set of sprites from a bitmap.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.SpriteSheet
+	 * @augments Gamalto.SectionList
 	 */
 	var _Object = G.SpriteSheet = function(bitmap) {
 		Object.base(this);
 		this.bitmap_ = bitmap;
 	},
 	
-	/* Inheritance and shortcut */
+	/** @alias Gamalto.SpriteSheet.prototype */
 	proto = _Object.inherits(G.SectionList);
 	
-	/* Instance methods */
+	/**
+	 * Adds a new set of sprites to the list using the specified parameters.
+	 * 
+	 * @param {Gamalto.Size} size
+	 *        Size of a sprite.
+	 * @param {number} [count]
+	 *        Number of sprite sections to compute. Defaults to the number of sections contained in the specified rectangle.
+	 * @param {Gamalto.IBox} [r]
+	 *        Rectangle defining the bounds of the container. Defaults to the bitmap bounds.
+	 *
+	 * @return {Gamalto.SpriteSheet} Current object for method chaining.
+	 */
 	proto.addSections = function(size, count, r) {
 		var b = this.bitmap_,
 			w = b.width,
@@ -59,8 +74,22 @@ THE SOFTWARE.
 		return _Object.base.addSections.call(this, size, count, r);
 	};
 
-	proto.draw = function(renderer, x, y, i) {
-		renderer.drawBitmapSection(this.bitmap_, x, y, this.getSection(i));
+	/**
+	 * Draws a sprite into a surface.
+	 *
+	 * @virtual
+	 * 
+	 * @param  {Gamalto.BaseRenderer} renderer
+	 *         Renderer of the surface where the sprite must be drawn.
+	 * @param  {number} x
+	 *         Horizontal drawing position.
+	 * @param  {number} y
+	 *         Vertical drawing position.
+	 * @param  {number} index
+	 *         Zero-based index of the sprite to be drawn.
+	 */
+	proto.draw = function(renderer, x, y, index) {
+		renderer.drawBitmapSection(this.bitmap_, x, y, this.getSection(index));
 	};
 
 })();

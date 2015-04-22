@@ -66,6 +66,17 @@ THE SOFTWARE.
 	/** @alias Gamalto.TileSet.prototype */
 	proto = _Object.inherits(G.SpriteSheet);
 
+	/**
+	 * Adds a new set of tiles to the list using the specified parameters.
+	 * The size is here implied and equals to the size specified in the constructor.
+	 * 
+	 * @param {number} [count]
+	 *        Number of tile sections to compute. Defaults to the number of sections contained in the specified rectangle.
+	 * @param {Gamalto.IBox} [r]
+	 *        Rectangle defining the bounds of the container. Defaults to the bitmap bounds.
+	 *
+	 * @return {Gamalto.SpriteSheet} Current object for method chaining.
+	 */
 	proto.addSections = function(count, r) {
 		return _Object.base.addSections.call(this, this.size, count, r);
 	};
@@ -73,10 +84,22 @@ THE SOFTWARE.
 	proto.createSection_ = function(x, y, w, h) {
 		return new G.Tile(x, y, w, h);
 	};
-	
-	proto.draw = function(renderer, x, y, i) {
+
+	/**
+	 * Draws a tile into a surface.
+	 * 
+	 * @param  {Gamalto.BaseRenderer} renderer
+	 *         Renderer of the surface where the tile must be drawn.
+	 * @param  {number} x
+	 *         Horizontal drawing position.
+	 * @param  {number} y
+	 *         Vertical drawing position.
+	 * @param  {number} index
+	 *         Zero-based index of the tile to be drawn.
+	 */
+	proto.draw = function(renderer, x, y, index) {
 		var offset = this.offset;
-		_Object.base.draw.call(this, renderer, x + offset.x, y + offset.y, i);
+		_Object.base.draw.call(this, renderer, x + offset.x, y + offset.y, index);
 	};
 
 })();
