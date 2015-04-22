@@ -39,49 +39,35 @@ THE SOFTWARE.
 	/**
 	 * @constructor
 	 */
-	var _Object = G.TileMap = function(ts) {
+	var _Object = G.TileMap = function(ts, width, height) {
 		Object.base(this);
-		this.setViewport(0, 0);
-		this.setOrigin(0, 0);
-		this.setOverflow(0, 0, 0, 0);
-		this._tileSet = ts;
+		this.viewport = new G.Size(width, height);
+		this.origin = _Vector2.zero();
+		this.setOverscan();
+		this.set_ = ts;
 	},
 	_Vector2 = G.Vector2,
-	
+
 	proto = _Object.inherits(G.TileGroup);
-		
-	proto.setOrigin = function(x, y) {
-		var o = this;
-		o._tileX = x;
-		o._tileY = y;
-		o._deltaX = 0;
-		o._deltaY = 0;
-	};
-	
-	proto.setViewport = function(width, height) {
-		this._viewport = new G.Size(width, height);
-	};
-	
-	proto.setOverflow = function(x1, y1, x2, y2) {
-		this._tL = new _Vector2(x1, y1);
-		this._bR = new _Vector2(x2, y2);
+
+	proto.setOverscan = function(left, top, right, bottom) {
+		this.tL_ = new _Vector2(left, top);
+		this.bR_ = new _Vector2(bottom, right);
 	};
 	
 	proto.render = function(renderer, w, h) {
-		var tx = this._tileX | 0,
-			ty = this._tileY | 0;
-		this._drawSection(renderer, tx, ty, w, h, 0, 0);
+		this.drawSection_(renderer, this.origin_.x | 0, this.origin_.y | 0, w, h, 0, 0);
 	};
 	
-	proto._drawSection = function(renderer, tx, ty, tw, th, ox, oy) {
-		var ts = this._tileSet,
+	proto.drawSection_ = function(renderer, tx, ty, tw, th, ox, oy) {
+		var x, y, t, ts = this.set_,
 			empty = G.TileGroup.NOTILE;
 	
-	// TODO: do not draw overflow
-		for (var x = 0; x < tw; x++) {
-			for (var y = 0; y < th; y++) {
+		// TODO: do not draw overscan (?)
+		for (x = 0; x < tw; x++) {
+			for (y = 0; y < th; y++) {
 				if (this.data[t] != empty) {
-					var t = (x + tx) + (y + ty) * this.width;
+					t = (x + tx) + (y + ty) * this.width;
 					ts.draw(renderer, ox + x * ts.size.width, oy + y * ts.size.height, this.data[t] - 1);
 				}
 			}
@@ -89,11 +75,13 @@ THE SOFTWARE.
 	};
 	
 	proto.update = function(mx, my) {
-		var o  = this,
-			ts = o._tileSet,
-			tw = ts.size.width,
-			th = ts.size.height,
-			vp = o._viewport,
+		var sz = this.set_.size,
+			tw = sz.width,
+			th = sz.height,
+
+			vp = this.viewport,
+			origin = this.origin_,
+			delta = this.delta_,
 
 			// Desired values
 			omx = mx,
@@ -102,60 +90,60 @@ THE SOFTWARE.
 			// New and old directions
 			ndx = Math.sign(mx),
 			ndy = Math.sign(my),
-			odx = Math.sign(o._deltaX),
-			ody = Math.sign(o._deltaY);
+			odx = Math.sign(delta.x),
+			ody = Math.sign(delta.y);
 	
-		// Changing direction?
-		// We must redraw the partial row and col on the other sides.
+		// Changing direction? We must redraw the partial row and col on the other sides.
 		if (odx != 0 && ndx - odx != 0) {
-			o._deltaX += ndx * tw;
-			o._tileX  += ndx;
+			delta.x  += ndx * tw;
+			origin.x += ndx;
 		}
 		if (ody != 0 && ndy - ody != 0) {
-			o._deltaY += ndy * th;
-			o._tileY  += ndy;
+			delta.y  += ndy * th;
+			origin.y += ndy;
 		}
-	
-		o._deltaX += mx;
-		o._deltaY += my;
-		
+
+		delta.x += mx;
+		delta.y += my;
+
 		// How many rows and cols should we have to draw?
-		var w = (o._deltaX / tw) | 0,
-			h = (o._deltaY / th) | 0,
-		// Overflow
-			o1 = o._tL,
-			o2 = o._bR;
+		var w = (delta.x / tw) | 0,
+			h = (delta.y / th) | 0,
+		// Overscan
+			tL = this.tL_,
+			bR = this.bR_;
 	
 		// Out of map bounds? adjust... if the map doesn't loop (TODO)
 	
-		if (mx > 0 && o._tileX - w <= -o1.x) {
-			w = this._tileX + o1.x;
-			mx -= o._deltaX - w * tw;
-			o._deltaX = 0;
-	
-		} else if (mx < 0 && (this._tileX + vp.width - this.width) - w >= o2.x) {
-			w = (this._tileX + vp.width - this.width) - o2.x;
-			mx -= o._deltaX - w * tw;
-			o._deltaX = 0;
-		}
-	
-		if (my > 0 && o._tileY - h <= -o1.y) {
-			h = this._tileY + o1.y;
-			my -= o._deltaY - h * th;
-			o._deltaY = 0;
-	
-		} else if (my < 0 && (this._tileY + vp.height - this.height) - h >= o2.y) {
-			h = (this._tileY + vp.height - this.height) - o2.y;
-			my -= o._deltaY - h * th;
-			o._deltaY = 0;
-		}
-	
-		// New drawing offset
-		o._deltaX %= tw;
-		o._deltaY %= th;
+		if (mx > 0 && origin.x - w <= -tL.x) {
+			w = origin.x + tL.x;
+			mx -= delta.x - w * tw;
+			delta.x = 0;
 
-		this._drawW = w;
-		this._drawH = h;
+		} else if (mx < 0 && (origin.x + vp.width - this.width) - w >= bR.x) {
+			w = (origin.x + vp.width - this.width) - bR.x;
+			mx -= delta.x - w * tw;
+			delta.x = 0;
+		}
+
+		if (my > 0 && origin.y - h <= -tL.y) {
+			h = origin.y + tL.y;
+			my -= delta.y - h * th;
+			delta.y = 0;
+
+		} else if (my < 0 && (origin.y + vp.height - this.height) - h >= bR.y) {
+			h = (origin.y + vp.height - this.height) - bR.y;
+			my -= delta.y - h * th;
+			delta.y = 0;
+		}
+
+		// New drawing offset
+		delta.x %= tw;
+		delta.y %= th;
+
+		// CHECKME: what if draw() is not called? should be += and then reset in draw()
+		this.drawW_ = w;
+		this.drawH_ = h;
 
 		// Returns the ratio applied to the desired displacement
 		return new _Vector2(mx / omx, my / omy);
@@ -163,32 +151,33 @@ THE SOFTWARE.
 	
 	proto.draw = function(renderer) {
 		// Let's redraw missing parts
-		var o = this,
-			ts = o._tileSet,
-			vp = o._viewport,
-			tw = ts.size.width,
-			th = ts.size.height,
-			w = this._drawW,
-			h = this._drawH,
+		var sz = this.set_.size,
+			tw = sz.width,
+			th = sz.height,
+
+			vp = this.viewport,
+
+			w = this.drawW_,
+			h = this.drawH_,
+
 			redraw = null;
-	
-		if (!w && !h)
-			return;
-		o._tileX -= w;
-		o._tileY -= h;	
-	
-		var cx = o._tileX,
-			cy = o._tileY,
-			ox = o._deltaX,
-			oy = o._deltaY;
-	
+
+		if (!w && !h) {
+			return redraw;
+		}
+
+		var cx = (this.origin_.x -= w),
+			cy = (this.origin_.y -= h),
+			ox = this.delta_.x,
+			oy = this.delta_.y;
+
 		if (w != 0) {
 			if (w < 0) {
 				w = -w;
 				cx += (vp.width - w);
 				ox += (vp.width - w) * tw;
 			}
-			this._drawSection(renderer, cx | 0, cy | 0, w, vp.height, ox, oy);
+			this.drawSection_(renderer, cx | 0, cy | 0, w, vp.height, ox, oy);
 			(redraw = redraw || []).push(new G.Box(ox, oy, w * tw, vp.height * th));
 		}
 		if (h != 0) {
@@ -197,11 +186,26 @@ THE SOFTWARE.
 				cy += (vp.height - h);
 				oy += (vp.height - h) * th;
 			}
-			o._drawSection(renderer, cx | 0, cy | 0, vp.width, h, ox, oy);
+			this.drawSection_(renderer, cx | 0, cy | 0, vp.width, h, ox, oy);
 			(redraw = redraw || []).push(new G.Box(ox, oy, vp.width * tw, h * th));
 		}
 
 		return redraw;
 	};
 
+	/**
+	 * Current top left position in the map in tiles.
+	 * 
+	 * @memberof Gamalto.TileMap.prototype
+	 * @member {Gamalto.Vector2} origin
+	 */
+	Object.defineProperties(proto, {
+		origin: {
+			get: function() { return this.origin_; },
+			set: function(value) {
+				this.delta_ = _Vector2.zero();
+				this.origin_ = value;
+			}
+		}
+	});
 })();
