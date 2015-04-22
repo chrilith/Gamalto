@@ -3,8 +3,8 @@ var data = obj;
 var self = this;
 ?>
 <h4 class="name" id="<?js= id ?>"><?js= name + (data.signature ? data.signature : '') ?></h4>
-<?js if (data.inherited) { ?><span class="badge">inherited</span><?js } ?>
-<?js if (data.overrides) { ?><span class="badge">override</span><?js } ?>
+<?js if (data.overrides) { ?><span class="badge">override</span><?js }
+else if (data.inherited) { ?><span class="badge">inherited</span><?js } ?>
 <?js= data.attribs.replace(", ", '</span> <span class="badge">') ?>
 
 <?js if (data.summary) { ?>

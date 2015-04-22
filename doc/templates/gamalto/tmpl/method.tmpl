@@ -9,8 +9,8 @@ var self = this;
 
     <h4 class="name" id="<?js= id ?>"><?js= (kind === 'class' ? 'new ' : '') +
     (data.scope === 'static' && kind === 'class' ? longname : name) + (data.signature || '') ?></h4>
-    <?js if (data.inherited) { ?><span class="badge">inherited</span><?js } ?>
-    <?js if (data.overrides) { ?><span class="badge">override</span><?js } ?>
+    <?js if (data.overrides) { ?><span class="badge">override</span><?js }
+    else if (data.inherited) { ?><span class="badge">inherited</span><?js } ?>
     <?js= data.attribs ?>
 
 
