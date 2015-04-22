@@ -524,6 +524,10 @@ pre.prettyprint {
     font-size:12px;
 }
 
+.params .last {
+    width:60%;
+}
+
 .params tbody tr:nth-child(odd) {
     background-color: #fafafa;
 }
