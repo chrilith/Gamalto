@@ -133,7 +133,7 @@ THE SOFTWARE.
 
 		// Save progression and check for ended animation
 		if ((this.progress = index) >= length && !loop) {
-			this.progress = length;
+			this.progress = length - 1;
 			this.playing = false;
 		} else {
 			this.progress += this.lastTime_ / duration[index];
