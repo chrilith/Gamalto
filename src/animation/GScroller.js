@@ -236,21 +236,46 @@ THE SOFTWARE.
 		if (region.loop) {
 			if (sx < 0) {
 				renderer.copy_(src,
-							  dx, dy, -sx, h,
-							  dx + w + sx, dy, -sx, h);
+							  dx, cy, -sx, hh,
+							  dx + ww, dy, -sx, hh);
+
+				if (sy < 0) {
+					renderer.copy_(src,
+								  dx, dy, -sx, -sy,
+								  dx + ww, dy + hh, -sx, -sy);
+
+				} else if (sy > 0) {
+					renderer.copy_(src,
+								  dx, cy + hh, -sx, sy,
+								  dx + ww, cy, -sx, sy);
+				}
+
 			} else if (sx > 0) {
 				renderer.copy_(src,
-							  dx + w - sx, dy, sx, h,
-							  dx, dy, sx, h);
+							  cx + ww, cy, sx, hh,
+							  cx, dy, sx, hh);
+
+				if (sy < 0) {
+					renderer.copy_(src,
+								  cx + ww, dy, sx, -sy,
+								  cx, dy + hh, sx, -sy);
+
+				} else if (sy > 0) {
+					renderer.copy_(src,
+								  cx + ww, cy + hh, sx, sy,
+								  cx, cy, sx, sy);
+				}
 			}
+
 			if (sy < 0) {
 				renderer.copy_(src,
-							  dx, dy, w, -sy,
-							  dx, dy + h + sy, w, -sy);
+							  cx, dy, ww, -sy,
+							  dx, dy + hh, ww, -sy);
+
 			} else if (sy > 0) {
 				renderer.copy_(src,
-							  dx, dy + h - sy, w, sy,
-							  dx, dy, w, sy);
+							  cx, cy + hh, ww, sy,
+							  dx, cy, ww, sy);
 			}
 		}
 	};
