@@ -50,7 +50,4 @@ THE SOFTWARE.
 		this.height = height;
 	};
 
-	/* Constant */
-	stat.NOTILE = 0xffff;	// Value for empty tile
-
 })();

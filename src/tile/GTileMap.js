@@ -60,15 +60,14 @@ THE SOFTWARE.
 	};
 	
 	proto.drawSection_ = function(renderer, tx, ty, tw, th, ox, oy) {
-		var x, y, t, ts = this.set_,
-			empty = G.TileGroup.NOTILE;
+		var x, y, tile, ts = this.set_;
 	
 		// TODO: do not draw overscan (?)
 		for (x = 0; x < tw; x++) {
 			for (y = 0; y < th; y++) {
-				if (this.data[t] != empty) {
-					t = (x + tx) + (y + ty) * this.width;
-					ts.draw(renderer, ox + x * ts.size.width, oy + y * ts.size.height, this.data[t] - 1);
+				tile = this.data[(x + tx) + (y + ty) * this.width] - ts.firstIndex;
+				if (tile >= 0 && tile < ts.length) {
+					ts.draw(renderer, ox + x * ts.size.width, oy + y * ts.size.height, tile);
 				}
 			}
 		}

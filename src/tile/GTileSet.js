@@ -61,6 +61,14 @@ THE SOFTWARE.
 		 * @alias Gamalto.TileSet#offset
 		 */
 		this.offset = new G.Vector2(0, 0);
+
+		/**
+		 * Gets or sets the index of the first tile in this tileset.
+		 * 
+		 * @member {number}
+		 * @alias Gamalto.TileSet#offset
+		 */
+		this.firstIndex = 0;
 	},
 
 	/** @alias Gamalto.TileSet.prototype */
