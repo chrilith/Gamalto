@@ -66,7 +66,7 @@ THE SOFTWARE.
 		 * Gets or sets the index of the first tile in this tileset.
 		 * 
 		 * @member {number}
-		 * @alias Gamalto.TileSet#offset
+		 * @alias Gamalto.TileSet#firstIndex
 		 */
 		this.firstIndex = 0;
 	},
