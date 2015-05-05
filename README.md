@@ -5,18 +5,6 @@ GAMALTO
 Check the site for updates and examples:
 http://www.gamalto.com/
 
-
-Documentation
-=============
-
-The full documentation is available online at:
-http://www.gamalto.com/documentation/
-
-You can build the documentation with:
-```bash
-$ gulp doc
-```
-
 Building Gamalto
 ================
 
@@ -39,6 +27,17 @@ Finally, build Gamalto using the following command.
 
 ```bash
 $ gulp --mode production
+```
+
+Documentation
+=============
+
+The full documentation is available online at:
+http://www.gamalto.com/documentation/
+
+You can build the documentation with:
+```bash
+$ gulp doc
 ```
 
 Support
