@@ -111,11 +111,9 @@ THE SOFTWARE.
 			tL = r.origin,
 			bR = _Vector2.add(tL, r.extent).substractFloat(1);
 
-		this.length += count;
-
 		for (var y = tL.y + mg.y; y < bR.y - mg.y; y += th + sp.y) {
 			for (var x = tL.x - mg.x; x < bR.x - mg.x; x += tw + sp.x) {
-				this.list_.push(this.createSection_(x, y, tw, th));
+				this.list_.push(this.createSection_(x, y, tw, th, this.length++));
 				if (!--count) {
 					return this;
 				}
@@ -153,13 +151,15 @@ THE SOFTWARE.
 	 *         Width of the section.
 	 * @param  {number} h
 	 *         Height of the section.
+	 * @param  {number} [index]
+	 *         Index of the section to create.
 	 * 
 	 * @return {object} The type depends on the implementation.
 	 */
-	proto.createSection_ = function(x, y, w, h) {
+	proto.createSection_ = function(x, y, w, h, index) {
 		return new G.Rect(x, y, w, h);
 	};
-	
+
 	/**
 	 * Gets the section at the specified index.
 	 * 

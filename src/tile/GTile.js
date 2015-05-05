@@ -43,6 +43,14 @@ THE SOFTWARE.
 	 */
 	var _Object = G.Tile = function(x, y, w, h) {
 		Object.base(this, x, y, w, h);
+
+		/**
+		 * Index of the tile if its belong to a tileset.
+		 * 
+		 * @member {number}
+		 * @alias Gamalto.Tile#index
+		 */
+		this.index = 0;
 	},
 
 	proto = _Object.inherits(G.Rect);

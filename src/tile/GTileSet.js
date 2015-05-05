@@ -89,8 +89,10 @@ THE SOFTWARE.
 		return _Object.base.addSections.call(this, this.size, count, r);
 	};
 
-	proto.createSection_ = function(x, y, w, h) {
-		return new G.Tile(x, y, w, h);
+	proto.createSection_ = function(x, y, w, h, index) {
+		var tile = new G.Tile(x, y, w, h);
+		tile.index = index;
+		return tile;
 	};
 
 	/**
