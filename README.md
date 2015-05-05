@@ -12,6 +12,11 @@ Documentation
 The full documentation is available online at:
 http://www.gamalto.com/documentation/
 
+You can build the documentation with:
+```bash
+$ gulp doc
+```
+
 Building Gamalto
 ================
 

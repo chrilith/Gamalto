@@ -43,7 +43,7 @@ gulp.task('shaders', function() {
 
 /* Documentation with JSDoc, gulp-jsdoc doesn't feed my needs... */
 
-gulp.task('docs', function(done) {
+gulp.task('doc', function(done) {
 	exec('node ./node_modules/jsdoc/jsdoc -c ./doc/conf.json', function (err, stdout, stderr) {
 		done(err);
 	});
