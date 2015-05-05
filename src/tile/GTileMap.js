@@ -360,9 +360,9 @@ THE SOFTWARE.
 	 * Gets the tile at the given position.
 	 * 
 	 * @param  {number} x
-	 *         Horizontal position in the visible map.
+	 *         Horizontal position in the full map.
 	 * @param  {number} y
-	 *         Vertical position in the visible map.
+	 *         Vertical position in the full map.
 	 * 
 	 * @return {Gamalto.Tile}
 	 */
