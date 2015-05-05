@@ -183,6 +183,22 @@ THE SOFTWARE.
 	};
 
 	/**
+	 * Sets the global offset of the animation, for the current animation content only.
+	 * This will reset offsets set with [setFrameOffset()]{@link Gamalto.Animation#setFrameOffset}
+	 * 
+	 * @param {number} x
+	 *        Horizontal offset.
+	 * @param {number} y
+	 *        Vertical offset.
+	 */
+	proto.setOffset = function(x, y) {
+		var len = this.length;
+		while (len--) {
+			this.offs_[len] = new G.Vector2(x, y);
+		}
+	};
+
+	/**
 	 * Sets the drawing offset of a frame.
 	 * 
 	 * @param {number} frame
