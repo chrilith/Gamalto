@@ -129,9 +129,8 @@ THE SOFTWARE.
 	 */
 	proto.setOverscan = function(top, right, bottom, left) {
 		this.overflow_(top, right, bottom, left);
-		// Reset the viewport and origin to recompute pre-adjusted size and position.
+		// Reset the viewport to recompute pre-adjusted size
 		this.viewport = this.vp_;
-		this.origin = this.og_;
 	};
 
 	/**
@@ -145,9 +144,12 @@ THE SOFTWARE.
 	 *         Vertical drawing position.
 	 */
 	proto.draw = function(renderer, x, y) {
-		var og = this.aog_,
-			vp = this.avp_;
-		this.drawSection_(renderer, og.x, og.y, vp.width, vp.height, x, y);
+		var og = this.og_,
+			tL = this.tL_,
+			vp = this.avp_,
+			dt = this.delta_;
+
+		this.drawSection_(renderer, og.x - tL.x, og.y - tL.y, vp.width, vp.height, x + dt.x, y + dt.y);
 	};
 
 	/**
@@ -220,7 +222,7 @@ THE SOFTWARE.
 			th = sz.height,
 
 			vp = this.avp_,
-			origin = this.aog_,
+			origin = this.og_,
 			delta = this.delta_,
 
 			// Desired values
@@ -242,6 +244,9 @@ THE SOFTWARE.
 			delta.y  += ndy * th;
 			origin.y += ndy;
 		}
+
+		// Adjust by overscan
+		origin = _Vector2.substract(origin, this.tL_);
 
 		delta.x += mx;
 		delta.y += my;
@@ -284,6 +289,7 @@ THE SOFTWARE.
 		this.drawW_ = w;
 		this.drawH_ = h;
 
+		// returns the ratios
 		return new _Vector2(mx / omx, my / omy);
 	};
 
@@ -315,11 +321,15 @@ THE SOFTWARE.
 			return redraw;
 		}
 
-		var cx = (this.aog_.x -= w),
-			cy = (this.aog_.y -= h),
+		var cx = (this.og_.x -= w),
+			cy = (this.og_.y -= h),
 			// Drawing offset in pixels
 			ox = this.delta_.x,
 			oy = this.delta_.y;
+
+		// Adjust by overscan
+		cx -= this.tL_.x;
+		cy -= this.tL_.y;
 
 		if (w != 0) {
 			// Save for clipping...
@@ -360,19 +370,31 @@ THE SOFTWARE.
 	 * Gets the tile at the given position.
 	 * 
 	 * @param  {number} x
-	 *         Horizontal position in the full map.
+	 *         Horizontal position in the map.
 	 * @param  {number} y
-	 *         Vertical position in the full map.
+	 *         Vertical position in the map.
+	 * @param  {boolean} [absolute]
+	 *         Whether to get the tile at an absolute position or in the visible space.
 	 * 
 	 * @return {Gamalto.Tile}
 	 */
-	proto.getTile = function(x, y) {
+	proto.getTile = function(x, y, absolute) {
 		var w = this.width,
 			h = this.height,
-			og = this.og_,
 			ts = this.set_,
-			tx = og.x + x / ts.size.width,
-			ty = og.y + y / ts.size.height;
+			tw = ts.size.width,
+			th = ts.size.height,
+			tx, ty;
+
+		if (absolute) {
+			tx = x / tw;
+			ty = y / th;
+		} else {
+			var og = this.og_,
+				dt = this.delta_;
+			tx = (og.x * tw + x - dt.x) / tw;
+			ty = (og.y * th + y - dt.y) / th;
+		}
 
 		// Adjust
 		if (this.loop) {
@@ -390,10 +412,17 @@ THE SOFTWARE.
 		origin: {
 			get: function() { return this.og_; },
 			set: function(value) {
+				/**
+				 * Delta in pixels when drawing the map.
+				 * The origin position in the map is given in tiles and adjusted using this delta.
+				 *
+				 * @private
+				 * @ignore
+				 * 
+				 * @member {Gamalto.Vector2}
+				 */
 				this.delta_ = _Vector2.zero();
 				this.og_ = value;
-				// Adjusted versions of Origin taking overscan into account.
-				this.aog_ = _Vector2.substract(value, this.tL_);
 			}
 		},
 		viewport: {
