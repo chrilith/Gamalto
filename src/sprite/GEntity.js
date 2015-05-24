@@ -89,7 +89,7 @@ THE SOFTWARE.
 	};
 
 	proto.getState = function(name) {
-		return this.state_[name];
+		return this.state_[name || this.getActive()];
 	};
 
 	proto.createState_ = function(name) {
