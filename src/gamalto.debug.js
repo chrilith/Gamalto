@@ -87,6 +87,7 @@ var GAMALTO_DEBUG = true;
 	    "geometry/GCircle.js",
 	    "geometry/GPath.js",
 
+	    "graphic/GTransform.js",
 	    "graphic/GBaseRenderer.js",
 	    "graphic/GBitmap.js",
 	    "graphic/GBitmapLibrary.js",

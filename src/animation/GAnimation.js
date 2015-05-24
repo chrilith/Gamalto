@@ -36,6 +36,7 @@ THE SOFTWARE.
 	gamalto.devel.using("SpriteSheet");
 	gamalto.devel.using("Vector2");
 	gamalto.devel.using("Timer");
+	gamalto.devel.using("Transform");
 
 	/**
 	 * Creates a new animation sequence from a sprites sheet.
@@ -103,6 +104,15 @@ THE SOFTWARE.
 		 */
 		this.loop = true;
 
+		/**
+		 * Drawing transformation information.
+		 * 
+		 * @readonly
+		 * 
+		 * @member {Gamalto.Transform}
+		 */
+		this.transform = new G.Transform();
+
 		this.setOffset();
 		Object.base(this);
 	},
@@ -121,6 +131,7 @@ THE SOFTWARE.
 	proto.useSectionRange = function(start, length) {
 		this.length += length;
 		while (length--) {
+			this.offs_.push(G.Vector2.ZERO);
 			this.list_.push(start++);
 			this.time_.push(0);
 		}
@@ -167,7 +178,6 @@ THE SOFTWARE.
 		var len = this.length,
 			slice = time / len;
 		while (len--) {
-			this.offs_[len] = G.Vector2.ZERO;
 			this.time_[len] = slice;
 		}
 	};
@@ -276,13 +286,16 @@ THE SOFTWARE.
 
 		var offs = this.offs_[frame],
 			tran = this.offset_,
-			invX = renderer.getFlipX() ? -1 : +1,
-			invY = renderer.getFlipY() ? -1 : +1;
+			trns = this.transform,
+			dest = renderer.transform;
 
-		x += (tran.x + offs.x) * invX | 0;
-		y += (tran.y + offs.y) * invY | 0;
+		x += tran.x + offs.x;
+		y += tran.y + offs.y;
 
+		dest.save();
+		dest.copy(trns);
 		this.sheet.draw(renderer, x, y, this.list_[frame]);
+		dest.restore();
 
 		return frame;
 	};

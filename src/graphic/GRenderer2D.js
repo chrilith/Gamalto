@@ -132,10 +132,12 @@ THE SOFTWARE.
 	// http://cairographics.org/matrix_transform/
 
 	proto._transform = function(x, y, w, h) {
+		var transform = this.transform;
+
 		if (!this._trans || !(
-			this._flipX ||
-			this._flipY ||
-			this._alpha < 1 ||
+			transform.flipX ||
+			transform.flipY ||
+			transform.alpha < 1 ||
 			!this._origin.isZero() ||
 			this._scaleX != 1 ||
 			this._scaleY != 1 ||
@@ -151,11 +153,11 @@ THE SOFTWARE.
 			c  = o.canvas._context,
 			cx = x + (w >> 1) + this._origin.x,
 			cy = y + (h >> 1) + this._origin.y,
-			fx = (o._flipX ? -1 : +1) * o._scaleX,
-			fy = (o._flipY ? -1 : +1) * o._scaleY,
+			fx = (transform.flipX ? -1 : +1) * o._scaleX,
+			fy = (transform.flipY ? -1 : +1) * o._scaleY,
 			rt = o._rotate;
 	
-		c.globalAlpha = o._alpha;
+		c.globalAlpha = transform.alpha;
 		// Check: source-in=source-atop on iOS, cannot use colors with alpha channel
 		// https://developer.mozilla.org/samples/canvas-tutorial/6_1_canvas_composite.html
 		c.globalCompositeOperation = o._mask ? "source-in" : "source-over";

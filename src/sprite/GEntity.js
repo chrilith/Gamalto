@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 	gamalto.devel.require("Vector2");
 	gamalto.devel.using("Movable");
+	gamalto.devel.using("Transform");
 
 	/**
 	 * @constructor
@@ -43,6 +44,7 @@ THE SOFTWARE.
 
 		this.state_ = {};
 		this.animation_ = {};
+		this.transform = new G.Transform();
 	},
 	_Vector2 = G.Vector2,
 
@@ -101,15 +103,23 @@ THE SOFTWARE.
 		var active = this.active_;
 		if (!active) { return false; }
 
-		var anim = this.animation_[this.active_];
+		var pos, res,
+			anim = this.animation_[this.active_],
+			trns = anim.transform;
 
 		if (!isNaN(x) || !isNaN(y)) {
 			// In that case, reset the current position
 			this.position = new _Vector2(x || 0, y || 0);
 		}
 
-		var pos = this.position_;
-		return anim.draw(renderer, pos.x, pos.y, i);
+		pos = this.position_;
+
+		trns.save();
+		trns.copy(this.transform);
+		res = anim.draw(renderer, pos.x, pos.y, i);
+		trns.restore();
+
+		return res;
 	};
 
 	Object.defineProperties(proto, {

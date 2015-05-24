@@ -52,6 +52,7 @@
     "src/geometry/GRect.js",
     "src/geometry/GCircle.js",
     "src/geometry/GPath.js",
+    "src/graphic/GTransform.js",
     "src/graphic/GBaseRenderer.js",
     "src/graphic/GBitmap.js",
     "src/graphic/GBitmapLibrary.js",
