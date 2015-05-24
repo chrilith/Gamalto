@@ -392,8 +392,8 @@ THE SOFTWARE.
 		} else {
 			var og = this.og_,
 				dt = this.delta_;
-			tx = (og.x * tw + x - dt.x) / tw;
-			ty = (og.y * th + y - dt.y) / th;
+			tx = (og.x * tw + x - dt.x) / tw | 0;
+			ty = (og.y * th + y - dt.y) / th | 0;
 		}
 
 		// Adjust
