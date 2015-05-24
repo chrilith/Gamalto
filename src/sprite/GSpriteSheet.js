@@ -41,6 +41,9 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.SpriteSheet
 	 * @augments Gamalto.SectionList
+	 *
+	 * @param {Gamalto.Bitmap} bitmap
+	 *        Image holding the sprites data.
 	 */
 	var _Object = G.SpriteSheet = function(bitmap) {
 		Object.base(this);

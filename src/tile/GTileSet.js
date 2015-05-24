@@ -42,6 +42,11 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TileSet
 	 * @augments Gamalto.SpriteSheet
+	 *
+	 * @param {Gamalto.Bitmap} bitmap
+	 *        Image holding the tiles data.
+	 * @param {Gamalto.Size} size
+	 *        Size of a tile.
 	 */
 	var _Object = G.TileSet = function(bitmap, size) {
 		Object.base(this, bitmap);
