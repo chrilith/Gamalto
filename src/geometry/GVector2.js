@@ -35,14 +35,29 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.Vector2 = function(x, y) {
-		this.x = Number(x) || 0;
-		this.y = Number(y) || 0;
+		this.set(x, y);
 	},
+
+	pool = [],
 
 	proto = _Object.inherits(G.Object);
 
-		
+	_Object.create = function(x, y) {
+		var vec = pool.pop();
+		if (vec) { vec.set(x, y); }
+		return vec || new _Object(x, y);
+	};
+
 	/* Instance methods */
+
+	proto.set = function(x, y) {
+		this.x = Number(x) || 0;
+		this.y = Number(y) || 0;
+	};
+
+	proto.recycle = function() {
+		pool.push(this);
+	};
 
 	proto.equals = function(v) {
 		return (this.x === v.x) && (this.y === v.y);
@@ -205,5 +220,7 @@ THE SOFTWARE.
 	_Object.zero = function() {
 		return new _Object(0, 0);
 	};
+
+	_Object.ZERO = _Object.zero();
 
 })();
