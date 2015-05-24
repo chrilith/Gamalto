@@ -103,6 +103,7 @@ THE SOFTWARE.
 		 */
 		this.loop = true;
 
+		this.setOffset();
 		Object.base(this);
 	},
 
@@ -138,6 +139,7 @@ THE SOFTWARE.
 		this.length += len;
 		arr.push.apply(arr, list);
 		while (len--) {
+			this.offs_.push(G.Vector2.ZERO);
 			this.time_.push(0);
 		}
 	};
@@ -165,6 +167,7 @@ THE SOFTWARE.
 		var len = this.length,
 			slice = time / len;
 		while (len--) {
+			this.offs_[len] = G.Vector2.ZERO;
 			this.time_[len] = slice;
 		}
 	};
@@ -184,7 +187,6 @@ THE SOFTWARE.
 
 	/**
 	 * Sets the global offset of the animation, for the current animation content only.
-	 * This will reset offsets set with [setFrameOffset()]{@link Gamalto.Animation#setFrameOffset}
 	 * 
 	 * @param {number} x
 	 *        Horizontal offset.
@@ -192,14 +194,11 @@ THE SOFTWARE.
 	 *        Vertical offset.
 	 */
 	proto.setOffset = function(x, y) {
-		var len = this.length;
-		while (len--) {
-			this.offs_[len] = new G.Vector2(x, y);
-		}
+		this.offset_ = new G.Vector2(x, y);
 	};
 
 	/**
-	 * Sets the drawing offset of a frame.
+	 * Sets the local drawing offset of a frame. It will be added to the global offset.
 	 * 
 	 * @param {number} frame
 	 *        Frame index.
@@ -220,10 +219,11 @@ THE SOFTWARE.
 	 *        Frame index.
 	 * 
 	 * @return {Gamalto.Vector2}
-	 *         Drawing offset.
+	 *         Drawing offset or null if not defined.
 	 */
 	proto.getFrameOffset = function(frame) {
-		return this.offs_[frame] || G.Vector.zero();
+		var offs = this.offs_[frame];
+		return offs === G.Vector2.ZERO ? null : offs;
 	};
 
 	/**
@@ -275,13 +275,12 @@ THE SOFTWARE.
 		frame = gamalto.defined(frame, this.progress, 0) | 0;
 
 		var offs = this.offs_[frame],
+			tran = this.offset_,
 			invX = renderer.getFlipX() ? -1 : +1,
 			invY = renderer.getFlipY() ? -1 : +1;
 
-		if (offs) {
-			x += offs.x * invX | 0;
-			y += offs.y * invY | 0;
-		}
+		x += (tran.x + offs.x) * invX | 0;
+		y += (tran.y + offs.y) * invY | 0;
 
 		this.sheet.draw(renderer, x, y, this.list_[frame]);
 
