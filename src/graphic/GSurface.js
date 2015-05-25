@@ -42,6 +42,7 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Surface
 	 * @augments Gamalto.Object
+	 * @implements {Gamalto.ISize}
 	 *
 	 * @param {number} width
 	 *        Physical horizontal size of the surface.

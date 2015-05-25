@@ -37,6 +37,7 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Size
 	 * @augments Gamalto.Object
+	 * @implements {Gamalto.ISize}
 	 * 
 	 * @param  {number} width
 	 *         Horizontal component of the size object.
@@ -81,5 +82,28 @@ THE SOFTWARE.
 	proto.isEmpty = function() {
 		return this.width === 0 && this.height === 0;
 	};
+
+	/**
+	 * Simple object defining shape dimensions.
+	 * 
+	 * @memberof Gamalto
+	 * @interface ISize
+	 */
+
+	/**
+	 * Gets the horizontal size.
+	 * 
+	 * @readonly
+	 *
+	 * @member {number} Gamalto.ISize#width
+	 */
+
+	/**
+	 * Gets the vertical size.
+	 *
+	 * @readonly
+	 *
+	 * @member {number} Gamalto.ISize#height
+	 */
 
 })();
