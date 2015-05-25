@@ -52,18 +52,23 @@ THE SOFTWARE.
 	};
 
 	proto.save = function() {
-		this.state_ = new _Object();
-		this.state_.copy(this);
+		this.state_ = this.clone();
 	};
 
 	proto.restore = function() {
-		this.copy(this.state_);
+		this.state_ = this.copy(this.state_);
 	};
 
 	proto.reset = function() {
 		this.flipX = false;
 		this.flipY = false;
 		this.alpha = 1;
+	};
+
+	proto.clone = function() {
+		var clone = new _Object();
+		clone.copy(this);
+		return clone;
 	};
 
 })();
