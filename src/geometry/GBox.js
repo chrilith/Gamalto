@@ -74,13 +74,13 @@ THE SOFTWARE.
 	/**
 	 * Gets or sets the top left corner of the box.
 	 *
-	 * @member {Gamalto.Vector2} Gamalto.IBox#origin
+	 * @member {Gamalto.IPoint} Gamalto.IBox#origin
 	 */
 
 	/**
 	 * Gets or sets the box extent.
 	 *
-	 * @member {Gamalto.Vector2} Gamalto.IBox#extent
+	 * @member {Gamalto.IPoint} Gamalto.IBox#extent
 	 */
 
 })();

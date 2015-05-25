@@ -32,7 +32,10 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * @constructor
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Vector2
+	 * @augments Gamalto.Object
+	 * @implements {Gamalto.IPoint}
 	 */
 	var _Object = G.Vector2 = function(x, y) {
 		this.set(x, y);
@@ -222,5 +225,28 @@ THE SOFTWARE.
 	};
 
 	_Object.ZERO = _Object.zero();
+
+	/**
+	 * Defines a simple point with read only components.
+	 * 
+	 * @memberof Gamalto
+	 * @interface IPoint
+	 */
+
+	/**
+	 * Gets the horizontal component.
+	 * 
+	 * @readonly
+	 *
+	 * @member {number} Gamalto.IPoint#x
+	 */
+
+	/**
+	 * Gets the vertical component.
+	 *
+	 * @readonly
+	 *
+	 * @member {number} Gamalto.IPoint#y
+	 */
 
 })();
