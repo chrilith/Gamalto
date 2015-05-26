@@ -46,9 +46,9 @@ THE SOFTWARE.
 	 * @param {Gamalto.TileSet} ts
 	 *        Tilset to be used to render the map.
 	 * @param {number} width
-	 *        Full horizontal size of the map.
+	 *        Viewport horizontal size.
 	 * @param {number} height
-	 *        Full vertical size of the map.
+	 *        Viewport vertical size.
 	 */
 	var _Object = G.TileMap = function(ts, width, height) {
 		Object.base(this);
