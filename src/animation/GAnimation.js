@@ -138,24 +138,6 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Sets a list of section indices to be used for the animation.
-	 * 
-	 * @param  {array.<number>} list
-	 *         List of indices to be used.
-	 */
-	proto.useSections = function(list) {
-		var arr = this.list_,
-			len = list.length;
-
-		this.length += len;
-		arr.push.apply(arr, list);
-		while (len--) {
-			this.offs_.push(G.Vector2.ZERO);
-			this.time_.push(0);
-		}
-	};
-
-	/**
 	 * Gets the sprites sheet section for the given frame.
 	 * 
 	 * @param  {number} frame
@@ -164,6 +146,7 @@ THE SOFTWARE.
 	 * @return {Gamalto.Rect} Rectangle defining the section.
 	 */
 	proto.getSection = function(frame) {
+		gamalto.devel.assert(frame < this.list_.length);
 		return this.sheet.getSection(this.list_[frame]);
 	};
 
@@ -220,20 +203,6 @@ THE SOFTWARE.
 	proto.setFrameOffset = function(frame, x, y) {
 		gamalto.devel.assert(frame < this.list_.length);
 		this.offs_[frame] = new G.Vector2(x, y);
-	};
-
-	/**
-	 * Gets the drawing offset of a frame.
-	 * 
-	 * @param {number} frame
-	 *        Frame index.
-	 * 
-	 * @return {Gamalto.Vector2}
-	 *         Drawing offset or null if not defined.
-	 */
-	proto.getFrameOffset = function(frame) {
-		var offs = this.offs_[frame];
-		return offs === G.Vector2.ZERO ? null : offs;
 	};
 
 	/**
@@ -303,7 +272,7 @@ THE SOFTWARE.
 	/**
 	 * Creates a clone of the current object.
 	 * 
-	 * @return {Gamalto.Animation} Deep copy of the object.
+	 * @return {Gamalto.Animation} Copy of the object.
 	 */
 	proto.clone = function() {
 		var clone = new _Object(this.sheet);
