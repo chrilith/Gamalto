@@ -76,7 +76,7 @@ THE SOFTWARE.
 		 * @private
 		 * @ignore
 		 * 
-		 * @type {array.<Gamalto.Vector2>}
+		 * @type {array.<Gamalto.IPoint>}
 		 */
 		this.offs_ = [];
 		/**
