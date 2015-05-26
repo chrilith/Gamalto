@@ -52,10 +52,12 @@ THE SOFTWARE.
 	
 	// useful for ennemies duplication
 	proto.clone = function() {
-		var clone = new _Object();
+		var name, 
+			clone = new _Object(),
+			anim = this.animation_;
 	
-		for (var name in anim) {
-			clone.addAnimation(name, this.animation_[name].clone());
+		for (name in anim) {
+			clone.addAnimation(name, anim[name].clone());
 		}
 
 		clone.active_ = this.active_;
