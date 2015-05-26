@@ -62,7 +62,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Clones the object.
+	 * Clones the object. It will be shallow copy unless otherwise specfied.
 	 * 
 	 * @virtual
 	 * 
