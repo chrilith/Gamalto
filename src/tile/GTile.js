@@ -53,6 +53,7 @@ THE SOFTWARE.
 		this.index = 0;
 	},
 
+	/** @alias Gamalto.Tile.prototype */
 	proto = _Object.inherits(G.Rect);
 
 })();

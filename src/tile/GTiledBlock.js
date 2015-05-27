@@ -35,36 +35,65 @@ THE SOFTWARE.
 	gamalto.devel.require("TileGroup");
 
 	/**
+	 * Creates a new rectangular tile-based image.
+	 * 
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TiledBlock
 	 * @augments Gamalto.TileGroup
+	 *
+	 * @param {Gamalto.TileSet} ts
+	 *        Tilset to be used to render the map.
+	 * @param {array.<number>} data
+	 *        List of tile indices representing the image.
+	 * @param {number} rows
+	 *        Horizontal size the of image in tiles.
 	 */
-	G.TiledBlock = function(ts, data, rows) {
+	var _Object = G.TiledBlock = function(ts, data, rows) {
 		Object.base(this);
 		this.setData(data, rows, Math.ceil(data.length / rows));
-		this._tileSet = ts;
-	};
-	
-	var proto = G.TiledBlock.inherits(G.TileGroup);
-	
+		/**
+		 * Tileset to be used to render the map data.
+		 *
+		 * @protected
+		 * @ignore
+		 * 
+		 * @member {Gamalto.TileSet}
+		 */
+		this.set_ = ts;
+	},
+
+	/** @alias Gamalto.TiledBlock.prototype */
+	proto = _Object.inherits(G.TileGroup);
+
+	/**
+	 * Renders the tile-based image.
+	 * 
+	 * @param  {Gamalto.BaseRenderer} renderer
+	 *         Renderer of the {@linkcode Gamalto.surface} to which the image will be rendered.
+	 * @param  {number} x
+	 *         Horizontal drawing position.
+	 * @param  {number} y
+	 *         Vertical drawing position.
+	 */
 	proto.draw = function(renderer, x, y) {
-		var ts = this._tileSet,
+		var tile, ts = this.set_,
 			tw = ts.size.width,
 			th = ts.size.height,
-			empty = G.TileGroup.NOTILE;
+			ox = x,
+			ow = x + tw * this.width,
+			pos = 0;
 
-		// TODO: while and inc++ on "t"	
-		for (var tx = 0; tx < this.width; tx++) {
-			for (var ty = 0; ty < this.height; ty++) {
-				var t = tx + ty * this.width,
-					d = this.data[t];
-				if (d != empty) {
-					ts.draw(renderer, x + tx * tw, y + ty * th, d);
-				}
+		while (pos < this.data.length) {
+			// Get the wanted tile
+			if ((tile = this.data[pos++] - ts.firstIndex) !== -1) {
+				// And draw it!
+				ts.draw(renderer, x, y, tile);
+			}
+			if ((x += tw) === ow) {
+				x  = ox;
+				y += th;
 			}
 		}
 	};
-
-	// TODO: getSize?
 
 })();

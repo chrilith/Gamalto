@@ -31,22 +31,55 @@ THE SOFTWARE.
 
 (function() {
 
-	/* Dependencies */
-	// ...
-
 	/**
+	 * Base object to create a tile-based image.
+	 * 
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TileGroup
 	 * @augments Gamalto.Object
+	 * @implements {Gamalto.ISize}
 	 */
-	var stat = G.TileGroup = function() { };
+	var _Object = G.TileGroup = function() {
+		Object.base(this);
+	},
 	
-	/* Inheritance and shortcut */
-	var proto = G.TileGroup.inherits(G.Object);
+	/** @alias Gamalto.TileGroup.prototype */
+	proto = _Object.inherits(G.Object);
 
+	/**
+	 * Sets the data needed to render the tile-based image.
+	 * 
+	 * @param {array.<number>} data
+	 *        List of tile indices representing the image.
+	 * @param {number} width
+	 *        Horizontal size of the image in tiles.
+	 * @param {number} height
+	 *        Vertical size of the image in tiles.
+	 */
 	proto.setData = function(data, width, height) {
+		/**
+		 * List of tile indices representing the image.
+		 * 
+		 * @member {array.<number>}
+		 * @readonly
+		 * @alias Gamalto.TileGroup#data
+		 */
 		this.data = data;
+		/**
+		 * Horizontal size of the image in tiles.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.TileGroup#width
+		 */
 		this.width = width;
+		/**
+		 * Vertical size of the image in tiles.
+		 * 
+		 * @member {number}
+		 * @readonly
+		 * @alias Gamalto.TileGroup#height
+		 */
 		this.height = height;
 	};
 
