@@ -136,7 +136,7 @@ THE SOFTWARE.
 	/**
 	 * Renders the visible part of the map including the overscan if any.
 	 * 
-	 * @param  {Gamalto.BaseRenderer}
+	 * @param  {Gamalto.BaseRenderer} renderer
 	 *         Renderer of the {@linkcode Gamalto.surface} to which the map will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position.
@@ -179,7 +179,8 @@ THE SOFTWARE.
 			w = this.width,
 			h = this.height,
 			tile, index, ts = this.set_,
-			size = ts.size;
+			size = ts.size,
+			first = ts.firstIndex;
 
 		// Adjust the drawing position if an overscan is defined.
 		// Like this the map viewport will be always rendered properly at the same position regardless of the overscan.
@@ -195,9 +196,11 @@ THE SOFTWARE.
 		for (x = 0; x < tw; x++) {
 			for (y = 0; y < th; y++) {
 				// Modulo to prevent out of bounds reads
-				index = (x + tx) % w + (y + ty) % h * w;
+				if ((index = (x + tx) % w + (y + ty) % h * w) < first) {
+					continue;
+				}
 				// Get the wanted tile
-				tile = this.data[index] - ts.firstIndex;
+				tile = this.data[index] - first;
 				// And draw it!
 				ts.draw(renderer, ox + x * size.width, oy + y * size.height, tile);
 			}
