@@ -32,25 +32,34 @@ THE SOFTWARE.
 if (GAMALTO_DEBUG) (function(global) {
 
 	var using = {},
+		interfaces = {},
 		debug = {};
 
 	gamalto.devel = debug;
 
 	debug.using = function(name) {
-		using["D__" + name] = 1;
+		using[name] = 1;
 	};
 	
 	debug.require = function(name) {
 		debug.assert(G[name], 'Gamalto dependency error ["' + name + '"].');
 	};
 
+	debug.needing = function(name) {
+		interfaces[name] = (interfaces[name] || 0) + 1;
+	};
+
 	debug.checkDependencies = function() {
-		for (var use in using) {
-			if (use.substr(0, 3) == "D__") {
-				var module = use.substr(3);
-				debug.assert(G[module], 'Gamalto cannot find module ["' + module + '"].');
+		var item, module;
+		for (item in using) {
+			debug.assert(G[item], 'Gamalto cannot find module ["' + item + '"].');
+		}
+		if (Object.keys(interfaces).length) {
+			debug.warn("Interfaces:\n");
+			for (item in interfaces) {
+				debug.log("- " + item + " (" + interfaces[item] + ")");
 			}
-		}	
+		}
 	};
 
 	// console.assert() is not supported in CocoonJS

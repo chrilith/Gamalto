@@ -35,8 +35,8 @@ THE SOFTWARE.
 	gamalto.devel.require("Animator");
 	gamalto.devel.using("SpriteSheet");
 	gamalto.devel.using("Vector2");
-	gamalto.devel.using("Timer");
 	gamalto.devel.using("Transform");
+	gamalto.devel.needing("ITiming");
 
 	/**
 	 * Creates a new animation sequence from a sprites sheet.
