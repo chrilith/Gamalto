@@ -30,55 +30,47 @@ THE SOFTWARE.
  */
 
 (function() {
-	/* Shortcut */
-	var core = gamalto;
 
 	/* Dependencies */
+	gamalto.devel.require("BaseAnimation");
 	gamalto.devel.using("TiledBlock");
-	gamalto.devel.using("Timer");
 
 	/**
+	 * Creates a new animation sequence using tile-based blocks.
+	 * 
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TiledAnimation
-	 * @augments Gamalto.Object
+	 * @augments Gamalto.BaseAnimation
+	 *
+	 * @example
+	 * var anim = new Gamalto.TiledAnimation();
 	 */
-	G.TiledAnimation = function() {
-		this._list = [];
-		this.setDuration(0);
-		this.length = 0;
-//var/	this._curr
-//var/	this._duration
-//var/	this._speed
+	var _Object = G.TiledAnimation = function() {
+		Object.base(this);
+	},
+
+	/** @alias Gamalto.TiledAnimation.prototype */
+	proto = _Object.inherits(G.BaseAnimation);
+
+	/**
+	 * Adds an new frame to the animation.
+	 * 
+	 * @param {Gamalto.TiledBlock} block
+	 *        Tile-based block.
+	 */
+	proto.addFrame = function(block) {
+		this.length++;
+		this.offs_.push(G.Vector2.ZERO);
+		this.list_.push(block);
+		this.time_.push(0);
 	};
 
-	var proto = G.TiledAnimation.inherits(G.Object);
-	
-	proto.add = function(block) {
-		this._list.push(block);
-		this.length = this._list.length;
-		this.setDuration(this._duration);
-	};
-	
-	proto.setDuration = function(time) {
-		this._duration = time;	// Save it to recalculate when needed
-		this._speed = (1 / (time / this.length)) || 0;
-	};
-	
-	proto.update = function(timer, frame) {
-		var length = this.length;
-	
-		frame = core.defined(frame, this._curr, 0);
-		if ((frame += timer.elapsedTime * this._speed) >= length) {
-			frame -= length;
-		}
-	
-		// Do not round to keep the fractionnal part to stay in sync
-		return (this._curr = frame); 
-	};
-	
-	proto.draw = function(renderer, x, y, frame) {
-		frame = core.defined(frame, this._curr, 0);
-		this._list[frame].draw(renderer, x, y);
+	/**
+	 * @see {Gamalto.BaseAnimation#draw}
+	 * @ignore
+	 */
+	proto.draw_ = function(renderer, x, y, frame) {
+		this.list_[frame].draw(renderer, x, y);
 	};
 
 })();

@@ -104,13 +104,6 @@ var GAMALTO_DEBUG = true;
 	    "sprite/GSpriteSheet.js",
 	    "sprite/GEntity.js",
 
-		"tile/GTile.js",
-		"tile/GTiledAnimation.js",
-		"tile/GTileGroup.js",
-		"tile/GTiledBlock.js",
-		"tile/GTileMap.js",
-		"tile/GTileSet.js",
-
 	    "event/GEvent.js",
 	    "event/GKeyboardEvent.js",
 	    "event/GMouseEvent.js",
@@ -148,11 +141,19 @@ var GAMALTO_DEBUG = true;
 	    "text/GFont.js",
 
 		"animation/GAnimator.js",
+		"animation/GBaseAnimation.js",
 		"animation/GAnimation.js",
 		"animation/GMovable.js",
 		"animation/GScrollingRegion.js",
 		"animation/GScroller.js",
 		"animation/GSequence.js",
+
+		"tile/GTile.js",
+		"tile/GTiledAnimation.js",
+		"tile/GTileGroup.js",
+		"tile/GTiledBlock.js",
+		"tile/GTileMap.js",
+		"tile/GTileSet.js",
 
 	    "geometry/GPathAnimator.js",
 
