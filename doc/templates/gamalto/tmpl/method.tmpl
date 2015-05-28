@@ -11,7 +11,7 @@ var self = this;
     (data.scope === 'static' && kind === 'class' ? longname : name) + (data.signature || '') ?></h4>
     <?js if (data.overrides) { ?><span class="badge">override</span><?js }
     else if (data.inherited) { ?><span class="badge">inherited</span><?js } ?>
-    <?js= data.attribs ?>
+    <?js= data.attribs.replace(", ", '</span> <span class="badge">') ?>
 
 
     <?js if (data.summary) { ?>
