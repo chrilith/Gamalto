@@ -218,8 +218,8 @@ THE SOFTWARE.
 			trns = this.transform,
 			dest = renderer.transform;
 
-		x += tran.x + offs.x;
-		y += tran.y + offs.y;
+		x += tran.x + offs.x * (trns.flipX ? -1 : +1);
+		y += tran.y + offs.y * (trns.flipY ? -1 : +1);
 
 		dest.save();
 		dest.copy(trns);
