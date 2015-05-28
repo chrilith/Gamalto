@@ -196,11 +196,11 @@ THE SOFTWARE.
 		for (x = 0; x < tw; x++) {
 			for (y = 0; y < th; y++) {
 				// Modulo to prevent out of bounds reads
-				if ((index = (x + tx) % w + (y + ty) % h * w) < first) {
+				index = (x + tx) % w + (y + ty) % h * w;
+				// Get the wanted tile
+				if ((tile = this.data[index] - first) < 0) {
 					continue;
 				}
-				// Get the wanted tile
-				tile = this.data[index] - first;
 				// And draw it!
 				ts.draw(renderer, ox + x * size.width, oy + y * size.height, tile);
 			}
