@@ -1,5 +1,6 @@
 *sublime-workspace*
 *.jar
+*.tmp
 .DS_Store
 temp/
 tools/
