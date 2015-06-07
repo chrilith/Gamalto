@@ -99,7 +99,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Compute the size of the specified text in pixels.
+	 * Computes the size of the specified text in pixels.
 	 * 
 	 * @param  {string} text
 	 *         Text to be measured.
