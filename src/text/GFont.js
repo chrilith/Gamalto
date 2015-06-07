@@ -33,160 +33,81 @@ THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.devel.require("SpriteSheet");
-	gamalto.devel.using("Rect");
+	gamalto.devel.using("BaseRenderer");
 	gamalto.devel.using("Size");
-	gamalto.devel.using("Surface");
 
 	/**
+	 * Creates a new graphical font from a bitmap.
+	 * 
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Font
 	 * @augments Gamalto.SpriteSheet
+	 * 
+	 * @param {Gamalto.Bitmap} bitmap
+	 *        Image holding the font data.
+	 * @param {string} firstLetter
+	 *        First character of the font.
 	 */
-	G.Font = function(bitmap, firstLetter) {
+	var _Object = G.Font = function(bitmap, firstLetter) {
 		Object.base(this, bitmap);
-		this._firstLetter = firstLetter.charCodeAt(0);
-		this.setAlign();
-	};
+		/**
+		 * Code of the first character of the font.
+		 * 
+		 * @private
+		 * @ignore
+		 * 
+		 * @member {number}
+		 */
+		this.firstLetter_ = firstLetter.charCodeAt(0);
+	},
 	
-	/* Inheritance and shortcut */
-	var proto = G.Font.inherits(G.SpriteSheet);
+	/** @alias Gamalto.Font.prototype */
+	proto = _Object.inherits(G.SpriteSheet);
 	
-	proto._paintLine = function(renderer, text, x, y) {
-		var o  = this,
-			i, s, c,
-			w  = 0,
-			h  = 0;
-	
-		for (c = 0; c < text.length; c++) {
-			i = text.charCodeAt(c) - o._firstLetter;
-			if ((s = o.getSection(i))) {
-				renderer.drawBitmapSection(o._bitmap, x + w, y, s);
-				w += s.extent.x;
-				h  = Math.fmax(s.extent.y, h);
-			}
-		}
-		return new G.Rect(x, y, w, h);
-	};
-	
-	proto._paintStyle = function(renderer, text, x, y) {
-		var rect, area,
-			size = this.getBounds(text),
-			buff = this._buffer;
-
-		if (!buff || buff.width != size.width || buff.height != size.height) {
-			this._buffer = buff = new G.Surface(size.width, size.height);
-		} else {
-			buff.clear();
-		}
-
-		area = buff.renderer;
-		rect = this._paintLine(area, text, 0, 0);
-
-		area.enableMask(true);
-		area.fillRect(null, this._style);
-		area.enableMask(false);
-
-		renderer.drawBitmap(buff, x, y);
-
-		// The line was painted at (0,0) in the buffer, readjust the box
-		// position according to the requested coordinates
-		var origin = rect.origin;
-		origin.x = x;
-		origin.y = y;
-		rect.origin = origin;
-
-		return rect;
-	};
-	
+	/**
+	 * Draws a text into a surface.
+	 * 
+	 * @param  {Gamalto.BaseRenderer} renderer
+	 *         Renderer of the surface where the text must be drawn.
+	 * @param  {string} text
+	 *         Text to be drawn.
+	 * @param  {number} x
+	 *         Horizontal drawing position.
+	 * @param  {number} y
+	 *         Vertical drawing position.
+	 *
+	 * @return {Gamalto.Size} Size of drawn text.
+	 */
 	proto.draw = function(renderer, text, x, y) {
-		var shadow = this._shadow;
-	
-		if (shadow) {
-			var prev = this.setStyle(shadow.style);
-			this._paint(renderer, text, x + shadow.x, y + shadow.y);
-			this.setStyle(prev);
-		}
-	
-		return this._paint.apply(this, arguments);
-	};
-	
-	proto._paint = function(renderer, text, x, y) {
-		var o  = this,
-			d  = o._style ? o._paintStyle : o._paintLine,
-			align = this._align,
-			h  = 0, xx, yy, r,
-			last, l, m;
+		var index, section, chr;
+		var w = 0;
+		var h = 0;
 
-		if (!align || align == (G.ALIGN_LEFT|G.ALIGN_TOP)) {
-			return d.call(o, renderer, text, x, y);
-		}
+		for (chr = 0; chr < text.length; chr++) {
+			index = text.charCodeAt(chr) - this.firstLetter_;
 
-		// Do we have a bit set for vertical alignment
-
-		if (align & G.ALIGN_BOTTOM) {
-			m  = o.getBounds(text);	
-			y -= m.height >> (align & G.ALIGN_TOP ? 1 : 0);
-		}
-
-		text = text.split('\n');
-		last = text.length;
-		yy = y;
-
-		for (l = 0; l < last; l++) {
-			xx = x;
-
-			// Do we have a bit set for horizontal alignment
-			if (align & G.ALIGN_RIGHT) {
-				m   = o._getBBox(text[l]);	// FIXME: Do not compute twice?
-				xx -= m.w >> (align & G.ALIGN_LEFT ? 1 : 0);
+			if ((section = this.getSection(index))) {
+				if (renderer) {
+					renderer.drawBitmapSection(this.bitmap_, x + w, y, section);
+				}
+				w += section.extent.x;
+				h  = Math.fmax(section.extent.y, h);
 			}
-
-			r = d.call(o, renderer, text[l], xx, yy);
-			yy += m.h;
 		}
-	
-		return r;
-	};
-	
-	proto.setStyle = function(style) {
-		var prev = this._style;
-		this._style = style;
-		return prev;
-	};
-	
-	proto.setShadow = function(offsetX, offsetY, style) {
-		// FIXME: really create a new object?
-		this._shadow = !offsetX && !offsetY ? null : { x: offsetX, y: offsetY, style: style };
-	};
 
-	proto.setAlign = function(align) {
-		this._align = align;
-	};
-
-	proto.getBounds = function(text) {
-		var c, i, s,
-			w = 0, h = 0;
-	
-		text = text.split("\n");
-		for (c = 0; c < text.length; c++) {
-			s  = this._getBBox(text[c]);
-			w  = Math.fmax(w, s.w);
-			h += s.h;
-		}	
 		return new G.Size(w, h);
 	};
-	
-	proto._getBBox = function(text) {
-		var c, i, s,
-			w = 0, h = 0;
 
-		for (c = 0; c < text.length; c++) {
-			i = text.charCodeAt(c) - this._firstLetter;
-			s = this.getSection(i);
-			w += s.extent.x;
-			h  = Math.fmax(s.extent.y, h);
-		}
-		return { w: w, h:h };
+	/**
+	 * Compute the size of the specified text in pixels.
+	 * 
+	 * @param  {string} text
+	 *         Text to be measured.
+	 * 
+	 * @return {Gamalto.Size} Size of the text.
+	 */
+	proto.measureText = function(text) {
+		return this.draw(null, text);
 	};
 
 })();

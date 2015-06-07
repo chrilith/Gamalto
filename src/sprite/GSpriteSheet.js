@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 	/* Dependencies */
 	gamalto.devel.require("SectionList");
+	gamalto.devel.using("BaseRenderer");
 	gamalto.devel.using("Box");
 
 	/**
@@ -47,6 +48,11 @@ THE SOFTWARE.
 	 */
 	var _Object = G.SpriteSheet = function(bitmap) {
 		Object.base(this);
+		/**
+		 * Bitmap holding the sprites.
+		 * 
+		 * @type {[type]}
+		 */
 		this.bitmap_ = bitmap;
 	},
 	
