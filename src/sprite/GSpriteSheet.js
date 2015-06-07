@@ -50,8 +50,11 @@ THE SOFTWARE.
 		Object.base(this);
 		/**
 		 * Bitmap holding the sprites.
+		 *
+		 * @protected
+		 * @ignore
 		 * 
-		 * @type {[type]}
+		 * @type {Gamalto.Bitmap}
 		 */
 		this.bitmap_ = bitmap;
 	},
