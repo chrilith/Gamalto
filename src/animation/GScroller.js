@@ -157,16 +157,22 @@ THE SOFTWARE.
 	 * Redraws parts of the current surface into the buffer surface.
 	 * Useful only with double buffering.
 	 * 
-	 * @param  {array.<Gamalto.IBox>} regions
-	 *         List of the regions to be updated.
+	 * @param  {array.<Gamalto.IBox>} [regions]
+	 *         List of the regions to be updated. Defaults to the whole surface.
 	 */
 	proto.redraw = function(regions) {
 		// Get the next destionation surface
-		var surface = this.surface_;
-		// Prepare regions
-		regions = regions || [new G.Box(0, 0, surface.width, surface.height)];
-		// Update the surface
-		surface.redraw(this.surface, 0, 0, regions);
+		var	offs = this.surface_;
+		// and the current view
+		var view = this.surface;
+
+		// No need to redraw on a same surface...
+		if (offs != view) {
+			// Prepare regions
+			regions = regions || [new G.Box(0, 0, offs.width, offs.height)];
+			// Update the surface
+			offs.redraw(view, 0, 0, regions);
+		}
 	};
 
 	/**
