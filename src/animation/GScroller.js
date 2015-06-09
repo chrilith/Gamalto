@@ -167,6 +167,7 @@ THE SOFTWARE.
 		var view = this.surface;
 
 		// No need to redraw on a same surface...
+		// Also, IE throw an 'unexpected call to method or property access' exception calling Surface.redraw()
 		if (offs != view) {
 			// Prepare regions
 			regions = regions || [new G.Box(0, 0, offs.width, offs.height)];
