@@ -1,6 +1,10 @@
 GAMALTO
 =======
-[![Build Status](https://travis-ci.org/chrilith/Gamalto.svg)](https://travis-ci.org/chrilith/Gamalto)
+[![Build Status](https://travis-ci.org/chrilith/Gamalto.svg)][travis]
+[![Inline docs](http://inch-ci.org/github/chrilith/gamalto.svg?branch=master)][inchpages]
+
+[travis]: https://travis-ci.org/chrilith/Gamalto
+[inchpages]: http://inch-ci.org/github/chrilith/gamalto
 
 Check the site for updates and examples:
 http://www.gamalto.com/
