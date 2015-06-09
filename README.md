@@ -1,9 +1,11 @@
 GAMALTO
 =======
 [![Build Status](https://travis-ci.org/chrilith/Gamalto.svg)][travis]
+[![devDependency Status](https://david-dm.org/chrilith/Gamalto/dev-status.svg)][daviddm]
 [![Inline docs](http://inch-ci.org/github/chrilith/gamalto.svg?branch=master)][inchpages]
 
 [travis]: https://travis-ci.org/chrilith/Gamalto
+[daviddm]: https://david-dm.org/chrilith/Gamalto#info=devDependencies
 [inchpages]: http://inch-ci.org/github/chrilith/gamalto
 
 Check the site for updates and examples:
