@@ -1,5 +1,7 @@
 var gulp = require('gulp');
 var exec = require('child_process').exec;
+var stylish = require('jshint-stylish');
+var rc = require('rc');
 
 var plugins = require('gulp-load-plugins')({
 	pattern: ['gulp-*', 'del']
@@ -51,7 +53,9 @@ gulp.task('doc', function(done) {
 
 /* Build Gamalto */
 
-gulp.task('default', ["source", "shaders"/*, "docs"*/], function() {
+gulp.task('all', ["default", "doc"]);
+
+gulp.task('default', ["source", "shaders"], function() {
 
 	gulp.src(bower.main)
 		.pipe(plugins.ignore.exclude("**/*.{vert,frag}"))
@@ -79,3 +83,22 @@ gulp.task('default', ["source", "shaders"/*, "docs"*/], function() {
 		.pipe(plugins.sourcemaps.write('./', { includeContent: false, sourceRoot: config.src }))
 		.pipe(gulp.dest(config.dist));
 });
+
+/* Code quality */
+
+var jsinspectrc = rc('jsinspect', {});
+
+gulp.task('lint', function() {
+
+	return gulp.src("./src/**/*.js")
+		.pipe(plugins.jshint())
+		.pipe(plugins.jshint.reporter(stylish));
+});
+
+gulp.task('duplication', function() {
+
+	return gulp.src("./src/**/*.js")
+		.pipe(plugins.jsinspect(jsinspectrc));
+});
+
+gulp.task('code-quality', ["lint", "duplication"]);

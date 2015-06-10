@@ -25,7 +25,8 @@
     "gulp-concat": "^2.5.2",
     "gulp-flatten": "0.0.4",
     "gulp-ignore": "^1.2.1",
-    "gulp-jshint": "^1.9.2",
+    "gulp-jshint": "^1.11.0",
+    "gulp-jsinspect": "^1.0.1",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.3",
@@ -33,6 +34,8 @@
     "gulp-strip-comments": "^1.0.1",
     "gulp-uglify": "^1.1.0",
     "gulp-util": "^3.0.4",
-    "jsdoc": "^3.3.0-beta3"
+    "jsdoc": "^3.3.0-beta3",
+    "jshint-stylish": "^2.0.0",
+    "rc": "^1.0.3"
   }
 }
