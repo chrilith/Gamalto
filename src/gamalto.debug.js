@@ -113,6 +113,8 @@ var GAMALTO_DEBUG = true;
 	    "event/GEventManager_Mouse.js",
 	    "event/GKeyboardEvent_iCade.js",
 	    "event/GTouchGamepad.js",
+	    "event/GSubscription.js",
+	    "event/GBroadcaster.js",
 
 	    "webgl/GShader.js",
 	    "webgl/GCanvasWebGL.js",
@@ -147,6 +149,7 @@ var GAMALTO_DEBUG = true;
 		"animation/GScrollingRegion.js",
 		"animation/GScroller.js",
 		"animation/GSequence.js",
+		"animation/GBlinker.js",
 
 		"tile/GTile.js",
 		"tile/GTiledAnimation.js",
