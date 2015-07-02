@@ -1,7 +1,7 @@
 /*
  * Gamalto.Scroller
  * ----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,7 +30,7 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/* Dependencies */
 	gamalto.devel.using("Box");
 	gamalto.devel.using("Surface");
@@ -46,24 +46,19 @@ THE SOFTWARE.
 	 * @param {Gamalto.Surface} surface
 	 *        Surface holding the image to be scrolled.
 	 * @param {boolean} [doubleBuffer]
-	 *        Whether to active double buffuring. Required for looping and parallax scrolling.
+	 *        Whether to active double buffuring. Required for looping and
+	 *        parallax scrolling.
 	 */
 	var _Object = G.Scroller = function(surface, doubleBuffer) {
-		/**
-		 * Dictionary holding the scrolling regions.
-		 *
-		 * @private
-		 * @ignore
-		 * 
-		 * @member {Object}
-		 */
-		this.regions_ = {};
+		Object.base(this);
+		this.resetRegions();
+
 		/**
 		 * Surface holding the graphics to be scrolled
 		 *
 		 * @private
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.Surface}
 		 */
 		var buffer = this.surface_ = surface;
@@ -75,26 +70,26 @@ THE SOFTWARE.
 		}
 		/**
 		 * Current surface when double buffer is active or passed surface if not.
-		 * Using double buffer, you must use this property instead of the original surface.
+		 * Using double buffer, you must use this property instead of the original
+		 * surface.
 		 *
 		 * @readonly
-		 * 
+		 *
 		 * @member {Gamalto.Surface}
 		 * @alias Gamalto.Scroller#surface
 		 */
 		this.surface = buffer;
-	},
-	
+	};
+
 	/** @alias Gamalto.Scroller.prototype */
-	proto = _Object.inherits(G.Object);
-	
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Gets the specified registered scrolling region.
-	 * 
+	 *
 	 * @param  {string} name
 	 *         Name of the requested region.
-	 * 
+	 *
 	 * @return {Gamalto.ScrollingRegion} Region if it exists.
 	 */
 	proto.getRegion = function(name) {
@@ -103,7 +98,7 @@ THE SOFTWARE.
 
 	/**
 	 * Regiters a scrolling region.
-	 * 
+	 *
 	 * @param {string} name
 	 *        Name the region to be registered.
 	 * @param {Gamalto.ScrollingRegion} region
@@ -114,18 +109,21 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Scrolls the region using the specified displacement, or the internal state if not specified.
-	 * To prevent a region from moving, simply set its speed to 0.
+	 * Scrolls the region using the specified displacement, or the internal state
+	 * if not specified. To prevent a region from moving, simply set its speed
+	 * to 0.
 	 *
 	 * @private
 	 * @ingore
-	 * 
+	 *
 	 * @param  {string} name
 	 *         Name the region to be drawn.
 	 * @param  {number} dx
-	 *         Value beween 0 and 1 indicating the desired horizontal displacement ratio.
+	 *         Value beween 0 and 1 indicating the desired horizontal
+	 *         displacement ratio.
 	 * @param  {number} dy
-	 *         Value beween 0 and 1 indicating the desired vertical displacement ratio.
+	 *         Value beween 0 and 1 indicating the desired vertical
+	 *         displacement ratio.
 	 */
 	proto.drawRegion_ = function(name, dx, dy) {
 		var region = this.getRegion(name);
@@ -137,10 +135,26 @@ THE SOFTWARE.
 	};
 
 	/**
+	 * Removes all regions.
+	 */
+	proto.resetRegions = function() {
+		/**
+		 * Dictionary holding the scrolling regions.
+		 *
+		 * @private
+		 * @ignore
+		 *
+		 * @member {Object}
+		 */
+		this.regions_ = {};
+	};
+
+	/**
 	 * Updates the internal displacement state of the registered regions.
-	 * 
+	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will be read.
+	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will
+	 *         be read.
 	 * @param  {number} dx
 	 *         Value beween -1 and +1 indicating the horizontal displacement.
 	 * @param  {number} dy
@@ -156,21 +170,24 @@ THE SOFTWARE.
 	/**
 	 * Redraws parts of the current surface into the buffer surface.
 	 * Useful only with double buffering.
-	 * 
+	 *
 	 * @param  {array.<Gamalto.IBox>} [regions]
 	 *         List of the regions to be updated. Defaults to the whole surface.
 	 */
 	proto.redraw = function(regions) {
 		// Get the next destionation surface
 		var	offs = this.surface_;
-		// and the current view
+
+		// And the current view
 		var view = this.surface;
 
 		// No need to redraw on a same surface...
-		// Also, IE throw an 'unexpected call to method or property access' exception calling Surface.redraw()
+		// Also, IE throw an 'unexpected call to method or property access' exception
+		// calling Surface.redraw()
 		if (offs != view) {
 			// Prepare regions
 			regions = regions || [new G.Box(0, 0, offs.width, offs.height)];
+
 			// Update the surface
 			offs.redraw(view, 0, 0, regions);
 		}
@@ -183,22 +200,22 @@ THE SOFTWARE.
 	 *         Value beween 0 and 1 indicating the horizontal displacement ratio.
 	 * @param  {number} dy
 	 *         Value beween 0 and 1 indicating the vertical displacement ratio.
-	 * 
+	 *
 	 * @return {Gamalto.Surface} Currently active surface to be displayed.
 	 */
 	proto.draw = function(dx, dy) {
 		// Swap buffers if double buffering is enabled
-		var	buf1 = this.surface_,
-			buf2 = this.surface;
+		var	buf1 = this.surface_;
+		var buf2 = this.surface;
 
 		this.surface_ = buf2;
-		this.surface  = buf1;
+		this.surface = buf1;
 
 		for (var name in this.regions_) {
 			this.drawRegion_(name, dx, dy);
 		}
 
-		return this.surface;
+		return buf1;
 	};
 
 	/**
@@ -206,7 +223,7 @@ THE SOFTWARE.
 	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @param  {Gamalto.ScrollingRegion} region
 	 *         Region to be scrolled.
 	 * @param  {number} sx
@@ -215,25 +232,26 @@ THE SOFTWARE.
 	 *         Vertical displacement in pixels.
 	 */
 	proto.move_ = function(region, sx, sy) {
-		var b = region.bounds_,
-			x = b.origin.x,
-			y = b.origin.y,
-			w = b.extent.x,
-			h = b.extent.y,
-	
-			src = this.surface_,
-			dst = this.surface,
+		var b = region.bounds_;
+		var x = b.origin.x;
+		var y = b.origin.y;
+		var w = b.extent.x;
+		var h = b.extent.y;
+
+		var src = this.surface_;
+		var dst = this.surface;
 
 		/* Clip for out of bounds values */
-			cx = (sx < 0 ? -sx : 0) + x,
-			cy = (sy < 0 ? -sy : 0) + y,
-			ww = w - (sx < 0 ? -sx : sx),
-			hh = h - (sy < 0 ? -sy : sy),
-			// Destination in the window buffer
-			dx = x + (sx > 0 ? sx : 0),
-			dy = y + (sy > 0 ? sy : 0),
+		var cx = (sx < 0 ? -sx : 0) + x;
+		var cy = (sy < 0 ? -sy : 0) + y;
+		var ww = w - (sx < 0 ? -sx : sx);
+		var hh = h - (sy < 0 ? -sy : sy);
 
-			renderer = dst.renderer;
+		// Destination in the window buffer
+		var dx = x + (sx > 0 ? sx : 0);
+		var dy = y + (sy > 0 ? sy : 0);
+
+		var renderer = dst.renderer;
 
 		// Copy a main surface area to the region buffer
 		if (src !== dst) { renderer.clearRect(b); }
@@ -243,46 +261,46 @@ THE SOFTWARE.
 		if (region.loop) {
 			if (sx < 0) {
 				renderer.copy_(src,
-							  dx, cy, -sx, hh,
-							  dx + ww, dy, -sx, hh);
+								dx, cy, -sx, hh,
+								dx + ww, dy, -sx, hh);
 
 				if (sy < 0) {
 					renderer.copy_(src,
-								  dx, dy, -sx, -sy,
-								  dx + ww, dy + hh, -sx, -sy);
+									dx, dy, -sx, -sy,
+									dx + ww, dy + hh, -sx, -sy);
 
 				} else if (sy > 0) {
 					renderer.copy_(src,
-								  dx, cy + hh, -sx, sy,
-								  dx + ww, cy, -sx, sy);
+									dx, cy + hh, -sx, sy,
+									dx + ww, cy, -sx, sy);
 				}
 
 			} else if (sx > 0) {
 				renderer.copy_(src,
-							  cx + ww, cy, sx, hh,
-							  cx, dy, sx, hh);
+								cx + ww, cy, sx, hh,
+								cx, dy, sx, hh);
 
 				if (sy < 0) {
 					renderer.copy_(src,
-								  cx + ww, dy, sx, -sy,
-								  cx, dy + hh, sx, -sy);
+									cx + ww, dy, sx, -sy,
+									cx, dy + hh, sx, -sy);
 
 				} else if (sy > 0) {
 					renderer.copy_(src,
-								  cx + ww, cy + hh, sx, sy,
-								  cx, cy, sx, sy);
+									cx + ww, cy + hh, sx, sy,
+									cx, cy, sx, sy);
 				}
 			}
 
 			if (sy < 0) {
 				renderer.copy_(src,
-							  cx, dy, ww, -sy,
-							  dx, dy + hh, ww, -sy);
+								cx, dy, ww, -sy,
+								dx, dy + hh, ww, -sy);
 
 			} else if (sy > 0) {
 				renderer.copy_(src,
-							  cx, cy + hh, ww, sy,
-							  dx, cy, ww, sy);
+								cx, cy + hh, ww, sy,
+								dx, cy, ww, sy);
 			}
 		}
 	};
