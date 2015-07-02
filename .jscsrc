@@ -6,7 +6,7 @@
 	"disallowMultipleLineBreaks": true,
 	"disallowMultipleLineStrings": true,
 	"disallowMultipleSpaces": true,
-	"disallowMultipleVarDecl": true,
+	"disallowMultipleVarDecl": "exceptUndefined",
 	"disallowNewlineBeforeBlockStatements": true,
 	"disallowSpaceAfterObjectKeys": true,
 	"disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!"],
