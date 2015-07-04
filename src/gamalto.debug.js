@@ -1,6 +1,6 @@
 /*
  * Gamalto Debug Version
- * 
+ *
  * This file is part of the Gamalto middleware
  * http://www.gamalto.com/
  *
@@ -35,112 +35,112 @@ var GAMALTO_DEBUG = true;
 
 (function() {
 
-	var all  = document.getElementsByTagName('script'),
-		path = all[all.length - 1].src,
-		dir	 = path.substr(0, path.indexOf("gamalto.debug.js")),
-		files = [
+	var all = document.getElementsByTagName('script');
+	var path = all[all.length - 1].src;
+	var dir = path.substr(0, path.indexOf("gamalto.debug.js"));
+	var files = [
 
-	    "Gamalto.js",
+		"Gamalto.js",
 
-	    "core/Core.js",
-	    "core/Environment.js",
-	    "core/Debug.js",
-	    "core/Compat.js",
-	    "core/GObject.js",
-	    "core/OOP.js",
-	    "core/Extensions.js",
-		
-	    "async/API_Immediate.js",
-	    "async/GPromise.js",
-	    "async/GAsync.js",
+		"core/Core.js",
+		"core/Environment.js",
+		"core/Debug.js",
+		"core/Compat.js",
+		"core/GObject.js",
+		"core/OOP.js",
+		"core/Extensions.js",
 
-	    "system/API_Base64.js",
-	    "system/GConvert.js",
-	    "system/GCommandLine.js",
-	    "system/GTimer.js",
-	    "system/GState.js",
-	    "system/GVersion.js",
+		"async/API_Immediate.js",
+		"async/GPromise.js",
+		"async/GAsync.js",
+
+		"system/API_Base64.js",
+		"system/GConvert.js",
+		"system/GCommandLine.js",
+		"system/GTimer.js",
+		"system/GState.js",
+		"system/GVersion.js",
 
 		"io/GStream.js",
-	    "io/GSeekableStream.js",
-	    "io/GReadableStream.js",
-	    "io/GStreamReader.js",
-	    "io/GMemoryStream.js",
-	    "io/GFile.js",
-	    "io/GAsyncFile.js",
+		"io/GSeekableStream.js",
+		"io/GReadableStream.js",
+		"io/GStreamReader.js",
+		"io/GMemoryStream.js",
+		"io/GFile.js",
+		"io/GAsyncFile.js",
 
-	    "data/API_CORS.js",
-	    "data/GBaseLibrary.js",
-	    "data/GXMLLibrary.js",
-	    "data/GDataLibrary.js",
-	    "data/GTextLibrary.js",
-	    "data/GArrayReader.js",
-	    "data/GArrayWriter.js",
-	    "data/GTextReader.js",
+		"data/API_CORS.js",
+		"data/GBaseLibrary.js",
+		"data/GXMLLibrary.js",
+		"data/GDataLibrary.js",
+		"data/GTextLibrary.js",
+		"data/GArrayReader.js",
+		"data/GArrayWriter.js",
+		"data/GTextReader.js",
 
-	    "geometry/GVector2.js",
-	    "geometry/GBox.js",
-	    "geometry/GShape.js",
-	    "geometry/GSize.js",
-	    "geometry/GPolygon.js",
-	    "geometry/GRect.js",
-	    "geometry/GCircle.js",
-	    "geometry/GPath.js",
+		"geometry/GVector2.js",
+		"geometry/GBox.js",
+		"geometry/GShape.js",
+		"geometry/GSize.js",
+		"geometry/GPolygon.js",
+		"geometry/GRect.js",
+		"geometry/GCircle.js",
+		"geometry/GPath.js",
 
-	    "graphic/GTransform.js",
-	    "graphic/GBaseRenderer.js",
-	    "graphic/GBitmap.js",
-	    "graphic/GBitmapLibrary.js",
-	    "graphic/GBaseCanvas.js",
-	    "graphic/GCanvas2D.js",
-	    "graphic/GColor.js",
-	    "graphic/GPalette.js",
-	    "graphic/GRenderer2D.js",
-	    "graphic/GSurface.js",
-	    "graphic/GScreen.js",
-	    "graphic/GPattern.js",
+		"graphic/GTransform.js",
+		"graphic/GBaseRenderer.js",
+		"graphic/GBitmap.js",
+		"graphic/GBitmapLibrary.js",
+		"graphic/GBaseCanvas.js",
+		"graphic/GCanvas2D.js",
+		"graphic/GColor.js",
+		"graphic/GPalette.js",
+		"graphic/GRenderer2D.js",
+		"graphic/GSurface.js",
+		"graphic/GScreen.js",
+		"graphic/GPattern.js",
 
-	    "sprite/GSectionList.js",
-	    "sprite/GSpriteSheet.js",
-	    "sprite/GEntity.js",
+		"sprite/GSectionList.js",
+		"sprite/GSpriteSheet.js",
+		"sprite/GEntity.js",
 
-	    "event/GEvent.js",
-	    "event/GKeyboardEvent.js",
-	    "event/GMouseEvent.js",
-	    "event/GEventManager.js",
-	    "event/GEventManager_Keyboard_iCade.js",
-	    "event/GEventManager_Keyboard.js",
-	    "event/GEventManager_Mouse.js",
-	    "event/GKeyboardEvent_iCade.js",
-	    "event/GTouchGamepad.js",
-	    "event/GSubscription.js",
-	    "event/GBroadcaster.js",
+		"event/GEvent.js",
+		"event/GKeyboardEvent.js",
+		"event/GMouseEvent.js",
+		"event/GEventManager.js",
+		"event/GEventManager_Keyboard_iCade.js",
+		"event/GEventManager_Keyboard.js",
+		"event/GEventManager_Mouse.js",
+		"event/GKeyboardEvent_iCade.js",
+		"event/GTouchGamepad.js",
+		"event/GSubscription.js",
+		"event/GBroadcaster.js",
 
-	    "webgl/GShader.js",
-	    "webgl/GCanvasWebGL.js",
-	    "webgl/GRendererWebGL.js",
+		"webgl/GShader.js",
+		"webgl/GCanvasWebGL.js",
+		"webgl/GRendererWebGL.js",
 
-	    "audio/GBaseAudioMixer.js",
-	    "audio/GAudioMixer.js",
-	    "audio/GAudioMixer_HTML5Audio.js",
-	    "audio/GAudioMixer_WebAudio.js",
-	    "audio/GAudioChannel.js",
-	    "audio/GBaseSound.js",
-	    "audio/GHTML5Sound.js",
-	    "audio/GWebAudioSound.js",
-	    "audio/GSoundPool.js",
+		"audio/GBaseAudioMixer.js",
+		"audio/GAudioMixer.js",
+		"audio/GAudioMixer_HTML5Audio.js",
+		"audio/GAudioMixer_WebAudio.js",
+		"audio/GAudioChannel.js",
+		"audio/GBaseSound.js",
+		"audio/GHTML5Sound.js",
+		"audio/GWebAudioSound.js",
+		"audio/GSoundPool.js",
 
-	    "retro/GDecoder.js",
-	    "retro/GDecoder_Interleaved.js",
-	    "retro/GDecoder_RLE-IFF.js",
-	    "retro/GDecoder_RLE.js",
-	    "retro/GIndexedImage.js",
-	    "retro/GIndexedImage_AtariDegasElite.js",
-	    "retro/GIndexedImage_AtariNeochrome.js",
-	    "retro/GIndexedImage_InterchangeFileFormat.js",
-	    "retro/GIndexedBitmap.js",
+		"retro/GDecoder.js",
+		"retro/GDecoder_Interleaved.js",
+		"retro/GDecoder_RLE-IFF.js",
+		"retro/GDecoder_RLE.js",
+		"retro/GIndexedImage.js",
+		"retro/GIndexedImage_AtariDegasElite.js",
+		"retro/GIndexedImage_AtariNeochrome.js",
+		"retro/GIndexedImage_InterchangeFileFormat.js",
+		"retro/GIndexedBitmap.js",
 
-	    "text/GFont.js",
+		"text/GFont.js",
 
 		"animation/GAnimator.js",
 		"animation/GBaseAnimation.js",
@@ -158,15 +158,16 @@ var GAMALTO_DEBUG = true;
 		"tile/GTileMap.js",
 		"tile/GTileSet.js",
 
-	    "geometry/GPathAnimator.js",
+		"geometry/GPathAnimator.js",
 
-	    "effect/EFader.js",
+		"effect/EFader.js",
 
-	    "cocoonjs/CJS_GScreen.js",
-	    "cocoonjs/CJS_API_Immediate.js"
+		"cocoonjs/CJS_GScreen.js",
+		"cocoonjs/CJS_API_Immediate.js"
 	];
-	
+
 	files.forEach(function(file) {
+		/*jshint evil: true */
 		document.write('<script src="' + dir + file + '"></script>');
 	});
 

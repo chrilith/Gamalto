@@ -1,7 +1,7 @@
 /*
  * Gamalto Global Environement
  * ---------------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,8 +32,8 @@ THE SOFTWARE.
 /* Gamalto base object and initializer */
 (function(global) {
 
-	var _initializers = [],
-		_Object = {
+	var initializers = [];
+	var _Object = {
 
 		/**
 		 * This is the first function to call before using the Gamalto framework.
@@ -52,7 +52,7 @@ THE SOFTWARE.
 			// Check for dependencies
 			gamalto.devel.checkDependencies();
 
-			_initializers.push(function() {
+			initializers.push(function() {
 				// Run the application
 				if (document.readyState == 'complete') {
 					setTimeout(loader, 0);
@@ -66,23 +66,23 @@ THE SOFTWARE.
 		N: function(name) {
 			return "G__" + name;
 		},
-		
+
 		H: function(name) {
 			return "_" + name + "Handler";
 		},
 
 		addInitializer: function(func) {
-			_initializers.push(func);
+			initializers.push(func);
 		},
 
 		nextInitializer: function() {
-			var next = _initializers.shift();
+			var next = initializers.shift();
 			if (next) { next(); }
 		},
 
 		getCurrentPath: function() {
-			var all = document.getElementsByTagName('script'),
-				path = all[all.length - 1].src;
+			var all = document.getElementsByTagName('script');
+			var path = all[all.length - 1].src;
 			return path.substr(0, path.lastIndexOf("/") + 1);
 		}
 
@@ -99,23 +99,29 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 */
 	constant.NONE			= undefined;
-	
+
 	constant.ALIGN_LEFT		= 1 << 0;
 	constant.ALIGN_RIGHT	= 1 << 1;
 	constant.ALIGN_TOP		= 1 << 2;
 	constant.ALIGN_BOTTOM	= 1 << 3;
 
-	constant.ALIGN_CENTER	= (1 << 0 | 1 << 1); 	// LEFT+RIGHT
+	constant.ALIGN_CENTER	= (1 << 0 | 1 << 1);	// LEFT+RIGHT
 	constant.ALIGN_MIDDLE	= (1 << 2 | 1 << 3);	// TOP+BOTTOM
 
 	/** @namespace Gamalto
 	 *
 	 * @description
-	 * <p>Gamalto is a JavaScript framework with no external libraries dependency. It provides small base objects, including complete source code, that can be easily extended to meet your needs.
+	 * <p>Gamalto is a JavaScript framework with no external libraries
+	 * dependency. It provides small base objects, including complete
+	 * source code, that can be easily extended to meet your needs.
 	 *
-	 * <p>It is lightweight, customiazable and take advantage of the HTML5 Canvas API specification widely available in all modern browsers.
+	 * <p>It is lightweight, customiazable and take advantage of
+	 * the HTML5 Canvas API specification widely available in all
+	 * modern browsers.
 	 *
-	 * <p>It is the perfect companion for retrogaming style game developers with support for tile-based games, palettized graphics and much more!
+	 * <p>It is the perfect companion for retrogaming style game
+	 * developers with support for tile-based games, palettized graphics
+	 * and much more!
 	 */
 	global.G = global.Gamalto = _Object;
 

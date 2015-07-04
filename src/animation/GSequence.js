@@ -1,7 +1,7 @@
 /*
  * Gamalto.Sequence
  * ----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -48,14 +48,14 @@ THE SOFTWARE.
 		this.list_ = [];
 		this.time_ = [];
 		Object.base(this);
-	},
-	
+	};
+
 	/** @alias Gamalto.Sequence.prototype */
-	proto = _Object.inherits(G.Animator);
-	
+	var proto = _Object.inherits(G.Animator);
+
 	/**
 	 * Adds a new event to the sequence.
-	 * 
+	 *
 	 * @param  {ISequence} inst
 	 *         Instance of a {@link ISequence} object.
 	 * @param  {number} duration
@@ -71,17 +71,18 @@ THE SOFTWARE.
 
 	/**
 	 * Updates the sequence state.
-	 * 
+	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
+	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *         time will be read.
 
 	 * @return {number} Current playing event.
 	 */
 	proto.update = function(timer) {
-		var p = this.progress | 0,	// remove fractional part for comparison
-			was = this.playing,
-			now = _Object.base.update_.call(this, timer, false, this.time_),
-			i = this.progress | 0;	// changed but update_() call
+		var p = this.progress | 0;	// Remove fractional part for comparison
+		var was = this.playing;
+		var now = _Object.base.update_.call(this, timer, false, this.time_);
+		var i = this.progress | 0;	// Changed but update_() call
 
 		// TODO: an action may be skipped upon slowdown. Add a strict parameter
 		// to for complete sequence execution? Important if an action has some
@@ -100,7 +101,7 @@ THE SOFTWARE.
 	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @param  {string} method
 	 *         Method name.
 	 * @param  {number} exec
@@ -116,7 +117,7 @@ THE SOFTWARE.
 
 	/**
 	 * Defines methods to handle sequencial events execution.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @interface ISequence
 	 *
@@ -136,7 +137,8 @@ THE SOFTWARE.
 	 * @name Gamalto.ISequence#entering
 	 *
 	 * @param {Gamalto.ITiming} timer
-	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
+	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *        time will be read.
 	 */
 
 	/**
@@ -146,7 +148,8 @@ THE SOFTWARE.
 	 * @name Gamalto.ISequence#update
 	 *
 	 * @param {Gamalto.ITiming} timer
-	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
+	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *        time will be read.
 	 */
 
 	/**
@@ -156,7 +159,8 @@ THE SOFTWARE.
 	 * @name Gamalto.ISequence#exiting
 	 *
 	 * @param {Gamalto.ITiming} timer
-	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
+	 *        [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *        time will be read.
 	 */
 
 })();

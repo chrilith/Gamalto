@@ -1,7 +1,7 @@
 /*
  * Gamalto.TileMap
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,13 +36,16 @@ THE SOFTWARE.
 	gamalto.devel.require("Vector2");
 	gamalto.devel.using("Size");
 
+	/* Aliases */
+	var _Vector2 = G.Vector2;
+
 	/**
 	 * Creates a new rectangular tile-based map.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TileMap
 	 * @augments Gamalto.TileGroup
-	 * 
+	 *
 	 * @param {Gamalto.TileSet} ts
 	 *        Tilset to be used to render the map.
 	 * @param {number} width
@@ -58,7 +61,7 @@ THE SOFTWARE.
 
 		/**
 		 * Gets or sets the size of the visible area of the map in tiles.
-		 * 
+		 *
 		 * @member {Gamalto.Size}
 		 * @alias Gamalto.TileMap#viewport
 		 */
@@ -66,7 +69,7 @@ THE SOFTWARE.
 
 		/**
 		 * Gets of sets the origin of the visible area of the map in tiles.
-		 * 
+		 *
 		 * @member {Gamalto.Vector2}
 		 * @alias Gamalto.TileMap#origin
 		 */
@@ -77,30 +80,30 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.TileSet}
 		 */
 		this.set_ = ts;
 
 		/**
 		 * Whether the map loops. Defaults to not looping.
-		 * 
+		 *
 		 * @member {boolean}
 		 * @alias Gamalto.TileMap#loop
 		 */
 		this.loop = false;
-	},
-	_Vector2 = G.Vector2,
+	};
 
 	/** @alias Gamalto.TileMap.prototype */
-	proto = _Object.inherits(G.TileGroup);
+	var proto = _Object.inherits(G.TileGroup);
 
 	/**
-	 * Sets the parts which overflow the current viewport without altering the map position and size.
+	 * Sets the parts which overflow the current viewport without altering
+	 * the map position and size.
 	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @param {number} top
 	 *        Size of the top part of the overscan.
 	 * @param {number} right
@@ -116,8 +119,9 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Sets the size in tiles of the offscreen area to be drawn around the effective viewport to help sides redraw while moving in the map.
-	 * 
+	 * Sets the size in tiles of the offscreen area to be drawn around
+	 * the effective viewport to help sides redraw while moving in the map.
+	 *
 	 * @param {number} top
 	 *        Size of the top part of the overscan.
 	 * @param {number} right
@@ -129,27 +133,30 @@ THE SOFTWARE.
 	 */
 	proto.setOverscan = function(top, right, bottom, left) {
 		this.overflow_(top, right, bottom, left);
+
 		// Reset the viewport to recompute pre-adjusted size
 		this.viewport = this.vp_;
 	};
 
 	/**
 	 * Renders the visible part of the map including the overscan if any.
-	 * 
+	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the map will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which
+	 *         the map will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position.
 	 * @param  {number} y
 	 *         Vertical drawing position.
 	 */
 	proto.draw = function(renderer, x, y) {
-		var og = this.og_,
-			tL = this.tL_,
-			vp = this.avp_,
-			dt = this.delta_;
+		var og = this.og_;
+		var tL = this.tL_;
+		var vp = this.avp_;
+		var dt = this.delta_;
 
-		this.drawSection_(renderer, og.x - tL.x, og.y - tL.y, vp.width, vp.height, x + dt.x, y + dt.y);
+		this.drawSection_(renderer, og.x - tL.x, og.y - tL.y,
+			vp.width, vp.height, x + dt.x, y + dt.y);
 	};
 
 	/**
@@ -158,9 +165,10 @@ THE SOFTWARE.
 	 * @protected
 	 * @override
 	 * @ignore
-	 * 
+	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the map will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which
+	 *         the map will be rendered.
 	 * @param  {number} tx
 	 *         Horizontal origin of the map part to be drawn in tiles.
 	 * @param  {number} ty
@@ -175,32 +183,35 @@ THE SOFTWARE.
 	 *         Vertical drawing offset in pixels.
 	 */
 	proto.drawSection_ = function(renderer, tx, ty, tw, th, ox, oy) {
-		var x, y,
-			w = this.width,
-			h = this.height,
-			tile, index, ts = this.set_,
-			size = ts.size,
-			first = ts.firstIndex;
+		var x, y, tile, index;
+		var w = this.width;
+		var h = this.height;
+		var ts = this.set_;
+		var size = ts.size;
+		var first = ts.firstIndex;
 
 		// Adjust the drawing position if an overscan is defined.
-		// Like this the map viewport will be always rendered properly at the same position regardless of the overscan.
+		// Like this the map viewport will be always rendered properly at
+		// the same position regardless of the overscan.
 		ox -= this.tL_.x * size.width;
-		oy -= this.tL_.y * size.height
+		oy -= this.tL_.y * size.height;
 
 		// Looping map ?
 		if (this.loop) {
-			if (tx < 0) tx = tx % w + w;
-			if (ty < 0) ty = ty % h + h;
+			if (tx < 0) { tx = tx % w + w; }
+			if (ty < 0) { ty = ty % h + h; }
 		}
 
 		for (x = 0; x < tw; x++) {
 			for (y = 0; y < th; y++) {
 				// Modulo to prevent out of bounds reads
 				index = (x + tx) % w + (y + ty) % h * w;
+
 				// Get the wanted tile
 				if ((tile = this.data[index] - first) < 0) {
 					continue;
 				}
+
 				// And draw it!
 				ts.draw(renderer, ox + x * size.width, oy + y * size.height, tile);
 			}
@@ -209,41 +220,45 @@ THE SOFTWARE.
 
 	/**
 	 * Updates the map position.
-	 * You can, for instance, pass the computed displacement of a {@linkcode Gamalto.ScrollingRegion}
-	 * and then adjust the effective scrolling displacement with the returned ratios.
-	 * 
+	 * You can, for instance, pass the computed displacement of
+	 * a {@linkcode Gamalto.ScrollingRegion}
+	 * and then adjust the effective scrolling displacement with
+	 * the returned ratios.
+	 *
 	 * @param  {number} mx
-	 *         Horizontal displacement in pixels. 
+	 *         Horizontal displacement in pixels.
 	 * @param  {number} my
 	 *         Vertical displacement in pixels.
-	 * 
-	 * @return {Gamalto.Vector2} Ratios applied to the desired displacement. Always (1,1) when the map loops.
+	 *
+	 * @return {Gamalto.Vector2} Ratios applied to the desired displacement.
+	 * Always (1,1) when the map loops.
 	 */
 	proto.update = function(mx, my) {
-		var sz = this.set_.size,
-			tw = sz.width,
-			th = sz.height,
+		var sz = this.set_.size;
+		var tw = sz.width;
+		var th = sz.height;
 
-			vp = this.avp_,
-			origin = this.og_,
-			delta = this.delta_,
+		var vp = this.avp_;
+		var origin = this.og_;
+		var delta = this.delta_;
 
-			// Desired values
-			omx = mx,
-			omy = my,
-	
-			// New and old directions
-			ndx = Math.sign(mx),
-			ndy = Math.sign(my),
-			odx = Math.sign(delta.x),
-			ody = Math.sign(delta.y);
+		// Desired values
+		var omx = mx;
+		var omy = my;
 
-		// Changing direction? We must redraw the partial row and col on the other sides.
-		if (odx != 0 && ndx - odx != 0) {
+		// New and old directions
+		var ndx = Math.sign(mx);
+		var ndy = Math.sign(my);
+		var odx = Math.sign(delta.x);
+		var ody = Math.sign(delta.y);
+
+		// Changing direction? We must redraw the partial row and col
+		// on the other sides.
+		if (odx !== 0 && ndx - odx !== 0) {
 			delta.x  += ndx * tw;
 			origin.x += ndx;
 		}
-		if (ody != 0 && ndy - ody != 0) {
+		if (ody !== 0 && ndy - ody !== 0) {
 			delta.y  += ndy * th;
 			origin.y += ndy;
 		}
@@ -255,11 +270,12 @@ THE SOFTWARE.
 		delta.y += my;
 
 		// How many rows and cols should we have to draw?
-		var w = (delta.x / tw) | 0,
-			h = (delta.y / th) | 0,
+		var w = (delta.x / tw) | 0;
+		var h = (delta.y / th) | 0;
+
 		// Overscan
-			tL = this.tL_,
-			bR = this.bR_;
+		var tL = this.tL_;
+		var bR = this.bR_;
 
 		// Out of map bounds? adjust... if the map doesn't loop
 		if (!this.loop) {
@@ -292,78 +308,84 @@ THE SOFTWARE.
 		this.drawW_ = w;
 		this.drawH_ = h;
 
-		// returns the ratios
+		// Returns the ratios
 		return new _Vector2(mx / omx, my / omy);
 	};
 
 	/**
 	 * Redraws the missing sides of the viewport when scrolling the map.
-	 * 
+	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the sides will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which
+	 *         the sides will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position of the map.
 	 * @param  {number} y
 	 *         Vertical drawing position of the map.
-	 * 
-	 * @return {array.<Gamalto.IBox>} List of redrawn areas or null if nothing has been redrawn.
+	 *
+	 * @return {array.<Gamalto.IBox>} List of redrawn areas or null
+	 * if nothing has been redrawn.
 	 */
 	proto.redraw = function(renderer, x, y) {
-		var sz = this.set_.size,
-			tw = sz.width,
-			th = sz.height,
+		var sz = this.set_.size;
+		var tw = sz.width;
+		var th = sz.height;
 
-			vp = this.avp_,
+		var vp = this.avp_;
 
-			w = this.drawW_,
-			h = this.drawH_,
+		var w = this.drawW_;
+		var h = this.drawH_;
 
-			redraw = null;
+		var redraw = null;
 
 		if (!w && !h) {
 			return redraw;
 		}
 
-		var cx = (this.og_.x -= w),
-			cy = (this.og_.y -= h),
-			// Drawing offset in pixels
-			ox = this.delta_.x,
-			oy = this.delta_.y;
+		var cx = (this.og_.x -= w);
+		var cy = (this.og_.y -= h);
+
+		// Drawing offset in pixels
+		var ox = this.delta_.x;
+		var oy = this.delta_.y;
 
 		// Adjust by overscan
 		cx -= this.tL_.x;
 		cy -= this.tL_.y;
 
-		if (w != 0) {
+		if (w !== 0) {
 			// Save for clipping...
-			var ccx = cx,
-				cox = ox;
+			var ccx = cx;
+			var cox = ox;
 
 			if (w < 0) {
 				w = -w;
 				cx += (vp.width - w);
 				ox += (vp.width - w) * tw;
 			} else {
-				// ...clip the horizontal part to be drawn if any,
-				// to prevent rendering of the same tiles...
+				/* ...clip the horizontal part to be drawn if any,
+				   to prevent rendering of the same tiles...
+				*/
 				cox += w * tw;
 				ccx += w;
 			}
 			this.drawSection_(renderer, cx | 0, cy | 0, w, vp.height, x + ox, y + oy);
-			(redraw = redraw || []).push(new G.Box(x + ox, y + oy, w * tw, vp.height * th));
+			(redraw = redraw || [])
+				.push(new G.Box(x + ox, y + oy, w * tw, vp.height * th));
 
 			// ...and apply
 			cx = ccx;
 			ox = cox;
 		}
-		if (h != 0) {
+		if (h !== 0) {
 			if (h < 0) {
 				h = -h;
 				cy += (vp.height - h);
 				oy += (vp.height - h) * th;
 			}
 			this.drawSection_(renderer, cx | 0, cy | 0, vp.width - w, h, x + ox, y + oy);
-			(redraw = redraw || []).push(new G.Box(x + ox, y + oy, (vp.width - w) * tw, h * th));
+			(redraw = redraw || [])
+				.push(new G.Box(x + ox, y + oy, (vp.width - w) * tw, h * th));
 		}
 
 		return redraw;
@@ -371,42 +393,43 @@ THE SOFTWARE.
 
 	/**
 	 * Gets the tile at the given position.
-	 * 
+	 *
 	 * @param  {number} x
 	 *         Horizontal position in the map.
 	 * @param  {number} y
 	 *         Vertical position in the map.
 	 * @param  {boolean} [absolute]
-	 *         Whether to get the tile at an absolute position or in the visible space.
-	 * 
+	 *         Whether to get the tile at an absolute position or
+	 *         in the visible space.
+	 *
 	 * @return {Gamalto.Tile}
 	 */
 	proto.getTile = function(x, y, absolute) {
-		var w = this.width,
-			h = this.height,
-			ts = this.set_,
-			tw = ts.size.width,
-			th = ts.size.height,
-			tx, ty;
+		var w = this.width;
+		var h = this.height;
+		var ts = this.set_;
+		var tw = ts.size.width;
+		var th = ts.size.height;
+		var tx, ty;
 
 		if (absolute) {
 			tx = x / tw;
 			ty = y / th;
 		} else {
-			var og = this.og_,
-				dt = this.delta_;
+			var og = this.og_;
+			var dt = this.delta_;
 			tx = (og.x * tw + x - dt.x) / tw | 0;
 			ty = (og.y * th + y - dt.y) / th | 0;
 		}
 
 		// Adjust
 		if (this.loop) {
-			if (tx < 0) tx = tx % w + w;
-			if (ty < 0) ty = ty % h + h;
+			if (tx < 0) { tx = tx % w + w; }
+			if (ty < 0) { ty = ty % h + h; }
 		}
 
-		var index = tx % w + ty % h * w,
-			tile = this.data[index | 0] - ts.firstIndex;
+		var index = tx % w + ty % h * w;
+		var tile = this.data[index | 0] - ts.firstIndex;
 
 		return ts.getSection(tile);
 	};
@@ -417,11 +440,12 @@ THE SOFTWARE.
 			set: function(value) {
 				/**
 				 * Delta in pixels when drawing the map.
-				 * The origin position in the map is given in tiles and adjusted using this delta.
+				 * The origin position in the map is given in tiles and adjusted
+				 * using this delta.
 				 *
 				 * @private
 				 * @ignore
-				 * 
+				 *
 				 * @member {Gamalto.Vector2}
 				 */
 				this.delta_ = _Vector2.zero();
@@ -432,6 +456,7 @@ THE SOFTWARE.
 			get: function() { return this.vp_; },
 			set: function(value) {
 				this.vp_ = value;
+
 				// Adjusted versions of Viewport taking overscan into account.
 				var size = _Vector2.add(this.tL_, this.bR_);
 				this.avp_ = new G.Size(value.width + size.x, value.height + size.y);

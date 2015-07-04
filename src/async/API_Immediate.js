@@ -4,9 +4,10 @@
  * Implementation: setImmediate()
  * Implementation: clearImmediate()
  *
- * See: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
+ * See:
+ * https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
  * -----------------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -44,7 +45,7 @@ THE SOFTWARE.
 	Object.defineMethod(global, "clearImmediate", implClearImmediate);
 
 	/* If it is not native, it requires an initialization */
-	if (!~("" + setImmediate).indexOf("native code")) {
+	if (String(setImmediate).indexOf("native code") == -1) {
 		init();
 	}
 
@@ -52,8 +53,8 @@ THE SOFTWARE.
 	// For a similar implementation see: https://github.com/YuzuJS/setImmediate
 
 	var magic = "com.gamalto.impl.immediate" + Math.random();
-		tasks = {},
-		taskHandle = 1;
+	var tasks = {};
+	var taskHandle = 1;
 
 	function processHandler(vargs) {
 		var handler = vargs[0];
@@ -61,8 +62,9 @@ THE SOFTWARE.
 			if (typeof handler == "function") {
 				return handler.bind.apply(handler, vargs);
 			} else {
-				/* specs says: apply ToString() */
-				return new Function("" + handler);
+				/* Specs says: apply ToString() */
+				/*jshint evil: true */
+				return new Function(String(handler));
 			}
 		}
 		return null;
@@ -91,11 +93,14 @@ THE SOFTWARE.
 	function init() {
 		var handler = function(event) {
 			var data = event.data;
-			if (event.source == global && typeof data == "string" && data.indexOf(magic) == 0) {
+			if (event.source == global &&
+					typeof data == "string" &&
+					data.indexOf(magic) === 0) {
+
 				event.stopPropagation();
 				tryRunTask(Number(data.substr(magic.length)));
 			}
-		}
+		};
 		/* Using W3C Messaging API
 		 * See: http://www.nonblocking.io/2011/06/windownexttick.html
 		 */
@@ -104,7 +109,7 @@ THE SOFTWARE.
 
 	// EXTENSION FUNCTIONS //
 
-	function implSetImmediate(/*handler, vargs*/) {
+	function implSetImmediate(/*: handler, vargs */) {
 		var handle = registerTask(arguments);
 		global.postMessage(magic + handle, "*");
 		return handle;

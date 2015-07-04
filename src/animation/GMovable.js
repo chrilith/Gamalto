@@ -1,7 +1,7 @@
 /*
  * Gamalto.Movable
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -34,6 +34,9 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("Vector2");
 
+	/* Aliases */
+	var _Vector2 = G.Vector2;
+
 	/**
 	 * Base object to create a movable entity. It's not meant to be used directly.
 	 *
@@ -48,7 +51,7 @@ THE SOFTWARE.
 		 * @protected
 		 * @internal
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.Vector2}
 		 */
 		this.frac_ = new _Vector2(0, 0);
@@ -58,7 +61,7 @@ THE SOFTWARE.
 		 * @protected
 		 * @internal
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.Vector2}
 		 */
 		this.curr_ = new _Vector2(0, 0);
@@ -67,19 +70,18 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.Vector2}
 		 */
-		this.speed_ = new _Vector2(0, 0);	
-	},
-	_Vector2 = G.Vector2,
-	
+		this.speed_ = new _Vector2(0, 0);
+	};
+
 	/** @alias Gamalto.Movable.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Sets the maximum displacement speed of the entity.
-	 * 
+	 *
 	 * @param {number} sx
 	 *        Maximum horizontal speed in pixels per second.
 	 * @param {number} sy
@@ -98,52 +100,59 @@ THE SOFTWARE.
 		this.curr_.x = this.curr_.y =
 		this.frac_.x = this.frac_.y = 0;
 	};
-	
+
 	/**
 	 * Gets the computed displacement of the movable entity.
-	 * This method should be overridden to add specific behaviors like acceleration.
+	 * This method should be overridden to add specific behaviors
+	 * like acceleration.
 	 *
 	 * @protected
 	 * @virtual
 	 * @ignore
-	 * 
+	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will be read.
+	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed
+	 *         time will be read.
 	 * @param  {number} dx
-	 *         Value beween -1 and +1 indicating the desired horizontal displacement.
+	 *         Value beween -1 and +1 indicating the desired horizontal
+	 *         displacement.
 	 * @param  {number} dy
-	 *         Value beween -1 and +1 indicating the desired vertical displacement.
-	 * 
-	 * @return {Gamalto.Vector2} Displacement to be applied to the entity in pixels including the fractional part.
+	 *         Value beween -1 and +1 indicating the desired vertical
+	 *         displacement.
+	 *
+	 * @return {Gamalto.Vector2} Displacement to be applied to the entity
+	 *         in pixels including the fractional part.
 	 */
 	proto.getDisplacement_ = function(timer, dx, dy) {
-		var speed = this.speed_,
-			time = timer.elapsedTime;
-		return new _Vector2(speed.x * dx * time, speed.y * dy * time);	
+		var speed = this.speed_;
+		var time = timer.elapsedTime;
+		return new _Vector2(speed.x * dx * time, speed.y * dy * time);
 	};
 
 	/**
 	 * Updates the internal displacement state of the movable entity.
-	 * 
+	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will be read.
+	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed
+	 *         time will be read.
 	 * @param  {number} dx
 	 *         Value beween -1 and +1 indicating the horizontal displacement.
 	 * @param  {number} dy
 	 *         Value beween -1 and +1 indicating the vertical displacement.
-	 * 
-	 * @return {Gamalto.Vector2} Effective displacement to be applied to the entity in pixels.
+	 *
+	 * @return {Gamalto.Vector2} Effective displacement to be applied to
+	 *         the entity in pixels.
 	 */
 	proto.update = function(timer, dx, dy) {
-		var frac = this.frac_,
-			disp = this.getDisplacement_(timer, dx, dy);
-	
+		var frac = this.frac_;
+		var disp = this.getDisplacement_(timer, dx, dy);
+
 		frac.x += disp.x;
 		frac.y += disp.y;
-	
+
 		disp.x = frac.x | 0;	// Round
 		disp.y = frac.y | 0;
-	
+
 		frac.x -= disp.x;
 		frac.y -= disp.y;
 

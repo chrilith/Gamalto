@@ -1,7 +1,7 @@
 /*
  * Gamalto.MemoryStream
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -40,19 +40,20 @@ THE SOFTWARE.
 	 * @constructor Gamalto.MemoryStream
 	 * @augments Gamalto.StreamReader
 	 */
-	G.MemoryStream = function(data, unit) {
+	var _Object = G.MemoryStream = function(data, unit) {
 		// Do we have a source data?
-		data = typeof data == 'object' ? data : this.alloc_(+data);
+		data = typeof data == 'object' ? data : this.alloc_(Number(data));
 
 		// Base constructor
 		Object.base(this, data, unit);
 		this.writer_ = (data.byteLength) ? this.reader_ : new G.ArrayWriter(data);
-	},
+	};
 
 	/* Inheritance and shortcut */
-	proto = G.MemoryStream.inherits(G.StreamReader);
+	var proto = _Object.inherits(G.StreamReader);
 
 	proto.alloc_ = function(size) {
+		/*jshint -W056 */
 		return new (global.ArrayBuffer || Array)(size);
 	};
 
@@ -90,18 +91,18 @@ THE SOFTWARE.
 
 	proto.copy = function(src, length) {
 		if (this.buffer.set && src.buffer.subarray) {
-			var pos = src.addr(),
-				src = src.buffer.subarray(pos, pos + length);
+			var pos = src.addr();
+			src = src.buffer.subarray(pos, pos + length);
 			this.buffer.set(src, this.addr());
 		} else {
-			while(length-- > 0) {
+			while (length-- > 0) {
 				this.writeInt8(src.readUint8());
 			}
 		}
 	};
 
 	proto.fill = function(value, length) {
-		while(length-- > 0) {
+		while (length-- > 0) {
 			this.writeInt8(value);
 		}
 	};

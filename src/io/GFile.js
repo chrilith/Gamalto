@@ -1,7 +1,7 @@
 /*
  * Gamalto.File
  * ------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -53,7 +53,7 @@ THE SOFTWARE.
 		this.error = 0;
 		return this.info_();
 	};
-	
+
 	proto.close = function() {
 		this.buffer = null;
 		this.bufSize_ = 0;
@@ -69,22 +69,23 @@ THE SOFTWARE.
 	};
 
 	proto.read = function(buffer, size) {
-		while(size--) {
+		while (size--) {
 			buffer.writeInt8(this.readUint8());
-		}		
+		}
 	};
 
 	proto.seek = function(offset, origin) {
 		_Object.base.seek.apply(this, arguments);
-		
+
 		// Invalidate current cached data if needed
-		if (!(this.position_ >= this.bufPos_ &&
-			  this.position_ < (this.bufPos_ + this.bufSize_))) {
+		if (!(	this.position_ >= this.bufPos_ &&
+				this.position_ < (this.bufPos_ + this.bufSize_))) {
+
 			this.buffer = null;
 			this.bufSize_ = 0;
 		}
 	};
-	
+
 	proto.tell = function() {
 		return (this.bufPos_ + this.position_);
 	};
@@ -96,18 +97,18 @@ THE SOFTWARE.
 	};
 
 	proto.onInfoReceived_ = function(r) {
-		var status = r.status,
-			isOK = (status == 200 || status == 206),
-			state = r.readyState;
+		var status = r.status;
+		var isOK = (status == 200 || status == 206);
+		var state = r.readyState;
 
 		if (state == r.DONE) {
 			this.mimeType = r.getResponseHeader("Content-Type") ||
 								"application/octet-stream";
-			this.rangeSupported_ = !!r.getResponseHeader("Accept-Ranges");
+			this.rangeSupported_ = Boolean(r.getResponseHeader("Accept-Ranges"));
 
 			// Length should be -1 only using "file" URL scheme...
 			if (-1 == (this.length =
-							(status == 0) ? -1 /* local */ :
+							(status === 0) ? -1 /* Local */ :
 							!isOK ? 0 :
 								(r.getResponseHeader("Content-Length") | 0))) {
 
@@ -123,15 +124,17 @@ THE SOFTWARE.
 
 	proto.setError_ = function(isOK, status) {
 		this.error = isOK ? 0 : status;
+
 		// For file scheme which return always status == 0
-		if (status == 0 && this.length <= 0) {
+		if (status === 0 && this.length <= 0) {
 			this.error = 400;
 		}
 	};
 
 	proto.onError_ = function(r) {
 		// Will be raised on network or CORS errors
-		return new Error("An unexpected error occured. Check the console for more info");
+		return new Error("An unexpected error occured." +
+			"Check the console for more info");
 	};
 
 	proto.isAsync = function() {
@@ -139,9 +142,10 @@ THE SOFTWARE.
 	};
 
 	proto.open_ = function(loadHandler, errorHandler, mode) {
-		var r = new XMLHttpRequest(),
-			// FIXME: cached files may not return Content-Length header!
-			random = (this.url_.indexOf("?") != -1 ? "&" : "?") + Math.random();
+		var r = new XMLHttpRequest();
+
+		// FIXME: cached files may not return Content-Length header!
+		var random = (this.url_.indexOf("?") != -1 ? "&" : "?") + Math.random();
 
 		// Set the handler...
 		r.onreadystatechange = loadHandler.bind(this, r);
@@ -151,7 +155,7 @@ THE SOFTWARE.
 		// detrimental effects to the end user's experience. For more help,
 		// check http://xhr.spec.whatwg.org/.
 		r.open(mode || "GET", this.url_ + random, this.isAsync());
-		return r;	
+		return r;
 	};
 
 	proto.send_ = function(r) {
@@ -165,7 +169,7 @@ THE SOFTWARE.
 				// XHR binary charset opt by Marcus Granado 2006 [http://mgran.blogspot.com]
 				r.overrideMimeType(G.Stream.BIN_MIMETYPE);
 			} else {
-				// for IE9 compatibility only
+				// For IE9 compatibility only
 				this.useVB_ = !r.setRequestHeader('Accept-Charset', 'x-user-defined');
 			}
 		}
@@ -180,8 +184,8 @@ THE SOFTWARE.
 	proto.openRange_ = function(loadHandler, errorHandler, length) {
 		length = Math.max(length, this.cacheSize);
 
-		var r = this.open_(loadHandler, errorHandler),
-			p = this.position_;
+		var r = this.open_(loadHandler, errorHandler);
+		var p = this.position_;
 
 		// State must be OPENED to set headers
 		if (this.rangeSupported_) {
@@ -201,8 +205,9 @@ THE SOFTWARE.
 		if (!this.useVB_) {
 			return r.response || r.responseText;
 		}
-		var array = new VBArray(r.responseBody).toArray(),
-			response = "";
+		var array = new VBArray(r.responseBody).toArray();
+		var response = "";
+
 		// Array.map() is extremely slow
 		array.forEach(function(chr) {
 			response += String.fromCharCode(chr);
@@ -211,22 +216,27 @@ THE SOFTWARE.
 	};
 
 	proto.onRangeReceived_ = function(r) {
-		var data, state = r.readyState,
-			status = r.status,
-			isOK = ((status || 200) == 200 || status == 206);
+		var data;
+		var state = r.readyState;
+		var status = r.status;
+		var isOK = ((status || 200) == 200 || status == 206);
 
 		if (state == r.DONE) {
 			data = this.buffer = !isOK ? "" : this.response_(r);
+			/*jshint -W056 */
 			this.reader_ = new ((data.byteLength) ? DataView : G.TextReader)(data);
+
 			// There is a bug in some WebKit version like Safari 8.0.3
-			// Also earlier versions of CocoonJS don't support ranges (tested with v1.4.1)
+			// Also earlier versions of CocoonJS don't support ranges
+			// (tested with v1.4.1)
 			// See: https://bugs.webkit.org/show_bug.cgi?id=82672
 			if (!r.getResponseHeader("Content-Range")) {
 				this.bufPos_ = 0;
 				this.rangeSupported_ = false;
 			}
 			this.bufSize_ = (r.getResponseHeader("Content-Length") | 0)
-								|| this.buffer.byteLength || this.buffer.length || 0; // for local files...
+								/* For local files... */
+								|| this.buffer.byteLength || this.buffer.length || 0;
 			this.setError_(isOK, status);
 		}
 		return state;
@@ -263,8 +273,9 @@ THE SOFTWARE.
 
 	/**
 	 * Reads the whole file data into the internal buffer.
-	 * 
-	 * @return {Gamalto.Promise} A promise if this file object is asynchronous or nothing if not.
+	 *
+	 * @return {Gamalto.Promise} A promise if this file object is
+	 *         asynchronous or nothing if not.
 	 */
 	proto.readAll = function() {
 		this.rewind();
@@ -272,21 +283,21 @@ THE SOFTWARE.
 	};
 
 	proto.shouldRead_ = function(size) {
-		var position = this.position_,
-			bufSize = this.bufSize_,
-			bufStart = this.bufPos_,
-			bufEnd = bufStart + bufSize,
-			reqEnd = position + size,
-			eos = reqEnd - this.length;	// Are we reading at eos?
+		var position = this.position_;
+		var bufSize = this.bufSize_;
+		var bufStart = this.bufPos_;
+		var bufEnd = bufStart + bufSize;
+		var reqEnd = position + size;
+		var eos = reqEnd - this.length;	// Are we reading at eos?
 
-			 // Do we have a buffer?
+		// Do we have a buffer?
 		return (!bufSize ||
-			 // Are we behind the buffer position?
-			 position < bufStart ||
-			 // Are we over the current buffer?
-			 position > bufEnd ||
-			 // Do we have enough buffer for the requested size?
-			 reqEnd - eos > bufEnd);
+			/* Are we behind the buffer position? */
+			position < bufStart ||
+			/* Are we over the current buffer? */
+			position > bufEnd ||
+			/* Do we have enough buffer for the requested size? */
+			reqEnd - eos > bufEnd);
 	};
 
 	proto.ensureCapacity_ = function(size) {

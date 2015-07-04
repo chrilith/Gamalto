@@ -1,7 +1,7 @@
 /*
  * Gamalto.ScrollingRegion
  * -----------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -37,7 +37,8 @@ THE SOFTWARE.
 	gamalto.devel.using("Vector2");
 
 	/**
-	 * Creates an object defining the movable region of a [scroller]{@link Gamalto.Scroller}.
+	 * Creates an object defining the movable region of a
+	 * [scroller]{@link Gamalto.Scroller}.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.ScrollingRegion
@@ -55,25 +56,25 @@ THE SOFTWARE.
 		 *
 		 * @internal
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.IBox}
 		 */
 		this.bounds_ = box;
 		/**
 		 * Gets or sets the loop state of the scrolling.
-		 * 
+		 *
 		 * @member {boolean}
 		 * @alias Gamalto.ScrollingRegion#loop
 		 */
-		this.loop = !!loop;
-	},
+		this.loop = loop;
+	};
 
 	/** @alias Gamalto.ScrollingRegion.prototype */
-	proto = _Object.inherits(G.Movable);
+	var proto = _Object.inherits(G.Movable);
 
 	/**
 	 * Current expected displacement of the region in pixels.
-	 * 
+	 *
 	 * @memberof Gamalto.ScrollingRegion.prototype
 	 * @member {Gamalto.Vector2} moving
 	 * @readonly
@@ -83,4 +84,5 @@ THE SOFTWARE.
 			return this.curr_;
 		}
 	});
+
 })();

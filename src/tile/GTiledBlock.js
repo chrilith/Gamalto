@@ -1,7 +1,7 @@
 /*
  * Gamalto.TiledBlock
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 	/**
 	 * Creates a new rectangular tile-based image.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TiledBlock
 	 * @augments Gamalto.TileGroup
@@ -56,32 +56,34 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.TileSet}
 		 */
 		this.set_ = ts;
-	},
+	};
 
 	/** @alias Gamalto.TiledBlock.prototype */
-	proto = _Object.inherits(G.TileGroup);
+	var proto = _Object.inherits(G.TileGroup);
 
 	/**
 	 * Renders the tile-based image.
-	 * 
+	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the image will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which
+	 *         the image will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position.
 	 * @param  {number} y
 	 *         Vertical drawing position.
 	 */
 	proto.draw = function(renderer, x, y) {
-		var tile, ts = this.set_,
-			tw = ts.size.width,
-			th = ts.size.height,
-			ox = x,
-			ow = x + tw * this.width,
-			pos = 0;
+		var tile;
+		var ts = this.set_;
+		var tw = ts.size.width;
+		var th = ts.size.height;
+		var ox = x;
+		var ow = x + tw * this.width;
+		var pos = 0;
 
 		while (pos < this.data.length) {
 			// Get the wanted tile

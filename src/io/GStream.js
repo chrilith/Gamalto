@@ -1,7 +1,7 @@
 /*
  * Gamalto.Stream
  * --------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -34,10 +34,10 @@ THE SOFTWARE.
 	var _Object = G.Stream = function() {
 		this.position_ = 0;
 		this.length = 0;
-	},
+	};
 
 	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	proto.eos = function() {
 		return this.position_ >= this.length;

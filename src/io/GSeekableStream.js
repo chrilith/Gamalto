@@ -1,7 +1,7 @@
 /*
  * Gamalto.SeekableStream
  * ----------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -42,10 +42,10 @@ THE SOFTWARE.
 	 */
 	var _Object = G.SeekableStream = function() {
 		Object.base(this);
-	},
+	};
 
 	/** @alias Gamalto.SeekableStream.prototype */
-	proto = _Object.inherits(G.Stream);
+	var proto = _Object.inherits(G.Stream);
 
 	/**
 	 * Changes the position of the stream pointer.
@@ -53,30 +53,30 @@ THE SOFTWARE.
 	 * @param  {number}  offset
 	 *     Offset to be applied to the stream pointer.
 	 * @param  {number} [origin]
-	 *         Origin of the position change. Defaults to [SEEK_CUR]{@link Gamalto.SeekableStream#SEEK_CUR}.	
-	 * 
+	 *         Origin of the position change.
+	 *         Defaults to [SEEK_CUR]{@link Gamalto.SeekableStream#SEEK_CUR}.
+	 *
 	 * @see [SEEK_SET]{@link Gamalto.SeekableStream#SEEK_SET}
 	 * @see [SEEK_CUR]{@link Gamalto.SeekableStream#SEEK_CUR}
 	 * @see [SEEK_END]{@link Gamalto.SeekableStream#SEEK_END}
 	 */
 	proto.seek = function(offset, origin) {
-		var C = this,
-			undef;
+		var undef;
 
 		if (origin === undef) {
-			origin = C.SEEK_CUR;
+			origin = this.SEEK_CUR;
 		}
 
 		switch (origin) {
-			case C.SEEK_SET:
+			case this.SEEK_SET:
 				this.position_ = offset;
 				break;
 
-			case C.SEEK_CUR:
+			case this.SEEK_CUR:
 				this.position_ += offset;
 				break;
 
-			case C.SEEK_END:
+			case this.SEEK_END:
 				this.position_ = this.length + offset;
 				break;
 		}
@@ -91,21 +91,21 @@ THE SOFTWARE.
 
 	/**
 	 * Position is from the start of the stream.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */
 	proto.SEEK_SET = 0;
 	/**
 	 * Position is from the current stream position.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */
 	proto.SEEK_CUR = 1;
 	/**
 	 * Position is from the end of the stream.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Animation
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -51,7 +51,7 @@ THE SOFTWARE.
 	var _Object = G.Animation = function(sheet) {
 		/**
 		 * Sprites sheet use by the animation.
-		 * 
+		 *
 		 * @type {Gamalto.SpriteSheet}
 		 * @readonly
 		 * @alias Gamalto.Animation#sheet
@@ -59,14 +59,14 @@ THE SOFTWARE.
 		this.sheet = sheet;
 
 		Object.base(this);
-	},
+	};
 
 	/** @alias Gamalto.Animation.prototype */
-	proto = _Object.inherits(G.BaseAnimation);
+	var proto = _Object.inherits(G.BaseAnimation);
 
 	/**
 	 * Sets a section indices range to be used for the animation.
-	 * 
+	 *
 	 * @param  {number} start
 	 *         Start index is the sections list.
 	 * @param  {number} length
@@ -83,10 +83,10 @@ THE SOFTWARE.
 
 	/**
 	 * Gets the sprites sheet section for the given frame.
-	 * 
+	 *
 	 * @param  {number} frame
 	 *         Frame index.
-	 * 
+	 *
 	 * @return {Gamalto.Rect} Rectangle defining the section.
 	 */
 	proto.getSection = function(frame) {
@@ -104,7 +104,7 @@ THE SOFTWARE.
 
 	/**
 	 * Creates a clone of the current object.
-	 * 
+	 *
 	 * @return {Gamalto.Animation} Copy of the object.
 	 */
 	proto.clone = function() {

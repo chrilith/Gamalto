@@ -1,7 +1,7 @@
 /*
  * Gamalto.Async
  * -------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,14 +31,18 @@ THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
 	gamalto.devel.require("Promise");
+
+	/* Aliases */
+	var _Promise = G.Promise;
 
 	/**
 	 * Simple object to asynchonously loop a function call.
 	 *
 	 * @constructor
 	 * @ignore
-	 * 
+	 *
 	 * @param  {function} func
 	 *         Function to loop.
 	 */
@@ -48,19 +52,19 @@ THE SOFTWARE.
 		 *
 		 * @ignore
 		 * @private
-		 * 
+		 *
 		 * @member {function}
 		 */
 		this.func_ = func;
-	},
-	_Promise = G.Promise,
-	proto = Loop.prototype;
+	};
+
+	var proto = Loop.inherits(G.Object);
 
 	/**
 	 * Asynchonously loop the function until the returned value is true.
 	 *
 	 * @ignore
-	 * 
+	 *
 	 * @param  {Gamalto.Promise} promise
 	 *         Promise to resolve when the value is true.
 	 * @param  {object} context
@@ -104,22 +108,22 @@ THE SOFTWARE.
 	/**
 	 * Asynchonously loop a function call.
 	 * Equivalent to a <code>do {...} until(...)</code> statement.
-	 * 
+	 *
 	 * @static
-	 * 
+	 *
 	 * @param  {function} func
 	 *         Function to loop.
-	 * 
+	 *
 	 * @return {Gamalto.Promise}
 	 *         Promise to handle loop completion.
-	 *         
+	 *
 	 * @example
 	 * var i = 1;
-	 * 
+	 *
 	 * Gamalto.Async.loop(function() { // do
 	 *     gamalto.devel.log("Async.loop()", i);
 	 *     return (i++ == 5); // until
-	 * 
+	 *
 	 * }).then(function() {
 	 *     gamalto.devel.log("Done!");
 	 * });
@@ -132,13 +136,14 @@ THE SOFTWARE.
 
 	/**
 	 * Utility method to handle function execution as soon as possible.
-	 * It is the counterpart of [loop()]{@link Gamalto.Async.loop} when no loop is required but a promise is.
-	 * 
+	 * It is the counterpart of [loop()]{@link Gamalto.Async.loop} when no loop
+	 * is required but a promise is.
+	 *
 	 * @static
-	 * 
+	 *
 	 * @return {Gamalto.Promise}
 	 *         Promise to handle function execution.
-	 * 
+	 *
 	 * @example
 	 * process([]).then(function() {
 	 *     gamalto.devel.log("Done!");
@@ -166,25 +171,25 @@ THE SOFTWARE.
 
 	/**
 	 * Wait until the specified time has elasped.
-	 * 
+	 *
 	 * @static
-	 * 
+	 *
 	 * @param  {number} msecs
 	 *         Time to wait in millseconds.
-	 * 
+	 *
 	 * @return {Gamalto.Promise}
 	 *         Promise to handle wait completion.
-	 * 
+	 *
 	 * @example
 	 * var i = 1;
-	 * 
+	 *
 	 * Gamalto.Async.loop(function() {
 	 *     gamalto.devel.log("Async.loop()", i);
 	 *     if (i++ == 5) {
 	 *          return this.delay(2000);
 	 *     }
 	 *     return (i > 10);
-	 * 
+	 *
 	 * }).then(function() {
 	 *     gamalto.devel.log("Done!");
 	 * });

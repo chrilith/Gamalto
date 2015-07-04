@@ -1,7 +1,7 @@
 /*
  * Gamalto.TiledAnimation
  * ----------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -37,7 +37,7 @@ THE SOFTWARE.
 
 	/**
 	 * Creates a new animation sequence using tile-based blocks.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TiledAnimation
 	 * @augments Gamalto.BaseAnimation
@@ -47,14 +47,14 @@ THE SOFTWARE.
 	 */
 	var _Object = G.TiledAnimation = function() {
 		Object.base(this);
-	},
+	};
 
 	/** @alias Gamalto.TiledAnimation.prototype */
-	proto = _Object.inherits(G.BaseAnimation);
+	var proto = _Object.inherits(G.BaseAnimation);
 
 	/**
 	 * Adds an new frame to the animation.
-	 * 
+	 *
 	 * @param {Gamalto.TiledBlock} block
 	 *        Tile-based block.
 	 */

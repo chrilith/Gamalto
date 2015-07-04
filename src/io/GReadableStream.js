@@ -1,7 +1,7 @@
 /*
  * Gamalto.ReadableStream
  * ----------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -46,10 +46,10 @@ THE SOFTWARE.
 
 		/**
 		 * The DataView or ArrayReader instance used to access stream data.
-		 * 
+		 *
 		 * @ignore
 		 * @protected
-		 * 
+		 *
 		 * @member {object}
 		 */
 		this.reader_ = null;
@@ -57,28 +57,28 @@ THE SOFTWARE.
 		/**
 		 * The data pointer unit. For instance 4 for Uint32.
 		 * Internally changed into a power of 2. Defaults to 0.
-		 * 
+		 *
 		 * @ignore
 		 * @protected
-		 * 
+		 *
 		 * @member {number}
 		 */
 		this.unit_ = 0;
-	},
+	};
 
 	/* Inheritance and shortcut */
 
 	/** @alias Gamalto.ReadableStream.prototype */
-	proto = _Object.inherits(G.SeekableStream);
+	var proto = _Object.inherits(G.SeekableStream);
 
 	/* Instance methods */
 
 	/**
 	 * Utility method to compute stream access position based on the stream unit.
-	 * 
+	 *
 	 * @ignore
 	 * @protected
-	 * 
+	 *
 	 * @param  {number} len
 	 *         The number of bytes to be accessed.
 	 * @param  {number} [from]
@@ -94,6 +94,7 @@ THE SOFTWARE.
 		if (from === undef) {
 			// Read from the current position...
 			from = this.position_;
+
 			// ...and increment pointer
 			this.position_ += len;
 		} else {
@@ -132,8 +133,10 @@ THE SOFTWARE.
 	};
 
 	proto.readString = function(length, stopChar) {
-		var c, s = "";
-		for (var i = 0; i < length & 0xffff; i++) {
+		var c, i;
+		var s = "";
+
+		for (i = 0; i < length & 0xffff; i++) {
 			if ((c = this.readUint8()) == (stopChar | 0)) { break; }
 			s += String.fromCharCode(c);
 		}

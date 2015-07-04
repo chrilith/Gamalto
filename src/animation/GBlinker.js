@@ -1,7 +1,7 @@
 /*
  * Gamalto.Blinker
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,11 +36,11 @@ THE SOFTWARE.
 
 	/**
 	 * Helper object to handle blinking stuff.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Blinker
 	 * @augments Gamalto.Object
-	 * 
+	 *
 	 * @param {number}   period
 	 *        Blinking period.
 	 */
@@ -51,7 +51,7 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {number}
 		 */
 		this.period_ = Number(period) || 0;
@@ -60,21 +60,22 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {number}
 		 */
 		this.blink_ = 0;
 	};
-	
+
 	/** @alias Gamalto.Blinker.prototype */
 	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Updates the blinking state.
-	 * 
+	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
-	 * 
+	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *         time will be read.
+	 *
 	 * @return {boolean} Visibility state.
 	 */
 	proto.update = function(timer) {

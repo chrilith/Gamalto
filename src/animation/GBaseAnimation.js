@@ -1,7 +1,7 @@
 /*
  * Gamalto.BaseAnimation
  * ---------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 (function() {
 
-
 	/* Dependencies */
 	gamalto.devel.require("Animator");
 	gamalto.devel.using("Vector2");
@@ -39,7 +38,8 @@ THE SOFTWARE.
 	gamalto.devel.needing("ITiming");
 
 	/**
-	 * Abstract object to create an animation sequence. It is not meant to be used directly.
+	 * Abstract object to create an animation sequence. It is not meant
+	 * to be used directly.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.BaseAnimation
@@ -50,36 +50,37 @@ THE SOFTWARE.
 	 */
 	var _Object = G.BaseAnimation = function() {
 		/**
-		 * Frames to be used for the animation. May be an spritesheet index or a tile-based block.
+		 * Frames to be used for the animation. May be an spritesheet index
+		 * or a tile-based block.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @type {array.<object>}
 		 */
 		this.list_ = [];
 
 		/**
 		 * Offsets to be used when drawing a sprite.
-		 * 
+		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @type {array.<Gamalto.IPoint>}
 		 */
 		this.offs_ = [];
 		/**
 		 * Frame durations.
-		 * 
+		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @type {array.<number>}
 		 */
 		this.time_ = [];
 		/**
 		 * Length of the animation in frames.
-		 * 
+		 *
 		 * @type {number}
 		 * @readonly
 		 * @alias Gamalto.BaseAnimation#length
@@ -87,7 +88,7 @@ THE SOFTWARE.
 		this.length = 0;
 		/**
 		 * Gets or sets the loop state of the animation.
-		 * 
+		 *
 		 * @member {boolean}
 		 * @alias Gamalto.BaseAnimation#loop
 		 */
@@ -95,9 +96,9 @@ THE SOFTWARE.
 
 		/**
 		 * Drawing transformation information.
-		 * 
+		 *
 		 * @readonly
-		 * 
+		 *
 		 * @member {Gamalto.Transform}
 		 * @alias Gamalto.BaseAnimation#transform
 		 */
@@ -105,21 +106,23 @@ THE SOFTWARE.
 
 		this.setOffset();
 		Object.base(this);
-	},
+	};
 
 	/** @alias Gamalto.BaseAnimation.prototype */
-	proto = _Object.inherits(G.Animator);
+	var proto = _Object.inherits(G.Animator);
 
 	/**
-	 * Sets the global duration of the animation, for the current animation content only.
-	 * This will reset durations set with [setFrameDuration()]{@link Gamalto.Animation#setFrameDuration}
-	 * 
+	 * Sets the global duration of the animation, for the current
+	 * animation content only.
+	 * This will reset durations set with
+	 * [setFrameDuration()]{@link Gamalto.Animation#setFrameDuration}
+	 *
 	 * @param {number} time
 	 *        Duration in milliseconds.
 	 */
 	proto.setDuration = function(time) {
-		var len = this.length,
-			slice = time / len;
+		var len = this.length;
+		var slice = time / len;
 		while (len--) {
 			this.time_[len] = slice;
 		}
@@ -127,11 +130,11 @@ THE SOFTWARE.
 
 	/**
 	 * Sets the local duration of a frame.
-	 * 
+	 *
 	 * @param {number} frame
 	 *        Frame index.
 	 * @param {number} time
-	 *        
+	 *
 	 */
 	proto.setFrameDuration = function(frame, time) {
 		gamalto.devel.assert(frame < this.list_.length);
@@ -139,8 +142,9 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Sets the global offset of the animation, for the current animation content only.
-	 * 
+	 * Sets the global offset of the animation, for the current animation
+	 * content only.
+	 *
 	 * @param {number} x
 	 *        Horizontal offset.
 	 * @param {number} y
@@ -151,8 +155,9 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Sets the local drawing offset of a frame. It will be added to the global offset.
-	 * 
+	 * Sets the local drawing offset of a frame. It will be added to
+	 * the global offset.
+	 *
 	 * @param {number} frame
 	 *        Frame index.
 	 * @param {number} x
@@ -167,7 +172,7 @@ THE SOFTWARE.
 
 	/**
 	 * Duplicates a frame including all its properties.
-	 * 
+	 *
 	 * @param  {number} index
 	 *         Frame index.
 	 * @param  {number} dest
@@ -187,8 +192,9 @@ THE SOFTWARE.
 	 * Updates the animation state.
 	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased time will be read.
-	 * 
+	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *         time will be read.
+	 *
 	 * @return {boolean} Playing state.
 	 */
 	proto.update = function(timer) {
@@ -200,26 +206,28 @@ THE SOFTWARE.
 	 * Draws the current animation frame.
 	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the animation frame will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which the animation
+	 *         frame will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position.
 	 * @param  {number} y
 	 *         Vertical drawing position.
 	 * @param  {number} [frame]
-	 *         Index of the frame to draw. Usually, the frame index is internally calculated.
-	 * 
+	 *         Index of the frame to draw. Usually, the frame index is internally
+	 *         calculated.
+	 *
 	 * @return {number} Drawn frame index.
 	 */
 	proto.draw = function(renderer, x, y, frame) {
 		frame = gamalto.defined(frame, this.progress, 0) | 0;
 
-		var offs = this.offs_[frame],
-			tran = this.offset_,
-			trns = this.transform,
-			dest = renderer.transform;
+		var offs = this.offs_[frame];
+		var tran = this.offset_;
+		var trns = this.transform;
+		var dest = renderer.transform;
 
-		x += tran.x + offs.x * (trns.flipX ? -1 : +1);
-		y += tran.y + offs.y * (trns.flipY ? -1 : +1);
+		x += tran.x + offs.x * (trns.flipX ? -1 : 1);
+		y += tran.y + offs.y * (trns.flipY ? -1 : 1);
 
 		dest.save();
 		dest.copy(trns);
@@ -234,26 +242,28 @@ THE SOFTWARE.
 	 *
 	 * @function
 	 * @name Gamalto.BaseAnimation#draw_
-	 * 
+	 *
 	 * @protected
 	 * @abstract
 	 * @ignore
 	 *
 	 * @param  {Gamalto.BaseRenderer} renderer
-	 *         Renderer of the {@linkcode Gamalto.surface} to which the animation frame will be rendered.
+	 *         Renderer of the {@linkcode Gamalto.surface} to which
+	 *         the animation frame will be rendered.
 	 * @param  {number} x
 	 *         Horizontal drawing position.
 	 * @param  {number} y
 	 *         Vertical drawing position.
 	 * @param  {number} [frame]
-	 *         Index of the frame to draw. Usually, the frame index is internally calculated.
+	 *         Index of the frame to draw. Usually, the frame index
+	 *         is internally calculated.
 	 */
 
 	/**
 	 * Creates a clone of the current object.
 	 *
 	 * @virtual
-	 * 
+	 *
 	 * @return {object} Copy of the object.
 	 */
 	proto.clone = function() {

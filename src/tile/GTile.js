@@ -1,7 +1,7 @@
 /*
  * Gamalto.Tile
  * ------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,7 +30,7 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/* Dependencies */
 	gamalto.devel.using("Rect");
 
@@ -46,14 +46,14 @@ THE SOFTWARE.
 
 		/**
 		 * Index of the tile if its belong to a tileset.
-		 * 
+		 *
 		 * @member {number}
 		 * @alias Gamalto.Tile#index
 		 */
 		this.index = 0;
-	},
+	};
 
 	/** @alias Gamalto.Tile.prototype */
-	proto = _Object.inherits(G.Rect);
+	var proto = _Object.inherits(G.Rect);
 
 })();

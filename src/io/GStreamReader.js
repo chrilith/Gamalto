@@ -1,7 +1,7 @@
 /*
  * Gamalto.StreamReader
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -43,29 +43,35 @@ THE SOFTWARE.
 		data = data || "";
 
 		this.setUnit(unit);
+
 		// Default value, may be changed making a view stream using ptr()
 		this.startAt_ = 0;
 
-		var reader, type = (typeof data);
+		var reader;
+		var type = (typeof data);
+
 		// Initializing with a string?
 		if (type == 'string') {
 			reader = new G.TextReader(data);
 
-		// or an object?
+		// ...or an object?
 		} else if (type == 'object') {
 			// Typed array or classic array?
+			/*jshint -W056 */
 			reader = new ((data.byteLength) ? DataView : G.ArrayReader)(data);
 		}
 
 		this.reader_ = reader;
-		// compute the stream length
+
+		// Compute the stream length
 		this.length = data.length || data.byteLength | 0;
+
 		// Direct access to the buffer
 		this.buffer = data;
-	},
+	};
 
 	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.ReadableStream);
+	var proto = _Object.inherits(G.ReadableStream);
 
 	proto.at_ = function(len, from) {
 		return _Object.base.at_.call(this, len, from) + this.startAt_;
@@ -74,27 +80,27 @@ THE SOFTWARE.
 	/**
 	 * Gets the position of the stream pointer at the given offset.
 	 * If no offset is specified, this method will act as the #tell() method.
-	 * 
+	 *
 	 * @param  {Number} [offset]
 	 *         The offset to be applied.
-	 * 
+	 *
 	 * @return {Number} The position at the given offset.
 	 */
 	proto.addr = function(offset) {
-		return this.tell() + (+offset | 0);
+		return this.tell() + (Number(offset) | 0);
 	};
 
 	/**
 	 * Sets the data pointer unit. The access position will be based on this value.
-	 * 
+	 *
 	 * @param  {Number} unit
 	 *          The new data pointer unit.
-	 * 
+	 *
 	 * @return {number} The previous data pointer unit.
 	 */
 	proto.setUnit = function(unit) {
 		var old = this.unit_;
-		this.unit_ = (+unit | 0 || 1) >> 1;
+		this.unit_ = (Number(unit) | 0 || 1) >> 1;
 		return 1 << old;
 	};
 
@@ -113,7 +119,7 @@ THE SOFTWARE.
 			offset += this.tell();
 		}
 
-		// new pointer position
+		// New pointer position
 		clone.startAt_ = (offset << this.unit_) + this.startAt_;
 		clone.length = this.length - clone.startAt_ + this.startAt_;
 

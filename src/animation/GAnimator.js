@@ -1,7 +1,7 @@
 /*
  * Gamalto.Animator
  * ----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,7 +32,8 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * Base object to create time-based multiframe animation objects. It's not meant to be used directly.
+	 * Base object to create time-based multiframe animation objects.
+	 * It's not meant to be used directly.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Animator
@@ -41,10 +42,10 @@ THE SOFTWARE.
 	var _Object = G.Animator = function() {
 		Object.base(this);
 		this.reset();
-	},
+	};
 
 	/** @alias Gamalto.Animator.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
 
@@ -54,7 +55,7 @@ THE SOFTWARE.
 	proto.reset = function() {
 		/**
 		 * Position in the duration array.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.Animator#progress
@@ -62,7 +63,7 @@ THE SOFTWARE.
 		this.progress = 0;
 		/**
 		 * Whether the animation is playing.
-		 * 
+		 *
 		 * @member {boolean}
 		 * @readonly
 		 * @alias Gamalto.Animator#playing
@@ -70,9 +71,9 @@ THE SOFTWARE.
 		this.playing = false;
 		/**
 		 * The fractional time of the last iteration.
-		 * 
+		 *
 		 * @private
-		 * 
+		 *
 		 * @member {number}
 		 */
 		this.lastTime_ = 0;
@@ -85,7 +86,8 @@ THE SOFTWARE.
 	 * @ignore
 	 *
 	 * @param  {Gamalto.ITiming} timer
-	 *         [Timer]{@linkcode Gamalto.ITiming} object from which the elpased time will be read.
+	 *         [Timer]{@linkcode Gamalto.ITiming} object from which
+	 *         the elpased time will be read.
 	 * @param  {boolean} loop
 	 *         Whether to loop the animation.
 	 * @param  {array.<number>} duration
@@ -94,11 +96,12 @@ THE SOFTWARE.
 	 * @return {boolean} The playing state.
 	 */
 	proto.update_ = function(timer, loop, duration) {
-		var // Where do we start
-			index = this.progress | 0,
-			length = duration.length,
-			// Elapsted time to consider
-			time = (this.lastTime_ += timer.elapsedTime);
+		// Where do we start
+		var index = this.progress | 0;
+		var length = duration.length;
+
+		// Elapsted time to consider
+		var time = (this.lastTime_ += timer.elapsedTime);
 
 		// Nothing to animate
 		if (length <= 1 && !duration[0]) {
@@ -107,7 +110,7 @@ THE SOFTWARE.
 
 		// Handle playing state
 		if (!this.playing) {
-			// animation seems to have ended
+			// Animation seems to have ended
 			if (this.progress == length) {
 				return false;
 			}
@@ -122,6 +125,7 @@ THE SOFTWARE.
 			if (time < iter) {
 				break;
 			}
+
 			// No, remove the curent duration and move to the next one
 			this.lastTime_ = (time -= iter);
 
@@ -129,7 +133,7 @@ THE SOFTWARE.
 			if (++index === length && loop) {
 				index = 0;
 			}
-		};
+		}
 
 		// Save progression and check for ended animation
 		if ((this.progress = index) >= length && !loop) {
@@ -143,7 +147,7 @@ THE SOFTWARE.
 
 	/**
 	 * Creates a clone of the current object.
-	 * 
+	 *
 	 * @return {Gamalto.Animator} Deep copy of the object.
 	 */
 	proto.clone = function() {

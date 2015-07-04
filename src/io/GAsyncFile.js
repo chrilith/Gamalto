@@ -1,7 +1,7 @@
 /*
  * Gamalto.AsyncFile
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -41,7 +41,7 @@ THE SOFTWARE.
 	 */
 	var _Object = G.AsyncFile = function() {
 		Object.base(this);
-	}
+	};
 
 	/* Inheritance and shortcut */
 	var proto = _Object.inherits(G.File);
@@ -83,7 +83,7 @@ THE SOFTWARE.
 	proto.ensureCapacity_ = function(size) {
 		// Read new buffer...
 		return (this.shouldRead_(size))
-			? this.range_(size) 
+			? this.range_(size)
 			: G.Async.immediate();
 	};
 
@@ -100,10 +100,10 @@ THE SOFTWARE.
 	};
 
 	proto.readString = function(length, stopChar) {
-		var c,
-			i = 0,
-			s = "",
-			that = this;
+		var c;
+		var i = 0;
+		var s = "";
+		var that = this;
 
 		return this.ensureCapacity_(length).then(function() {
 			for (i = 0; i < length & 0xffff; i++) {
@@ -123,5 +123,5 @@ THE SOFTWARE.
 			}
 		});
 	};
-	
+
 })();

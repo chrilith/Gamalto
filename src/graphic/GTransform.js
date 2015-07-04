@@ -1,7 +1,7 @@
 /*
  * Gamalto.Transform
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -40,10 +40,10 @@ THE SOFTWARE.
 	 */
 	var _Object = G.Transform = function() {
 		this.reset();
-	},
-	
+	};
+
 	/** @alias Gamalto.Transform.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	proto.copy = function(transform) {
 		this.flipX = transform.flipX;

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Promise
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,15 +32,16 @@ THE SOFTWARE.
 (function() {
 
 	// TODO: comply to Promise/A+ / ES6
-	
-	var STATE_PENDING	= 0,
-		STATE_PROGRESS	= 1,
-		STATE_RESOLVED	= 2,
-		STATE_REJECTED	= 3,
-		STATE_CANCELED	= 4;
+
+	var STATE_PENDING	= 0;
+	var STATE_PROGRESS	= 1;
+	var STATE_RESOLVED	= 2;
+	var STATE_REJECTED	= 3;
+	var STATE_CANCELED	= 4;
 
 	/**
-	 * Creates a new promise object to handle the completion of asynchronous actions.
+	 * Creates a new promise object to handle the completion of
+	 * asynchronous actions.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Promise
@@ -51,11 +52,11 @@ THE SOFTWARE.
 		this.reject_ = [];
 		this.progress_ = [];
 		this.state_ = STATE_PENDING;
-	},
-	
+	};
+
 	/** @alias Gamalto.Promise.prototype */
-	proto = _Object.inherits(G.Object);
-	
+	var proto = _Object.inherits(G.Object);
+
 	/**
 	 * Resolves the promise and call the completion callbacks if any.
 	 *
@@ -65,12 +66,13 @@ THE SOFTWARE.
 	proto.resolve = function(value) {
 		this.complete_(STATE_RESOLVED, value);
 	};
-	
+
 	/**
 	 * Rejects the promise and call the completion callbacks if any.
 	 *
 	 * @param  {string} reason
-	 *         Reason of the rejection. Usually the raised exception message which has lead to the rejection.
+	 *         Reason of the rejection. Usually the raised exception message
+	 *         which has lead to the rejection.
 	 */
 	proto.reject = function(reason) {
 		this.complete_(STATE_REJECTED, reason);
@@ -87,7 +89,9 @@ THE SOFTWARE.
 
 	/**
 	 * Cancels the promise and calls the reject completion callbacks if any.
-	 * The method has the same behavior of the {@linkcode Gamalto.Promise#reject} method. The reason is implicit and will be an exception with the message: *Canceled*.
+	 * The method has the same behavior of the
+	 * {@linkcode Gamalto.Promise#reject} method. The reason is implicit
+	 * and will be an exception with the message: *Canceled*.
 	 */
 	proto.cancel = function() {
 		this.complete_(STATE_CANCELED, new Error("Canceled"));
@@ -127,7 +131,7 @@ THE SOFTWARE.
 		var that = this;
 		return function(value) {
 			return that.resolver_(value, resolver);
-		}
+		};
 	};
 
 	proto.resolver_ = function(value, resolver) {
@@ -137,12 +141,14 @@ THE SOFTWARE.
 			gamalto.devel.warn("Promise rejected", e);
 			this.reject(e);
 		}
-		return value;		
+		return value;
 	};
 
 	/**
 	 * Defines the callbacks to be used upon action completion or error.
-	 * The sucess callback can return a new promise, this is why a promise is always returned by `then()`. This allows actions pipelining and eases code readability.
+	 * The sucess callback can return a new promise, this is why a promise
+	 * is always returned by `then()`. This allows actions pipelining and
+	 * eases code readability.
 	 *
 	 * @param  {CompletionFunc} [resolve]
 	 *         Callback to be called upon action success.
@@ -151,10 +157,12 @@ THE SOFTWARE.
 	 * @param  {CompletionFunc} [progress]
 	 *         Callback to be called to handle action progression notification.
 	 *
-	 * @return {Gamalto.Promise} New promise to handle the completion of another action.
+	 * @return {Gamalto.Promise} New promise to handle the completion
+	 * of another action.
 	 */
 	proto.then = function(resolve, reject, progress) {
-		var undef, promise = new G.Promise();
+		var undef;
+		var promise = new G.Promise();
 
 		// Set the "resolve" callback
 		this.resolve_.push(function(value) {
@@ -168,7 +176,7 @@ THE SOFTWARE.
 			// If the value is not a promise, call the callback immediately
 			if (!(value && value.is(G.Promise))) {
 				complete(value);
-			
+
 			// Else, wait for the new promise completion
 			} else {
 				value.then(
@@ -178,7 +186,7 @@ THE SOFTWARE.
 					function(e) {
 						promise.reject(e);
 					}
-				)
+				);
 			}
 		});
 
@@ -201,7 +209,7 @@ THE SOFTWARE.
 		// Return the new promise for pipelining
 		return promise;
 	};
-	
+
 	/**
 	 * Waits for all the promises.
 	 *
@@ -211,39 +219,43 @@ THE SOFTWARE.
 	 *
 	 * @param  {...Gamalto.Promise} vargs
 	 *         A list of promises to wait for.
-	 * 
+	 *
 	 * @return {Gamalto.Promise} A new promise to handle completions.
 	 */
-	_Object.all = function(/* vargs */) {
+	_Object.all = function(/*: vargs */) {
 		// Get all promises to be completed
-		var all = Array.prototype.slice.call(arguments, 0),
-			count = 0,
-			results = [],
-			promise = new G.Promise();
+		var all = Array.prototype.slice.call(arguments, 0);
+		var count = 0;
+		var results = [];
+		var promise = new G.Promise();
 
 		// For each promise
 		all.forEach(function(value, i) {
 			// Add completions callbacks for the current promise...
 			all[i].then(
+
 				// ...for success
 				function(value) {
-					// save the result
+
+					// Save the result
 					results[i] = value;
-					// set progression
+
+					// Set progression
 					promise.progress(count++ / all.length);
-					
+
 					// Completion
 					if (count == all.length) {
 						promise.resolve(results);
 					}
 				},
+
 				// ...for errors
 				function(error) {
 					promise.reject(error);
 				}
 			);
 		});
-		
+
 		return promise;
 	};
 

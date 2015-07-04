@@ -1,7 +1,7 @@
 /*
  * Gamalto.TileGroup
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 	/**
 	 * Base object to create a tile-based image.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.TileGroup
 	 * @augments Gamalto.Object
@@ -41,14 +41,14 @@ THE SOFTWARE.
 	 */
 	var _Object = G.TileGroup = function() {
 		Object.base(this);
-	},
-	
+	};
+
 	/** @alias Gamalto.TileGroup.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Sets the data needed to render the tile-based image.
-	 * 
+	 *
 	 * @param {array.<number>} data
 	 *        List of tile indices representing the image.
 	 * @param {number} width
@@ -59,7 +59,7 @@ THE SOFTWARE.
 	proto.setData = function(data, width, height) {
 		/**
 		 * List of tile indices representing the image.
-		 * 
+		 *
 		 * @member {array.<number>}
 		 * @readonly
 		 * @alias Gamalto.TileGroup#data
@@ -67,7 +67,7 @@ THE SOFTWARE.
 		this.data = data;
 		/**
 		 * Horizontal size of the image in tiles.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.TileGroup#width
@@ -75,7 +75,7 @@ THE SOFTWARE.
 		this.width = width;
 		/**
 		 * Vertical size of the image in tiles.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.TileGroup#height

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Broadcaster
  * -------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 	/**
 	 * Creates messages manager object.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Broadcaster
 	 * @augments Gamalto.Object
@@ -47,7 +47,7 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {object.<string, array.<Gamalto.Subscription>>}
 		 */
 		this.observers_ = {};
@@ -58,19 +58,20 @@ THE SOFTWARE.
 
 	/**
 	 * Subscribes to an event.
-	 * 
+	 *
 	 * @param  {string}   event
 	 *         Name of the event.
 	 * @param  {function} callback
 	 *         Function to be used when an event occurs.
 	 * @param  {object}   target
 	 *         Execution context when calling the callback.
-	 * 
+	 *
 	 * @return {Gamalto.Subscription} Context to handle the subscription.
 	 */
 	proto.subscribe = function(event, callback, target) {
 		// Gets a reference to the observers list for this event
 		var obs = (this.observers_[event] = this.observers_[event] || []);
+
 		// Creates a new unsubscriber object
 		var sub = new G.Subscription(obs, callback, target);
 
@@ -82,7 +83,7 @@ THE SOFTWARE.
 
 	/**
 	 * Sends an event and related data to the subscribers if any.
-	 * 
+	 *
 	 * @param  {string} event
 	 *         Name of the event.
 	 * @param  {...object} [vargs]
@@ -92,7 +93,8 @@ THE SOFTWARE.
 		var observers = this.observers_;
 
 		if (observers && (observers = observers[event])) {
-			var n, vargs = Array.prototype.slice.call(arguments, 1);
+			var n;
+			var vargs = Array.prototype.slice.call(arguments, 1);
 
 			for (n = 0; n < observers.length; n++) {
 				observers[n].notify_(vargs);

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Subscription
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,18 +32,19 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * Creates a context to manage [broadcaster]{@link Gamalto.Broadcaster} subscriptions state. It is not meant to be use directly.
+	 * Creates a context to manage [broadcaster]{@link Gamalto.Broadcaster}
+	 * subscriptions state. It is not meant to be use directly.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Subscription
 	 * @augments Gamalto.Object
-	 * 
+	 *
 	 * @param {array.<Gamalto.Subscription>} observers
 	 *        List of observers for the same event.
-	 * 
+	 *
 	 * @param {function} callback
 	 *        Function to be called when an event occurs.
-	 * 
+	 *
 	 * @param {object}   [target]
 	 *        Execution context when calling the callback.
 	 */
@@ -53,27 +54,27 @@ THE SOFTWARE.
 		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {array.<Gamalto.Subscription>}
 		 */
 		this.list_ = observers;
 
 		/**
 		 * Function to be called when an event occurs.
-		 * 
+		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {function}
 		 */
 		this.callback_ = callback;
 
 		/**
 		 * Execution context when calling the callback.
-		 * 
+		 *
 		 * @protected
 		 * @ignore
-		 * 
+		 *
 		 * @member {object}
 		 */
 		this.target_ = target;
@@ -87,7 +88,7 @@ THE SOFTWARE.
 	 *
 	 * @internal
 	 * @ignore
-	 * 
+	 *
 	 * @param  {array.<object>} args
 	 *         List of event related parameters.
 	 */
