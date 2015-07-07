@@ -1,7 +1,7 @@
 /*
  * Gamalto.Bitmap
  * --------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,7 +30,7 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/**
 	 * Creates a framework compatible bitmap.
 	 *
@@ -43,17 +43,17 @@ THE SOFTWARE.
 	 */
 	var _Object = G.Bitmap = function(source) {
 		this.source_ = source;
-	},
-	
+	};
+
 	/** @alias Gamalto.Bitmap.prototype */
-	proto = G.Bitmap.inherits(G.Object);
+	var proto = G.Bitmap.inherits(G.Object);
 
 	/**
 	 * Creates an image object that can be used as bitmap source.
-	 * 
+	 *
 	 * @internal
 	 * @ignore
-	 * 
+	 *
 	 * @return {HTMLImageElement}
 	 */
 	proto.createSource_ = function() {
@@ -65,7 +65,7 @@ THE SOFTWARE.
 	 *
 	 * @internal
 	 * @ignore
-	 * 
+	 *
 	 * @return {HTMLImageElement}
 	 */
 	proto.getCanvas_ = function() {
@@ -75,7 +75,7 @@ THE SOFTWARE.
 	Object.defineProperties(proto, {
 		/**
 		 * Width of the bitmap in pixels.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.Bitmap#width
@@ -88,7 +88,7 @@ THE SOFTWARE.
 		},
 		/**
 		 * Height of the bitmap in pixels.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.Bitmap#height

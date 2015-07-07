@@ -1,7 +1,7 @@
 /*
  * Gamalto.Screen
  * --------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -61,14 +61,14 @@ THE SOFTWARE.
 		 *
 		 * @private
 		 * @ignore
-		 * 
+		 *
 		 * @member {Gamalto.Surface}
 		 */
 		this.screen_ = new G.Surface(width, height, canvas);
-	},
+	};
 
 	/** @alias Gamalto.Screen.prototype */
-	proto = _Object.inherits(G.Surface);
+	var proto = _Object.inherits(G.Surface);
 
 
 	/**
@@ -76,7 +76,7 @@ THE SOFTWARE.
 	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @return {HTMLCanvasElement} Screen canvas element.
 	 */
 	proto.getElement_ = function() {
@@ -86,7 +86,7 @@ THE SOFTWARE.
 	/**
 	 * Gets the displayed screen surface for direct access.
 	 * Accessing the surface may lead to unexpected rendering artifacts.
-	 * 
+	 *
 	 * @return {Gamalto.Surface} Screen surface.
 	 */
 	proto.getSurface = function() {
@@ -95,7 +95,7 @@ THE SOFTWARE.
 
 	/**
 	 * Sets the mouse cursor visibility.
-	 * 
+	 *
 	 * @param {boolean} isOn
 	 *        Whether to show the mouse cursor.
 	 */
@@ -105,7 +105,7 @@ THE SOFTWARE.
 
 	/**
 	 * Sets the filtering state.
-	 * 
+	 *
 	 * @param {boolean} isOn
 	 *        Whether to smooth the screen when stretched.
 	 */
@@ -115,12 +115,12 @@ THE SOFTWARE.
 		// No way for IE:(
 		if (!isOn &&
 			(style.setMember("imageRendering", "pixelated") ||
-			 style.setMember("imageRendering", "crisp-edges") ||
-			 style.setMember("imageRendering", "optimize-contrast") )) {
-	
+			style.setMember("imageRendering", "crisp-edges") ||
+			style.setMember("imageRendering", "optimize-contrast") )) {
+
 		// Off? reset property to its initial state
 		} else if (isOn) {
-			 style.setMember("imageRendering", null);
+			style.setMember("imageRendering", null);
 		}
 	};
 
@@ -128,16 +128,17 @@ THE SOFTWARE.
 	 * Clears the screen to black.
 	 */
 	proto.clear = function() {
-		var renderer = this.renderer,
-			old = renderer.setTransform(false);
+		var renderer = this.renderer;
+		var old = renderer.setTransform(false);
+
 		renderer.fillRect(new G.Box(0, 0, this.width, this.height), G.Color.BLACK);
 		renderer.setTransform(old);
 	};
-	
+
 	/**
 	 * Sets the scalines effect state.
 	 * If no parameter is specified, scalines are disabled.
-	 * 
+	 *
 	 * @param {number} dark
 	 *        The dark lines level between 0 and 1.
 	 * @param {number} light
@@ -148,14 +149,14 @@ THE SOFTWARE.
 			this.scanlines_ = null;
 
 		} else {
-			var s = new G.Surface(1, 2),
-				r = s.renderer;
+			var s = new G.Surface(1, 2);
+			var r = s.renderer;
 
 			// Create the scanlines effect
 			r.fillRect(new G.Box(0, 0, 1, 1),
-					   new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
+						new G.Color(0, 0, 0, 255 * (dark || 0) / 100));
 			r.fillRect(new G.Box(0, 1, 1, 1),
-					   new G.Color(255, 255, 255, 255 * (light || 0) / 100));			
+						new G.Color(255, 255, 255, 255 * (light || 0) / 100));
 
 			this.scanlines_ = new G.Pattern(s);
 		}
@@ -173,14 +174,14 @@ THE SOFTWARE.
 
 	/**
 	 * Adjust the logical screen size.
-	 * 
+	 *
 	 * @param {number} mode
 	 *        Bitmask indicating the transformation to apply.
 	 */
 	proto.setStretch = function(mode) {
-		var canvas = this.getElement_(),
-			style = canvas.style,
-			parent = canvas.parentNode;
+		var canvas = this.getElement_();
+		var style = canvas.style;
+		var parent = canvas.parentNode;
 
 		// Reset styles to default (parent should be set to overflow=hidden)
 		style.marginTop =
@@ -192,11 +193,11 @@ THE SOFTWARE.
 		mode = (this.stretch_ = Number(mode || this.stretch_) | 0);
 		if (mode === this.STRETCH_DEFAULT) { return; }
 
-		var rw, rh,
-			w1 = parent.offsetWidth;
-			h1 = parent.offsetHeight,
-			w2 = canvas.width,
-			h2 = canvas.height;
+		var rw, rh;
+		var w1 = parent.offsetWidth;
+		var h1 = parent.offsetHeight;
+		var w2 = canvas.width;
+		var h2 = canvas.height;
 
 		if (mode & this.STRETCH_UNIFORM) {
 			if (w1 / h1 < w2 / h2) {
@@ -206,6 +207,7 @@ THE SOFTWARE.
 				rh = h1;
 				rw = rh * (w2 / h2);
 			}
+
 		// Any other non-default mode?
 		} else if (mode) {
 			rw = w1;
@@ -223,28 +225,29 @@ THE SOFTWARE.
 				style.marginLeft = ((w1 - rw) >> 1) + "px";
 			}
 		}
+
 		// Finally sets the canvas element size
 		style.width  = rw + "px";
 		style.height = rh + "px";
 	};
-	
+
 	/**
 	 * No specific streching.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */
 	proto.STRETCH_DEFAULT	= 0;
 	/**
 	 * Bit to keep aspect ratio.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */
 	proto.STRETCH_UNIFORM	= 1 << 1;
 	/**
 	 * Bit to fill the parent.
-	 * 
+	 *
 	 * @constant
 	 * @type {number}
 	 */
@@ -254,7 +257,7 @@ THE SOFTWARE.
 	 * Active screen.
 	 *
 	 * @ignore
-	 * 
+	 *
 	 * @type {Gamalto.Screen}
 	 */
 	var active;
@@ -265,7 +268,7 @@ THE SOFTWARE.
 	 * @function setActive
 	 * @memberof Gamalto.Screen
 	 * @static
- 	 * 
+ 	 *
 	 * @param {Gamalto.Screen} screen
 	 *        Screen to be shown.
 	 */
@@ -275,6 +278,7 @@ THE SOFTWARE.
 			container.removeChild(active.getElement_());
 		}
 		container.appendChild(screen.getElement_());
+
 		// Adjust the screen size
 		screen.setStretch();
 	};

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Surface
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -50,22 +50,23 @@ THE SOFTWARE.
 	 *        Physical vertical size of the surface.
 	 * @param {Gamalto.BaseCanvas} [canvas]
 	 *        Type of the internal canvas.
-	 * 
+	 *
 	 * @example
 	 * var surface = new Gamalto.Surface(320, 240);
 	 */
 	var _Object = G.Surface = function(width, height, canvas) {
 		/**
 		 * Drawing canvas.
-		 * 
+		 *
 		 * @member {Gamalto.BaseCanvas}
 		 * @readonly
 		 * @alias Gamalto.Surface#canvas
 		 */
-		var canvas = this.canvas = new (canvas || G.Canvas2D)(width, height);
+		/*jshint -W056 */
+		canvas = this.canvas = new (canvas || G.Canvas2D)(width, height);
 		/**
 		 * Internal canvas.
-		 * 
+		 *
 		 * @member {Gamalto.BaseRenderer}
 		 * @readonly
 		 * @alias Gamalto.Surface#renderer
@@ -73,7 +74,7 @@ THE SOFTWARE.
 		this.renderer = canvas.createRenderer();
 		/**
 		 * Horizontal size of the surface.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.Surface#width
@@ -81,7 +82,7 @@ THE SOFTWARE.
 		this.width = canvas.width;
 		/**
 		 * Vertical size of the surface.
-		 * 
+		 *
 		 * @member {number}
 		 * @readonly
 		 * @alias Gamalto.Surface#height
@@ -89,14 +90,14 @@ THE SOFTWARE.
 		this.height	= canvas.height;
 
 		this.disableClipping();
-	},
+	};
 
 	/** @alias Gamalto.Surface.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Activates the renderering clipping.
-	 * 
+	 *
 	 * @param  {Gamalto.Box} rect
 	 *         Rectangle representing the clipping area.
 	 */
@@ -118,7 +119,7 @@ THE SOFTWARE.
 
 	/**
 	 * Copies a surface content at the given position.
-	 * 
+	 *
 	 * @param  {Gamalto.Surface} surface
 	 *         Surface to copy.
 	 * @param  {number} x
@@ -127,15 +128,15 @@ THE SOFTWARE.
 	 *         Vertical origin of the copy.
 	 */
 	proto.blit = function(surface, x, y) {
-		var renderer = this.renderer,
-			old = renderer.setTransform(false);
+		var renderer = this.renderer;
+		var old = renderer.setTransform(false);
 		renderer.drawBitmap(surface, x, y);
 		renderer.setTransform(old);
 	};
 
 	/**
 	 * Redraws parts of the given surface into the current surface.
-	 * 
+	 *
 	 * @param  {Gamalto.Surface} surface
 	 *         Surface to copy.
 	 * @param  {number} x
@@ -147,8 +148,9 @@ THE SOFTWARE.
 	 */
 	proto.redraw = function(surface, x, y, regions) {
 		if (regions) {
-			var renderer = this.renderer,
-				old = renderer.setTransform(false);
+			var renderer = this.renderer;
+			var old = renderer.setTransform(false);
+
 			regions.forEach(function(r) {
 				renderer.drawBitmapSection(surface, r.origin.x + x, r.origin.y + y, r);
 			});
@@ -160,15 +162,16 @@ THE SOFTWARE.
 	 * Clears the surface content.
 	 */
 	proto.clear = function() {
-		var renderer = this.renderer,
-			old = renderer.setTransform(false);
+		var renderer = this.renderer;
+		var old = renderer.setTransform(false);
+
 		renderer.clearRect(new G.Box(0, 0, this.width, this.height));
 		renderer.setTransform(old);
 	};
 
 	/**
 	 * Gets a buffer for direct drawing.
-	 * 
+	 *
 	 * @return {object} A buffer or null if the surface is already locked.
 	 */
 	proto.lock = function() {
@@ -190,7 +193,7 @@ THE SOFTWARE.
 	 *
 	 * @internal
 	 * @ignore
-	 * 
+	 *
 	 * @return {object} HTMLCanvasElement or HTMLImageElement.
 	 */
 	proto.getCanvas_ = function() {

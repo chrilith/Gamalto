@@ -1,7 +1,7 @@
 /*
  * Gamalto.BitmapLibrary
  * ---------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -45,10 +45,10 @@ THE SOFTWARE.
 	var _Object = G.BitmapLibrary = function() {
 		Object.base(this);
 	};
-	
+
 	/** @alias Gamalto.BitmapLibrary.prototype */
 	var proto = _Object.inherits(G.BaseLibrary);
-	
+
 	/**
 	 * Tries to load a new resource in the library.
 	 *
@@ -58,20 +58,21 @@ THE SOFTWARE.
 	 *         Location of the item to load.
 	 * @param  {Gamalto.Bitmap} [type]
 	 *         Type of the bitmap object to be instanciated.
-	 * 
+	 *
 	 * @return {Gamalto.Promise} A promise to handle loading states.
 	 */
 	proto.loadItem = function(name, src, type) {
-		var promise = _Object.base.loadItem.call(this),
-			bitmap = new (type || G.Bitmap),
+		var promise = _Object.base.loadItem.call(this);
+		/*jshint -W056 */
+		var bitmap = new (type || G.Bitmap)();
 
-			image = bitmap.createSource_(),
-			that = this;
+		var image = bitmap.createSource_();
+		var that = this;
 
 		image.onabort =
 			image.onerror = function(e) {
 				promise.reject(that.failed_(name, src));
-		};
+			};
 
 		image.onload = function() {
 			that.list_[G.N(name)] = bitmap;

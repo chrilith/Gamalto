@@ -1,7 +1,7 @@
 /*
  * Gamalto.BaseCanvas
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -35,7 +35,7 @@ THE SOFTWARE.
 	 * Abstract object to create a drawing canvas.
 	 *
 	 * @bastract
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.BaseCanvas
 	 * @augments Gamalto.Object
@@ -43,14 +43,16 @@ THE SOFTWARE.
 	var _Object = G.BaseCanvas = function(width, height) {
 		this._initCanvas();
 		this._setSize(width, height);
-	},
+	};
 
 	/** @alias Gamalto.BaseCanvas.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	proto._setSize = function(width, height) {
-		var ctx, canvas = this.__canvas;
-		canvas.width  = this.width  = Number(width)  || 0;
+		var ctx;
+		var canvas = this.__canvas;
+
+		canvas.width = this.width = Number(width) || 0;
 		canvas.height = this.height = Number(height) || 0;
 	};
 
@@ -61,16 +63,17 @@ THE SOFTWARE.
 	 * @memberof Gamalto.BaseCanvas.prototype
 	 * @abstract
 	 *
-	 * @return {Gamalto.BaseRenderer} Object instance implementing {@link Gamalto.BaseRenderer}.
+	 * @return {Gamalto.BaseRenderer} Object instance implementing
+	 *         {@link Gamalto.BaseRenderer}.
 	 */
 
 	proto.hasContext = function() {
-		return !!this._getContext();
+		return Boolean(this._getContext());
 	};
 
 	proto._initCanvas = function() {
 		/* This will never change */
-		this.__canvas = document.createElement("canvas");	
+		this.__canvas = document.createElement("canvas");
 	};
 
 	proto.getCanvas_ = function() {

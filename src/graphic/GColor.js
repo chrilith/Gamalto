@@ -1,7 +1,7 @@
 /*
  * Gamalto.Color
  * -------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -40,17 +40,17 @@ THE SOFTWARE.
 		this.g = Math.fmin(Math.fmax(g | 0, 0), 255);
 		this.b = Math.fmin(Math.fmax(b | 0, 0), 255);
 		this.a = Math.fmin(Math.fmax((a === undef) ? 255 : (a | 0), 0), 255);
-	},
+	};
 
 	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
 	proto.__toCanvasStyle = function() {
-		return "rgba("	+  this.r + ","
-						+  this.g + ","
-						+  this.b + ","
-						+ (this.a / 255) + ")";
+		return "rgba("	+	this.r + "," +
+							this.g + "," +
+							this.b + "," +
+						(this.a / 255) + ")";
 	};
 
 	proto.clone = function() {
@@ -58,11 +58,12 @@ THE SOFTWARE.
 	};
 
 	_Object.blend = function(c1, c2, t) {
-		var t1 = 1 - t,
-			r = c1.r * t1 + c2.r * t,
-			g = c1.g * t1 + c2.g * t,
-			b = c1.b * t1 + c2.b * t,
-			a = c1.a * t1 + c2.a * t;
+		var t1 = 1 - t;
+		var r = c1.r * t1 + c2.r * t;
+		var g = c1.g * t1 + c2.g * t;
+		var b = c1.b * t1 + c2.b * t;
+		var a = c1.a * t1 + c2.a * t;
+
 		return new _Object(r, g, b, a);
 	};
 

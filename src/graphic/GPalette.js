@@ -1,7 +1,7 @@
 /*
  * Gamalto.Palette
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,34 +36,34 @@ THE SOFTWARE.
 	 * @constructor Gamalto.Palette
 	 * @augments Gamalto.Object
 	 */
-	G.Palette = function(colors) {
+	var _Object = G.Palette = function(colors) {
 		this._list = colors || [];
 		this._animators = [];
 		this._animated = [];
 		this._changed = false;	// Whether the palette has been changed
 		this._trans = -1;
 		this.length = this._list.length;
-	}
+	};
 
 	/* Inheritance */
-	var proto = G.Palette.inherits(G.Object);
-	
+	var proto = _Object.inherits(G.Object);
+
 	/* Instance methods */
 	proto.addColor = function(color) {
 		this._list.push(color);
 		this.length++;
-	}
+	};
 
 	proto.setColor = function(index, color) {
 		if (index < this.length) {
 			this._list[index] = color;
 			this._changed = true;
 		}
-	}
+	};
 
 	proto.getColor = function(index) {
 		return this._list[index];
-	}
+	};
 
 	proto.setTransparency = function(index) {
 		if (index < this.length) {
@@ -72,39 +72,40 @@ THE SOFTWARE.
 			this._trans = index;
 			this._changed = true;
 		}
-	}
+	};
 
 	proto.getTransparency = function(index) {
 		return this._trans;
-	}
+	};
 
 	proto.addAnimator = function(from, to, delay) {
-		var step = from < to ? +1 : -1,
-			iter = (to - from) * step;
+		var step = from < to ? 1 : -1;
+		var iter = (to - from) * step;
 
 		this._animators.push({
-			speed	 : 1 / delay,
-			step	 : step,
-			from	 : from,
-			to		 : to,
-			curr	 : 0
+			speed:	1 / delay,
+			step:	step,
+			from:	from,
+			to:		to,
+			curr:	0
 		});
 
 		// Cache cycling color indices
 		do {
 			this._animated[from] = true;
 			from += step;
-		} while(iter--);
-	}
-	
+		} while (iter--);
+	};
+
 	proto.isAnimated = function(index) {
 		return this._animated[index];
-	}
+	};
 
 	proto.update = function(timer) {
-		var n, r, anim = this._animators, changed;
+		var n, r, changed;
+		var anim = this._animators;
 
-		for (var n = 0; n < anim.length; n++) {
+		for (n = 0; n < anim.length; n++) {
 
 			// Compute number of required iterations based on elapsed time
 			if ((r = (anim[n].curr += timer.elapsedTime * anim[n].speed) | 0)) {
@@ -114,18 +115,19 @@ THE SOFTWARE.
 
 			}
 		}
+
 		// Whether the palette has been updated
-		return !!changed;
-	}
+		return Boolean(changed);
+	};
 
 	proto.swap = function(index) {
-			var anim = this._animators[index],
-				list = this._list,
-				step = anim.step,
-				from = anim.from,
-				to	 = anim.to,
-				col	 = list[from];
-				i	 = 0,
+		var anim = this._animators[index];
+		var list = this._list;
+		var step = anim.step;
+		var from = anim.from;
+		var to = anim.to;
+		var col	= list[from];
+		var i = 0;
 
 		len = (anim.to - anim.from) * step;
 		while (i < len) {
@@ -133,7 +135,7 @@ THE SOFTWARE.
 			list[n] = list[n + step];
 			i++;
 		}
-		list[to] = col;		
-	}
-	
+		list[to] = col;
+	};
+
 })();

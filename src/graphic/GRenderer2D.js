@@ -1,7 +1,7 @@
 /*
  * Gamalto.Renderer2D
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,12 +30,12 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/**
 	 * Dependencies
 	 */
 	gamalto.devel.require("BaseRenderer");
-	
+
 	/**
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Renderer2D
@@ -44,41 +44,43 @@ THE SOFTWARE.
 	G.Renderer2D = function(canvas) {
 		Object.base(this, canvas);
 	};
-	
+
 	/* Inheritance and shortcut */
 	var proto = G.Renderer2D.inherits(G.BaseRenderer);
-	
+
 	/* Instance methods */
 	proto.drawBitmap = function(bitmap, x, y) {
-		var sw = bitmap.width,
-			sh = bitmap.height,
-			xy = this._transform(x, y, sw, sh),
-			gc = bitmap.getCanvas_;
+		var sw = bitmap.width;
+		var sh = bitmap.height;
+		var xy = this._transform(x, y, sw, sh);
+		var gc = bitmap.getCanvas_;
 
 		this._getContext()
 			.drawImage(gc ? gc.call(bitmap) : bitmap, xy[0], xy[1]);
 	};
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
-		var sx = r.origin.x,
-			sy = r.origin.y,
-			sw = r.extent.x,
-			sh = r.extent.y,
-			xy = this._transform(x, y, sw, sh),
-			gc = bitmap.getCanvas_;
+		var sx = r.origin.x;
+		var sy = r.origin.y;
+		var sw = r.extent.x;
+		var sh = r.extent.y;
+		var xy = this._transform(x, y, sw, sh);
+		var gc = bitmap.getCanvas_;
 
 		this._getContext()
-			.drawImage(gc ? gc.call(bitmap) : bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);
+			.drawImage(gc ? gc.call(bitmap) :
+				bitmap, sx, sy, sw, sh, xy[0], xy[1], sw, sh);
 	};
 
 	proto.enableFiltering = function(isOn) {
-		this._getContext().setMember("imageSmoothingEnabled", !!isOn);
+		this._getContext().setMember("imageSmoothingEnabled", Boolean(isOn));
 	};
-	
+
 	proto.fillRect = function(r, style) {
-		var s = this.canvas,
-			x = 0,
-			y = 0, w, h, v;
+		var s = this.canvas;
+		var x = 0;
+		var y = 0;
+		var w, h, v;
 
 		if (r) {
 			x = r.origin.x;
@@ -89,9 +91,10 @@ THE SOFTWARE.
 			w = s.width;
 			h = s.height;
 		}
-	
-		var ctx = this._getContext(),
-			xy  = this._transform(x, y, w, h);
+
+		var ctx = this._getContext();
+		var xy  = this._transform(x, y, w, h);
+
 		ctx.fillStyle = style.__toCanvasStyle();
 		ctx.fillRect(xy[0], xy[1], w, h);
 	};
@@ -101,8 +104,9 @@ THE SOFTWARE.
 	};
 
 	proto.hLine = function(x, y, w, style) {
-		var ctx = this._getContext(),
-			xy  = this._transform(x, y, w, 1);
+		var ctx = this._getContext();
+		var xy  = this._transform(x, y, w, 1);
+
 		ctx.strokeStyle = style.__toCanvasStyle();
 
 		x = (xy[0] | 0) + 0.0;
@@ -115,8 +119,9 @@ THE SOFTWARE.
 	};
 
 	proto.vLine = function(x, y, h, style) {
-		var ctx = this._getContext(),
-			xy  = this._transform(x, y, 1, h);
+		var ctx = this._getContext();
+		var xy  = this._transform(x, y, 1, h);
+
 		ctx.strokeStyle = style.__toCanvasStyle();
 
 		x = (xy[0] | 0) + 0.5;
@@ -127,7 +132,7 @@ THE SOFTWARE.
 		ctx.lineTo(x, y + h - 1);
 		ctx.stroke();
 	};
-	
+
 	// http://en.wikipedia.org/wiki/Transformation_matrix
 	// http://cairographics.org/matrix_transform/
 
@@ -141,23 +146,26 @@ THE SOFTWARE.
 			!this._origin.isZero() ||
 			this._scaleX != 1 ||
 			this._scaleY != 1 ||
-			(this._rotate != 0 && this._rotate != 360) ||
+			(this._rotate !== 0 && this._rotate !== 360) ||
 			this._mask
 		)) {
 			this._reset();
 			return [x, y];
 		}
 
-	// TODO: compute matrices members in an array and use apply() once per change?
-		var o  = this, dx = 0, dy = 0,
-			c  = o.canvas._context,
-			cx = x + (w >> 1) + this._origin.x,
-			cy = y + (h >> 1) + this._origin.y,
-			fx = (transform.flipX ? -1 : +1) * o._scaleX,
-			fy = (transform.flipY ? -1 : +1) * o._scaleY,
-			rt = o._rotate;
-	
+		// TODO: compute matrices members in an array and use apply() once per change?
+		var o  = this;
+		var dx = 0;
+		var dy = 0;
+		var c  = o.canvas._context;
+		var cx = x + (w >> 1) + this._origin.x;
+		var cy = y + (h >> 1) + this._origin.y;
+		var fx = (transform.flipX ? -1 : 1) * o._scaleX;
+		var fy = (transform.flipY ? -1 : 1) * o._scaleY;
+		var rt = o._rotate;
+
 		c.globalAlpha = transform.alpha;
+
 		// Check: source-in=source-atop on iOS, cannot use colors with alpha channel
 		// https://developer.mozilla.org/samples/canvas-tutorial/6_1_canvas_composite.html
 		c.globalCompositeOperation = o._mask ? "source-in" : "source-over";
@@ -173,8 +181,9 @@ THE SOFTWARE.
 
 		// Rotation, matrix multiplication will be handled natively to simplify...
 		if (rt) {
-			var cos = Math.cos(rt),
-				sin =-Math.sin(rt);
+			var cos = Math.cos(rt);
+			var sin = -Math.sin(rt);
+
 			c.transform( cos, sin,
 						-sin, cos,
 						cx - cos * cx + sin * cy - dx,
@@ -200,7 +209,8 @@ THE SOFTWARE.
 
 	proto.copy_ = function(bitmap, sx, sy, sw, sh, dx, dy, dw, dh) {
 		var getCanvas = bitmap.getCanvas_;
-		this._getContext().drawImage(getCanvas ? getCanvas.call(bitmap) : bitmap, sx, sy, sw, sh, dx, dy, dw, dh);
+		this._getContext().drawImage(getCanvas ? getCanvas.call(bitmap) :
+			bitmap, sx, sy, sw, sh, dx, dy, dw, dh);
 	};
 
 	proto._reset = function() {

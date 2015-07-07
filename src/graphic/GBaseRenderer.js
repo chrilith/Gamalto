@@ -1,7 +1,7 @@
 /*
  * Gamalto.BaseRenderer
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,13 +30,13 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/**
 	 * Dependencies
 	 */
 	gamalto.devel.using("Transform");
 	gamalto.devel.using("Vector2");
-	
+
 	/**
 	 * @constructor
 	 */
@@ -44,25 +44,25 @@ THE SOFTWARE.
 		this.canvas = canvas;
 		this.transform = new G.Transform();
 		this._init();
-	},
-	
-	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.Object);
-	
-	/* Instance methods */	
-	proto._init = function() {
-		this.reset();		
 	};
-	
+
+	/* Inheritance and shortcut */
+	var proto = _Object.inherits(G.Object);
+
+	/* Instance methods */
+	proto._init = function() {
+		this.reset();
+	};
+
 	proto.setOrigin = function(x, y) {
 		this._origin = new G.Vector2(x, y);
 	};
-	
+
 	proto.setScale = function(x, y) {
 		this._scaleX = (x || 1);
 		this._scaleY = (y || x || 1);
 	};
-	
+
 	proto.setRotation = function(angle) {
 		this._rotate = (angle || 0) * Math.PI / 180;
 	};
@@ -82,14 +82,18 @@ THE SOFTWARE.
 
 	proto.setTransform = function(isOn) {
 		var old = this._trans;
-		this._trans = !!isOn;
+		this._trans = Boolean(isOn);
 		return old;
 	};
 
-	proto._reset = function() { /* To be implemented, should be replace with setTransform() */ }
+	proto._reset = function() {
+		/* To be implemented, should be replace with setTransform() */
+	};
 
 	/* Should be called before accessing canvas */
-	proto.flush = function() { /* Nothing to do */ }
+	proto.flush = function() {
+		/* Nothing to do */
+	};
 
 	/* Used only when altering the canvas content */
 	proto._getContext = function() {

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Canvas2D
  * ----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -39,8 +39,9 @@ THE SOFTWARE.
 
 	var _Object = G.Canvas2D = function(width, height) {
 		Object.base(this, width, height);
-	},
-	_proto = _Object.inherits(G.BaseCanvas);
+	};
+
+	var _proto = _Object.inherits(G.BaseCanvas);
 
 	_proto._setSize = function(width, height) {
 		_Object.base._setSize.call(this, width, height);
@@ -57,7 +58,8 @@ THE SOFTWARE.
 
 	_proto._createRawBuffer = function() {
 		var ctx = this._context;
-		// createImageData() is not supported in CocoonJS up to v1.4.1 
+
+		// .createImageData() is not supported in CocoonJS up to v1.4.1
 		return (ctx.createImageData)
 			? ctx.createImageData(this.width, this.height)
 			: ctx.getImageData(0, 0, this.width, this.height);
@@ -68,12 +70,12 @@ THE SOFTWARE.
 	};
 
 	_proto._copyRawBufferIndexed = function(palette, raw, x, y) {
-		var color, index,
-			pixel	= 0,
-			pos		= -1,
-			buf		= this._createRawBuffer(),	// TODO: cache raw buffer
-			dest	= buf.data,
-			data	= raw.data;
+		var color, index;
+		var pixel	= 0;
+		var pos		= -1;
+		var buf		= this._createRawBuffer();	// TODO: cache raw buffer
+		var dest	= buf.data;
+		var data	= raw.data;
 
 		while (++pos < (data.length || data.byteLength)) {
 			index = data[pos];
@@ -85,7 +87,7 @@ THE SOFTWARE.
 			dest[pixel++] = color.a;
 		}
 
-		this._copyRawBuffer(buf, x, y);		
+		this._copyRawBuffer(buf, x, y);
 	};
 
 })();
