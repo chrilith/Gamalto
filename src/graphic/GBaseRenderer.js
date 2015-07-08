@@ -43,61 +43,32 @@ THE SOFTWARE.
 	var _Object = G.BaseRenderer = function(canvas) {
 		this.canvas = canvas;
 		this.transform = new G.Transform();
-		this._init();
+		this.init_();
 	};
 
-	/* Inheritance and shortcut */
+	/** @alias Gamalto.BaseRenderer.prototype */
 	var proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
-	proto._init = function() {
+	proto.init_ = function() {
 		this.reset();
 	};
 
-	proto.setOrigin = function(x, y) {
-		this._origin = new G.Vector2(x, y);
-	};
-
-	proto.setScale = function(x, y) {
-		this._scaleX = (x || 1);
-		this._scaleY = (y || x || 1);
-	};
-
-	proto.setRotation = function(angle) {
-		this._rotate = (angle || 0) * Math.PI / 180;
-	};
-
-	proto.enableMask = function(isOn) {
-		this._mask = isOn;
-	};
-
 	proto.reset = function() {
-		this.setScale();
-		this.setRotation();
-		this.setOrigin(0, 0);
-		this.setTransform(true);
-		this._reset();
 		this.transform.reset();
 	};
 
 	proto.setTransform = function(isOn) {
-		var old = this._trans;
-		this._trans = Boolean(isOn);
+		var old = this.trans_;
+		this.trans_ = Boolean(isOn);
 		return old;
 	};
 
-	proto._reset = function() {
-		/* To be implemented, should be replace with setTransform() */
-	};
-
-	/* Should be called before accessing canvas */
-	proto.flush = function() {
-		/* Nothing to do */
-	};
-
 	/* Used only when altering the canvas content */
-	proto._getContext = function() {
-		return this.canvas._context;
-	};
+	Object.defineProperty(proto, "context", {
+		get: function() {
+			return this.canvas.context;
+		}
+	});
 
 })();

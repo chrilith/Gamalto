@@ -36,13 +36,13 @@ if (navigator.isCocoonJS) (function() {
 		var prefix = "idtkscale:";
 		mode = (this.stretch_ = (mode || this.stretch_) | 0);
 
-		this.getCanvas_().style.cssText =
+		this.getDrawable_().style.cssText =
 			(mode === this.STRETCH_DEFAULT) ? "" :
 			(mode & this.STRETCH_UNIFORM) ?
 				(mode & this.STRETCH_FILL) ?
 					prefix + "ScaleAspectFill" :
 				prefix + "ScaleAspectFit" :
-			
+
 			"";	// Default: ScaleToFill;
 	};
 

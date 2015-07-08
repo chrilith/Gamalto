@@ -58,7 +58,7 @@ THE SOFTWARE.
 	};
 
 	proto.onSurface = function(surface) {
-		return (this.target == surface.getCanvas_());
+		return (this.target == surface.getDrawable_());
 	};
 
 	/* Constants */

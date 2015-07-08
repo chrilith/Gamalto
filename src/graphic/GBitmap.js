@@ -68,7 +68,7 @@ THE SOFTWARE.
 	 *
 	 * @return {HTMLImageElement}
 	 */
-	proto.getCanvas_ = function() {
+	proto.getDrawable_ = function() {
 		return this.source_;
 	};
 

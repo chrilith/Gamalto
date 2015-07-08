@@ -193,7 +193,7 @@ THE SOFTWARE.
 	 * 
 	 * @return {HTMLCanvasElement}
 	 */
-	proto.getCanvas_ = function(refresh) {
+	proto.getDrawable_ = function(refresh) {
 		var buf, pal = this.palette;
 
 		if (pal._changed || refresh) {
@@ -206,7 +206,7 @@ THE SOFTWARE.
 			});
 		}
 
-		return this.buffer_.getCanvas_();
+		return this.buffer_.getDrawable_();
 	};
 
 	/**

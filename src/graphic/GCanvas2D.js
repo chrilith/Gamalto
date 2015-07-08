@@ -37,27 +37,61 @@ THE SOFTWARE.
 	gamalto.devel.require("BaseCanvas");
 	gamalto.devel.using("Renderer2D");
 
+	/**
+	 * Aliases
+	 */
+	var _BaseCanvas = G.BaseCanvas;
+
+	/**
+	 * Creates a canvas based on the W3C Canvas 2D API.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Canvas2D
+	 * @augments Gamalto.BaseCanvas
+	 *
+	 * @param {number} width
+	 *        Width of the canvas in pixels.
+	 * @param {number} height
+	 *        Height of the canvas in pixels.
+	 */
 	var _Object = G.Canvas2D = function(width, height) {
 		Object.base(this, width, height);
 	};
 
-	var _proto = _Object.inherits(G.BaseCanvas);
+	/** @alias Gamalto.Canvas2D.prototype */
+	var proto = _Object.inherits(_BaseCanvas);
 
-	_proto._setSize = function(width, height) {
-		_Object.base._setSize.call(this, width, height);
-		this._context = this.__canvas.getContext("2d");
+	/* Register the canvas */
+	_BaseCanvas.addObject_("MODE_NATIVE2D", _Object);
+
+	/**
+	 * @see Gamalto.BaseCanvas.setSize_
+	 * @ignore
+	 */
+	proto.setSize_ = function(width, height) {
+		_Object.base.setSize_.call(this, width, height);
+		this.context_ = this.canvas.getContext("2d");
 	};
 
-	_proto.createRenderer = function() {
+	/**
+	 * Creates a renderer for the current canvas type.
+	 *
+	 * @return {Gamalto.Renderer2D} Object instance.
+	 */
+	proto.createRenderer = function() {
 		return new G.Renderer2D(this);
 	};
 
-	_proto._getRawBuffer = function() {
-		return this._context.getImageData(0, 0, this.width, this.height);
+
+
+
+
+	proto._getRawBuffer = function() {
+		return this.context_.getImageData(0, 0, this.width, this.height);
 	};
 
-	_proto._createRawBuffer = function() {
-		var ctx = this._context;
+	proto._createRawBuffer = function() {
+		var ctx = this.context_;
 
 		// .createImageData() is not supported in CocoonJS up to v1.4.1
 		return (ctx.createImageData)
@@ -65,11 +99,11 @@ THE SOFTWARE.
 			: ctx.getImageData(0, 0, this.width, this.height);
 	};
 
-	_proto._copyRawBuffer = function(raw, x, y) {
-		this._context.putImageData(raw, x || 0, y || 0);
+	proto._copyRawBuffer = function(raw, x, y) {
+		this.context_.putImageData(raw, x || 0, y || 0);
 	};
 
-	_proto._copyRawBufferIndexed = function(palette, raw, x, y) {
+	proto._copyRawBufferIndexed = function(palette, raw, x, y) {
 		var color, index;
 		var pixel	= 0;
 		var pos		= -1;

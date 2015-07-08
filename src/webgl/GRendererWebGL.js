@@ -1,7 +1,7 @@
 /*
  * Gamalto.RendererWebGL
  * ---------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -39,12 +39,12 @@ THE SOFTWARE.
 	 */
 	gamalto.devel.require("BaseRenderer");
 	gamalto.devel.require("TextLibrary");
-	
+
 	/* Initialization */
 	var _shaders,
 		_path = ns.getCurrentPath();
 
-	ns.addInitializer(function() {		
+	ns.addInitializer(function() {
 		_shaders = new G.TextLibrary();
 		_shaders.pushItem("position", _path + "shaders/rdr_position.vert");
 		_shaders.pushItem("fillColor", _path + "shaders/rdr_fill-color.frag");
@@ -61,15 +61,15 @@ THE SOFTWARE.
 	var _Object = G.RendererWebGL = function(canvas) {
 		Object.base(this, canvas);
 	};
-	
+
 	/* Inheritance and shortcut */
 	var proto = _Object.inherits(G.BaseRenderer);
-	
-	/* Instance methods */
-	proto._init = function() {
-		_Object.base._init.call(this);
 
-		var gl = this._getContext();
+	/* Instance methods */
+	proto.init_ = function() {
+		_Object.base.init_.call(this);
+
+		var gl = this.context;
 
 		var s1 = G.Shader.load(gl, _shaders.getItem("position"), gl.VERTEX_SHADER);
 		var s2 = G.Shader.load(gl, _shaders.getItem("fillColor"), gl.FRAGMENT_SHADER);
@@ -88,9 +88,9 @@ THE SOFTWARE.
 	};
 
 	proto.drawBitmapSection = function(bitmap, x, y, r) {
-		var gl = this._getContext(),
+		var gl = this.context,
 			p = this._program[1],
-			gc = bitmap.getCanvas_;
+			gc = bitmap.getDrawable_;
 
 		gl.useProgram(this._program[1]);
 
@@ -114,7 +114,7 @@ THE SOFTWARE.
 			gl.uniform4f(cropLocation, xx, yy, ww, hh);
 		}
 
-		// provide texture coordinates for the rectangle.
+		// Provide texture coordinates for the rectangle.
 		var texCoordBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -145,7 +145,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this._filtering ? gl.NEAREST : gl.LINEAR);
 
 		// For scrolling, we allow passing a context directly
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gc ? bitmap.getCanvas_() : bitmap); 
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gc ? bitmap.getDrawable_() : bitmap); 
 
 		var x1 = x,
 			y1 = y,
@@ -162,7 +162,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 
 		var buffer = this._initDraw(p, points);
 
-		// draw
+		// Draw
 		gl.drawArrays(gl.TRIANGLES, 0, points.length >> 1);
 	};
 
@@ -171,14 +171,14 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 
 	proto._setStyle = function(style) {
-		var gl = this._getContext();
+		var gl = this.context;
 
 		var colorLocation = gl.getUniformLocation(this._program[0], "uColor");
 		gl.uniform4f(colorLocation, style.r / 255, style.g / 255, style.b / 255, style.a / 255);
 	};
 
 	proto._initDraw = function(program, points) {
-		var gl = this._getContext(),
+		var gl = this.context,
 			s = this.canvas;
 
 		var positionLocation = gl.getAttribLocation(program, "aPosition");
@@ -197,14 +197,14 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 
 	proto._drawShape = function(type, points, style) {
-		var gl = this._getContext(),
+		var gl = this.context,
 			p = this._program[0];
 
 		this._setStyle(style);
 		this._initDraw(p, points);
 		gl.drawArrays(type, 0, points.length >> 1);
 	};
-	
+
 	proto.fillRect = function(r, style) {
 		var s = this.canvas,
 			x = 0,
@@ -220,7 +220,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			h = s.height;
 		}
 
-		var gl = this._getContext(),
+		var gl = this.context,
 			x1 = x,
 			y1 = y,
 			x2 = x + w,
@@ -238,7 +238,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 
 	proto.clearRect = function(r) {
-		var gl = this._getContext();
+		var gl = this.context;
 
 		gl.disable(gl.BLEND);
 		this.fillRect(r, new G.Color(0, 0, 0, 0));
@@ -246,7 +246,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 
 	proto.hLine = function(x, y, w, style) {
-		var gl = this._getContext();
+		var gl = this.context;
 
 		x = (x | 0) + 0.0;
 		y = (y | 0) + 0.5;
@@ -258,7 +258,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 	};
 
 	proto.vLine = function(x, y, h, style) {
-		var gl = this._getContext();
+		var gl = this.context;
 
 		x = (x | 0) + 0.5;
 		y = (y | 0) + 0.5;
@@ -268,12 +268,12 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			x, y,
 			x, y + h], style);
 	};
-	
+
 	proto._transform = function(x, y, w, h) {
 	};
 
 	proto.clip_ = function(r) {
-		var gl = this._getContext();
+		var gl = this.context;
 
 		if (!r) {
 			gl.disable(gl.SCISSOR_TEST);

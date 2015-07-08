@@ -32,9 +32,14 @@ THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.devel.require("Canvas2D");
+	gamalto.devel.require("BaseCanvas");
 	gamalto.devel.using("BaseRenderer");
 	gamalto.devel.using("Box");
+
+	/**
+	 * Aliases
+	 */
+	var _BaseCanvas = G.BaseCanvas;
 
 	/**
 	 * Creates a new drawing surface.
@@ -62,8 +67,7 @@ THE SOFTWARE.
 		 * @readonly
 		 * @alias Gamalto.Surface#canvas
 		 */
-		/*jshint -W056 */
-		canvas = this.canvas = new (canvas || G.Canvas2D)(width, height);
+		canvas = this.canvas = _BaseCanvas.create_(canvas, width, height);
 		/**
 		 * Internal canvas.
 		 *
@@ -196,9 +200,8 @@ THE SOFTWARE.
 	 *
 	 * @return {object} HTMLCanvasElement or HTMLImageElement.
 	 */
-	proto.getCanvas_ = function() {
-		this.renderer.flush();
-		return this.canvas.getCanvas_();
+	proto.getDrawable_ = function() {
+		return this.canvas.getDrawable_();
 	};
 
 })();

@@ -80,7 +80,7 @@ THE SOFTWARE.
 	 * @return {HTMLCanvasElement} Screen canvas element.
 	 */
 	proto.getElement_ = function() {
-		return this.screen_.getCanvas_();
+		return this.screen_.getDrawable_();
 	};
 
 	/**

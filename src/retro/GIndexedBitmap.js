@@ -74,10 +74,10 @@ THE SOFTWARE.
 	 * 
 	 * @return {HTMLCanvasElement}
 	 */
-	proto.getCanvas_ = function() {
+	proto.getDrawable_ = function() {
 		var refresh = this.updated_;
 		this.updated_ = false;
-		return this.source_.getCanvas_(refresh);
+		return this.source_.getDrawable_(refresh);
 	};
 
 	/**

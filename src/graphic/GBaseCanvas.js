@@ -32,6 +32,12 @@ THE SOFTWARE.
 (function() {
 
 	/**
+	 * Factory stuff
+	 */
+	var canvases = [];
+	var mode = 0;
+
+	/**
 	 * Abstract object to create a drawing canvas.
 	 *
 	 * @bastract
@@ -39,22 +45,93 @@ THE SOFTWARE.
 	 * @memberof Gamalto
 	 * @constructor Gamalto.BaseCanvas
 	 * @augments Gamalto.Object
+	 *
+	 * @param {number} width
+	 *        Width of the canvas in pixels.
+	 * @param {number} height
+	 *        Height of the canvas in pixels.
 	 */
 	var _Object = G.BaseCanvas = function(width, height) {
-		this._initCanvas();
-		this._setSize(width, height);
+		/**
+		 * Internal canvas object.
+		 *
+		 * @member {object}
+		 * @readonly
+		 * @alias Gamalto.BaseCanvas#canvas
+		 */
+		this.canvas = document.createElement("canvas");
+
+		this.setSize_(width, height);
 	};
 
 	/** @alias Gamalto.BaseCanvas.prototype */
 	var proto = _Object.inherits(G.Object);
 
-	proto._setSize = function(width, height) {
-		var ctx;
-		var canvas = this.__canvas;
+	/**
+	 * Initializes the internal canvas object.
+	 *
+	 * @protected
+	 * @ingore
+	 *
+	 * @param {number} width
+	 *        Width of the canvas in pixels.
+	 * @param {number} height
+	 *        Height of the canvas in pixels.
+	 */
+	proto.setSize_ = function(width, height) {
+		var canvas = this.canvas;
 
 		canvas.width = this.width = Number(width) || 0;
 		canvas.height = this.height = Number(height) || 0;
 	};
+
+	/**
+	 * Gets the current context of the cnavas.
+	 * May be overidden for expiring context.
+	 *
+	 * @protected
+	 * @ignore
+	 *
+	 * @return {object} Current canvas context.
+	 */
+	proto.getContext_ = function() {
+		return this.context_;
+	};
+
+	/**
+	 * Gets an object than can be drawn on a HTMLCanvasElement.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @return {object} HTMLCanvasElement.
+	 */
+	proto.getDrawable_ = function() {
+		return this.canvas;
+	};
+
+	/**
+	 * Context of the internal canvas.
+	 *
+	 * @member {object}
+	 * @readonly
+	 * @alias Gamalto.BaseCanvas#context
+	 */
+	Object.defineProperties(proto, {
+		"context": {
+			get: function() {
+				return this.getContext_();
+			}
+		}
+	});
+
+	proto._getRawBuffer = function() { };
+
+	proto._createRawBuffer = function() { };
+
+	proto._copyRawBuffer = function(raw, x, y) { };
+
+	proto._copyRawBufferIndexed = function(palette, raw, x, y) { };
 
 	/**
 	 * Creates a renderer for the current canvas type.
@@ -67,29 +144,38 @@ THE SOFTWARE.
 	 *         {@link Gamalto.BaseRenderer}.
 	 */
 
-	proto.hasContext = function() {
-		return Boolean(this._getContext());
+	/**
+	 * Adds an object to the factory.
+	 *
+	 * @ignore
+	 *
+	 * @param {string} name
+	 *        Name of the constant.
+	 * @param {object} item
+	 *        Object type.
+	 */
+	_Object.addObject_ = function(name, item) {
+		_Object[name] = ++mode; // For next object registration
+		canvases.push(item);
 	};
 
-	proto._initCanvas = function() {
-		/* This will never change */
-		this.__canvas = document.createElement("canvas");
+	/**
+	 * Creates a canvas using the specified parameters.
+	 *
+	 * @ignore
+	 *
+	 * @param  {number} mode
+	 *         Canvas mode.
+	 * @param {number} width
+	 *        Width of the canvas in pixels.
+	 * @param {number} height
+	 *        Height of the canvas in pixels.
+	 *
+	 * @return {Gamalto.BaseCanvas} New instance of the requested canvas type.
+	 */
+	_Object.create_ = function(mode, width, height) {
+		// Return the first by default
+		return new canvases[(mode || 1) - 1](width, height);
 	};
-
-	proto.getCanvas_ = function() {
-		return this.__canvas;
-	};
-
-	proto._getContext = function() {
-		return this._context;
-	};
-
-	proto._getRawBuffer = function() { };
-
-	proto._createRawBuffer = function() { };
-
-	proto._copyRawBuffer = function(raw, x, y) { };
-
-	proto._copyRawBufferIndexed = function(palette, raw, x, y) { };
 
 })();
