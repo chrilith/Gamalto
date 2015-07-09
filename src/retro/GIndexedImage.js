@@ -81,7 +81,7 @@ THE SOFTWARE.
 		// Module lookup
 		for (i = 0; i < modules.length; i++) {
 			if (modules[i].ext.indexOf(url) != -1 &&
-				~modules[i].mime.indexOf(this.file_.mimeType)) {
+				modules[i].mime.indexOf(this.file_.mimeType) != -1) {
 
 				return modules[i].reader;
 			}
