@@ -72,6 +72,10 @@ THE SOFTWARE.
 	/* Register the canvas */
 	_BaseCanvas.addObject_("MODE_NATIVE3D", _Object);
 
+	/**
+	 * @see Gamalto.BaseCanvas
+	 * @ignore
+	 */
 	proto.setSize_ = function(width, height) {
 		_Object.base.setSize_.call(this, width, height);
 
@@ -91,9 +95,38 @@ THE SOFTWARE.
 		} catch(e) {  }
 	};
 
+	/**
+	 * Creates a renderer for the current canvas type.
+	 *
+	 * @return {Gamalto.RendererWebGL} Object instance.
+	 */
 	proto.createRenderer = function() {
 		return new G.RendererWebGL(this);
 	};
+
+	/**
+	 * @see Gamalto.BaseCanvas
+	 * @ignore
+	 */
+	proto.export_ = function() {
+		var w = this.width;
+		var h = this.height;
+		var buffer = new Uint8Array(w * h * 4);
+
+		gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buffer);
+
+		return {
+			data: buffer,
+			width: w,
+			height: h
+		};
+	};
+
+	/**
+	 * @see Gamalto.BaseCanvas
+	 * @ignore
+	 */
+	proto.import_ = function(data) { /* TODO */ };
 
 	proto._copyRawBufferIndexed = function(palette, raw, x, y) {
 		var gl = this.context_;

@@ -53,7 +53,7 @@ THE SOFTWARE.
 	 *        Physical horizontal size of the surface.
 	 * @param {number} height
 	 *        Physical vertical size of the surface.
-	 * @param {Gamalto.BaseCanvas} [canvas]
+	 * @param {number} [canvas]
 	 *        Type of the internal canvas.
 	 *
 	 * @example
@@ -179,7 +179,7 @@ THE SOFTWARE.
 	 * @return {object} A buffer or null if the surface is already locked.
 	 */
 	proto.lock = function() {
-		return this.locked_ ? null : (this.locked_ = this.canvas._getRawBuffer());
+		return this.locked_ ? null : (this.locked_ = this.canvas.export_());
 	};
 
 	/**
@@ -187,7 +187,7 @@ THE SOFTWARE.
 	 */
 	proto.unlock = function() {
 		if (this.locked_) {
-			this.canvas._copyRawBuffer(this.locked_);
+			this.canvas.import_(this.locked_);
 			this.locked_ = null;
 		}
 	};

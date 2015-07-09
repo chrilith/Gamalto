@@ -65,7 +65,7 @@ THE SOFTWARE.
 	_BaseCanvas.addObject_("MODE_NATIVE2D", _Object);
 
 	/**
-	 * @see Gamalto.BaseCanvas.setSize_
+	 * @see Gamalto.BaseCanvas
 	 * @ignore
 	 */
 	proto.setSize_ = function(width, height) {
@@ -82,13 +82,23 @@ THE SOFTWARE.
 		return new G.Renderer2D(this);
 	};
 
-
-
-
-
-	proto._getRawBuffer = function() {
+	/**
+	 * @see Gamalto.BaseCanvas
+	 * @ignore
+	 */
+	proto.export_ = function() {
 		return this.context_.getImageData(0, 0, this.width, this.height);
 	};
+
+	/**
+	 * @see Gamalto.BaseCanvas
+	 * @ignore
+	 */
+	proto.import_ = function(data) {
+		this.context_.putImageData(data, 0, 0);
+	};
+
+
 
 	proto._createRawBuffer = function() {
 		var ctx = this.context_;
@@ -97,10 +107,6 @@ THE SOFTWARE.
 		return (ctx.createImageData)
 			? ctx.createImageData(this.width, this.height)
 			: ctx.getImageData(0, 0, this.width, this.height);
-	};
-
-	proto._copyRawBuffer = function(raw, x, y) {
-		this.context_.putImageData(raw, x || 0, y || 0);
 	};
 
 	proto._copyRawBufferIndexed = function(palette, raw, x, y) {

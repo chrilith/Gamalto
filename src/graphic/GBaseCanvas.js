@@ -71,7 +71,7 @@ THE SOFTWARE.
 	 * Initializes the internal canvas object.
 	 *
 	 * @protected
-	 * @ingore
+	 * @ignore
 	 *
 	 * @param {number} width
 	 *        Width of the canvas in pixels.
@@ -125,14 +125,6 @@ THE SOFTWARE.
 		}
 	});
 
-	proto._getRawBuffer = function() { };
-
-	proto._createRawBuffer = function() { };
-
-	proto._copyRawBuffer = function(raw, x, y) { };
-
-	proto._copyRawBufferIndexed = function(palette, raw, x, y) { };
-
 	/**
 	 * Creates a renderer for the current canvas type.
 	 *
@@ -142,6 +134,33 @@ THE SOFTWARE.
 	 *
 	 * @return {Gamalto.BaseRenderer} Object instance implementing
 	 *         {@link Gamalto.BaseRenderer}.
+	 */
+
+	/**
+	 * Creates an object representing the underlying pixel data of the canvas.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @function export_
+	 * @memberof Gamalto.BaseCanvas.prototype
+	 * @abstract
+	 *
+	 * @return {object} Object containing the image data.
+	 */
+
+	/**
+	 * Copies the pixel data from the passed object.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @function import_
+	 * @memberof Gamalto.BaseCanvas.prototype
+	 * @abstract
+	 *
+	 * @param {object} data
+	 *        Object representing the pixel data to be copied.
 	 */
 
 	/**
