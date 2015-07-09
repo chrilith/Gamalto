@@ -186,8 +186,8 @@ THE SOFTWARE.
 
 	proto.reset_ = function() {
 		var ctx = this.context;
+
 		ctx.globalAlpha = 1;
-		ctx.globalCompositeOperation = "source-over";
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 	};
 
