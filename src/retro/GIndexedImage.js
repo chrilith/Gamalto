@@ -1,7 +1,7 @@
 /*
  * Gamalto.IndexedImage
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -36,7 +36,8 @@ THE SOFTWARE.
 	gamalto.devel.using("AsyncFile");
 
 	/* Local */
-	var modules = [], bufferType;
+	var modules = [];
+	var bufferType;
 
 	/**
 	 * Creates a new image with indexed palette.
@@ -47,29 +48,31 @@ THE SOFTWARE.
 	 */
 	var _Object = G.IndexedImage = function() {
 		this.file_ = new G.AsyncFile();
-	},
+	};
 
 	/** @alias Gamalto.IndexedImage.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Looks for a compatible module to decode the image data.
 	 *
 	 * @private
 	 * @ignore
-	 * 
-	 * @return {function} A function to decode the image data or null if no module has been found.
+	 *
+	 * @return {function} A function to decode the image data
+	 *         or null if no module has been found.
 	 */
 	proto.findModule_ = function() {
-		var i, url = this.url_,
-			p1 = url.indexOf('?'),
-			p2 = url.indexOf('#');
-			
+		var i;
+		var url = this.url_;
+		var p1 = url.indexOf('?');
+		var p2 = url.indexOf('#');
+
 		// Get end of filename
 		url = url.substr(0,
 				p1 != -1 ? p1 :
 				p2 != -1 ? p2 : url.length);
-		
+
 		// Get file extension if any
 		p1 = url.lastIndexOf("/");
 		p2 = url.lastIndexOf(".");
@@ -79,7 +82,7 @@ THE SOFTWARE.
 		for (i = 0; i < modules.length; i++) {
 			if (modules[i].ext.indexOf(url) != -1 &&
 				~modules[i].mime.indexOf(this.file_.mimeType)) {
-				
+
 				return modules[i].reader;
 			}
 		}
@@ -94,8 +97,8 @@ THE SOFTWARE.
 	 * @ignore
 	 */
 	proto.load_ = function() {
-		var file = this.file_,
-			that = this;
+		var file = this.file_;
+		var that = this;
 
 		// Open the file and get info
 		return file.open(this.url_).then(function() {
@@ -105,7 +108,7 @@ THE SOFTWARE.
 					var buf = new G.StreamReader(file.buffer);
 					file.close();
 					that.onLoad_(buf);
-					this.file_= null;
+					this.file_ = null;
 				});
 			} else {
 				that.raiseEvent_("error");
@@ -119,7 +122,7 @@ THE SOFTWARE.
 	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @param  {string} type
 	 *         Event type, "error" or "load".
 	 */
@@ -128,22 +131,22 @@ THE SOFTWARE.
 		if (onevent) {
 			var e = gamalto.createEvent(type);
 			e.path = [this];
-			onevent.call(this, e);			
+			onevent.call(this, e);
 		}
 	};
 
 	/**
 	 * Decodes the image data.
-	 * 
+	 *
 	 * @private
 	 * @ignore
-	 * 
+	 *
 	 * @param  {Gamalto.ReadableStream} buffer
 	 *         Stream containing the image data.
 	 */
 	proto.onLoad_ = function(buffer) {
-		var dec  = this.module_,
-			data = dec ? dec.call(this, buffer) : null;
+		var dec  = this.module_;
+		var data = dec ? dec.call(this, buffer) : null;
 
 		if (!data) {
 			this.raiseEvent_("error");
@@ -152,32 +155,32 @@ THE SOFTWARE.
 		} else {
 			/**
 			 * Image palette.
-			 * 
+			 *
 			 * @member {Gamalto.Palette}
 			 * @readonly
-			 * 
+			 *
 			 * @alias Gamalto.IndexedImage#palette
 			 */
 			this.palette	= data[0];
 			this.data_		= data[1];	// For full redraw
 			/**
 			 * Width of the image in pixels.
-			 * 
+			 *
 			 * @member {number}
 			 * @readonly
-			 * 
+			 *
 			 * @alias Gamalto.IndexedImage#width
 			 */
 			this.width		= data[2];
 			/**
 			 * Height of the image in pixels.
-			 * 
+			 *
 			 * @member {number}
 			 * @readonly
-			 * 
+			 *
 			 * @alias Gamalto.IndexedImage#height
 			 */
-			this.height		= data[3];			
+			this.height		= data[3];
 
 			this.buffer_ = new (bufferType || G.Canvas2D)(data[2], data[3]);
 
@@ -190,11 +193,12 @@ THE SOFTWARE.
 	 *
 	 * @internal
 	 * @ignore
-	 * 
+	 *
 	 * @return {HTMLCanvasElement}
 	 */
 	proto.getDrawable_ = function(refresh) {
-		var buf, pal = this.palette;
+		var buf;
+		var pal = this.palette;
 
 		if (pal._changed || refresh) {
 			pal._changed = false;
@@ -215,7 +219,7 @@ THE SOFTWARE.
 	 * @memberof Gamalto.IndexedImage
 	 * @function addModule
 	 * @static
-	 * 
+	 *
 	 * @param {object} module
 	 *        Module descriptor.
 	 */
@@ -226,11 +230,11 @@ THE SOFTWARE.
 
 	/**
 	 * Sets the type of buffer to be used to render the image.
-	 * 
+	 *
 	 * @memberof Gamalto.IndexedImage
 	 * @function setBufferType
 	 * @static
-	 * 
+	 *
 	 * @param {Gamalto.BaseCanvas} type
 	 *        Type implementing BaseCanvas.
 	 */
@@ -240,7 +244,7 @@ THE SOFTWARE.
 
 	/**
 	 * Source url of the image.
-	 * 
+	 *
 	 * @memberof Gamalto.IndexedImage.prototype
 	 * @member {string} src
 	 * @readonly
