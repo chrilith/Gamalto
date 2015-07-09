@@ -203,7 +203,8 @@ THE SOFTWARE.
 		if (pal._changed || refresh) {
 			pal._changed = false;
 			buf = this.data_.buffer;
-			this.buffer_._copyRawBufferIndexed(pal._list, {
+			this.buffer_.importIndexed_({
+				palette: pal._list,
 				data: buf.byteLength ? new Uint8Array(buf) : buf,
 				width: this.width,
 				height: this.height

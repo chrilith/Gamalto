@@ -98,9 +98,13 @@ THE SOFTWARE.
 		this.context_.putImageData(data, 0, 0);
 	};
 
-
-
-	proto._createRawBuffer = function() {
+	/**
+	 * @private
+	 * @ignore
+	 *
+	 * @return {ImageData}
+	 */
+	proto.createData_ = function() {
 		var ctx = this.context_;
 
 		// .createImageData() is not supported in CocoonJS up to v1.4.1
@@ -109,17 +113,17 @@ THE SOFTWARE.
 			: ctx.getImageData(0, 0, this.width, this.height);
 	};
 
-	proto._copyRawBufferIndexed = function(palette, raw, x, y) {
+	proto.importIndexed_ = function(raw) {
 		var color, index;
 		var pixel	= 0;
 		var pos		= -1;
-		var buf		= this._createRawBuffer();	// TODO: cache raw buffer
+		var buf		= this.createData_();	// TODO: cache raw buffer
 		var dest	= buf.data;
 		var data	= raw.data;
 
 		while (++pos < (data.length || data.byteLength)) {
 			index = data[pos];
-			color = palette[index];
+			color = raw.palette[index];
 
 			dest[pixel++] = color.r;
 			dest[pixel++] = color.g;
@@ -127,7 +131,7 @@ THE SOFTWARE.
 			dest[pixel++] = color.a;
 		}
 
-		this._copyRawBuffer(buf, x, y);
+		this._copyRawBuffer(buf, 0, 0);
 	};
 
 })();

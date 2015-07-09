@@ -128,12 +128,13 @@ THE SOFTWARE.
 	 */
 	proto.import_ = function(data) { /* TODO */ };
 
-	proto._copyRawBufferIndexed = function(palette, raw, x, y) {
+	proto.importIndexed_ = function(raw) {
 		var gl = this.context_;
 		var program = this._program[0];
 		var data = raw.data;
 		var width = raw.width;
 		var height = raw.height;
+		var palette = raw.palette;
 
 		// HACK
 		// TODO: change palette _list[]
