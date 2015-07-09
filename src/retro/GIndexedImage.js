@@ -32,12 +32,12 @@ THE SOFTWARE.
 (function() {
 
 	/* Dependencies */
-	gamalto.devel.using("Canvas2D");
+	gamalto.devel.using("BaseCanvas");
 	gamalto.devel.using("AsyncFile");
 
 	/* Local */
 	var modules = [];
-	var bufferType;
+	var bufferMode;
 
 	/**
 	 * Creates a new image with indexed palette.
@@ -161,8 +161,8 @@ THE SOFTWARE.
 			 *
 			 * @alias Gamalto.IndexedImage#palette
 			 */
-			this.palette	= data[0];
-			this.data_		= data[1];	// For full redraw
+			this.palette = data[0];
+			this.data_ = data[1];	// For full redraw
 			/**
 			 * Width of the image in pixels.
 			 *
@@ -171,7 +171,7 @@ THE SOFTWARE.
 			 *
 			 * @alias Gamalto.IndexedImage#width
 			 */
-			this.width		= data[2];
+			this.width = data[2];
 			/**
 			 * Height of the image in pixels.
 			 *
@@ -180,9 +180,9 @@ THE SOFTWARE.
 			 *
 			 * @alias Gamalto.IndexedImage#height
 			 */
-			this.height		= data[3];
+			this.height	= data[3];
 
-			this.buffer_ = new (bufferType || G.Canvas2D)(data[2], data[3]);
+			this.buffer_ = G.BaseCanvas.create_(bufferMode, data[2], data[3]);
 
 			this.raiseEvent_("load");
 		}
@@ -232,14 +232,14 @@ THE SOFTWARE.
 	 * Sets the type of buffer to be used to render the image.
 	 *
 	 * @memberof Gamalto.IndexedImage
-	 * @function setBufferType
+	 * @function setBufferMode
 	 * @static
 	 *
-	 * @param {Gamalto.BaseCanvas} type
-	 *        Type implementing BaseCanvas.
+	 * @param {Gamalto.BaseCanvas} mode
+	 *        Type of the canvas buffer.
 	 */
-	_Object.setBufferType = function(type) {
-		bufferType = type;
+	_Object.setBufferMode = function(mode) {
+		bufferMode = mode;
 	};
 
 	/**
