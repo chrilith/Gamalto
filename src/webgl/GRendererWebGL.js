@@ -269,7 +269,7 @@ CANNOT CACHE TEX LIKE THIS BECAUSE CONTEXT MAY BE LOST
 			x, y + h], style);
 	};
 
-	proto._transform = function(x, y, w, h) {
+	proto.transform_ = function(x, y, w, h) {
 	};
 
 	proto.clip_ = function(r) {

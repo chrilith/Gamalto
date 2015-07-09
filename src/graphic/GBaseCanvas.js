@@ -71,6 +71,7 @@ THE SOFTWARE.
 	 * Initializes the internal canvas object.
 	 *
 	 * @protected
+	 * @virtual
 	 * @ignore
 	 *
 	 * @param {number} width
@@ -90,6 +91,7 @@ THE SOFTWARE.
 	 * May be overidden for expiring context.
 	 *
 	 * @protected
+	 * @virtual
 	 * @ignore
 	 *
 	 * @return {object} Current canvas context.
@@ -102,6 +104,7 @@ THE SOFTWARE.
 	 * Gets an object than can be drawn on a HTMLCanvasElement.
 	 *
 	 * @internal
+	 * @virtual
 	 * @ignore
 	 *
 	 * @return {object} HTMLCanvasElement.
