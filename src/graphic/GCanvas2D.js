@@ -131,7 +131,7 @@ THE SOFTWARE.
 			dest[pixel++] = color.a;
 		}
 
-		this._copyRawBuffer(buf, 0, 0);
+		this.import_(buf, 0, 0);
 	};
 
 })();
