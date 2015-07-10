@@ -169,6 +169,7 @@ THE SOFTWARE.
 	/**
 	 * Adds an object to the factory.
 	 *
+	 * @internal
 	 * @ignore
 	 *
 	 * @param {string} name
@@ -184,6 +185,7 @@ THE SOFTWARE.
 	/**
 	 * Creates a canvas using the specified parameters.
 	 *
+	 * @internal
 	 * @ignore
 	 *
 	 * @param  {number} mode
