@@ -178,6 +178,14 @@ header.main a#toggler {
     width: 768px;
 }
 
+.fork img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    z-index: 100;
+}
+
 /* SCOLLBAR */
 
 .iScrollLoneScrollbar:hover {
@@ -663,6 +671,10 @@ pre.prettyprint {
 
     #content {
         right:0;
+    }
+
+    .fork {
+        display: none;
     }
 }
 
