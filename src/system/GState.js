@@ -30,49 +30,48 @@ THE SOFTWARE.
  */
 
 (function() {
-	
+
 	/**
 	 * @memberof Gamalto
 	 * @constructor Gamalto.State
 	 * @augments Gamalto.Object
 	 */
-	G.State = function() {
-		this._list = [];
-	//-	this._curr = null;
+	var _Object = G.State = function() {
+		Object.base(this);
+
+		this.list_ = [];
+		this.curr_ = null;
 	};
-	
+
 	/* Inheritance and shortcut */
-	var proto = G.State.inherits(G.Object);
-	
+	var proto = _Object.inherits(G.Object);
+
 	/* Instance methods */
 	proto.register = function(name, object) {
-		this._list[name] = object;
+		this.list_[name] = object;
 		return this;
 	};
-	
-	proto.set = function(name) {
-		var s = this;
-		s._exit();
-		s._curr = name;
-		s._enter();
-	};
-	
+
 	proto.update = function(timer) {
-		return this._call("update", timer);
+		return this.call_("update", timer);
 	};
-	
-	proto._enter = function() {
-		this._call("entering");
+
+	proto.call_ = function(method, data) {
+		var object;
+		if ((object = this.list_[this.curr_]) && object[method]) {
+			return object[method](data);
+		}
 	};
-	
-	proto._exit = function() {
-		this._call("exiting");
-	};
-	
-	proto._call = function(method, data) {
-		var u, o, s = this;
-		if ((o = s._list[s._curr]) && o[method]) { return o[method](data); }
-		return u;
-	};
+
+	Object.defineProperty(proto, "active", {
+		get: function() {
+			return this.curr_;
+		},
+		set: function(name) {
+			this.call_("exiting");
+			this.curr_ = name;
+			this.call_("entering");
+		}
+	});
 
 })();
