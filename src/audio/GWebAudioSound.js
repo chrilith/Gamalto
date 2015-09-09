@@ -36,7 +36,6 @@ THE SOFTWARE.
 	 */
 	gamalto.devel.require("BaseSound");
 	gamalto.devel.using("AsyncFile");
-	gamalto.devel.using("Promise");
 
 	/**
 	 * @memberof Gamalto
@@ -46,54 +45,53 @@ THE SOFTWARE.
 	var _Object = G.WebAudioSound = function(src, context) {
 		Object.base(this, src);
 		this.init(context);
-	},
+	};
 
-	proto = _Object.inherits(G.BaseSound);
+	var proto = _Object.inherits(G.BaseSound);
 
 	proto.init = function(context) {
 		this.ctx_ = context;
 	};
 
 	proto.load = function() {
-		var that = this,
-			promise = new G.Promise(),
-			file = new G.AsyncFile(),
-			context = this.ctx_;
+		var file = new G.AsyncFile();
+		var context = this.ctx_;
 
-		file.open(this.src_)
-		.then(function() {
-			if (file.error != 0) {
-				promise.reject("Error " + file.error);
-			} else {
-				file.readAll();
-				var buffer = file.buffer;
-				file.close();
+		return new Promise(function(resolve, reject) {
 
-				if (context.decodeAudioData) {
-					context.decodeAudioData(buffer, function(data) {
-						that.buffer = data;
-						promise.resolve();
-					}, function() {
-						promise.reject("Failed to decode audio data.");
-					});
+			file.open(this.src_)
+			.then(function() {
+
+				if (file.error !== 0) {
+					reject("Error " + file.error);
+
 				} else {
-					that.buffer = context.createBuffer(buffer, false/*keep channels*/);
-					promise.resolve();
+					file.readAll();
+					var buffer = file.buffer;
+					file.close();
+
+					if (context.decodeAudioData) {
+						context.decodeAudioData(buffer, function(data) {
+							this.buffer = data;
+							resolve();
+						}.bind(this), reject);
+					} else {
+						this.buffer = context.createBuffer(buffer, false /* Keep channels */);
+						resolve();
+					}
 				}
-			}
 
-		}, function(reason) {
-			promise.reject(reason);
-		});
+			}.bind(this), reject);
 
-		return promise;
+		}.bind(this));
 	};
 
 	proto.play = function(repeat) {
 		_Object.base.play.call(this, repeat);
 
-		var context = this.ctx_,
-			source = context.createBufferSource();
+		var context = this.ctx_;
+		var source = context.createBufferSource();
+
 		source.connect(context.destination);
 		source.onended = this.onEnded_.bind(this);
 

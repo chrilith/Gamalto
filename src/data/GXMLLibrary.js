@@ -1,7 +1,7 @@
 /*
  * Gamalto.XMLLibrary
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -42,10 +42,10 @@ THE SOFTWARE.
 	 */
 	var _Object = G.XMLLibrary = function() {
 		Object.base(this);
-	},
-	
+	};
+
 	/** @alias Gamalto.XMLLibrary.prototype */
-	proto = _Object.inherits(G.BaseLibrary);
+	var proto = _Object.inherits(G.BaseLibrary);
 
 	/**
 	 * Tries to load a new resource into the library.
@@ -55,55 +55,62 @@ THE SOFTWARE.
 	 * @param  {string} src
 	 *         Location of the item to load.
 	 * @param  {string} [data]
-	 *         Data to send with the request. If set, the request will use POST instead of GET.
-	 * 
-	 * @returns {Gamalto.Promise} Promise to handle the loading states.
+	 *         Data to send with the request. If set, the request
+	 *         will use POST instead of GET.
+	 *
+	 * @returns {Promise} Promise to handle the loading states.
 	 */
 	proto.loadItem = function(name, src, data) {
-		var promise = _Object.base.loadItem.call(this),
-		
+		return new Promise(function(resolve, reject) {
+
 			/* See: API_CORS.js */
-			x = new (global._XDomainRequest || XMLHttpRequest),
-			that = this;
+			/*jshint -W056 */
+			var x = new (global._XDomainRequest || XMLHttpRequest)();
 
-		x.onreadystatechange = function() {
-			var e, exception, success;
-			switch (x.readyState) {
-				case x.LOADING:
-					data = true;
-					break;
-				case x.DONE:
-					if (data && (success = (x.status || 200)) == 200) {
-						try {
-							data = that.toData_(x);
-						} catch(e) {
-							exception = e;
+			x.onreadystatechange = function() {
+				var e, exception, success;
+
+				switch (x.readyState) {
+
+					case x.LOADING:
+						data = true;
+						break;
+
+					case x.DONE:
+						if (data && (success = (x.status || 200)) == 200) {
+							try {
+								data = this.toData_(x);
+
+							} catch(ex) {
+								exception = ex;
+							}
+							success = success && Boolean(data);
 						}
-						success = success && !!data;
-					}
-	
-					if (!success) {
-						promise.reject(that.failed_(name, src, exception));
-					} else {
-						that.list_[G.N(name)] = data;
-						promise.resolve({
-							source: that,
-							item: name
-						});
-					}
-					break;
-			}
-		}
 
-		try {
-			x.open(data ? "POST" : "GET", src);
-			x.send(data || null);
-		} catch(exception) {
-			promise.reject(this.failed_(name, src, exception));
-		}
-		return promise;
+						if (!success) {
+							reject(this.failed_(name, src, exception));
+						} else {
+							this.list_[G.N(name)] = data;
+							resolve({
+								source: this,
+								item: name
+							});
+						}
+						break;
+				}
+			}.bind(this);
+
+			try {
+				x.open(data ? "POST" : "GET", src);
+				x.send(data || null);
+
+			} catch(exception) {
+				reject(this.failed_(name, src, exception));
+			}
+
+		}.bind(this));
 	};
-	
+
 	/**
 	 * Transforms data before sorting the resource.
 	 *

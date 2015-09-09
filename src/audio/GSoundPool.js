@@ -42,15 +42,13 @@ THE SOFTWARE.
 	var _Object = G.SoundPool = function(mixer) {
 		Object.base(this);
 		this.mixer = mixer;
-	}
+	};
 
 	var proto = _Object.inherits(G.BaseLibrary);
 
 	proto.loadItem = function(name, src, type/*, ...vargs*/) {
-		var that = this,
-			vargs = Array.prototype.slice.call(arguments, 3),
-			promise = _Object.base.loadItem.call(this),
-			sound = type ? new type(src) :
+		var vargs = Array.prototype.slice.call(arguments, 3);
+		var sound = type ? new type(src) :
 				this.mixer ? this.mixer.createSound(src) : null;
 
 		gamalto.devel.assert(sound, "Failed to initialize sound object " + name + ".");
@@ -58,41 +56,49 @@ THE SOFTWARE.
 		if (vargs.length) {
 			sound.init.apply(sound, vargs);
 		}
-		sound.load()
-		.then(function() {
-			that.add_(name, sound);
-			promise.resolve({
-				source: that,
-				item: name
-			});
 
-		}, function() {
-			promise.reject(that.failed_(name, src, e));
-		});
+		return new Promise(function(resolve, reject) {
 
-		return promise;
-	}
+			sound.load()
+			.then(
+				function() {
+					this.add_(name, sound);
+					resolve({
+						source: this,
+						item: name
+					});
+				}.bind(this),
+
+				function(reason) {
+					reject(this.failed_(name, src, reason));
+				}.bind(this)
+			);
+
+		}.bind(this));
+	};
 
 	/* Constants */
 
-	_Object.MP3	 = ["audio/mpeg", "audio/mpg3"];
-	_Object.MP4	 = ["audio/mpg4"];
-	_Object.OGG	 = ["audio/ogg"];
-	_Object.WAVE = ["audio/wav", "audio/x-wav"];
+	_Object.MP3		= ["audio/mpeg", "audio/mpg3"];
+	_Object.MP4		= ["audio/mpg4"];
+	_Object.OGG		= ["audio/ogg"];
+	_Object.WAVE	= ["audio/wav", "audio/x-wav"];
 
 	/* Static */
 
 	var test = new Audio();
 	_Object.isSupported = function(mime) {
-		if (typeof mime == "string") { mime = [mime]; }
+		if (typeof mime == "string") {
+			mime = [mime];
+		}
 
-		var supported;
+		var supported = false;
 		mime.forEach(function(item) {
-			if (test.canPlayType(item) != "") {
-				supported = 1;
+			if (test.canPlayType(item) !== "") {
+				supported = true;
 			}
 		});
-		return !!supported;
-	}
+		return supported;
+	};
 
 })();

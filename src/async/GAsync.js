@@ -31,11 +31,8 @@ THE SOFTWARE.
 
 (function() {
 
-	/* Dependencies */
-	gamalto.devel.require("Promise");
-
 	/* Aliases */
-	var _Promise = G.Promise;
+	var _Promise = Promise;
 
 	/**
 	 * Simple object to asynchonously loop a function call.
@@ -65,33 +62,31 @@ THE SOFTWARE.
 	 *
 	 * @ignore
 	 *
-	 * @param  {Gamalto.Promise} promise
+	 * @param  {Promise} promise
 	 *         Promise to resolve when the value is true.
 	 * @param  {object} context
 	 *         Calling context when calling the function.
 	 */
-	proto.iterator = function(promise, context) {
-		var that = this;
-
+	proto.iterator = function(resolve, context) {
 		setImmediate(function() {
-			var value = that.func_.call(context);
+			var value = this.func_.call(context);
 
 			if (!value) {
-				that.iterator(promise, context);
+				this.iterator(resolve, context);
 			} else {
 				if (!value.is(_Promise)) {
-					promise.resolve();
+					resolve();
 				} else {
 					value.then(function(value) {
 						if (value) {
-							promise.resolve();
+							resolve();
 						} else {
-							that.iterator(promise, context);
+							this.iterator(resolve, context);
 						}
 					});
 				}
 			}
-		});
+		}.bind(this));
 	};
 
 	/**
@@ -114,7 +109,7 @@ THE SOFTWARE.
 	 * @param  {function} func
 	 *         Function to loop.
 	 *
-	 * @return {Gamalto.Promise}
+	 * @return {Promise}
 	 *         Promise to handle loop completion.
 	 *
 	 * @example
@@ -129,9 +124,9 @@ THE SOFTWARE.
 	 * });
 	 */
 	_Object.loop = function(func) {
-		var promise = new _Promise();
-		new Loop(func).iterator(promise, this);
-		return promise;
+		return new _Promise(function(resolve) {
+			new Loop(func).iterator(resolve, this);
+		}.bind(this));
 	};
 
 	/**
@@ -141,7 +136,7 @@ THE SOFTWARE.
 	 *
 	 * @static
 	 *
-	 * @return {Gamalto.Promise}
+	 * @return {Promise}
 	 *         Promise to handle function execution.
 	 *
 	 * @example
@@ -160,13 +155,9 @@ THE SOFTWARE.
 	 * }
 	 */
 	_Object.immediate = function() {
-		var promise = new _Promise();
-
-		setImmediate(function() {
-			promise.resolve();
+		return new _Promise(function(resolve) {
+			setImmediate(resolve);
 		});
-
-		return promise;
 	};
 
 	/**
@@ -177,7 +168,7 @@ THE SOFTWARE.
 	 * @param  {number} msecs
 	 *         Time to wait in millseconds.
 	 *
-	 * @return {Gamalto.Promise}
+	 * @return {Promise}
 	 *         Promise to handle wait completion.
 	 *
 	 * @example
@@ -195,13 +186,9 @@ THE SOFTWARE.
 	 * });
 	 */
 	_Object.delay = function(msecs) {
-		var promise = new _Promise();
-
-		setTimeout(function() {
-			promise.resolve();
-		}, msecs);
-
-		return promise;
+		return new _Promise(function() {
+			setTimeout(resolve, msecs);
+		});
 	};
 
 })();

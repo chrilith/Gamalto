@@ -21,7 +21,6 @@
     "src/core/OOP.js",
     "src/core/Extensions.js",
     "src/async/API_Immediate.js",
-    "src/async/GPromise.js",
     "src/async/GAsync.js",
     "src/system/API_Base64.js",
     "src/system/GConvert.js",
@@ -131,5 +130,8 @@
     "test",
     "tests"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "promise-polyfill": "~2.1.0"
+  }
 }

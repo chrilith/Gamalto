@@ -22,16 +22,6 @@ var config = {
 	production: env.mode == "production"
 };
 
-/* Copy source files in place for mapping */
-
-gulp.task('source', function() {
-
-	gulp.src(config.src + "/**/*.js")
-		.pipe(plugins.ignore.exclude("gamalto.debug.js"))
-		.pipe(plugins.flatten())
-		.pipe(gulp.dest(config.code));
-});
-
 /* Copy shaders files for distribution */
 
 gulp.task('shaders', function() {
@@ -55,9 +45,13 @@ gulp.task('doc', function(done) {
 
 gulp.task('all', ["default", "doc"]);
 
-gulp.task('default', ["source", "shaders"], function() {
+gulp.task('default', ["shaders"], function() {
 
-	gulp.src(bower.main)
+	gulp.src('./bower.json')
+		.pipe(plugins.mainBowerFiles({
+			includeSelf: true,
+			includeDev: true
+		}))
 		.pipe(plugins.ignore.exclude("**/*.{vert,frag}"))
 		.pipe(plugins.ignore.exclude("gamalto.debug.js"))
 		.pipe(plugins.sourcemaps.init())
@@ -80,7 +74,7 @@ gulp.task('default', ["source", "shaders"], function() {
 			}
 		}))
 		.pipe(plugins.rename({ extname: '.min.js' }))
-		.pipe(plugins.sourcemaps.write('./', { includeContent: false, sourceRoot: config.src }))
+		.pipe(plugins.sourcemaps.write('./'))
 		.pipe(gulp.dest(config.dist));
 });
 

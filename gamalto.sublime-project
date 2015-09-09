@@ -1,0 +1,16 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"test",
+				"dist",
+				"temp",
+				"node_modules",
+				"bower_components"
+			],
+			"path": "."
+		}
+	]
+}

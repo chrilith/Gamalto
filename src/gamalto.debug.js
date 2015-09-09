@@ -51,7 +51,6 @@ var GAMALTO_DEBUG = true;
 		"core/Extensions.js",
 
 		"async/API_Immediate.js",
-		"async/GPromise.js",
 		"async/GAsync.js",
 
 		"system/API_Base64.js",

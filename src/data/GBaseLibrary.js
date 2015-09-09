@@ -31,9 +31,6 @@ THE SOFTWARE.
 
 (function() {
 
-	/* Dependencies */
-	gamalto.devel.using("Promise");
-
 	/**
 	 * Base object to implement resources managers. It's not meant to be used directly by the client code.
 	 *
@@ -41,26 +38,26 @@ THE SOFTWARE.
 	 * @constructor Gamalto.BaseLibrary
 	 * @augments Gamalto.Object
 	 */
-	 var _Object = G.BaseLibrary = function() {
+	var _Object = G.BaseLibrary = function() {
 		this.list_ = {};
 		this.pending_ = [];
-	},
-	
+	};
+
 	/** @alias Gamalto.BaseLibrary.prototype */
-	proto = _Object.inherits(G.Object);
-	
+	var proto = _Object.inherits(G.Object);
+
 	/**
 	 * Gets a resource from the library.
 	 *
 	 * @param  {string} name
 	 *         Name of the resource.
-	 * 
+	 *
 	 * @return {object} Requested item if it exists.
 	 */
 	proto.getItem = function(name) {
 		return this.list_[G.N(name)];
 	};
-	
+
 	/**
 	 * Releases the resource.
 	 *
@@ -71,23 +68,26 @@ THE SOFTWARE.
 		delete this.list_[G.N(name)];
 	};
 
+
 	/**
 	 * Tries to load a new resource into the library.
 	 *
-	 * @virtual
-	 * 
+	 * @function
+	 * @name Gamalto.BaseAnimation#draw_
+	 *
+	 * @protected
+	 * @abstract
+	 * @ignore
+	 *
 	 * @param  {string} name
 	 *          Name of the resource.
 	 * @param  {string} src
 	 *          Location of the item to load.
 	 * @param  {...object} [vargs]
 	 *          Extra parameters.
-	 * 
-	 * @return {Gamalto.Promise} Promise to handle the loading states.
+	 *
+	 * @return {Promise} Promise to handle the loading states.
 	 */
-	proto.loadItem = function(name, src/* vargs */) {
-		return new G.Promise();
-	};
 
 	/**
 	 * Pushes a new resource into the list.
@@ -102,47 +102,43 @@ THE SOFTWARE.
 		// Here we can have more than just 'src', save all parameters
 		this.pending_.push(Array.prototype.slice.call(arguments, 0));
 	};
-	
+
 	/**
 	 * Tries to load all the resources pushed into the library.
 	 *
-	 * @return {Gamalto.Promise} Promise to handle the loading states.
+	 * @return {Promise} Promise to handle the loading states.
 	 */
 	proto.load = function() {
 		gamalto.devel.assert(!this.loading_, "The libary is already loading items.");
 		this.loading_ = true;
 
-		var that = this,
-			args = [],
-			promise = new G.Promise();
+		return new Promise(function(resolve, reject) {
 
-		this.pending_.forEach(function(val) {
-			args.push(that.loadItem.apply(that, val));
-		});
+			var args = [];
+			this.pending_.forEach(function(val) {
+				args.push(this.loadItem.apply(this, val));
+			}, this);
 
-		G.Promise.all.apply(null, args)
-			.then(
-				function(value) {
-					that.loading_ = false;
-					that.pending_.length = 0;
-					promise.resolve(value);
-				},
-				function(error) {
-					that.loading_ = false;
-					promise.reject(error);
-				},
-				function(value) {
-					promise.progress(value);
-				}
-			);
+			var promise = Promise.all(args)
+				.then(
+					function(value) {
+						this.loading_ = false;
+						this.pending_.length = 0;
+						resolve(value);
+					}.bind(this),
 
-		return promise;
+					function(reason) {
+						this.loading_ = false;
+						reject(reason);
+					}.bind(this));
+
+		}.bind(this));
 	};
 
 	proto.add_ = function(name, item) {
 		this.list_[G.N(name)] = item;
 	};
-	
+
 	proto.failed_ = function(name, src, e) {
 		var err = new Error("Failed to load item '" + name + "' from '" + src + "'.");
 		err.source	= this;
@@ -150,13 +146,13 @@ THE SOFTWARE.
 		err.innerException = e;
 		return err;
 	};
-	
+
 	/**
 	 * Tests whether a resource is available.
 	 *
 	 * @param  {string} name
 	 *         Name of the resource.
-	 * 
+	 *
 	 * @return {boolean} True is the resource exists and has been properly loaded.
 	 */
 	proto.hasItem = function(name) {

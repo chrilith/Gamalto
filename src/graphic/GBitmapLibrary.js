@@ -59,32 +59,33 @@ THE SOFTWARE.
 	 * @param  {Gamalto.Bitmap} [type]
 	 *         Type of the bitmap object to be instanciated.
 	 *
-	 * @return {Gamalto.Promise} A promise to handle loading states.
+	 * @return {Promise} A promise to handle loading states.
 	 */
 	proto.loadItem = function(name, src, type) {
-		var promise = _Object.base.loadItem.call(this);
-		/*jshint -W056 */
-		var bitmap = new (type || G.Bitmap)();
+		return new Promise(function(resolve, reject) {
 
-		var image = bitmap.createSource_();
-		var that = this;
+			/*jshint -W056 */
+			var bitmap = new (type || G.Bitmap)();
 
-		image.onabort =
-			image.onerror = function(e) {
-				promise.reject(that.failed_(name, src));
+			var image = bitmap.createSource_();
+			var that = this;
+
+			image.onabort =
+				image.onerror = function(e) {
+					reject(that.failed_(name, src));
+				};
+
+			image.onload = function() {
+				that.list_[G.N(name)] = bitmap;
+				resolve({
+					source: that,
+					item: name
+				});
 			};
 
-		image.onload = function() {
-			that.list_[G.N(name)] = bitmap;
-			promise.resolve({
-				source: that,
-				item: name
-			});
-		};
+			image.src = src;
 
-		image.src = src;
-
-		return promise;
+		}.bind(this));
 	};
 
 })();

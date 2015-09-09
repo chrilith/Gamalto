@@ -32,8 +32,6 @@ THE SOFTWARE.
 (function() {
 
 	gamalto.devel.require("BaseSound");
-	gamalto.devel.using("Promise");
-	
 
 	/**
 	 * @memberof Gamalto
@@ -43,34 +41,34 @@ THE SOFTWARE.
 	var _Object = G.HTML5Sound = function(src) {
 		Object.base(this, src);
 		this.canPlay_ = false;
-	},
+	};
 
-	proto = _Object.inherits(G.BaseSound);
+	var proto = _Object.inherits(G.BaseSound);
 
 	proto.load = function() {
-		var promise = new G.Promise(),
-			audio = new Audio(),
-			handler = this.handleEvent.bind(this); // passing "this" is not supported by CocoonJS
+		return new Promise(function(resolve, reject) {
+			var audio = new Audio();
+			var handler = this.handleEvent.bind(this); // FIXME: passing "this" is not supported by CocoonJS
 
-		// When data is available try to play the sound if needed
-		audio.addEventListener("canplaythrough", handler, false);
+			// When data is available try to play the sound if needed
+			audio.addEventListener("canplaythrough", handler, false);
 
-		// Loop handling
-		audio.addEventListener("ended", handler, false);
+			// Loop handling
+			audio.addEventListener("ended", handler, false);
 
-		audio.addEventListener("loadedmetadata", function() {
-			audio.removeEventListener("loadedmetadata", arguments.callee, false);
-			promise.resolve();
-		}, false);
+			audio.addEventListener("loadedmetadata", function() {
+				audio.removeEventListener("loadedmetadata", arguments.callee, false);
+				resolve();
+			}, false);
 
-		audio.onabort = audio.onerror = promise.reject.bind(promise);
+			audio.onabort = audio.onerror = reject;
 
-		this.audio_ = audio;
-		audio.preload = "auto";
-		audio.src = this.src_;
-		audio.load();
+			this.audio_ = audio;
+			audio.preload = "auto";
+			audio.src = this.src_;
+			audio.load();
 
-		return promise;
+		}.bind(this));
 	};
 
 	proto.play = function(repeat) {
@@ -83,17 +81,18 @@ THE SOFTWARE.
 		var audio = this.audio_;
 		try {
 			audio.currentTime = 0;
+
 		// Expection if metadata is not available
 		} finally {
 			audio.play();
-		}		
+		}
 	};
 
 	proto.stop = function() {
 		_Object.base.stop.call(this);
 		this.audio_.pause();
 	};
-	
+
 	proto.clone = function() {
 		var sound = new _Object(this.src_);
 		sound.load();
@@ -113,21 +112,23 @@ THE SOFTWARE.
 
 	proto.onCanPlayThrough_ = function() {
 		if (this.playing_ && !this.canPlay_) {
-			var elapsed		= (Date.now() - this.startTime_) / 1000,
-				audio		= this.audio_,
-				duration	= audio.duration,
-				// Adjust
-				loop		= elapsed / duration | 0,
-				played		= elapsed % duration;
+			var elapsed		= (Date.now() - this.startTime_) / 1000;
+			var audio		= this.audio_;
+			var duration	= audio.duration;
 
-				if ((this.toPlay_ -= loop) >= 0) {
-					audio.currentTime = played;
-					audio.play();
-				} else {
-					this.stop();
-				}
+			// Adjust
+			var loop		= elapsed / duration | 0;
+			var played		= elapsed % duration;
+
+			if ((this.toPlay_ -= loop) >= 0) {
+				audio.currentTime = played;
+				audio.play();
+			} else {
+				this.stop();
+			}
 		}
+
 		this.canPlay_ = true;
 	};
-	
+
 })();

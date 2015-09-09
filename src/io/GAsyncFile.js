@@ -34,7 +34,6 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("File");
 	gamalto.devel.using("Async");
-	gamalto.devel.using("Promise");
 
 	/**
 	 * @constructor
@@ -51,33 +50,29 @@ THE SOFTWARE.
 	};
 
 	proto.info_ = function() {
-		var promise = new G.Promise();
-
-		this.send_(this.open_(function(r) {
-			var state = this.onInfoReceived_(r);
-			if (state == r.DONE) {
-				promise.resolve(this);
-			}
-		}, function(r) {
-			promise.reject(this.onError_(r));
-		}, "HEAD"));
-
-		return promise;
+		return this.sendFor_("open_", "onInfoReceived_");
 	};
 
 	proto.range_ = function() {
-		var promise = new G.Promise();
+		return this.sendFor_("openRange_", "onRangeReceived_");
+	};
 
-		this.send_(this.openRange_(function(r) {
-			var state = this.onRangeReceived_(r);
-			if (state == r.DONE) {
-				promise.resolve(this);
-			}
-		}, function(r) {
-			promise.reject(this.onError_(r));
-		}));
+	proto.sendFor_ = function(opener, event) {
+		return new Promise(function(resolve, reject) {
 
-		return promise;
+			this.send_(this[opener](
+				function(r) {
+					var state = this[event](r);
+					if (state == r.DONE) {
+						resolve(this);
+					}
+				}.bind(this),
+
+				function(reason) {
+					reject(this.onError_(reason));
+				}.bind(this)));
+
+		}.bind(this));
 	};
 
 	proto.ensureCapacity_ = function(size) {

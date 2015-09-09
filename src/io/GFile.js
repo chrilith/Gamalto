@@ -274,7 +274,7 @@ THE SOFTWARE.
 	/**
 	 * Reads the whole file data into the internal buffer.
 	 *
-	 * @return {Gamalto.Promise} A promise if this file object is
+	 * @return {Promise} A promise if this file object is
 	 *         asynchronous or nothing if not.
 	 */
 	proto.readAll = function() {
