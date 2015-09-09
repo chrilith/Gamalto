@@ -131,7 +131,7 @@ THE SOFTWARE.
 		var renderer = this.renderer;
 		var old = renderer.setTransform(false);
 
-		renderer.fillRect(new G.Box(0, 0, this.width, this.height), G.Color.BLACK);
+		renderer.fillRect(new G.Box(0, 0, this.width, this.height), new G.Color());
 		renderer.setTransform(old);
 	};
 

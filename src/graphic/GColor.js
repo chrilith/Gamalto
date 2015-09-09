@@ -32,17 +32,55 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * @constructor
+	 * Creates a RGBA color object.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Color
+	 * @augments Gamalto.Object
+	 *
+	 * @param {number} [r]
+	 *        Red component of the color.
+	 * @param {number} [g]
+	 *        Green component of the color.
+	 * @param {number} [b]
+	 *        Blue component of the color.
+	 * @param {number} [a]
+	 *        Alpha component of the color.
 	 */
 	var _Object = G.Color = function(r, g, b, a) {
 		var undef;
-		this.r = Math.fmin(Math.fmax(r | 0, 0), 255);
-		this.g = Math.fmin(Math.fmax(g | 0, 0), 255);
-		this.b = Math.fmin(Math.fmax(b | 0, 0), 255);
-		this.a = Math.fmin(Math.fmax((a === undef) ? 255 : (a | 0), 0), 255);
+
+		/**
+		 * Gets or sets the red component of the color.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Color#r
+		 */
+		this.r = Math.fmin(Math.fmax(Number(r) | 0, 0), 255);
+		/**
+		 * Gets or sets the green component of the color.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Color#g
+		 */
+		this.g = Math.fmin(Math.fmax(Number(g) | 0, 0), 255);
+		/**
+		 * Gets or sets the blue component of the color.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Color#b
+		 */
+		this.b = Math.fmin(Math.fmax(Number(b) | 0, 0), 255);
+		/**
+		 * Gets or sets the alpha component of the color.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Color#a
+		 */
+		this.a = Math.fmin(Math.fmax((a === undef) ? 255 : (Number(a) | 0), 0), 255);
 	};
 
-	/* Inheritance and shortcut */
+	/** @alias Gamalto.Color.prototype */
 	var proto = _Object.inherits(G.Object);
 
 	/* Instance methods */
@@ -53,22 +91,39 @@ THE SOFTWARE.
 						(this.a / 255) + ")";
 	};
 
+	/**
+	 * Creates a clone of the current object.
+	 *
+	 * @return {Gamalto.Color} Copy of the object.
+	 */
 	proto.clone = function() {
 		return new _Object(this.r, this.g, this.b, this.a);
 	};
 
-	_Object.blend = function(c1, c2, t) {
-		var t1 = 1 - t;
-		var r = c1.r * t1 + c2.r * t;
-		var g = c1.g * t1 + c2.g * t;
-		var b = c1.b * t1 + c2.b * t;
-		var a = c1.a * t1 + c2.a * t;
+	/**
+	 * Alpha-blends two colors.
+	 *
+	 * @function blend
+	 * @memberof Gamalto.Color
+	 * @static
+	 *
+	 * @param  {Gamalto.Color} c1
+	 *         Source color.
+	 * @param  {Gamalto.Color} c2
+	 *         Destination color.
+	 * @param  {number} factor
+	 *         Blending factor. A value of 1 means 100% of the destination color.
+	 *
+	 * @return {Gamalto.Color} Resulting color.
+	 */
+	_Object.blend = function(c1, c2, factor) {
+		var f1 = 1 - factor;
+		var r = c1.r * f1 + c2.r * factor;
+		var g = c1.g * f1 + c2.g * factor;
+		var b = c1.b * f1 + c2.b * factor;
+		var a = c1.a * f1 + c2.a * factor;
 
 		return new _Object(r, g, b, a);
 	};
-
-	_Object.BLACK	= new _Object(0, 0, 0);
-	_Object.GREY	= new _Object(128, 128, 128);
-	_Object.WHITE	= new _Object(255, 255, 255);
 
 })();

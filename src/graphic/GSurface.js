@@ -69,7 +69,7 @@ THE SOFTWARE.
 		 */
 		canvas = this.canvas = _BaseCanvas.create_(canvas, width, height);
 		/**
-		 * Internal canvas.
+		 * Internal canvas renderer.
 		 *
 		 * @member {Gamalto.BaseRenderer}
 		 * @readonly
