@@ -14,7 +14,7 @@ http://www.gamalto.com/
 Building Gamalto
 ================
 
-To build your own version of Gamalto you'll need [Node.js](http://nodejs.org/) and [Gulp](http://gulpjs.com).
+To build your own version of Gamalto you'll need [Node.js](http://nodejs.org/) and [Gulp](http://gulpjs.com/).
 
 First you need to clone the Gamalto repository to your computer.
 
@@ -45,6 +45,28 @@ You can build the documentation with:
 ```bash
 $ gulp doc
 ```
+
+TODO
+====
+
+- Complete current code cleanup and documentation!
+- Complete sound support
+- Freeze vertices in shapes
+
+Roadmap
+=======
+
+- Add better indexed image support
+- Add depth support to Color and Palette
+- Add indexed palette surface with multi-palette support
+- Add full WebGL renderer
+- Add more map orientations support
+- Add more transformations
+- Add basic SAT support
+- Add shapes rendering
+- Add TypeScript definition
+- Add semver support to Version object
+- Make Promise comply with Promise/A+
 
 Support
 =======
