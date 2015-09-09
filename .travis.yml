@@ -4,5 +4,7 @@ node_js:
 
 before_script:
   - npm install -g gulp
+  - npm install -g bower
+  - bower install
 
 script: gulp --mode production
