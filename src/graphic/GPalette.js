@@ -36,11 +36,10 @@ THE SOFTWARE.
 	 * @constructor Gamalto.Palette
 	 * @augments Gamalto.Object
 	 */
-	var _Object = G.Palette = function(colors) {
+	var _Object = G.Palette = function(colors, transparent) {
 		this._list = colors || [];
 		this._animators = [];
-		this._animated = [];
-		this._changed = false;	// Whether the palette has been changed
+		this._changed = false;	// Whether the palette has been changed, should be in the parent object??
 		this._trans = -1;
 		this.length = this._list.length;
 	};
@@ -80,7 +79,6 @@ THE SOFTWARE.
 
 	proto.addAnimator = function(from, to, delay) {
 		var step = from < to ? 1 : -1;
-		var iter = (to - from) * step;
 
 		this._animators.push({
 			speed:	1 / delay,
@@ -89,16 +87,6 @@ THE SOFTWARE.
 			to:		to,
 			curr:	0
 		});
-
-		// Cache cycling color indices
-		do {
-			this._animated[from] = true;
-			from += step;
-		} while (iter--);
-	};
-
-	proto.isAnimated = function(index) {
-		return this._animated[index];
 	};
 
 	proto.update = function(timer) {
@@ -109,9 +97,9 @@ THE SOFTWARE.
 
 			// Compute number of required iterations based on elapsed time
 			if ((r = (anim[n].curr += timer.elapsedTime * anim[n].speed) | 0)) {
-				changed = r;
+				changed = true;
 				anim[n].curr -= r; // Save fractional part
-				while (r--) { this.swap(n); }
+				this.cycle_(n, r);
 
 			}
 		}
@@ -120,20 +108,24 @@ THE SOFTWARE.
 		return Boolean(changed);
 	};
 
-	proto.swap = function(index) {
+	proto.cycle_ = function(index, shift) {
+		// Quite faster that using array methods...
+		while (shift-- > 0) {
+			this.swap_(index);
+		}
+	};
+
+	proto.swap_ = function(index) {
 		var anim = this._animators[index];
 		var list = this._list;
 		var step = anim.step;
 		var from = anim.from;
 		var to = anim.to;
 		var col	= list[from];
-		var i = 0;
 
-		len = (anim.to - anim.from) * step;
-		while (i < len) {
-			var n = from + i * step;
-			list[n] = list[n + step];
-			i++;
+		len = (to - from) * step;
+		while (len--) {
+			list[from] = list[(from += step)];
 		}
 		list[to] = col;
 	};
