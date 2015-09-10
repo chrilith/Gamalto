@@ -109,7 +109,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Scrolls the region using the specified displacement, or the internal state
+	 * Scrolls the region using the specified ratios, or the internal state
 	 * if not specified. To prevent a region from moving, simply set its speed
 	 * to 0.
 	 *
@@ -120,10 +120,10 @@ THE SOFTWARE.
 	 *         Name the region to be drawn.
 	 * @param  {number} dx
 	 *         Value beween 0 and 1 indicating the desired horizontal
-	 *         displacement ratio.
+	 *         speed ratio. Usually 1 to move all or 0 to not.
 	 * @param  {number} dy
 	 *         Value beween 0 and 1 indicating the desired vertical
-	 *         displacement ratio.
+	 *         speed ratio. Usually 1 to move all or 0 to not.
 	 */
 	proto.drawRegion_ = function(name, dx, dy) {
 		var region = this.getRegion(name);
@@ -150,15 +150,15 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Updates the internal displacement state of the registered regions.
+	 * Updates the internal motion state of the registered regions.
 	 *
 	 * @param  {Gamalto.ITiming} timer
 	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed time will
 	 *         be read.
 	 * @param  {number} dx
-	 *         Value beween -1 and +1 indicating the horizontal displacement.
+	 *         Value beween -1 and +1 indicating the horizontal direction ratio.
 	 * @param  {number} dy
-	 *         Value beween -1 and +1 indicating the vertical displacement.
+	 *         Value beween -1 and +1 indicating the vertical direction ratio.
 	 */
 	proto.update = function(timer, dx, dy) {
 		var regions = this.regions_;
@@ -171,10 +171,10 @@ THE SOFTWARE.
 	 * Redraws parts of the current surface into the buffer surface.
 	 * Useful only with double buffering.
 	 *
-	 * @param  {array.<Gamalto.IBox>} [regions]
-	 *         List of the regions to be updated. Defaults to the whole surface.
+	 * @param  {array.<Gamalto.IBox>} [parts]
+	 *         List of the parts to be updated. Defaults to the whole surface.
 	 */
-	proto.redraw = function(regions) {
+	proto.redraw = function(parts) {
 		// Get the next destionation surface
 		var	offs = this.surface_;
 
@@ -185,21 +185,23 @@ THE SOFTWARE.
 		// Also, IE throw an 'unexpected call to method or property access' exception
 		// calling Surface.redraw()
 		if (offs != view) {
-			// Prepare regions
-			regions = regions || [new G.Box(0, 0, offs.width, offs.height)];
+			// Prepare parts
+			parts = parts || [new G.Box(0, 0, offs.width, offs.height)];
 
 			// Update the surface
-			offs.redraw(view, 0, 0, regions);
+			offs.redraw(view, 0, 0, parts);
 		}
 	};
 
 	/**
-	 * Scrolls the registered regions.
+	 * Scrolls and draws the registered regions into the internal buffer.
 	 *
 	 * @param  {number} dx
-	 *         Value beween 0 and 1 indicating the horizontal displacement ratio.
+	 *         Value beween 0 and 1 indicating the horizontal speed ratio.
+	 *         Usually 1 to move or 0 to not.
 	 * @param  {number} dy
-	 *         Value beween 0 and 1 indicating the vertical displacement ratio.
+	 *         Value beween 0 and 1 indicating the vertical speed ratio.
+	 *         Usually 1 to move or 0 to not.
 	 *
 	 * @return {Gamalto.Surface} Currently active surface to be displayed.
 	 */

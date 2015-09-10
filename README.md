@@ -66,13 +66,18 @@ Roadmap
 - Add shapes rendering
 - Add TypeScript definition
 - Add semver support to Version object
-- Make Promise comply with Promise/A+
 
 Support
 =======
 
 For requests and issues use the GitHub project at:
 https://github.com/chrilith/Gamalto
+
+Dependencies
+============
+
+Currently, Gamalto relies on a single polyfill for older browsers with no native
+Promise support.
 
 License
 =======

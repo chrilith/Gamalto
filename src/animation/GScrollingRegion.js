@@ -76,7 +76,7 @@ THE SOFTWARE.
 	 * Current expected displacement of the region in pixels.
 	 *
 	 * @memberof Gamalto.ScrollingRegion.prototype
-	 * @member {Gamalto.Vector2} moving
+	 * @member {Gamalto.IPoint} moving
 	 * @readonly
 	 */
 	Object.defineProperty(proto, "moving", {

@@ -46,7 +46,7 @@ THE SOFTWARE.
 	 */
 	var _Object = G.Movable = function() {
 		/**
-		 * Fractional part of the previous displacement.
+		 * Fractional part of the previous motion iteration.
 		 *
 		 * @protected
 		 * @internal
@@ -66,7 +66,7 @@ THE SOFTWARE.
 		 */
 		this.curr_ = new _Vector2(0, 0);
 		/**
-		 * Displacement speed in pixels per millisecond.
+		 * Motion speed in pixels per millisecond.
 		 *
 		 * @protected
 		 * @ignore
@@ -80,7 +80,7 @@ THE SOFTWARE.
 	var proto = _Object.inherits(G.Object);
 
 	/**
-	 * Sets the maximum displacement speed of the entity.
+	 * Sets the maximum motion speed of the entity.
 	 *
 	 * @param {number} sx
 	 *        Maximum horizontal speed in pixels per second.
@@ -94,7 +94,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Resets the displacement properties of the movable entity.
+	 * Resets the motion properties of the movable entity.
 	 */
 	proto.reset = function() {
 		this.curr_.x = this.curr_.y =
@@ -115,10 +115,10 @@ THE SOFTWARE.
 	 *         time will be read.
 	 * @param  {number} dx
 	 *         Value beween -1 and +1 indicating the desired horizontal
-	 *         displacement.
+	 *         direction.
 	 * @param  {number} dy
 	 *         Value beween -1 and +1 indicating the desired vertical
-	 *         displacement.
+	 *         direction.
 	 *
 	 * @return {Gamalto.Vector2} Displacement to be applied to the entity
 	 *         in pixels including the fractional part.
@@ -130,15 +130,15 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Updates the internal displacement state of the movable entity.
+	 * Updates the internal motion state of the movable entity.
 	 *
 	 * @param  {Gamalto.ITiming} timer
 	 *         [Timer]{@link Gamalto.ITiming} from which the elapsed
 	 *         time will be read.
 	 * @param  {number} dx
-	 *         Value beween -1 and +1 indicating the horizontal displacement.
+	 *         Value beween -1 and +1 indicating the horizontal drection.
 	 * @param  {number} dy
-	 *         Value beween -1 and +1 indicating the vertical displacement.
+	 *         Value beween -1 and +1 indicating the vertical direction.
 	 *
 	 * @return {Gamalto.Vector2} Effective displacement to be applied to
 	 *         the entity in pixels.
