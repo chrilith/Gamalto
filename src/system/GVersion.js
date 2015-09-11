@@ -122,7 +122,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Determines whether teh current object is equal to the passed parameter.
+	 * Determines whether the current object is equal to the passed parameter.
 	 * 
 	 * @param  {Gamalto.Version} version
 	 *         Version object to test.
