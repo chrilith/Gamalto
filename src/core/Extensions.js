@@ -48,10 +48,17 @@ THE SOFTWARE.
 	 * @param  {number} n
 	 *         Number to test.
 	 *
-	 * @return {number} 0 if the value is zero, -1 if negative, +1 if positive.
+	 * @return {number} 0 if the value is zero, -1 if negative, +1 if positive
+	 *                  or NaN if the value is not a number.
 	 */
 	Object.defineMethod(Math, "sign", function(n) {
-		return n > 0 ? +1 : n < 0 ? -1 : 0;
+		n = Number(n);
+
+		if (n === 0 || isNaN(n)) {
+			return n;
+		}
+
+		return n > 0 ? 1 : -1;
 	});
 
 	/* Faster versions */
