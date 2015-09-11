@@ -1,7 +1,7 @@
 /*
  * Gamalto.Size
  * ------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -38,10 +38,9 @@ THE SOFTWARE.
 	 * @constructor Gamalto.Size
 	 * @augments Gamalto.Object
 	 * @implements {Gamalto.ISize}
-	 * 
+	 *
 	 * @param  {number} width
 	 *         Horizontal component of the size object.
-	 * 
 	 * @param  {number} height
 	 *         Vertical component of the size object.
 	 *
@@ -54,7 +53,7 @@ THE SOFTWARE.
 		 * Horizontal component of the size object.
 		 *
 		 * @readonly
-		 * 
+		 *
 		 * @member {number}
 		 * @alias Gamalto.Size#width
 		 */
@@ -64,19 +63,19 @@ THE SOFTWARE.
 		 * Vertical component of the size object.
 		 *
 		 * @readonly
-		 * 
+		 *
 		 * @member {number}
 		 * @alias Gamalto.Size#height
 		 */
 		this.height = Number(height) || 0;
-	},
+	};
 
 	/** @alias Gamalto.Size.prototype */
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	/**
 	 * Tests whether the object has width and height of 0.
-	 * 
+	 *
 	 * @return {boolean}
 	 */
 	proto.isEmpty = function() {
@@ -85,14 +84,14 @@ THE SOFTWARE.
 
 	/**
 	 * Simple object defining shape dimensions.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @interface ISize
 	 */
 
 	/**
 	 * Gets the horizontal size.
-	 * 
+	 *
 	 * @readonly
 	 *
 	 * @member {number} Gamalto.ISize#width

@@ -1,7 +1,7 @@
 /*
  * Gamalto.Shape
  * -------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,38 +31,85 @@ THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
 	gamalto.devel.require("Vector2");
 
+	/* Aliases */
+	var _Vector2 = G.Vector2;
+
 	/**
+	 * Abstract object to create a geometric shape.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Shape
 	 * @augments Gamalto.Object
+	 *
+	 * @param  {number} x
+	 *         Horizontal position of the shape origin.
+	 * @param  {number} y
+	 *         Vertical position of the shape origin.
 	 */
-	G.Shape = function(x, y){
-		this.origin_ = new G.Vector2(x, y);
-	},
-	_Vector2 = G.Vector2,
-
-	proto = G.Shape.inherits(G.Object);
-
-	proto.vectorInShape = function(v) {
-		return this.pointInShape(v.x, v.y);
-	}
-
-	proto.compute_ = function() { };
-
-	proto.offset = function(vec) {
-		this.origin_.add(vec);
+	var _Object = G.Shape = function(x, y) {
+		this.origin_ = new _Vector2(x, y);
 	};
 
+	/** @alias Gamalto.Shape.prototype */
+	var proto = _Object.inherits(G.Object);
+
+	/**
+	 * Translates the shape by the vector.
+	 *
+	 * @virtual
+	 *
+	 * @param  {Gamalto.IPoint} vec
+	 *         Vector to use for the translation.
+	 */
+	proto.translate = function(vec) {
+		this.origin_ = _Vector2.add(this.origin_, vec);
+	};
+
+	/**
+	 * Gets of sets the origin of the shape.
+	 *
+	 * @memberof Gamalto.Shape.prototype
+	 * @member {Gamalto.IPoint} origin
+	 */
 	Object.defineProperty(proto, "origin", {
 		get: function() {
 			return this.origin_;
 		},
 		set: function(value) {
+			// Convenient way to have inheriting object properly updated.
 			var vec = _Vector2.substract(value, this.origin_);
-			this.offset(vec);
+			this.translate(vec);
 		}
 	});
-	
+
+	/**
+	 * Abstract method to determine if a point lies inside the shape.
+	 *
+	 * @function
+	 * @name Gamalto.Shape#pointInShape
+	 *
+	 * @abstract
+	 *
+	 * @param  {number} x
+	 *         Horizontal position of the point to test.
+	 * @param  {number} y
+	 *         Vertical position of the point to test.
+	 *
+	 * @return {boolean} True if the point lies inside the shape.
+	 */
+
+	/**
+	 * Abstract method to get the bounding box of the shape.
+	 *
+	 * @function
+	 * @name Gamalto.Shape#toBox
+	 *
+	 * @abstract
+	 *
+	 * @return {Gamalto.Box} Bounding box of the shape.
+	 */
+
 })();

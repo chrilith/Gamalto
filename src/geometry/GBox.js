@@ -1,7 +1,7 @@
 /*
  * Gamalto.Box
  * -----------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -34,39 +34,63 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("Vector2");
 
+	/* Aliases */
+	var _Vector2 = G.Vector2;
+
 	/**
-	 * Creates a simple box object.
+	 * Creates a lightweight box object.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Box
 	 * @augments Gamalto.Object
 	 * @implements {Gamalto.IBox}
+	 *
+	 * @param  {number} x
+	 *         Horizontal position of the top left corner of the box.
+	 * @param  {number} y
+	 *         Vertical position of the top left corner of the box.
+	 * @param  {number} width
+	 *         Horizontal size of the box.
+	 * @param  {number} height
+	 *         Vertical size of the box.
 	 */
 	var _Object = G.Box = function(x, y, width, height) {
 		this.origin = new _Vector2(x, y);
 		this.extent = new _Vector2(width, height);
-	},
-	_Vector2 = G.Vector2,
-	
-	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.Object);
-
-	proto.equals = function(b2) {
-		var b1 = this;
-		return (b1.origin.x == b2.origin.x &&
-				b1.origin.y == b2.origin.y &&
-				b1.extent.x == b2.extent.x &&
-				b1.extent.y == b2.extent.y);
 	};
 
+	/** @alias Gamalto.Box.prototype */
+	var proto = _Object.inherits(G.Object);
+
+	/**
+	 * Determines if an object is equal to the current object.
+	 *
+	 * @param  {Gamalto.IBox} that
+	 *         Object to test.
+	 *
+	 * @return {boolean} True if the two objects are equal.
+	 */
+	proto.equals = function(that) {
+		return (that.origin.x == this.origin.x &&
+				that.origin.y == this.origin.y &&
+				that.extent.x == this.extent.x &&
+				that.extent.y == this.extent.y);
+	};
+
+	/**
+	 * Creates a clone of the current object.
+	 *
+	 * @return {Gamalto.Box} Copy of the object.
+	 */
 	proto.clone = function() {
-		return new _Object(this.origin.x, this.origin.y, this.extent.x, this.extent.y);
+		return new _Object(
+			this.origin.x, this.origin.y,
+			this.extent.x, this.extent.y);
 	};
-
 
 	/**
 	 * Defines a simple box object.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @interface IBox
 	 */
