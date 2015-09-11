@@ -1,7 +1,7 @@
 /*
  * Gamalto.Vector2
  * ---------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -39,11 +39,11 @@ THE SOFTWARE.
 	 */
 	var _Object = G.Vector2 = function(x, y) {
 		this.set(x, y);
-	},
+	};
 
-	pool = [],
+	var pool = [];
 
-	proto = _Object.inherits(G.Object);
+	var proto = _Object.inherits(G.Object);
 
 	_Object.create = function(x, y) {
 		var vec = pool.pop();
@@ -62,8 +62,8 @@ THE SOFTWARE.
 		pool.push(this);
 	};
 
-	proto.equals = function(v) {
-		return (this.x === v.x) && (this.y === v.y);
+	proto.equals = function(vec) {
+		return _Object.equals(this, vec);
 	};
 
 	proto.isZero = function() {
@@ -71,21 +71,19 @@ THE SOFTWARE.
 	};
 
 	proto.getLength = function() {
-		var x = this.x,
-			y = this.y;
+		var x = this.x;
+		var y = this.y;
 		return Math.sqrt(x * x + y * y);
 	};
 
 	proto.getAngle = function() {
 		return (2.0 * Math.atan2(this.y + this.getLength(), this.x));
 	};
-	
+
 	proto.getDistance = function(from) {
-		var x = (from.x - this.x),
-			y = (from.y - this.y);
-		return Math.sqrt(x * x + y * y);
+		return _Object.distance(from, this);
 	};
-	
+
 	proto.add = function(v) {
 		this.x += v.x;
 		this.y += v.y;
@@ -146,6 +144,9 @@ THE SOFTWARE.
 		return new _Object(this.x, this.y);
 	};
 
+	_Object.equals = function(p1, p2) {
+		return (p1.x === p2.x) && (p1.y === p2.y);
+	};
 
 	_Object.add = function(v1, v2) {
 		return new _Object(v1.x + v2.x, v1.y + v2.y);
@@ -180,43 +181,51 @@ THE SOFTWARE.
 	};
 
 	_Object.lerp = function(v1, v2, t) {
-		var t1 = 1 - t,
-			x = v1.x * t1 + v2.x * t,
-			y = v1.y * t1 + v2.y * t;
+		var t1 = 1 - t;
+		var x = v1.x * t1 + v2.x * t;
+		var y = v1.y * t1 + v2.y * t;
+
 		return new _Object(x, y);
 	};
 
 	_Object.dot = function(v1, v2) {
 		return v1.x * v2.x + v1.y * v2.y;
-	}
+	};
+
+	_Object.distance = function(from, to) {
+		var x = (from.x - to.x);
+		var y = (from.y - to.y);
+		return Math.sqrt(x * x + y * y);
+	};
 
 	_Object.hermite = function(v1, t1, v2, t2, amount) {
-		var s2 = amount * amount,	// amount^2
-			s3 = amount * s2,		// amount^3
+		var s2 = amount * amount;	// For amount^2
+		var s3 = amount * s2;		// For amount^3
 
-			h0 = + 2 * s3 - 3 * s2 + 1,
-			h1 =	   s3 - 2 * s2 + amount,
-			h2 = - 2 * s3 + 3 * s2,
-			h3 =	   s3 -     s2;
+		var h0 =  2 * s3 - 3 * s2 + 1;
+		var h1 =      s3 - 2 * s2 + amount;
+		var h2 = -2 * s3 + 3 * s2;
+		var h3 =      s3 -     s2;
 
-		return		 _Object.multiplyFloat(v1, h0)
+		return       _Object.multiplyFloat(v1, h0)
 				.add(_Object.multiplyFloat(t1, h1))
 				.add(_Object.multiplyFloat(v2, h2))
 				.add(_Object.multiplyFloat(t2, h3));
 	};
-	
+
 	_Object.catmullRom = function(v1, v2, v3, v4, amount) {
-		/*
+		/* With:
 			i  = start point
 			v1 = i - 1
 			v2 = i - 0
 			v3 = i + 1
 			v4 = i + 2
 		*/
-		var t1 = _Object.substract(v3, v1).multiply(0.5),
-			t2 = _Object.substract(v4, v2).multiply(0.5),
-			p1 = v2,
-			p2 = v3;
+		var t1 = _Object.substract(v3, v1).multiply(0.5);
+		var t2 = _Object.substract(v4, v2).multiply(0.5);
+		var p1 = v2;
+		var p2 = v3;
+
 		return _Object.hermite(p1, t1, p2, t2, amount);
 	};
 
@@ -228,14 +237,14 @@ THE SOFTWARE.
 
 	/**
 	 * Defines a simple point with read only components.
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @interface IPoint
 	 */
 
 	/**
 	 * Gets the horizontal component.
-	 * 
+	 *
 	 * @readonly
 	 *
 	 * @member {number} Gamalto.IPoint#x
