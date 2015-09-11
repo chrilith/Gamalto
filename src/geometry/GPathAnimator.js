@@ -1,12 +1,30 @@
 /*
  * Gamalto.PathAnimator
  * --------------------
- * 
+ *
+ * This file is part of the GAMALTO JavaScript Development Framework.
+ * http://www.gamalto.com/
+ *
 
- This file is part of the GAMALTO JavaScript Development Framework.
- http://www.gamalto.com/
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
- (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
@@ -17,6 +35,7 @@
 	gamalto.devel.require("Animator");
 	gamalto.devel.using("Path");
 	gamalto.devel.using("Vector2");
+	gamalto.devel.needing("ITiming");
 
 	/**
 	 * Creates a new path animator.
@@ -36,28 +55,29 @@
 	var _Object = G.PathAnimator = function(path, duration) {
 		Object.base(this);
 		this.path = path;
-		this.duration = duration;	// msecs
-	},
+		this.duration = duration;	// In msecs
+	};
 
 	/** @alias Gamalto.PathAnimator.prototype */
-	proto = _Object.inherits(G.Animator);
+	var proto = _Object.inherits(G.Animator);
 
 	/**
 	 * Updates path animation state.
-	 * 
-	 * @param  {Gamalto.Timer} timer
-	 *         {@link Gamalto.Timer} object from which the elpased time will be read.
-	 * 
+	 *
+	 * @param  {Gamalto.ITiming} timer
+	 *         [Timer]{@link Gamalto.ITiming} object from which the elpased
+	 *         time will be read.
+	 *
 	 * @return {Gamalto.Vector2} New position on the path.
 	 */
 	proto.update = function(timer) {
 		_Object.base.update_.call(this, timer, false, [this.duration]);
 
-		var path = this.path,
-			position = this.progress * path.length,
-			vertices = path.vertices_,
-			distances = path.distances_,
-			i, dist, amount;
+		var i, dist, amount;
+		var path = this.path;
+		var position = this.progress * path.length;
+		var vertices = path.vertices;
+		var distances = path.distances;
 
 		for (i = 0; i < distances.length; i++) {
 			dist = distances[i];

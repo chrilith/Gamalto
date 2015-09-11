@@ -1,76 +1,116 @@
 /*
  * Gamalto.Path
  * ------------
- * 
+ *
+ * This file is part of the GAMALTO JavaScript Development Framework.
+ * http://www.gamalto.com/
+ *
 
- This file is part of the GAMALTO JavaScript Development Framework.
- http://www.gamalto.com/
+Copyright (C)2012-20XX Chris Apers and The GAMALTO Project, all rights reserved.
 
- (c)2012-Now The GAMALTO Project, written by Chris Apers, all rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
  *
  */
 
 (function() {
 
-	gamalto.devel.require("Shape");
+	/* Dependencies */
+	gamalto.devel.require("BasePolyline");
+	gamalto.devel.require("Vector2");
+
+	/* Aliases */
+	var _Vector2 = G.Vector2;
 
 	/**
-	 * @constructor
+	 * Creates a path.
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.Path
+	 * @augments Gamalto.BasePolyline
+	 *
+	 * @param  {number} x
+	 *         Horizontal position of the shape origin.
+	 * @param  {number} y
+	 *         Vertical position of the shape origin.
+	 * @param  {array.<Gamalto.IPoint>} points
+	 *         List of path points excluding the origin.
 	 */
 	var _Object = G.Path = function(x, y, points) {
-		Object.base(this, x, y);
+		/**
+		 * Pre-computed distances used in PathAnimator.
+		 *
+		 * @private
+		 *
+		 * @member {array.<Gamalto.IPoint>}
+		 */
 		this.distances_ = [];
 
-		points = (points || []).slice();
-		points.unshift(this.origin_.clone());
-		this.vertices_ = points;
-		this.compute_();
-	},
+		Object.base(this, x, y, points);
+	};
 
-	/* Inheritance and shortcut */
-	proto = _Object.inherits(G.Shape);
+	/** @alias Gamalto.Path.prototype */
+	var proto = _Object.inherits(G.BasePolyline);
 
+	/**
+	 * Computes distances and length.
+	 *
+	 * @private
+	 */
 	proto.compute_ = function() {
-		var dist,
-			vertices = this.vertices_;
-		this.distances_.length = this.length = 0;
+		var dist;
+		var vertices = this.vertices_;
+
+		this.distances_.length = this.length_ = 0;
 
 		vertices.forEach(function(vertex, i) {
-			if (i === 0) {
-				return;
+
+			if (i > 0) {
+				this.length_ += (dist = _Vector2.distance(vertex, vertices[i - 1]));
+				this.distances_.push(dist);
 			}
-			this.length += (dist = vertex.getDistance(vertices[i-1]));
-			this.distances_.push(dist);
+
 		}, this);
 	};
 
-	proto.offset = function(vec) {
-		_Object.base.offset.call(this, vec);
-		this.vertices_.forEach(function(vertex) {
-			vertex.add(vec);
-		});
-	};
-
-	proto.clone = function() {
-		var points = [];
-		this.vertices_.forEach(function(vertex, i) {
-			// Ignore the origin which will be added by the constructor
-			if (i > 0) { points.push(vertex.clone()); }
-		});
-		return new _Object(this.origin_.x, this.origin_.y, points);
-	};
-
+	/**
+	 * Determines if a point lies on the path.
+	 *
+	 * @param  {number} x
+	 *         Horizontal position of the point to test.
+	 * @param  {number} y
+	 *         Vertical position of the point to test.
+	 *
+	 * @return {boolean} True if the point lies on the path.
+	 */
 	proto.pointInShape = function(x, y) {
-		var i, a, b, p1, p2,
-			tolerance = 0.0001;
-			vertices = this.vertices_;
+		var i, a, b, p1, p2;
+		var tolerance = 0.0001;
+		var vertices = this.vertices_;
 
 		for (i = 0; i < vertices.length - 1; i++) {
 			v1 = vertices[i];
 			v2 = vertices[i + 1];
+
 			// Slope
 			a = (v2.y - v1.y) / (v2.x - v1.x);
+
 			// Y-intercept
 			b = v1.y - a * v1.x;
 
@@ -87,19 +127,36 @@
 	};
 
 	Object.defineProperties(proto, {
-		"vertices": {
+		/**
+		 * Gets the distances between the path points.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.Path.prototype
+		 * @member {array.<Gamalto.IPoint>} distances
+		 */
+		"distances": {
 			get: function() {
-				return this.vertices_;
-			},
-			set: function(value) {
-				if (value.length === 0) {
-					this.vertices_ = [this.origin_];
-				} else {
-					this.vertices_ = value;
-					// Reset the origin based on the new list of vectors
-					this.origin_ = value[0].clone();
+				if (this.dirty_) {
+					this.compute_();
+					this.dirty_ = false;
 				}
-				this.compute_();
+				return this.distances_;
+			}
+		},
+
+		/**
+		 * Length of the path.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.Path.prototype
+		 * @member {number} length
+		 */
+		"length": {
+			get: function() {
+				// DRY
+				return (this.distances & 0) + this.length_;
 			}
 		}
 	});

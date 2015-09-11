@@ -81,6 +81,7 @@ var GAMALTO_DEBUG = true;
 		"geometry/GBox.js",
 		"geometry/GShape.js",
 		"geometry/GSize.js",
+		"geometry/GBasePolyline.js",
 		"geometry/GPolygon.js",
 		"geometry/GRect.js",
 		"geometry/GCircle.js",

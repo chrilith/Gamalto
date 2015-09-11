@@ -47,6 +47,7 @@
     "src/geometry/GBox.js",
     "src/geometry/GShape.js",
     "src/geometry/GSize.js",
+    "src/geometry/GBasePolyline.js",
     "src/geometry/GPolygon.js",
     "src/geometry/GRect.js",
     "src/geometry/GCircle.js",
