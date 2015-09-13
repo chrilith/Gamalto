@@ -109,7 +109,7 @@ THE SOFTWARE.
 			sp = this.spacing_,
 			// Rectangle
 			tL = r.origin,
-			bR = _Vector2.add(tL, r.extent).substractFloat(1);
+			bR = _Vector2.add(tL, r.extent).subNum(1);
 
 		for (var y = tL.y + mg.y; y < bR.y - mg.y; y += th + sp.y) {
 			for (var x = tL.x - mg.x; x < bR.x - mg.x; x += tw + sp.x) {

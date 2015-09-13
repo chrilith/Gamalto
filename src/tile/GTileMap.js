@@ -73,7 +73,7 @@ THE SOFTWARE.
 		 * @member {Gamalto.Vector2}
 		 * @alias Gamalto.TileMap#origin
 		 */
-		this.origin = _Vector2.zero();
+		this.origin = new _Vector2();
 
 		/**
 		 * Tileset to be used to render the map data.
@@ -264,7 +264,7 @@ THE SOFTWARE.
 		}
 
 		// Adjust by overscan
-		origin = _Vector2.substract(origin, this.tL_);
+		origin = _Vector2.sub(origin, this.tL_);
 
 		delta.x += mx;
 		delta.y += my;
@@ -448,7 +448,7 @@ THE SOFTWARE.
 				 *
 				 * @member {Gamalto.Vector2}
 				 */
-				this.delta_ = _Vector2.zero();
+				this.delta_ = new _Vector2();
 				this.og_ = value;
 			}
 		},

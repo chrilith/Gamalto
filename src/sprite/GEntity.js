@@ -39,7 +39,7 @@ THE SOFTWARE.
 	 * @constructor
 	 */
 	var _Object = G.Entity = function() {
-		this.position_ = _Vector2.zero();
+		this.position_ = new _Vector2();
 		this.active_ = null;
 
 		this.state_ = {};
@@ -83,7 +83,7 @@ THE SOFTWARE.
 
 	proto.update = function(timer, dx, dy) {
 		var active = this.active_;
-		if (!active) { return _Vector2.zero(); }
+		if (!active) { return new _Vector2(); }
 
 		var disp = this.state_[active].update(timer, dx, dy);
 		this.position_.add(disp);

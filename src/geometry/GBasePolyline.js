@@ -101,7 +101,7 @@ THE SOFTWARE.
 
 		// Point after point...
 		for (var i = 0; i < vertices.length; i++) {
-			if (!_Vector2.equals(vertices[i], compares[i])) {
+			if (!_Vector2.equal(vertices[i], compares[i])) {
 				return false;
 			}
 		}
@@ -143,7 +143,6 @@ THE SOFTWARE.
 		x1 = x2 = origin.x;
 		y1 = y2 = origin.y;
 
-		// TODO: optimize this!
 		this.vertices_.forEach(function(vertex) {
 			x1 = Math.fmin(x1, vertex.x);
 			y1 = Math.fmin(y1, vertex.y);

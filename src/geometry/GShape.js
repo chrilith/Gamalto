@@ -80,7 +80,7 @@ THE SOFTWARE.
 		},
 		set: function(value) {
 			// Convenient way to have inheriting object properly updated.
-			var vec = _Vector2.substract(value, this.origin_);
+			var vec = _Vector2.sub(value, this.origin_);
 			this.translate(vec);
 		}
 	});

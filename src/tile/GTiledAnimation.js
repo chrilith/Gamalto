@@ -34,6 +34,7 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("BaseAnimation");
 	gamalto.devel.using("TiledBlock");
+	gamalto.devel.using("Vector2");
 
 	/**
 	 * Creates a new animation sequence using tile-based blocks.
@@ -60,7 +61,7 @@ THE SOFTWARE.
 	 */
 	proto.addFrame = function(block) {
 		this.length++;
-		this.offs_.push(G.Vector2.ZERO);
+		this.offs_.push(new G.Vector2());
 		this.list_.push(block);
 		this.time_.push(0);
 	};

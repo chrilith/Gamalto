@@ -75,7 +75,7 @@ THE SOFTWARE.
 	proto.useSectionRange = function(start, length) {
 		this.length += length;
 		while (length--) {
-			this.offs_.push(G.Vector2.ZERO);
+			this.offs_.push(new G.Vector2());
 			this.list_.push(start++);
 			this.time_.push(0);
 		}

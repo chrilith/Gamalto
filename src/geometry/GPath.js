@@ -82,7 +82,7 @@ THE SOFTWARE.
 		vertices.forEach(function(vertex, i) {
 
 			if (i > 0) {
-				this.length_ += (dist = _Vector2.distance(vertex, vertices[i - 1]));
+				this.length_ += (dist = _Vector2.getDistance(vertex, vertices[i - 1]));
 				this.distances_.push(dist);
 			}
 

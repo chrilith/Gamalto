@@ -34,7 +34,6 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("Shape");
 	gamalto.devel.using("Box");
-	gamalto.devel.using("Vector2");
 
 	/**
 	 * Creates a circle shape.

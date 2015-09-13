@@ -32,208 +32,511 @@ THE SOFTWARE.
 (function() {
 
 	/**
+	 * Creates a a vector with two components.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Vector2
 	 * @augments Gamalto.Object
 	 * @implements {Gamalto.IPoint}
+	 *
+	 * @param {number} x
+	 *        X component of the vector.
+	 * @param {number} y
+	 *        Y component of the vector.
 	 */
 	var _Object = G.Vector2 = function(x, y) {
-		this.set(x, y);
-	};
-
-	var pool = [];
-
-	var proto = _Object.inherits(G.Object);
-
-	_Object.create = function(x, y) {
-		var vec = pool.pop();
-		if (vec) { vec.set(x, y); }
-		return vec || new _Object(x, y);
-	};
-
-	/* Instance methods */
-
-	proto.set = function(x, y) {
 		this.x = Number(x) || 0;
 		this.y = Number(y) || 0;
 	};
 
-	proto.recycle = function() {
-		pool.push(this);
+	/** @alias Gamalto.Vector2.prototype */
+	var proto = _Object.inherits(G.Object);
+
+
+	/**
+	 * Determines if a vector is equal to the current vector.
+	 *
+	 * @param  {Gamalto.Vector2} that
+	 *         Object to test.
+	 *
+	 * @return {boolean} True if the two vectors are equal.
+	 */
+	proto.equals = function(that) {
+		return _Object.equals(this, that);
 	};
 
-	proto.equals = function(vec) {
-		return _Object.equals(this, vec);
-	};
-
+	/**
+	 * Determines if a vector is a zero vector.
+	 *
+	 * @return {boolean}
+	 */
 	proto.isZero = function() {
 		return (this.x === 0 && this.y === 0);
 	};
 
+	/**
+	 * Gets the length of the vector.
+	 *
+	 * @return {number}
+	 */
 	proto.getLength = function() {
 		var x = this.x;
 		var y = this.y;
 		return Math.sqrt(x * x + y * y);
 	};
 
-	proto.getAngle = function() {
-		return (2.0 * Math.atan2(this.y + this.getLength(), this.x));
-	};
-
+	/**
+	 * Calculates the distance from the specified vector.
+	 *
+	 * @param  {Gamalto.Vector2} from
+	 *         Source vector.
+	 *
+	 * @return {number} Distance between the two vectors.
+	 */
 	proto.getDistance = function(from) {
-		return _Object.distance(from, this);
+		return _Object.getDistance(from, this);
 	};
 
-	proto.add = function(v) {
-		this.x += v.x;
-		this.y += v.y;
+	/**
+	 * Adds a vector to the current vector.
+	 *
+	 * @param {Gamalto.Vector2} vec
+	 *        Vector to add.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.add = function(vec) {
+		this.x += vec.x;
+		this.y += vec.y;
 		return this;
 	};
 
-	proto.substract = function(v) {
-		this.x -= v.x;
-		this.y -= v.y;
+	/**
+	 * Substracts a vector from the current vector.
+	 *
+	 * @param {Gamalto.Vector2} vec
+	 *        Vector to substract.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.sub = function(vec) {
+		this.x -= vec.x;
+		this.y -= vec.y;
 		return this;
 	};
 
-	proto.multiply = function(v) {
-		this.x *= v.x;
-		this.y *= v.y;
+	/**
+	 * Multiplies a vector by the current vector.
+	 *
+	 * @param {Gamalto.Vector2} vec
+	 *        Vector to multiply.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.mul = function(vec) {
+		this.x *= vec.x;
+		this.y *= vec.y;
 		return this;
 	};
 
-	proto.divide = function(v) {
-		this.x /= v.x;
-		this.y /= v.y;
+	/**
+	 * Divides the current vector by a vector.
+	 *
+	 * @param {Gamalto.Vector2} vec
+	 *        Divisor vector.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.div = function(vec) {
+		this.x /= vec.x;
+		this.y /= vec.y;
 		return this;
 	};
 
-	proto.addFloat = function(num) {
+	/**
+	 * Adds a scalar value to the current vector.
+	 *
+	 * @param {number} num
+	 *        Scalar value.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.addNum = function(num) {
 		this.x += num;
 		this.y += num;
 		return this;
 	};
 
-	proto.substractFloat = function(num) {
+	/**
+	 * Substracts a scalar value from the current vector.
+	 *
+	 * @param {number} num
+	 *        Vector to substract.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.subNum = function(num) {
 		this.x -= num;
 		this.y -= num;
 		return this;
 	};
 
-	proto.multiplyFloat = function(num) {
+	/**
+	 * Multiplies the current vector by a scalar value.
+	 *
+	 * @param {number} num
+	 *        Scalar factor.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.mulNum = function(num) {
 		this.x *= num;
 		this.y *= num;
 		return this;
 	};
 
-	proto.divideFloat = function(num) {
+	/**
+	 * Divides the current vector by a scalar value.
+	 *
+	 * @param {number} num
+	 *        Scalar divisor.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
+	proto.divNum = function(num) {
 		this.x /= num;
 		this.y /= num;
 		return this;
 	};
 
+	/**
+	 * Turns the current vector into a unit vector.
+	 * The result is a vector one unit in length pointing
+	 * in the same direction as the original vector.
+	 *
+	 * @return {Gamalto.Vector2} Current vector.
+	 */
 	proto.normalize = function() {
 		var length = this.getLength();
 		if (length === 0) {
 			return this;
 		}
-		return this.divideFloat(length);
+		return this.divNum(length);
 	};
 
+	/**
+	 * Creates a clone of the current object.
+	 *
+	 * @return {Gamalto.Vector2} Copy of the object.
+	 */
 	proto.clone = function() {
 		return new _Object(this.x, this.y);
 	};
 
-	_Object.equals = function(p1, p2) {
+	/**
+	 * Determines if two vectors are equal.
+	 *
+	 * @function equal
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Vector to test.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Vector to test.
+	 *
+	 * @return {boolean} True if the two vectors are equal.
+	 */
+	_Object.equal = function(p1, p2) {
 		return (p1.x === p2.x) && (p1.y === p2.y);
 	};
 
-	_Object.add = function(v1, v2) {
-		return new _Object(v1.x + v2.x, v1.y + v2.y);
-	};
-
-	_Object.substract = function(v1, v2) {
-		return new _Object(v1.x - v2.x, v1.y - v2.y);
-	};
-
-	_Object.multiply = function(v1, v2) {
-		return new _Object(v1.x * v2.x, v1.y * v2.y);
-	};
-
-	_Object.divide = function(v1, v2) {
-		return new _Object(v1.x / v2.x, v1.y / v2.y);
-	};
-
-	_Object.addFloat = function(v, num) {
-		return new _Object(v.x + num, v.y + num);
-	};
-
-	_Object.substractFloat = function(v, num) {
-		return new _Object(v.x - num, v.y - num);
-	};
-
-	_Object.multiplyFloat = function(v, num) {
-		return new _Object(v.x * num, v.y * num);
-	};
-
-	_Object.divideFloat = function(v, num) {
-		return new _Object(v.x / num, v.y / num);
-	};
-
-	_Object.lerp = function(v1, v2, t) {
-		var t1 = 1 - t;
-		var x = v1.x * t1 + v2.x * t;
-		var y = v1.y * t1 + v2.y * t;
-
-		return new _Object(x, y);
-	};
-
-	_Object.dot = function(v1, v2) {
-		return v1.x * v2.x + v1.y * v2.y;
-	};
-
-	_Object.distance = function(from, to) {
+	/**
+	 * Calculates the distance between two vectors.
+	 *
+	 * @function getDistance
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} from
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} to
+	 *         Source vector.
+	 *
+	 * @return {number} Distance between the two vectors.
+	 */
+	_Object.getDistance = function(from, to) {
 		var x = (from.x - to.x);
 		var y = (from.y - to.y);
 		return Math.sqrt(x * x + y * y);
 	};
 
+	/**
+	 * Adds two vectors.
+	 *
+	 * @function add
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source vector.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.add = function(p1, p2) {
+		return new _Object(p1.x + p2.x, p1.y + p2.y);
+	};
+
+	/**
+	 * Substracts two vectors.
+	 *
+	 * @function sub
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source vector.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.sub = function(p1, p2) {
+		return new _Object(p1.x - p2.x, p1.y - p2.y);
+	};
+
+	/**
+	 * Multiplies two vectors.
+	 *
+	 * @function mul
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source vector.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.mul = function(p1, p2) {
+		return new _Object(p1.x * p2.x, p1.y * p2.y);
+	};
+
+	/**
+	 * Divides two vectors.
+	 *
+	 * @function div
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Divisor vector.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.div = function(p1, p2) {
+		return new _Object(p1.x / p2.x, p1.y / p2.y);
+	};
+
+	/**
+	 * Adds a scalar value to a vector.
+	 *
+	 * @function addNum
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} pt
+	 *         Source vector.
+	 * @param  {number} num
+	 *         Scalar value.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.addNum = function(pt, num) {
+		return new _Object(pt.x + num, pt.y + num);
+	};
+
+	/**
+	 * Substracts a scalar value from a vector.
+	 *
+	 * @function subNum
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} pt
+	 *         Source vector.
+	 * @param  {number} num
+	 *         Scalar value.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.subNum = function(pt, num) {
+		return new _Object(pt.x - num, pt.y - num);
+	};
+
+	/**
+	 * Multiplies a vector by a scalar value.
+	 *
+	 * @function mulNum
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} pt
+	 *         Source vector.
+	 * @param  {number} num
+	 *         Scalar factor.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.mulNum = function(pt, num) {
+		return new _Object(pt.x * num, pt.y * num);
+	};
+
+	/**
+	 * Divides a vector by a scalar value.
+	 *
+	 * @function divNum
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} pt
+	 *         Source vector.
+	 * @param  {number} num
+	 *         Scalar divisor.
+	 *
+	 * @return {Gamalto.Vector2} Resulting vector.
+	 */
+	_Object.divNum = function(pt, num) {
+		return new _Object(pt.x / num, pt.y / num);
+	};
+
+	/**
+	 * Calculates the dot product of two vectors. If the two vectors
+	 * are unit vectors, the dot product returns a floating point value
+	 * between -1 and 1 that can be used to determine some properties of
+	 * the angle between two vectors. For example, it can show whether
+	 * the vectors are orthogonal, parallel, or have an acute or
+	 * obtuse angle between them.
+	 *
+	 * @function dot
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source vector.
+	 *
+	 * @return {number} Dot product of the two vectors.
+	 */
+	_Object.dot = function(p1, p2) {
+		return p1.x * p2.x + p1.y * p2.y;
+	};
+
+	/**
+	 * Performs a linear interpolation between two vectors.
+	 *
+	 * @function lerp
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source vector.
+	 * @param  {number} amount
+	 *         Value between 0 and 1 indicating the weight of the second vector.
+	 *
+	 * @return {Gamalto.Vector2} Linear interpolation of the two vectors.
+	 */
+	_Object.lerp = function(p1, p2, amount) {
+		var t1 = 1 - amount;
+		var x = p1.x * t1 + p2.x * amount;
+		var y = p1.y * t1 + p2.y * amount;
+
+		return new _Object(x, y);
+	};
+
+	/**
+	 * Performs a Hermite spline interpolation.
+	 *
+	 * @function hermite
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @see {@link http://www.cubic.org/docs/hermite.htm|Cubic Team & $eeN website}
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         Source position vector.
+	 * @param  {Gamalto.IPoint} t1
+	 *         Source tangent vector.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Source position vector.
+	 * @param  {Gamalto.IPoint} t2
+	 *         Source tangent vector.
+	 * @param  {number} amount
+	 *         Weighting factor.
+	 *
+	 * @return {Gamalto.Vector2} Result of the interpolation.
+	 */
 	_Object.hermite = function(v1, t1, v2, t2, amount) {
 		var s2 = amount * amount;	// For amount^2
 		var s3 = amount * s2;		// For amount^3
 
+		// Calculate basis functions
 		var h0 =  2 * s3 - 3 * s2 + 1;
 		var h1 =      s3 - 2 * s2 + amount;
 		var h2 = -2 * s3 + 3 * s2;
 		var h3 =      s3 -     s2;
 
-		return       _Object.multiplyFloat(v1, h0)
-				.add(_Object.multiplyFloat(t1, h1))
-				.add(_Object.multiplyFloat(v2, h2))
-				.add(_Object.multiplyFloat(t2, h3));
+		return _Object.mulNum(p1, h0)
+				.add(_Object.mulNum(t1, h1))
+				.add(_Object.mulNum(p2, h2))
+				.add(_Object.mulNum(t2, h3));
 	};
 
-	_Object.catmullRom = function(v1, v2, v3, v4, amount) {
-		/* With:
-			i  = start point
-			v1 = i - 1
-			v2 = i - 0
-			v3 = i + 1
-			v4 = i + 2
+	/**
+	 * Performs a Catmull-Rom interpolation.
+	 *
+	 * @function catmullRom
+	 * @memberof Gamalto.Vector2
+	 * @static
+	 *
+	 * @see {@link http://www.cubic.org/docs/hermite.htm|Cubic Team & $eeN website}
+	 *
+	 * @param  {Gamalto.IPoint} p1
+	 *         First position in the interpolation.
+	 * @param  {Gamalto.IPoint} p2
+	 *         Second position in the interpolation.
+	 * @param  {Gamalto.IPoint} p3
+	 *         Third position in the interpolation.
+	 * @param  {Gamalto.IPoint} p4
+	 *         Fourth position in the interpolation.
+	 * @param  {number} amount
+	 *         Weighting factor.
+	 *
+	 * @return {Gamalto.Vector2} Result of the interpolation.
+	 */
+	_Object.catmullRom = function(p1, p2, p3, p4, amount) {
+		/* Tangent calculation:
+			Ti = a * (P(i+1) - P(i-1))
+
+		   For:
+			p1 = i-1
+			p2 = i-0
+			p3 = i+1
+			p4 = i+2
 		*/
-		var t1 = _Object.substract(v3, v1).multiply(0.5);
-		var t2 = _Object.substract(v4, v2).multiply(0.5);
-		var p1 = v2;
-		var p2 = v3;
+		var t1 = _Object.sub(p3, p1).mulNum(0.5);
+		var t2 = _Object.sub(p4, p2).mulNum(0.5);
 
-		return _Object.hermite(p1, t1, p2, t2, amount);
+		return _Object.hermite(p2, t1, p3, t2, amount);
 	};
-
-	_Object.zero = function() {
-		return new _Object(0, 0);
-	};
-
-	_Object.ZERO = _Object.zero();
 
 	/**
 	 * Defines a simple point with read only components.

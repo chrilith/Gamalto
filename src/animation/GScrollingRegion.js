@@ -34,7 +34,6 @@ THE SOFTWARE.
 	/* Dependencies */
 	gamalto.devel.require("Movable");
 	gamalto.devel.using("Canvas2D");
-	gamalto.devel.using("Vector2");
 
 	/**
 	 * Creates an object defining the movable region of a
