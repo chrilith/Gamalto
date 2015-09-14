@@ -56,6 +56,7 @@ TODO
 Roadmap
 =======
 
+- Add storage support
 - Add better indexed image support
 - Add depth support to Color and Palette
 - Add indexed palette surface with multi-palette support
