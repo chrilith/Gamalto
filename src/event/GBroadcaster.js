@@ -35,7 +35,7 @@ THE SOFTWARE.
 	gamalto.devel.using("Subscription");
 
 	/**
-	 * Creates messages manager object.
+	 * Creates a messages manager object.
 	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Broadcaster
