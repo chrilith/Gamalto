@@ -62,23 +62,36 @@ THE SOFTWARE.
 	 * @param  {string}   event
 	 *         Name of the event.
 	 * @param  {function} callback
-	 *         Function to be used when an event occurs.
-	 * @param  {object}   target
-	 *         Execution context when calling the callback.
+	 *         Function to be called when an event occurs.
 	 *
-	 * @return {Gamalto.Subscription} Context to handle the subscription.
+	 * @return {Gamalto.Subscription} Context to handle the subscription state.
 	 */
-	proto.subscribe = function(event, callback, target) {
+	proto.subscribe = function(event, callback) {
 		// Gets a reference to the observers list for this event
 		var obs = (this.observers_[event] = this.observers_[event] || []);
 
-		// Creates a new unsubscriber object
-		var sub = new G.Subscription(obs, callback, target);
+		// Creates a new subscription object to help unsubscription...
+		// makes sense, no? :)
+		var sub = new G.Subscription(this, event, callback);
 
 		// Adds the new subscriber info (...)
 		obs.push(sub);
 
 		return sub;
+	};
+
+	proto.unsubscribe = function(sub) {
+		if (sub.owner === this) {
+			var list = this.observers_[sub.event];
+			var position = list.indexOf(sub);
+
+			if (position != -1) {
+				list.splice(position, 1);
+
+				// Free ressources
+				sub.dispose();
+			}
+		}
 	};
 
 	/**
@@ -93,10 +106,9 @@ THE SOFTWARE.
 		var observers = this.observers_;
 
 		if (observers && (observers = observers[event])) {
-			var n;
 			var vargs = Array.prototype.slice.call(arguments, 1);
 
-			for (n = 0; n < observers.length; n++) {
+			for (var n = 0; n < observers.length; n++) {
 				observers[n].notify_(vargs);
 			}
 		}

@@ -39,25 +39,30 @@ THE SOFTWARE.
 	 * @constructor Gamalto.Subscription
 	 * @augments Gamalto.Object
 	 *
-	 * @param {array.<Gamalto.Subscription>} observers
-	 *        List of observers for the same event.
+	 * @param  {string}   event
+	 *         Name of the subscribed event.
 	 *
 	 * @param {function} callback
 	 *        Function to be called when an event occurs.
-	 *
-	 * @param {object}   [target]
-	 *        Execution context when calling the callback.
 	 */
-	var _Object = G.Subscription = function(observers, callback, target) {
+	var _Object = G.Subscription = function(owner, event, callback) {
 		/**
-		 * List of observers.
+		 * Parent broadcaster.
 		 *
-		 * @protected
-		 * @ignore
+		 * @readonly
 		 *
-		 * @member {array.<Gamalto.Subscription>}
+		 * @member {Gamalto.Broadcaster}
 		 */
-		this.list_ = observers;
+		this.owner = owner;
+
+		/**
+		 * Related event.
+		 *
+		 * @readonly
+		 *
+		 * @member {string}
+		 */
+		this.event = event;
 
 		/**
 		 * Function to be called when an event occurs.
@@ -68,16 +73,6 @@ THE SOFTWARE.
 		 * @member {function}
 		 */
 		this.callback_ = callback;
-
-		/**
-		 * Execution context when calling the callback.
-		 *
-		 * @protected
-		 * @ignore
-		 *
-		 * @member {object}
-		 */
-		this.target_ = target;
 	};
 
 	/** @alias Gamalto.Subscription.prototype */
@@ -93,21 +88,17 @@ THE SOFTWARE.
 	 *         List of event related parameters.
 	 */
 	proto.notify_ = function(args) {
-		this.callback_.apply(this.target_, args);
+		this.callback_.apply(null, args);
 	};
 
 	/**
 	 * Unsubscribes from the event and free related resources.
 	 */
 	proto.dispose = function() {
-		var position = this.list_.indexOf(this);
-		if (position != -1) {
-			this.list_.splice(position, 1);
-		}
-
-		this.callback_ =
-			this.target_ =
-			this.list_ = null;
+		// Make sure the reference has been removed
+		this.owner.unsubscribe(this);
+		this.owner = null;
+		this.callback_ = null;
 	};
 
 })();
