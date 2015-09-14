@@ -39,9 +39,10 @@ THE SOFTWARE.
 	 * @constructor Gamalto.Subscription
 	 * @augments Gamalto.Object
 	 *
+	 * @param  {Gamalto.Broadcaster}   owner
+	 *         Parent subscription manager.
 	 * @param  {string}   event
 	 *         Name of the subscribed event.
-	 *
 	 * @param {function} callback
 	 *        Function to be called when an event occurs.
 	 */

@@ -1,4 +1,4 @@
-##The Gamalto Framework
+## The Gamalto Framework
 
 Gamalto is a JavaScript framework with no external libraries dependency. It provides small base objects, including complete source code, that can be easily extended to meet your needs.
  
@@ -29,7 +29,7 @@ If you prefer using a CDN, Gamalto can be called directly from **code.gamalto.co
 There are currently two flavors of Gamalto you can use in the CDN. One minified and lightweight version which include all the debug traces present in the original source code, a good way to pre-test a final version of your game, and another one which is the exact copy of the full source code available on GitHub in a human readable format to ease debugging.
 
 
-##Accessing the Gamalto Components
+## Accessing the Gamalto Components
 
 You can access all the properties, methods and objects related to Gamalto using the `Gamalto` global property. This property is a static object which provides two ways to access its components.
 
@@ -46,7 +46,7 @@ var scroll = new G.Scroller(surface);
 
 The shorten call version is usually prefered because it consequently reduce the final code size and ease code writing.
 
-##Initialization
+## Initialization
 
 To initialize Gamalto you must first call the `init()` method of the object passing a startup function. This function will be called once the framework is fully initialized. You can use the following code as a bootstrap.
 
