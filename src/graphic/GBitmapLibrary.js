@@ -57,7 +57,7 @@ THE SOFTWARE.
 	 * @param  {string} src
 	 *         Location of the item to load.
 	 * @param  {Gamalto.Bitmap} [type]
-	 *         Type of the bitmap object to be instanciated.
+	 *         Type of the bitmap object to instanciate.
 	 *
 	 * @return {Promise} A promise to handle loading states.
 	 */
