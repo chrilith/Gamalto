@@ -119,7 +119,7 @@ THE SOFTWARE.
 				args.push(this.loadItem.apply(this, val));
 			}, this);
 
-			var promise = Promise.all(args)
+			return Promise.all(args)
 				.then(
 					function(value) {
 						this.loading_ = false;
