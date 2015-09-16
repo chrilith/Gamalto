@@ -45,7 +45,19 @@ THE SOFTWARE.
 	 *        Y component of the vector.
 	 */
 	var _Object = G.Vector2 = function(x, y) {
+		/**
+		 * X component of the vector.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Vector2#x
+		 */
 		this.x = Number(x) || 0;
+		/**
+		 * Y component of the vector.
+		 *
+		 * @member {number}
+		 * @alias Gamalto.Vector2#y
+		 */
 		this.y = Number(y) || 0;
 	};
 
