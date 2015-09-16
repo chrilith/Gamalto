@@ -81,7 +81,7 @@
     "src/webgl/GShader.js",
     "src/webgl/GCanvasWebGL.js",
     "src/webgl/GRendererWebGL.js",
-    "src/audio/GBaseAudioMixer.js",
+    "src/audio/GAudioState.js",
     "src/audio/GAudioMixer.js",
     "src/audio/GAudioMixer_HTML5Audio.js",
     "src/audio/GAudioMixer_WebAudio.js",

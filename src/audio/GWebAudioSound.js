@@ -1,7 +1,7 @@
 /*
  * Gamalto.WebAudioSound
  * ---------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,9 +31,7 @@ THE SOFTWARE.
 
 (function() {
 
-	/**
-	 * Dependencies
-	 */
+	/* Dependencies */
 	gamalto.devel.require("BaseSound");
 	gamalto.devel.using("AsyncFile");
 
@@ -44,15 +42,24 @@ THE SOFTWARE.
 	 */
 	var _Object = G.WebAudioSound = function(src, context) {
 		Object.base(this, src);
-		this.init(context);
-	};
-
-	var proto = _Object.inherits(G.BaseSound);
-
-	proto.init = function(context) {
+		/**
+		 * Audio context used to play the sound.
+		 *
+		 * @private
+		 *
+		 * @memebr {AudioContext}
+		 */
 		this.ctx_ = context;
 	};
 
+	/** @alias Gamalto.WebAudioSound.prototype */
+	var proto = _Object.inherits(G.BaseSound);
+
+	/**
+	 * Loads the sound data.
+	 *
+	 * @return {Promise} Promise to handle loading states.
+	 */
 	proto.load = function() {
 		var file = new G.AsyncFile();
 		var context = this.ctx_;
@@ -86,27 +93,68 @@ THE SOFTWARE.
 		}.bind(this));
 	};
 
+	/**
+	 * Plays the sound.
+	 *
+	 * @param  {number} [repeat=0]
+	 *         How many times to repeat the sound.
+	 */
 	proto.play = function(repeat) {
 		_Object.base.play.call(this, repeat);
 
 		var context = this.ctx_;
 		var source = context.createBufferSource();
 
-		source.connect(context.destination);
 		source.onended = this.onEnded_.bind(this);
-
-		this.source_ = source;
 		source.buffer = this.buffer;
+		source.connect(context.destination);
 
-		source.start(0);
+		/**
+		 * Internal sound data.
+		 *
+		 * @private
+		 *
+		 * @member {AudioBufferSourceNode}
+		 */
+		(this.source_ = source).start(0);
 	};
 
+	/**
+	 * Stops the sound if playing.
+	 */
 	proto.stop = function() {
 		if (this.playing_) {
-			this.source_.onended = null;
-			this.source_.stop(0);
+			var source = this.source_;
+			source.onended = null;
+			source.stop(0);
+			this.source_ = null;
 		}
 		_Object.base.stop.call(this);
+	};
+
+	/**
+	 * Creates a clone of the current object.
+	 *
+	 * Warning: if the current sound has been loaded, the clone will
+	 * share the same buffer. If not, the sound will need to be loaded
+	 * and a new buffer will be created.
+	 *
+	 * @return {Gamalto.WebAudioSound} Copy of the object.
+	 */
+	proto.clone = function() {
+		var clone = new _Object(this.src_, this.ctx_);
+		clone.buffer = this.buffer;
+
+		return clone;
+	};
+
+	/**
+	 * Releases resources related to this object.
+	 */
+	proto.dispose = function() {
+		this.stop();
+		this.source_ = null;
+		this.buffer = null;
 	};
 
 })();

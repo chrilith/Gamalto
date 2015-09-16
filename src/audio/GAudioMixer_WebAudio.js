@@ -1,7 +1,7 @@
 /*
  * Gamalto.AudioMixer Web Audio API Module
  * ---------------------------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -34,36 +34,60 @@ THE SOFTWARE.
 	/* Enable standard version of the method */
 	Object.defineMethod(global, "AudioContext");
 
-	/**
-	 * Dependencies
-	 */
+	/* Dependencies */
 	gamalto.devel.require("AudioMixer");
-	gamalto.devel.require("BaseAudioMixer");
 	gamalto.devel.using("WebAudioSound");
 
-	var _Base = G.AudioMixer,
+	/* Aliases */
+	var _AudioMixer = G.AudioMixer;
 
-	_Object = function() {
+	/**
+	 * Creates a new audio mixer using Web Audio API.
+	 */
+	var _Object = function() {
 		Object.base(this);
-	},
-
-	proto = _Object.inherits(G.BaseAudioMixer);
-
-	_Object.canUse = function() {
-		// FIXME
-		return !!global.AudioContext && !global.ontouchstart;
 	};
 
-	// TODO: change name to MIX_WEBAUDIO as this is not used has bit
-	_Base.addMixer_("BIT_WEBAUDIO", _Object);
-	
+	/* Object prototype */
+	var proto = _Object.inherits(_AudioMixer);
+
+	/**
+	 * Initializes the mixer with an extra AudioContext
+	 *
+	 * @param  {number} channels
+	 *         Number of channels to be used by the mixer.
+	 */
 	proto.init = function(channels) {
 		this.ctx_ = new AudioContext();
 		return _Object.base.init.call(this, channels);
 	};
 
+	/**
+	 * Creates a new Web Audio sound.
+	 *
+	 * @return {Gamalto.WebAudioSound}
+	 */
 	proto.createSound = function(src) {
 		return new G.WebAudioSound(src, this.ctx_);
 	};
+
+	/**
+	 * Checks whether this audio driver can be used.
+	 *
+	 * @return {boolean}
+	 */
+	_Object.canUse = function() {
+		return Boolean(global.AudioContext);
+	};
+
+	/**
+	 * Defines a mixer which use the Web Audio API.
+	 *
+	 * @see {@link http://www.w3.org/TR/webaudio/|W3C Web Audio API page}
+	 *
+	 * @constant MIX_WEBAUDIO
+	 * @memberof Gamalto.AudioMixer
+	 */
+	_AudioMixer.addObject_("MIX_WEBAUDIO", _Object);
 
 })(this);

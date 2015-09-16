@@ -1,7 +1,7 @@
 /*
  * Gamalto.AudioChannel
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -29,41 +29,87 @@ THE SOFTWARE.
  *
  */
 
-(function(window) {
+(function() {
+
+	/* Dependencies */
+	gamalto.devel.using("AudioState");
 
 	/**
+	 * Creates an audio channel that can be used by an audio mixer.
+	 * It is not meant to be used directly.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.AudioChannel
 	 * @augments Gamalto.Object
 	 */
-	G.AudioChannel = function(duplicateSource) {
-		// Allows a same sound to be played on many channels
-		this.ds_ = duplicateSource;
-	},
+	var _Object = G.AudioChannel = function() {
+		/**
+		 * Whether to duplicate the sound source before playing a sound.
+		 * This allows to play multiple instances of a same sound and
+		 * to dispose resources when needed.
+		 *
+		 * @private
+		 *
+		 * @member {boolean}
+		 */
+		this.ds_ = false;
 
-	proto = G.AudioChannel.inherits(G.Object);
-
-	proto.getPriority = function() {
-		return this.priority_;
+		/**
+		 * Priority of the playing sound.
+		 *
+		 * @readonly
+		 *
+		 * @member {number}
+		 * @alias Gamalto.AudioChannel#priority
+		 */
+		this.priority = 0;
 	};
 
-	proto.isPlaying = function() {
-		return this.sound_ ? this.sound_.isPlaying() : false;
-	};
+	/** @alias Gamalto.AudioChannel.prototype */
+	var proto = _Object.inherits(G.Object);
 
-	proto.play = function(sound, repeat, priority) {
+	/**
+	 * Plays a sound using the provided context.
+	 *
+	 * @param  {Gamalto.AudioState} context
+	 *         Context holding the playback configuration.
+	 */
+	proto.play = function(context) {
+		// Stop any playing sound and free related resources if needed.
 		this.stop();
-		this.priority_ = (+priority | 0);
-		if (!(this.sound_ && this.sound_ === sound)) {
-			this.sound_ = (this.ds_) ? sound.clone() : sound;
-		}
-		this.sound_.play(repeat);
+
+		this.priority = Number(context.priority) | 0;
+
+		// Get the sound object...
+		this.sound_ = (this.ds_ = context.duplicateSource) ?
+			context.sound.clone() : context.sound;
+
+		// ...and play
+		this.sound_.play(context.repeat);
 	};
 
+	/**
+	 * Stops the playing sound if any.
+	 */
 	proto.stop = function() {
 		if (this.sound_) {
-			this.sound_.stop();
+			this.sound_[this.ds_ ? "dispose" : "stop"]();
+			this.sound_ = null;
 		}
 	};
-	
+
+	/**
+	 * Whether the channel is playing a sound.
+	 *
+	 * @readonly
+	 *
+	 * @member {boolean}
+	 * @alias Gamalto.AudioChannel#playing
+	 */
+	Object.defineProperty(proto, "playing", {
+		get: function() {
+			return this.sound_ && this.sound_.playing;
+		}
+	});
+
 })();

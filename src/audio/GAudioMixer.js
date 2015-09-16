@@ -1,7 +1,7 @@
 /*
  * Gamalto.AudioMixer
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,39 +31,185 @@ THE SOFTWARE.
 
 (function() {
 
-	var mixers = [],
-		count = 0;
+	/* Dependencies */
+	gamalto.devel.using("AudioChannel");
+	gamalto.devel.using("AudioState");
 
 	/**
-	 * @namespace
-	 * @memberof Gamalto
-	 * @augments Gamalto.Object
+	 * List of registered mixers.
 	 *
-	 * @alias Gamalto.AudioMixer
+	 * @type {array.<Gamalto.BaseAudioMixer>}
 	 */
-	var _Object = G.AudioMixer = new G.Object();
+	var mixers = [];
 
-	_Object.create = function(channels/*, ...preferedMode*/) {
-		var i, current, mixer,
-			preferedMode = Array.prototype.slice.call(arguments, 1);
+	/**
+	 * Abstract object to create an audio mixer.
+	 * It is not meant to be used directly by the client code.
+	 *
+	 * @abstract
+	 *
+	 * @memberof Gamalto
+	 * @constructor Gamalto.AudioMixer
+	 * @augments Gamalto.Object
+	 */
+	var _Object = G.AudioMixer = function() {
+		/**
+		 * Mixer audio channels.
+		 *
+		 * @readonly
+		 *
+		 * @member {array.<Gamalto.AudioChannel>}
+		 * @alias Gamalto.AudioMixer#channels
+		 */
+		this.channels = [];
+	};
 
-		for (i = 0; i < preferedMode.length; i++) {
-			current = preferedMode[i];
+	/** @alias Gamalto.AudioMixer.prototype */
+	var proto = _Object.inherits(G.Object);
 
-			if (mixers[current].canUse()) {
-				mixer = new mixers[current](this);
-				this.numChannels_ = mixer.init(channels);
-				return mixer;
+	/**
+	 * Initializes the mixer.
+	 *
+	 * @param  {number} channels
+	 *         Number of channels to be used by the mixer.
+	 */
+	proto.init = function(channels) {
+		var all = this.channels;
+		all.length = 0;
+
+		for (var i = 0; i < channels; i++) {
+			all.push(new G.AudioChannel());
+		}
+	};
+
+	/**
+	 * Creates a sound for the current mixer type.
+	 *
+	 * @function createSound
+	 * @memberof Gamalto.AudioMixer.prototype
+	 * @abstract
+	 *
+	 * @param {string} src
+	 *        Source URL of the sound.
+	 *
+	 * @return {Gamalto.BaseSound} Object instance implementing
+	 *         {@link Gamalto.BaseSound}.
+	 */
+
+	/**
+	 * Searches for a free channel.
+	 *
+	 * @private
+	 *
+	 * @param  {number} priority
+	 *         Priority to consider.
+	 *
+	 * @return {Gamalto.AudioChannel} Found channel or null.
+	 */
+	proto.findChannel_ = function(priority) {
+		var i;
+		var all = this.channels;
+
+		// Find a non playing channel
+		for (i = 0; i < all.length; i++) {
+			if (!all[i].playing) {
+				return all[i];
 			}
 		}
 
-		gamalto.devel.assert(this.mixer_, "Failed to initialize audio mixer.");
+		// Then try to find a playing channel with same priority
+		for (i = 0; i < all.length; i++) {
+			if (all[i].priority <= priority) {
+				return all[i];
+			}
+		}
 
 		return null;
 	};
 
-	_Object.addMixer_ = function(name, mixer) {
-		_Object[name] = count++;
+	/**
+	 * Plays a sound.
+	 *
+	 * @param  {Gamalto.BaseSound} sound
+	 *         Sound to play.
+	 * @param  {number} [repeat=0]
+	 *         How many times to repeat the sound.
+	 * @param  {number} [priority=0]
+	 *         Playback priority.
+	 */
+	proto.play = function(sound, repeat, priority) {
+		var context = new G.AudioState(sound);
+		var channel = this.findChannel_(priority);
+
+		if (!channel) {
+			gamalto.devel.warn("Unable to allocate channel to play sound.");
+		} else {
+			context.priority = priority;
+			context.repeat = repeat;
+			channel.play(context);
+		}
+	};
+
+	/**
+	 * Stops all playing channels.
+	 */
+	proto.stopAll = function() {
+		this.channels.forEach(function(channel) {
+			channel.stop();
+		});
+	};
+
+	/**
+	 * Creates an audio mixer.
+	 *
+	 * @function create
+	 * @memberof Gamalto.AudioMixer
+	 * @static
+	 *
+	 * @param  {number} channels
+	 *         Number of channels to use with the audio mixer.
+	 * @param  {...number} preferedMode
+	 *         One or more types of mixer in order of preference.
+	 *         The manager will create the first available mixer
+	 *         type for the current system.
+	 *
+	 * @return {Gamalto.BaseAudioMixer} Mixer instance or null
+	 *                                  if sound isn't supported by the system.
+	 */
+	_Object.create = function(channels/*, ...preferedMode*/) {
+		var i, current, mixer;
+		var preferedMode = Array.prototype.slice.call(arguments, 1);
+
+		for (i = 0; i < preferedMode.length; i++) {
+			current = mixers[preferedMode[i]];
+
+			if (current.canUse()) {
+				// jscs:disable
+				mixer = new (current)();
+				// jscs:enable
+				mixer.init(channels);
+
+				return mixer;
+			}
+		}
+
+		gamalto.devel.assert(mixer, "Failed to initialize audio mixer.");
+		return null;
+	};
+
+	/**
+	 * Adds a mixer object to the factory.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @param {string} name
+	 *        name of the property to add.
+	 * @param {Gamalto.BaseMixer} mixer
+	 *        Object inheriting from Gamalto.BaseMixer.
+	 */
+	_Object.addObject_ = function(name, mixer) {
+		_Object[name] = mixers.length;
 		mixers.push(mixer);
 	};
 

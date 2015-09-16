@@ -35,31 +35,51 @@ THE SOFTWARE.
 	gamalto.devel.require("BaseLibrary");
 
 	/**
+	 * Creates a new sound library.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.SoundPool
 	 * @augments Gamalto.BaseLibrary
+	 *
+	 * @param {Gamalto.AudioMixer} mixer
+	 *        Parent mixer of the library.
 	 */
 	var _Object = G.SoundPool = function(mixer) {
 		Object.base(this);
+		/**
+		 * Parent mixer of the library.
+		 * The mixer is use to instanciate related sound objects.
+		 *
+		 * @readonly
+		 *
+		 * @member {Gamalto.AudioMixer}
+		 * @alias Gamalto.SoundPool#mixer
+		 */
 		this.mixer = mixer;
 	};
 
+	/** @alias Gamalto.SoundPool.prototype */
 	var proto = _Object.inherits(G.BaseLibrary);
 
-	proto.loadItem = function(name, src, type/*, ...vargs*/) {
-		var vargs = Array.prototype.slice.call(arguments, 3);
-		var sound = type ? new type(src) :
-				this.mixer ? this.mixer.createSound(src) : null;
+	/**
+	 * Tries to load a new resource in the library.
+	 *
+	 * @param  {string} name
+	 *         Name of the resource.
+	 * @param  {string} src
+	 *         Location of the item to load.
+	 *
+	 * @return {Promise} A promise to handle loading states.
+	 */
+	proto.loadItem = function(name, src) {
+		var sound = this.mixer.createSound(src);
 
-		gamalto.devel.assert(sound, "Failed to initialize sound object " + name + ".");
-
-		if (vargs.length) {
-			sound.init.apply(sound, vargs);
-		}
+		gamalto.devel.assert(sound,
+			"Failed to initialize sound object " + name + ".");
 
 		return new Promise(function(resolve, reject) {
 
-			sound.load()
+			return sound.load()
 			.then(
 				function() {
 					this.add_(name, sound);
@@ -79,10 +99,10 @@ THE SOFTWARE.
 
 	/* Constants */
 
-	_Object.MP3		= ["audio/mpeg", "audio/mpg3"];
-	_Object.MP4		= ["audio/mpg4"];
-	_Object.OGG		= ["audio/ogg"];
-	_Object.WAVE	= ["audio/wav", "audio/x-wav"];
+	_Object.TYPE_MP3	= ["audio/mpeg", "audio/mpg3"];
+	_Object.TYPE_MP4	= ["audio/mpg4"];
+	_Object.TYPE_OGG	= ["audio/ogg"];
+	_Object.TYPE_WAVE	= ["audio/wav", "audio/x-wav"];
 
 	/* Static */
 

@@ -1,7 +1,7 @@
 /*
- * Gamalto.AudioMixer HTML5 Audio API Module
- * -----------------------------------------
- * 
+ * Gamalto.AudioMixer HTML5 Audio Element Module
+ * ---------------------------------------------
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,32 +31,49 @@ THE SOFTWARE.
 
 (function(global) {
 
-	/**
-	 * Dependencies
-	 */
+	/* Dependencies */
 	gamalto.devel.require("AudioMixer");
-	gamalto.devel.require("BaseAudioMixer");
 	gamalto.devel.using("HTML5Sound");
 
-	var _Base = G.AudioMixer,
+	/* Aliases */
+	var _AudioMixer = G.AudioMixer;
 
-	_Object = function() {
+	/**
+	 * Creates a new audio mixer using HTML5 Audio Element.
+	 */
+	var _Object = function() {
 		Object.base(this);
-		this.duplicateSource_ = true;
-	},
-
-	proto = _Object.inherits(G.BaseAudioMixer);
-
-	_Object.canUse = function() {
-		// FIXME
-		return !!global.Audio && !global.ontouchstart;
 	};
 
-	// TODO: change name to MIX_WEBAUDIO as this is not used has bit
-	_Base.addMixer_("BIT_HTML5AUDIO", _Object);
+	/* Object prototype */
+	var proto = _Object.inherits(_AudioMixer);
 
+	/**
+	 * Creates a new HTML5 Audio sound.
+	 *
+	 * @return {Gamalto.HTML5Sound}
+	 */
 	proto.createSound = function(src) {
 		return new G.HTML5Sound(src);
 	};
+
+	/**
+	 * Checks whether this audio driver can be used.
+	 *
+	 * @return {boolean}
+	 */
+	_Object.canUse = function() {
+		return Boolean(global.Audio);
+	};
+
+	/**
+	 * Defines a mixer which use the HTML5 Audio Element.
+	 *
+	 * @see  {@link http://www.w3.org/html/wg/drafts/html/master/semantics.html#the-audio-element|W3C HTML Audio Element page}
+	 *
+	 * @constant MIX_HTML5AUDIO
+	 * @memberof Gamalto.AudioMixer
+	 */
+	_AudioMixer.addObject_("MIX_HTML5AUDIO", _Object);
 
 })(this);

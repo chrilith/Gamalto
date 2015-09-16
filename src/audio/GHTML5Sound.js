@@ -1,7 +1,7 @@
 /*
  * Gamalto.HTML5Sound
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,38 +31,49 @@ THE SOFTWARE.
 
 (function() {
 
+	/* Dependencies */
 	gamalto.devel.require("BaseSound");
 
 	/**
+	 * Creates a sound based on the HTML5 Audio Element.
+	 *
+	 * @see  {@link http://www.w3.org/html/wg/drafts/html/master/semantics.html#the-audio-element|W3C HTML Audio Element page}
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.HTML5Sound
 	 * @augments Gamalto.BaseSound
 	 */
 	var _Object = G.HTML5Sound = function(src) {
 		Object.base(this, src);
-		this.canPlay_ = false;
 	};
 
+	/** @alias Gamalto.HTML5Sound.prototype */
 	var proto = _Object.inherits(G.BaseSound);
 
+	/**
+	 * Loads the sound data.
+	 *
+	 * @return {Promise} Promise to handle loading states.
+	 */
 	proto.load = function() {
 		return new Promise(function(resolve, reject) {
 			var audio = new Audio();
-			var handler = this.handleEvent.bind(this); // FIXME: passing "this" is not supported by CocoonJS
 
-			// When data is available try to play the sound if needed
-			audio.addEventListener("canplaythrough", handler, false);
-
-			// Loop handling
-			audio.addEventListener("ended", handler, false);
-
-			audio.addEventListener("loadedmetadata", function() {
-				audio.removeEventListener("loadedmetadata", arguments.callee, false);
+			// CocoonJS has a limited number of events
+			audio.addEventListener("canplaythrough", function() {
+				audio.removeEventListener("canplaythrough", arguments.callee, false);
 				resolve();
 			}, false);
 
 			audio.onabort = audio.onerror = reject;
 
+			/**
+			 * Internal sound data.
+			 *
+			 * @private
+			 *
+			 * @member {HtmlAudioElement}
+			 */
 			this.audio_ = audio;
 			audio.preload = "auto";
 			audio.src = this.src_;
@@ -71,64 +82,53 @@ THE SOFTWARE.
 		}.bind(this));
 	};
 
+	/**
+	 * Plays the sound.
+	 *
+	 * @param  {number} [repeat=0]
+	 *         How many times to repeat the sound.
+	 */
 	proto.play = function(repeat) {
+		var audio = this.audio_;
+
 		_Object.base.play.call(this, repeat);
 
-		// Save start time if the sound cannot be played immediately
-		this.startTime_ = Date.now();
+		// Loop handling
+		audio.onended = audio.onended || this.onEnded_.bind(this);
 
 		// Try to play the sound from the beginning
-		var audio = this.audio_;
-		try {
-			audio.currentTime = 0;
-
-		// Expection if metadata is not available
-		} finally {
-			audio.play();
-		}
+		audio.currentTime = 0;
+		audio.play();
 	};
 
+	/**
+	 * Stops the sound if playing.
+	 */
 	proto.stop = function() {
+		if (this.playing) {
+			this.audio_.pause();
+		}
 		_Object.base.stop.call(this);
-		this.audio_.pause();
 	};
 
+	/**
+	 * Creates a clone of the current object.
+	 *
+	 * @return {Gamalto.HTML5Sound} Copy of the object.
+	 */
 	proto.clone = function() {
-		var sound = new _Object(this.src_);
-		sound.load();
-		return sound;
+		var clone = new _Object(this.src_);
+		clone.audio_ = this.audio_.cloneNode(true);
+
+		return clone;
 	};
 
-	/* Events handling */
-
-	proto.handleEvent = function(e) {
-		if (e.type == "canplaythrough") {
-			this.onCanPlayThrough_();
-
-		} else if (e.type == "ended") {
-			this.onEnded_();
-		}
-	};
-
-	proto.onCanPlayThrough_ = function() {
-		if (this.playing_ && !this.canPlay_) {
-			var elapsed		= (Date.now() - this.startTime_) / 1000;
-			var audio		= this.audio_;
-			var duration	= audio.duration;
-
-			// Adjust
-			var loop		= elapsed / duration | 0;
-			var played		= elapsed % duration;
-
-			if ((this.toPlay_ -= loop) >= 0) {
-				audio.currentTime = played;
-				audio.play();
-			} else {
-				this.stop();
-			}
-		}
-
-		this.canPlay_ = true;
+	/**
+	 * Releases resources related to this object.
+	 */
+	proto.dispose = function() {
+		this.stop();
+		this.audio_ = null;
 	};
 
 })();

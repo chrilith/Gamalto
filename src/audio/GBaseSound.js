@@ -1,7 +1,7 @@
 /*
  * Gamalto.BaseSound
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,51 +32,118 @@ THE SOFTWARE.
 (function() {
 
 	/**
-	 * Abstract object to create an audio mixer compatible sound. It is not meant to be used directly by the client code.
-	 * 
+	 * Abstract object to create an audio mixer compatible sound.
+	 * It is not meant to be used directly by the client code.
+	 *
 	 * @abstract
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.BaseSound
 	 * @augments Gamalto.Object
 	 */
 	var _Object = G.BaseSound = function(src) {
+		/**
+		 * Source URL of the sound.
+		 *
+		 * @protected
+		 * @ignore
+		 *
+		 * @member {string}
+		 */
 		this.src_ = src;
 
+		/**
+		 * @see {@link Gamalto.BaseSound#playing}
+		 *
+		 * @protected
+		 * @ignore
+		 *
+		 * @member {boolean}
+		 */
 		this.playing_ = false;
 
-		this.toPlay_ = 0;
-	},
+		/**
+		 * Number of times the sound should be played again.
+		 *
+		 * @protected
+		 * @ingore
+		 *
+		 * @member {number}
+		 */
+		this.loop_ = 0;
+	};
 
-	proto = _Object.inherits(G.Object);
+	/** @alias Gamalto.BaseSound.prototype */
+	var proto = _Object.inherits(G.Object);
 
-	proto.init = function() {};
-
-	proto.load = function() {};
-
+	/**
+	 * Plays the sound.
+	 *
+	 * @param  {number} [repeat=0]
+	 *         How many times to repeat the sound.
+	 */
 	proto.play = function(repeat) {
 		this.stop();
+
 		// Should be playing now
 		this.playing_ = true;
+
 		// Loop the sound
-		this.toPlay_ = (+repeat | 0);
+		this.loop_ = Number(repeat) | 0;
 	};
 
+	/**
+	 * Stops the sound if playing.
+	 */
 	proto.stop = function() {
-		this.toPlay_ = 0;
+		this.loop_ = 0;
 		this.playing_ = false;
 	};
 
-	proto.isPlaying = function() {
-		return this.playing_;
-	};
-
+	/**
+	 * Event handler to handle loop.
+	 *
+	 * @protected
+	 * @ignore
+	 */
 	proto.onEnded_ = function() {
-		if (this.playing_ && this.toPlay_-- > 0) {
-			this.play(this.toPlay_);
+		if (this.playing_ && this.loop_-- > 0) {
+			this.play(this.loop_);
 		} else {
 			this.stop();
-		}		
+		}
 	};
+
+	/**
+	 * Whether the sound is playing.
+	 *
+	 * @readonly
+	 *
+	 * @member {boolean}
+	 * @alias Gamalto.BaseAudio#playing
+	 */
+	Object.defineProperty(proto, "playing", {
+		get: function() {
+			return this.playing_;
+		}
+	});
+
+	/**
+	 * Loads the sound data.
+	 *
+	 * @function load
+	 * @memberof Gamalto.BaseSound.prototype
+	 * @abstract
+	 *
+	 * @return {Promise} Promise to handle loading states.
+	 */
+
+	/**
+	 * Releases resources related to this object.
+	 *
+	 * @function dispose
+	 * @memberof Gamalto.BaseSound.prototype
+	 * @abstract
+	 */
 
 })();

@@ -120,7 +120,7 @@ var GAMALTO_DEBUG = true;
 		"webgl/GCanvasWebGL.js",
 		"webgl/GRendererWebGL.js",
 
-		"audio/GBaseAudioMixer.js",
+		"audio/GAudioState.js",
 		"audio/GAudioMixer.js",
 		"audio/GAudioMixer_HTML5Audio.js",
 		"audio/GAudioMixer_WebAudio.js",
