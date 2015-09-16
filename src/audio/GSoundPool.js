@@ -1,7 +1,7 @@
 /*
  * Gamalto.SoundPool
  * -----------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *

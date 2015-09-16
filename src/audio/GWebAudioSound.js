@@ -73,19 +73,21 @@ THE SOFTWARE.
 					reject("Error " + file.error);
 
 				} else {
-					file.readAll();
-					var buffer = file.buffer;
-					file.close();
+					file.readAll().then(function() {
+						var buffer = file.buffer;
+						file.close();
 
-					if (context.decodeAudioData) {
-						context.decodeAudioData(buffer, function(data) {
-							this.buffer = data;
+						if (context.decodeAudioData) {
+							context.decodeAudioData(buffer, function(data) {
+								this.buffer = data;
+								resolve();
+							}.bind(this), reject);
+						} else {
+							this.buffer = context.createBuffer(buffer, false /* Keep channels */);
 							resolve();
-						}.bind(this), reject);
-					} else {
-						this.buffer = context.createBuffer(buffer, false /* Keep channels */);
-						resolve();
-					}
+						}
+
+					}.bind(this), reject);
 				}
 
 			}.bind(this), reject);
