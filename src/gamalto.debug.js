@@ -43,7 +43,6 @@ var GAMALTO_DEBUG = true;
 		"Gamalto.js",
 
 		"core/Core.js",
-		"core/Environment.js",
 		"core/Debug.js",
 		"core/Compat.js",
 		"core/GObject.js",
@@ -108,11 +107,8 @@ var GAMALTO_DEBUG = true;
 		"event/GKeyboardEvent.js",
 		"event/GMouseEvent.js",
 		"event/GEventManager.js",
-		"event/GEventManager_Keyboard_iCade.js",
 		"event/GEventManager_Keyboard.js",
 		"event/GEventManager_Mouse.js",
-		"event/GKeyboardEvent_iCade.js",
-		"event/GTouchGamepad.js",
 		"event/GSubscription.js",
 		"event/GBroadcaster.js",
 

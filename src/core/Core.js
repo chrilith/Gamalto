@@ -42,7 +42,6 @@ THE SOFTWARE.
 	 */
 	var Core = function() {
 //		this.devel = undef;
-//		this.env = undef;
 	};
 
 	/** @alias Core.prototype */
