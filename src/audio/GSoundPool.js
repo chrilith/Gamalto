@@ -97,28 +97,4 @@ THE SOFTWARE.
 		}.bind(this));
 	};
 
-	/* Constants */
-
-	_Object.TYPE_MP3	= ["audio/mpeg", "audio/mpg3"];
-	_Object.TYPE_MP4	= ["audio/mpg4"];
-	_Object.TYPE_OGG	= ["audio/ogg"];
-	_Object.TYPE_WAVE	= ["audio/wav", "audio/x-wav"];
-
-	/* Static */
-
-	var test = new Audio();
-	_Object.isSupported = function(mime) {
-		if (typeof mime == "string") {
-			mime = [mime];
-		}
-
-		var supported = false;
-		mime.forEach(function(item) {
-			if (test.canPlayType(item) !== "") {
-				supported = true;
-			}
-		});
-		return supported;
-	};
-
 })();

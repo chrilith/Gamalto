@@ -74,7 +74,7 @@ THE SOFTWARE.
 			 *
 			 * @member {HtmlAudioElement}
 			 */
-			this.audio_ = audio;
+			this.source_ = audio;
 			audio.preload = "auto";
 			audio.src = this.src_;
 			audio.load();
@@ -89,7 +89,7 @@ THE SOFTWARE.
 	 *         How many times to repeat the sound.
 	 */
 	proto.play = function(repeat) {
-		var audio = this.audio_;
+		var audio = this.source_;
 
 		_Object.base.play.call(this, repeat);
 
@@ -106,7 +106,7 @@ THE SOFTWARE.
 	 */
 	proto.stop = function() {
 		if (this.playing) {
-			this.audio_.pause();
+			this.source_.pause();
 		}
 		_Object.base.stop.call(this);
 	};
@@ -118,7 +118,7 @@ THE SOFTWARE.
 	 */
 	proto.clone = function() {
 		var clone = new _Object(this.src_);
-		clone.audio_ = this.audio_.cloneNode(true);
+		clone.source_ = this.source_.cloneNode(true);
 
 		return clone;
 	};
@@ -128,7 +128,7 @@ THE SOFTWARE.
 	 */
 	proto.dispose = function() {
 		this.stop();
-		this.audio_ = null;
+		this.source_ = null;
 	};
 
 })();
