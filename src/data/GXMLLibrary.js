@@ -112,7 +112,7 @@ THE SOFTWARE.
 	};
 
 	/**
-	 * Transforms data before sorting the resource.
+	 * Transforms data before storing the resource.
 	 *
 	 * @virtual
 	 * @protected

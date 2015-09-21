@@ -53,6 +53,7 @@ THE SOFTWARE.
 		 * @readonly
 		 *
 		 * @member {Gamalto.Broadcaster}
+		 * @alias Gamalto.Subscription#owner
 		 */
 		this.owner = owner;
 
@@ -62,6 +63,7 @@ THE SOFTWARE.
 		 * @readonly
 		 *
 		 * @member {string}
+		 * @alias Gamalto.Subscription#event
 		 */
 		this.event = event;
 

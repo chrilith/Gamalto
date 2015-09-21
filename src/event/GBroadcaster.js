@@ -80,6 +80,12 @@ THE SOFTWARE.
 		return sub;
 	};
 
+	/**
+	 * Unsubscribes from an event.
+	 *
+	 * @param  {Gamalto.Subscription} sub
+	 *         Subscription context.
+	 */
 	proto.unsubscribe = function(sub) {
 		if (sub.owner === this) {
 			var list = this.observers_[sub.event];
@@ -88,7 +94,7 @@ THE SOFTWARE.
 			if (position != -1) {
 				list.splice(position, 1);
 
-				// Free ressources
+				// Free resources
 				sub.dispose();
 			}
 		}
