@@ -1,7 +1,7 @@
 /*
  * Gamalto.KeyboardEvent
  * ---------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,48 +30,57 @@ THE SOFTWARE.
  */
 
 (function() {
-	
-	/**
-	 * Dependencies
-	 */
+
+	/* Dependencies */
 	gamalto.devel.require("Event");
-	
+
 	/**
+	 * Creates a keyboard event.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.KeyboardEvent
 	 * @augments Gamalto.Event
+	 *
+	 * @param {string} type
+	 *        Event name.
 	 */
-	G.KeyboardEvent = function(type) {
+	var _Object = G.KeyboardEvent = function(type) {
 		Object.base(this, type);
-	//	this._repeat	// is repeating
+
+		/**
+		 * Pressed key code.
+		 *
+		 * @readonly
+		 *
+		 * @member {mumber}
+		 * @alias Gamalto.KeyboardEvent#keyCode
+		 */
+		this.keyCode = 0;
 	};
 
-	/* Inheritance and shortcut */
-	var proto = G.KeyboardEvent.inherits(G.Event);
-	
-	proto.equals = function(b) {
-		var a = this;
-		return (a.type		== b.type &&
-				a.keyCode	== b.keyCode &&
-				a.modifiers	== b.modifiers);
+	/** @alias Gamalto.KeyboardEvent.prototype */
+	var proto = _Object.inherits(G.Event);
+
+	/**
+	 * Determines if an object is equal to the current object.
+	 *
+	 * @param  {Gamalto.Event} that
+	 *         Object to test.
+	 *
+	 * @return {boolean} True if the two objects are equal.
+	 */
+	proto.equals = function(that) {
+		return that && (
+				this.type		== that.type &&
+				this.keyCode	== that.keyCode &&
+				this.modifiers	== that.modifiers);
 	};
-	
+
 	/* Constants */
 	var constant = G.Event;
 
 	constant.KEYDOWN		= "keydown";
 	constant.KEYUP			= "keyup";
-	
-	constant.KMOD_NONE		= 0x0000;
-	constant.KMOD_SHIFT		= 0x0001;	// | 0x0002
-	constant.KMOD_CTRL		= 0x0004;	// | 0x0008
-	constant.KMOD_ALT		= 0x0010;	// | 0x0020
-	constant.KMOD_LMETA		= 0x0040;
-	constant.KMOD_RMETA		= 0x0080;
-	
-	constant.KMOD_META		= 0x0040|0x0080;
-	//constant.KMOD_ALT		= (0x0010|0x0020);
-	//constant.KMOD_ALTGR	= (0x0020); // CTRL+ = META?
 
 	constant.K_TAB			= 9;
 	constant.K_ENTER		= 13;

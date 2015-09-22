@@ -1,7 +1,7 @@
 /*
  * Gamalto.Event
  * -------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -32,23 +32,69 @@ THE SOFTWARE.
 (function() {
 
 	/**
+	 * Abstract event object.
+	 *
 	 * @abstract
-	 * 
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.Event
 	 * @augments Gamalto.Object
+	 *
+	 * @param {string} type
+	 *        Event name.
 	 */
-	G.Event = function(type) {
+	var _Object = G.Event = function(type) {
+		/**
+		 * Event type.
+		 *
+		 * @readonly
+		 *
+		 * @memebr {string}
+		 * @alias Gamalto.Event#type
+		 */
 		this.type = type;
-	//	this._time
+
+		/**
+		 * Event time.
+		 *
+		 * @readonly
+		 *
+		 * @member {mumber}
+		 * @alias Gamalto.Event#time
+		 */
+		this.time = Date.now();
+
+		/**
+		 * Bitmask holding modifiers (KMOD_*) state.
+		 *
+		 * @readonly
+		 *
+		 * @member {mumber}
+		 * @alias Gamalto.Event#modifiers
+		 */
+		this.modifiers = 0;
 	};
-	
-	/* Inheritance and shortcut */
-	var proto = G.Event.inherits(G.Object);
-	
-	proto.equals = function(b) {
-		var a = this;
-		return (a.type == b.type);
+
+	/** @alias Gamalto.Event.prototype */
+	var proto = _Object.inherits(G.Object);
+
+	/**
+	 * Determines if an object is equal to the current object.
+	 *
+	 * @param  {Gamalto.Event} that
+	 *         Object to test.
+	 *
+	 * @return {boolean} True if the two objects are equal.
+	 */
+	proto.equals = function(that) {
+		return (this.type == that.type);
 	};
+
+	/* Constants */
+	_Object.KMOD_NONE		= 0x0000;
+	_Object.KMOD_SHIFT		= 0x0001;	// | 0x0002
+	_Object.KMOD_CTRL		= 0x0004;	// | 0x0008
+	_Object.KMOD_ALT		= 0x0010;	// | 0x0020
+	_Object.KMOD_META		= 0x0040;	// | 0x0080
 
 })();

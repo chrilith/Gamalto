@@ -1,7 +1,7 @@
 /*
  * Gamalto.MouseEvent
  * ------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,34 +31,104 @@ THE SOFTWARE.
 
 (function() {
 
-	/**
-	 * Dependencies
-	 */
+	/* Dependencies */
 	gamalto.devel.require("Event");
+	gamalto.devel.using("Screen");
 
 	/**
+	 * Creates a mouse event.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.MouseEvent
 	 * @augments Gamalto.Event
+	 *
+	 * @param {string} type
+	 *        Event name.
 	 */
-	G.MouseEvent = function(type) {
+	var _Object = G.MouseEvent = function(type) {
 		Object.base(this, type);
+
+		/**
+		 * Event target element.
+		 *
+		 * @internal
+		 *
+		 * @member {HTMLElement}
+		 */
+
+		/**
+		 * Absolute horizontal position of the mouse.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.MouseEvent.prototype
+		 * @member {number} absX
+		 */
+
+		/**
+		 * Absolute vertical position of the mouse.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.MouseEvent.prototype
+		 * @member {number} absY
+		 */
+
+		/**
+		 * Target-relative horizontal position of the mouse.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.MouseEvent.prototype
+		 * @member {number} x
+		 */
+
+		/**
+		 * Target-relative vertical position of the mouse.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.MouseEvent.prototype
+		 * @member {number} y
+		 */
+
+		/**
+		 * Bitmask of the mouse buttons state.
+		 *
+		 * @readonly
+		 *
+		 * @memberof Gamalto.MouseEvent.prototype
+		 * @member {number} buttons
+		 */
 	};
 
-	/* Inheritance and shortcut */
-	var proto = G.MouseEvent.inherits(G.Event);
+	/** @alias Gamalto.KeyboardEvent.prototype */
+	var proto = _Object.inherits(G.Event);
 
-	proto.equals = function(b) {
-		var a = this;
-		return (a.type		== b.type &&
-				a.absX		== b.absX &&
-				a.absY		== b.absY &&
-				a.buttons	== b.buttons &&
-				a.modifiers	== b.modifiers);
+	/**
+	 * Determines if an object is equal to the current object.
+	 *
+	 * @param  {Gamalto.Event} that
+	 *         Object to test.
+	 *
+	 * @return {boolean} True if the two objects are equal.
+	 */
+	proto.equals = function(that) {
+		return (this.type		== that.type &&
+				this.absX		== that.absX &&
+				this.absY		== that.absY &&
+				this.buttons	== that.buttons &&
+				this.modifiers	== that.modifiers);
 	};
 
-	proto.onSurface = function(surface) {
-		return (this.target == surface.getDrawable_());
+	/**
+	 * Checks if the event occured on the active screen.
+	 *
+	 * @return {boolean} Whether the event occured on the active screen
+	 */
+	proto.onScreen = function() {
+		var active = G.Screen.getActive_();
+		return (active && this.target_ == active.getElement_());
 	};
 
 	/* Constants */
@@ -68,8 +138,8 @@ THE SOFTWARE.
 	constant.MOUSEDOWN	= "mousedown";
 	constant.MOUSEUP	= "mouseup";
 
-	constant.KBUT_LEFT		= 0x0001;
-	constant.KBUT_MIDDLE	= 0x0002;
-	constant.KBUT_RIGHT		= 0x0004;
+	constant.MBUT_LEFT		= 0x0001;
+	constant.MBUT_RIGHT		= 0x0002;
+	constant.MBUT_MIDDLE	= 0x0004;
 
 })();

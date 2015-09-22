@@ -1,7 +1,7 @@
 /*
  * Gamalto.EventManager
  * --------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -31,70 +31,187 @@ THE SOFTWARE.
 
 (function() {
 
-	var managers = [],
-		bit = 1;		/* For extra manager bit */	
-	
 	/**
+	 * List of registered event managers.
+	 *
+	 * @type {array.<Gamalto.IEventHandler>}
+	 */
+	var handlers = [];
+
+	/**
+	 * Creates a synchronous event manager.
+	 *
 	 * @memberof Gamalto
 	 * @constructor Gamalto.EventManager
 	 * @augments Gamalto.Object
+	 *
+	 * @param {number} listeners
+	 *        Bitmask of events to listen to.
 	 */
-	G.EventManager = function(listen) {
-//->	this._isPolling = false;
-		this._q = [];			// Event queue
-		this._man = [];			// Active managers
-		
-		for (var i = 0; i < managers.length; i++) {
-			if (listen & (1 << i)) {
-				var man = new managers[i](this);
-					man.init();
-				this._man.push(man);
+	var _Object = G.EventManager = function(listeners) {
+		/**
+		 * Whether event handlers have been initialized.
+		 *
+		 * @private
+		 *
+		 * @member {boolean}
+		 */
+		this.polling_ = false;
+
+		/**
+		 * Event queue.
+		 *
+		 * @internal
+		 * @ignore
+		 *
+		 * @member {array.<Gamalto.Event>}
+		 */
+		this.q_ = [];
+
+		/**
+		 * List of active event handlers.
+		 *
+		 * @private
+		 *
+		 * @member {array.<Gamalto.IEventHandler>}
+		 */
+		this.hdr_ = [];
+
+		/**
+		 * Timer to automatically stop polling when idle.
+		 *
+		 * @private
+		 *
+		 * @member {mumber}
+		 */
+		this.timerID_ = 0;
+
+		for (var i = 0; i < handlers.length; i++) {
+			if (listeners & (1 << i)) {
+				// Instanciate the event handler
+				var handler = new handlers[i](this);
+
+				// Initialize it
+				handler.init();
+
+				// And same the instance
+				this.hdr_.push(handler);
 			}
 		}
 	};
 
-	var stat = G.EventManager;
-	
-	stat._addManager = function(name, manager) {
-		stat[name] = bit;
-		bit <<= 1;				// For next manager registration
-		managers.push(manager);
-	};
+	/** @alias Gamalto.EventManager.prototype */
+	var proto = _Object.inherits(G.Object);
 
-	/* Inheritance and shortcut */
-	var proto = G.EventManager.inherits(G.Object);
-	
+	/**
+	 * Polls for events.
+	 *
+	 * @return {Gamalto.Event} Next event in the queue if any or null.
+	 */
 	proto.poll = function() {
-		var i, o = this,
-			man = this._man;
-	
-		if (!o._isPolling) {
-			o._isPolling = true;
-			for (i = 0; i < man.length; i++) {
-				man[i].listen();
+		var q = this.q_;
+		var handlers = this.hdr_;
+
+		// Start to listen for event if not already started
+		if (!this.polling_) {
+			this.polling_ = true;
+
+			for (var i = 0; i < handlers.length; i++) {
+				handlers[i].listen();
 			}
 		}
 
 		// Prevent useless events registration
-		clearTimeout(o._timerID);
-		// Polling is reset here, but set again if _isPolling == false
-		o._timerID = setTimeout(this._release.bind(this), 10000);
-	
-		var q = this._q;
-		if (!q.length) {
-			return null;
-		}
-		return q.shift();
-	};
-	
-	proto._release = function() {
-		var i, man = this._man;
-		for (i = 0; i < man.length; i++) {
-			man[i].release();
-		}
+		clearTimeout(this.timerID_);
 
-		this._q = []; // clear Q
-		this._isPolling = false;
+		// Polling is reset here (but will be set again if polling_ == false)
+		this.timerID_ = setTimeout(this.release_.bind(this), 10000);
+
+		return (q.length) ? q.shift() : null;
 	};
+
+	/**
+	 * Gets a registered event handler.
+	 *
+	 * @param  {number} bit
+	 *         Defined bit of the wanted handler.
+	 *
+	 * @return {Gamalto.IEventHandler} Requested handler or null if not found.
+	 */
+	proto.getHandler = function(x) {
+		// As defined in malloc.c in the GNU C Library (glibc)
+		gamalto.devel.assert(((x !== 0) && !(x & (x - 1))),
+			"Parameter is not a power of 2.");
+
+		return this.hdr_[x >> 1] || null;
+	};
+
+	/**
+	 * Stops event listening.
+	 *
+	 * @private
+	 */
+	proto.release_ = function() {
+		this.hdr_.forEach(function(handler) {
+			handler.release();
+		});
+
+		this.q_.length = 0;
+		this.polling_ = false;
+	};
+
+	/**
+	 * Miximum queue size.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @constant {mumber}
+	 */
+	_Object.LIMIT = 128;
+
+	/**
+	 * Adds an event handler object to the factory.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @param {string} name
+	 *        name of the property to add.
+	 * @param {Gamalto.IEventHandler} handler
+	 *        Object implementing Gamalto.IEventHandler.
+	 */
+	_Object.addObject_ = function(name, handler) {
+		_Object[name] = 1 << handlers.length;
+		handlers.push(handler);
+	};
+
+	/**
+	 * Defines an event handler.
+	 *
+	 * @memberof Gamalto
+	 * @interface IEventHandler
+	 */
+
+	/**
+	 * Initializes the event handler.
+	 *
+	 * @function
+	 * @name Gamalto.IEventHandler#init
+	 */
+
+	/**
+	 * Starts listening to events.
+	 *
+	 * @function
+	 * @name Gamalto.IEventHandler#listen
+	 */
+
+	/**
+	 * Stops listening to events.
+	 *
+	 * @function
+	 * @name Gamalto.IEventHandler#release
+	 */
 
 })();

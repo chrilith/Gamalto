@@ -60,7 +60,6 @@ THE SOFTWARE.
 		 * Surface that will be display on the physical screen.
 		 *
 		 * @private
-		 * @ignore
 		 *
 		 * @member {Gamalto.Surface}
 		 */
@@ -74,7 +73,7 @@ THE SOFTWARE.
 	/**
 	 * Gets the HTMLCanvasElement of the screen.
 	 *
-	 * @private
+	 * @internal
 	 * @ignore
 	 *
 	 * @return {HTMLCanvasElement} Screen canvas element.
@@ -281,6 +280,18 @@ THE SOFTWARE.
 
 		// Adjust the screen size
 		screen.setStretch();
+	};
+
+	/**
+	 * Gets the active screen.
+	 *
+	 * @internal
+	 * @ignore
+	 *
+	 * @return {Gamalto.Screen} Active screen.
+	 */
+	_Object.getActive_ = function() {
+		return active;
 	};
 
 	// Adjusts the screen when the window is resized

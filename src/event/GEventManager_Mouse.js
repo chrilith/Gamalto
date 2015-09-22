@@ -1,7 +1,7 @@
 /*
  * Gamalto.EventManager Standard Mouse Module
  * ------------------------------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,101 +30,150 @@ THE SOFTWARE.
  */
 
 (function(global) {
-	/* Shortcut */
-	var core = gamalto;
 
-	/**
-	 * Dependencies
-	 */
+	/* Dependencies */
 	gamalto.devel.require("EventManager");
 	gamalto.devel.require("MouseEvent");
 	gamalto.devel.using("KeyboardEvent");
 
-	/* Local */
-	var base = G.EventManager,
-		manager = function(parent) {
-			this._parent = parent;
+	/* Aliases */
+	var _EventManager = G.EventManager;
+
+	/**
+	 * Creates a new mouse event handler.
+	 * This is an internal object which is not accessible to the client code.
+	 *
+	 * @constructor Gamalto.MouseEventHandler
+	 * @augments Gamalto.Object
+	 * @implements {Gamalto.IEventHandler}
+	 * @protected
+	 *
+	 * @param  {Gamalto.EventManager} parent
+	 *         Parent event manager.
+	 */
+	var _Object = function(parent) {
+			this.parent_ = parent;
 		};
 
-	base._addManager("BIT_MOUSE", manager);
+	/** @alias Gamalto.MouseEventHandler.prototype */
+	var proto = _Object.inherits(G.Object);
 
-	var proto = manager.prototype;
-
+	/**
+	 * Initializes the event handler.
+	 */
 	proto.init = function() {
-		this._buttons = 0;
+		/**
+		 * Bitmask holding mouse buttons state between events.
+		 *
+		 * @private
+		 *
+		 * @member {mumber}
+		 */
+		this.buttons_ = 0;
 	};
 
+	/**
+	 * Starts listening to events.
+	 */
 	proto.listen = function() {
+		// Use global to help event lsitening when changing active screen
 		global.addEventListener("mousemove", this, false);
 		global.addEventListener("mouseup", this, false);
 		global.addEventListener("mousedown", this, false);
 	};
 
+	/**
+	 * Stops listening to events.
+	 */
 	proto.release = function() {
 		global.removeEventListener("mousemove", this, false);
 		global.removeEventListener("mouseup", this, false);
 		global.removeEventListener("mousedown", this, false);
 	};
 
-	proto._handle = function(e) {
-		var p = this._parent,
-			q = p._q;
-		if (q.length == 128) {
+	/**
+	 * Pushes an new event into the event queue.
+	 *
+	 * @private
+	 *
+	 * @param  {Gamalto.MouseEvent} e
+	 *         New mouse event.
+	 *
+	 * @return {boolean} Whether the event has been pushed.
+	 */
+	proto.push_ = function(e) {
+		var E = G.Event;
+		var q = this.parent_.q_;
+
+		// Prevent too big queue
+		if (q.length == _EventManager.LIMIT) {
 			return false;
 		}
-		var cst = G.Event,
-			evt = new G.MouseEvent(e.type),
-			pos;
 
-		evt._time = e.timeStamp; // || Date.now();
-		evt.modifiers = !G.KeyboardEvent ? 0 :
-			(e.shiftKey		&& evt.keyCode != 16	? cst.KMOD_SHIFT: 0) |
-			(e.ctrlKey		&& evt.keyCode != 17	? cst.KMOD_CTRL	: 0) |
-			(e.altKey		&& evt.keyCode != 18	? cst.KMOD_ALT	: 0);// |
-	//		(e.altGraphKey	&& evt.keyCode != 16	? cst.KMOD_ALTGR: 0) | => CTRL+ALT raised
-	//		(e.metaKey		&& evt.keyCode != 91
-	//						&& evt.keyCode != 93	? cst.KMOD_META	: 0);	// CHECKME
+		// Create a new event
+		var evt = new G.MouseEvent(e.type);
 
-		evt.target = (e.target || e.srcElement);
+		// Set modifiers
+		evt.modifiers =
+			(e.shiftKey	? E.KMOD_SHIFT	: 0) |
+			(e.ctrlKey	? E.KMOD_CTRL	: 0) |
+			(e.altKey	? E.KMOD_ALT	: 0) |
+			(e.metaKey	? E.KMOD_META	: 0);
 
 		// Mouse related stuff
 		evt.absX = e.clientX;
 		evt.absY = e.clientY;
 
 		// Relative
-		pos = core._xywh(evt.target);
+		var pos = gamalto.getBox_(evt.target_ = (e.target || e.srcElement));
 		evt.x = evt.absX - pos.x;
 		evt.y = evt.absY - pos.y;
 
 		// Buttons
 		if (e.type != "mousemove") {
 			var state = (
-					(e.button === 0 ? cst.KBUT_LEFT : 0) |
-					(e.button === 1 ? cst.KBUT_MIDDLE : 0) |
-					(e.button === 2 ? cst.KBUT_RIGHT : 0)
+					(e.button === 0 ? E.MBUT_LEFT   : 0) |
+					(e.button === 1 ? E.MBUT_MIDDLE : 0) |
+					(e.button === 2 ? E.MBUT_RIGHT  : 0)
 				);
+
 			if (e.type == "mouseup") {
-				this._buttons &= ~state;
+				this.buttons_ &= ~state;
 			} else {
-				this._buttons |=  state;
+				this.buttons_ |=  state;
 			}
 		}
-		evt.buttons = this._buttons;
 
-		if (!q.length || !evt.equals(q[q.length - 1])) {
-			return !!(q.push(evt));
-		}
-		return false;
+		evt.buttons = this.buttons_;
+
+		return (!q.length || !evt.equals(q[q.length - 1])) ?
+			Boolean(q.push(evt)) : false;
 	};
 
+	/**
+	 * Event handler.
+	 *
+	 * @private
+	 *
+	 * @param  {KeyboardEvent} e
+	 *         System event.
+	 */
 	proto.handleEvent = function(e) {
 		switch (e.type) {
 			case "mousemove":
 			case "mouseup":
 			case "mousedown":
-				this._handle(e);
+				this.push_(e);
 				break;
 		}
 	};
+
+	/**
+	 * Defines a manager to handle mouse events.
+	 *
+	 * @constant BIT_MOUSE
+	 * @memberof Gamalto.EventManager
+	 */
+	_EventManager.addObject_("BIT_MOUSE", _Object);
 
 })(this);

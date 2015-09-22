@@ -40,9 +40,7 @@ THE SOFTWARE.
 	 * @constructor Core
 	 * @protected
 	 */
-	var Core = function() {
-//		this.devel = undef;
-	};
+	var Core = function() { };
 
 	/** @alias Core.prototype */
 	var core = Core.prototype;
@@ -104,7 +102,8 @@ THE SOFTWARE.
 	 *           First defined element or `undefined` by default.
 	 */
 	core.defined = function(/* vargs... */) {
-		var i, undef, args = arguments;
+		var i, undef;
+		var args = arguments;
 
 		for (i = 0; i < args.length; i++) {
 			if (args[i] !== undef) { return args[i]; }
@@ -120,7 +119,7 @@ THE SOFTWARE.
 
 	/* Pseudo-Private methods */
 
-	core._xywh = function(elem, parent, unit) {
+	core.getBox_ = function(elem, parent, unit) {
 		var x = 0,
 			y = 0,
 			w = elem.offsetWidth,
@@ -133,13 +132,13 @@ THE SOFTWARE.
 		}
 
 		unit = unit || 0;
-		return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };			
+		return { x: x + unit, y: y + unit, w: w + unit, h: h + unit };
 	};
 
 	/* Register the singleton */
 
 	/**
-	 * Main object to access the Gamalto core properties.
+	 * Main object to access the Gamalto core members.
 	 *
 	 * @global
 	 * @type {Gamalto.Core}

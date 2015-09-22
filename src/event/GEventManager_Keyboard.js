@@ -1,7 +1,7 @@
 /*
  * Gamalto.EventManager Keyboard Module
  * ------------------------------------
- * 
+ *
  * This file is part of the GAMALTO JavaScript Development Framework.
  * http://www.gamalto.com/
  *
@@ -30,113 +30,197 @@ THE SOFTWARE.
  */
 
 (function(global) {
-	
-	/**
-	 * Dependencies
-	 */
+
+	/* Dependencies */
 	gamalto.devel.require("EventManager");
-	gamalto.devel.using("KeyboardEvent");
 	gamalto.devel.using("Event");
+	gamalto.devel.using("KeyboardEvent");
 
-	
-	/* Local */
-	var base = G.EventManager,
-		manager = function(parent) {
-			this._parent = parent;
-		};
+	/* Aliases */
+	var _EventManager = G.EventManager;
 
-	base._addManager("BIT_KEYBOARD", manager);	
-	
-	var proto = manager.prototype;
-	
-	proto.init = function(){}
+	/**
+	 * Creates a new keyboard event handler.
+	 * This is an internal object which is not accessible to the client code.
+	 *
+	 * @constructor Gamalto.KeyboardEventHandler
+	 * @augments Gamalto.Object
+	 * @implements {Gamalto.IEventHandler}
+	 * @protected
+	 *
+	 * @param  {Gamalto.EventManager} parent
+	 *         Parent event manager.
+	 */
+	var _Object = function(parent) {
+		/**
+		 * Parent manager.
+		 *
+		 * @private
+		 *
+		 * @member {Gamalto.EventManager}
+		 */
+		this.parent_ = parent;
 
+		/**
+		 * Last key event for key repeat even if the is no more event in queue.
+		 *
+		 * @private
+		 *
+		 * @member {Gamalto.KeyboardEvent}
+		 */
+		this.last_ = null;
+
+		/**
+		 * Whether we are repeating a key to switch from delay to internval.
+		 *
+		 * @private
+		 *
+		 * @memebr {boolean}
+		 */
+		this.repeating_ = false;
+	};
+
+	/** @alias Gamalto.KeyboardEventHandler.prototype */
+	var proto = _Object.inherits(G.Object);
+
+	/**
+	 * Initializes the event handler.
+	 */
+	proto.init = function() {
+		this.enableKeyRepeat();
+	};
+
+	/**
+	 * Starts listening to events.
+	 */
 	proto.listen = function() {
 		global.addEventListener("keydown", this, false);
 		global.addEventListener("keyup", this, false);
 	};
 
+	/**
+	 * Stops listening to events.
+	 */
 	proto.release = function() {
 		global.removeEventListener("keydown", this, false);
 		global.removeEventListener("keyup", this, false);
 	};
-	
-	
-	// EventManager extensions
-	base.prototype.enableKeyRepeat = function(delay, interval) {
-		this._rDelay = delay;		// 500
-		this._rInterval = interval;	// 30
+
+	/**
+	 * Enables or disables the keyboard repeat rate.
+	 * Parameters are expressed in milliseconds.
+	 *
+	 * @param  {number} [delay=500]
+	 *         How long the key must be pressed before to begin repeating.
+	 * @param  {number} [interval=30]
+	 *         Repeat speed after delay.
+	 */
+	proto.enableKeyRepeat = function(delay, interval) {
+		/**
+		 * Milliseconds before to begin repeating.
+		 *
+		 * @private
+		 *
+		 * @member {number}
+		 */
+		this.rDelay_ = gamalto.defined(delay, 500);
+
+		/**
+		 * Repeat speed.
+		 *
+		 * @private
+		 *
+		 * @member {number}
+		 */
+		this.rInterval_ = gamalto.defined(interval, 30);
 	};
 
-	/* TODO: Involve a constant polling (or readable in poll only??).
-	   If needed, _release() will flush Q only
-	base.prototype.getModifiersState = function() {
-		return ;
-	}
-	
-	base.prototype.disableSystemKey = function() {
-		// do a preventDefaut with useCapture = true ??
-		// Enable F11 for example, or Windows key?
-	}
-	*/
-	
-	proto._pushKey = function(e) {
-		var t,
-			p = this._parent,
-			q = p._q;
-		if (q.length == 128) {
+	/**
+	 * Pushes an new event into the event queue.
+	 *
+	 * @private
+	 *
+	 * @param  {Gamalto.KeyBoardEvent} e
+	 *         New keyboard event.
+	 *
+	 * @return {boolean} Whether the event has been pushed.
+	 */
+	proto.push_ = function(e) {
+		var E = G.Event;
+		var q = this.parent_.q_;
+
+		// Prevent too big queue
+		if (q.length == _EventManager.LIMIT) {
 			return false;
 		}
-		var cst = G.Event,
-			evt = new G.KeyboardEvent(e.type);
-		evt.keyCode = (e.keyCode || e.which);	// FIXME: http://javascript.info/tutorial/keyboard-events
-		evt.charCode = e.charCode;	// FIXME: old IE??
-		evt._time = e.timeStamp; // || Date.now();
+
+		// Create a new event
+		var evt = new G.KeyboardEvent(e.type);
+
+		// See http://javascript.info/tutorial/keyboard-events
+		evt.keyCode = (e.keyCode || e.which);
+
+		// Set modifiers only if it isn't the only key pressed
 		evt.modifiers =
-			(e.shiftKey		&& evt.keyCode != 16	? cst.KMOD_SHIFT: 0) |
-			(e.ctrlKey		&& evt.keyCode != 17	? cst.KMOD_CTRL	: 0) |
-			(e.altKey		&& evt.keyCode != 18 	? cst.KMOD_ALT	: 0);// |
-	//		(e.altGraphKey	&& evt.keyCode != 16	? cst.KMOD_ALTGR: 0) | => CTRL+ALT raised
-	//		(e.metaKey		&& evt.keyCode != 91
-	//						&& evt.keyCode != 93	? cst.KMOD_META	: 0);	// CHECKME
+			(e.shiftKey		&& evt.keyCode != 16	? E.KMOD_SHIFT	: 0) |
+			(e.ctrlKey		&& evt.keyCode != 17	? E.KMOD_CTRL	: 0) |
+			(e.altKey		&& evt.keyCode != 18	? E.KMOD_ALT	: 0) |
+			(e.metaKey		&& evt.keyCode != 91
+							&& evt.keyCode != 93	? E.KMOD_META	: 0);
 
-		var cur, lst = q.length - 1;
-		for (var n = lst; n >= 0; n--) {
-			cur = q[n];
+		// Clear key repeat state if not the same event
+		var last = this.last_;
 
-			// Same event?
-			if (cur.equals(evt)) {
-				// Should we repeat?
-				if (n == lst && (t = (cur._repeat ? p._rInterval : p._rDelay) | 0)) {
-					// Not in time, ignore...
-					if ((Date.now() - cur._time) < t) {	// TODO: add delta to event timeStamp
-						return false;
-					} else {
-						cur._repeat = false;	// Prevent repeating when polling (keyA keyA [keyB keyA] <= polled, should not repeat keyA!)
-						evt._repeat = true;		// tell next event that we should repeat
-						break;
-					}
-				}
-				// Not repeating, can we register it?
-				if (!cur._done) {
+		if (!evt.equals(last)) {
+			this.repeating_ = false;
+
+		} else {
+			var time;
+
+			// Is there any repeat delay? (read the expected repeat time...)
+			if ((time = (this.repeating_ ? this.rInterval_ : this.rDelay_) | 0)) {
+
+				// Yes, but elapsed time is to short, ignore... (but still repeating)
+				if ((Date.now() - last.time) < time) {
 					return false;
 				}
+
+				// Set the repeat state to check against interval instead of delay next time
+				this.repeating_ = true;
+
+			// Not in 'interval' (which may be 0) and no 'delay'
+			} else if (!this.repeating_) {
+				return false;
 			}
 		}
-		// We are adding a new event, ignore the equals() test next time
-		if (lst >= 0) {
-			q[lst]._done = true;
-		}
-		return !!(q.push(evt));
+
+		this.last_ = evt;
+		return Boolean(q.push(evt));
 	};
 
+	/**
+	 * Event handler.
+	 *
+	 * @private
+	 *
+	 * @param  {KeyboardEvent} e
+	 *         System event.
+	 */
 	proto.handleEvent = function(e) {
 		switch (e.type) {
 			case "keydown":
 			case "keyup":
-				this._pushKey(e);
+				this.push_(e);
 				break;
 		}
 	};
+
+	/**
+	 * Defines a manager to handle keyboard events.
+	 *
+	 * @constant BIT_KEYBOARD
+	 * @memberof Gamalto.EventManager
+	 */
+	_EventManager.addObject_("BIT_KEYBOARD", _Object);
 
 })(this);
